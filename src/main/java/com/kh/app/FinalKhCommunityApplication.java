@@ -9,6 +9,7 @@ public class FinalKhCommunityApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FinalKhCommunityApplication.class, args);
 		System.out.println("푸쉬푸쉬베이베~");
+		System.out.println("살앙해❤️");
 	}
 
 }
