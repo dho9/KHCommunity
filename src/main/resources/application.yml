@@ -3,7 +3,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /community
+    context-path: /kh
     session:
       timeout: 30m
 
@@ -16,8 +16,8 @@ spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@localhost:1521:xe
-    username: final
-    password: final
+    username: kh
+    password: kh
 
 
 # logback
