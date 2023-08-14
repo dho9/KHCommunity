@@ -11,6 +11,7 @@ public class FinalKhCommunityApplication {
 		System.out.println("안녕하세요?");
 		System.out.println("방가방가 햄토리~");
 		System.out.println("로그인");
+		System.out.println("진짜 마지막");
 	}
 
 }
