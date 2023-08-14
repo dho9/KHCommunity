@@ -33,5 +33,6 @@ public class BoardController {
 		List<BoardDetails> boards = boardService.findAll(params);
 		log.debug("boards = {}", boards);
 		model.addAttribute("boards", boards);
+		
 	}
 }
