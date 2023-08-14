@@ -1,7 +1,7 @@
 --=============================================
 -- 계정
 --=============================================
---alter session set _oracle_script = true;
+--alter session set "_oracle_script" = true;
 --
 --create user kh
 --identified by kh
