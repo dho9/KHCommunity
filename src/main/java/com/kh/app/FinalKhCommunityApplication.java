@@ -9,7 +9,8 @@ public class FinalKhCommunityApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FinalKhCommunityApplication.class, args);
 		System.out.println("안녕하세요?");
-
+		System.out.println("방가방가 햄토리~");
+		System.out.println("로그인");
 	}
 
 }
