@@ -7,7 +7,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 	<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/style.css" />
     <title>KH소통할까?</title>
