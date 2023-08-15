@@ -1,6 +1,6 @@
  <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-  <div id="bottom" style="position:absolute; right:385px; bottom:-450px;">
+  <div id="bottom" style="position:absolute; bottom:-670%;">
         <ul class="links">
             <li><a href="/page/serviceagreement">이용약관</a></li>
             <li class="privacy"><a href="/page/privacy">개인정보처리방침</a></li>
