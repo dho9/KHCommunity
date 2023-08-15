@@ -36,6 +36,7 @@
 						<c:if test="${param.error ne null}">
 							<div class="alert alert-danger" role="alert">
 								아이디 또는 비밀번호가 일치하지 않습니다.
+								아이디 또는 비밀번호가 일치하지 않습니다.
 							</div>
 						</c:if>
 						<input 
