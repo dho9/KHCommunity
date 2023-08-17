@@ -1006,5 +1006,4 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 
-
-
+select count(*) from student where substr(to_char(student_enroll_dated), 1, 9) = to_date('23/08/17', 'yy/MM/dd');

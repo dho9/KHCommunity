@@ -15,29 +15,28 @@
         <div class="card-body" id="todayIssueBody">
           <span>신규 수강생</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">2</span>
-          &nbsp;&nbsp;&nbsp;&nbsp; 
+          <span style="color: tomato; font-weight: 600">${todayNewStudentCount}</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <span>신규 직원(강사 포함)</span>
+          &nbsp;
+          <span style="color: tomato; font-weight: 600">${todayTotalEmployee}</span>
+          <br />
+          <br />
           <span>가입 승인</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">2</span>
+          <span style="color: tomato; font-weight: 600">${approvementStudentCount }</span>
           &nbsp;&nbsp;&nbsp;&nbsp; 
           <span>휴가 승인</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">1</span>
+          <span style="color: tomato; font-weight: 600">${approvementStudentVacationCount }</span>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <br />
-          <br />
           <span>신규 게시글</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">1</span>
+          <span style="color: tomato; font-weight: 600">${todayNewPostCount }</span>
           &nbsp;&nbsp;&nbsp;&nbsp; 
           <span>신고내역</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">0</span>
-          &nbsp;&nbsp;&nbsp;&nbsp; 
-          <span>상담내역</span>
-          &nbsp;
-          <span style="color: tomato; font-weight: 600">2</span>
+          <span style="color: tomato; font-weight: 600">${todayNewReportCount }</span>
         </div>
       </div>
     </section>
