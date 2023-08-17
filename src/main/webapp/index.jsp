@@ -46,12 +46,6 @@
         </div>
     </nav>
 
-
-<h1>Final Project</h1>
-<h2>대호커밋</h2>
-<h3>장준커커밋밋</h3>
-<h3>1커커밋밋</h3>
-
     <div id="container" class="community" style="margin-top: 150px;">
         <aside class="none">
             <form class="search">
@@ -411,5 +405,7 @@
                 </div>
             </div>
         </div>
+        <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 >>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
