@@ -762,6 +762,96 @@ aside > div.title > ol.buttons > li > a.image.setting {
    display: none;
 }
 
+#container > div.title > h1 > a {
+    color: #292929;
+    font-size: 22px;
+    font-weight: bold;
+}
+#container > div.articles > article.dialog {
+    padding: 80px 0;
+    color: #737373;
+    font-size: 15px;
+    text-align: center;
+}
+#container > div.articles > article > a.article {
+    display: block;
+    padding: 15px;
+}
+#container > div.articles > article img.picture.medium {
+    margin: 0 5px 5px 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+#container > div.articles > article img.picture {
+    float: left;
+}
+#container > div.articles > article h3.medium {
+    float: left;
+    max-width: 90px;
+    margin: 0 10px 5px 0;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+#container > div.articles > article h2 {
+    color: #292929;
+}
+.bold {
+    font-weight: bold !important;
+}
+#container > div.articles > article p.medium {
+    margin-bottom: 5px;
+    max-height: 100px;
+    line-height: 20px;
+    white-space: normal;
+    overflow: hidden;
+    color: #444444;
+    font-size: 14px;
+}
+
+#container > div.articles > article p {
+    word-break: break-all;
+}
+#container > div.articles > article a.boardname {
+    line-height: 15px;
+    color: #a6a6a6;
+    font-size: 12px;
+}
+#container > div.articles > article ul.status {
+    float: right;
+    display: flex;
+}
+dl, ul, ol, menu, li {
+    list-style: none;
+}
+#container > div.articles > article ul.status li.vote {
+    padding-left: 15px;
+    color: #c62917;
+}
+#container > div.articles > article ul.status li.comment {
+    padding-left: 15px;
+    color: #0ca5af;
+}
+
+#container > div.articles > article span.category.medium, #container > div.articles > article time.medium {
+    float: left;
+    margin-bottom: 5px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+}
+#container > div.articles > article h2.medium {
+    margin-bottom: 5px;
+    line-height: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    font-weight: normal;
+}
+
 #container div.card > div.menus > a {
    display: block; padding: 10px 0 10px 37px; border-bottom: 1px solid #e3e3e3; line-height: 20px; box-sizing: border-box;
    color: #444444; font-size: 14px; background-repeat: no-repeat; background-size: 12px auto; background-position: 15px center;
@@ -903,6 +993,18 @@ aside > div.title > ol.buttons > li > a.image.setting {
 #container > div.rightside form.search > input.text:focus {
    outline: none; border-color: #a6a6a6;
 }
+#container > div.title {
+  margin-bottom: -20px;
+  padding: 15px;
+  border: 1px solid #d6d6d6;
+  box-sizing: border-box;
+}
+#container > div.articles > article {
+    margin-bottom: -1px;
+    box-sizing: border-box;
+    border: 1px solid #e3e3e3;
+    background-color: #fff;
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * *  /  pc only  /  * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -979,6 +1081,13 @@ aside > div.title > ol.buttons > li > a.image.setting {
    }
    #container > div.rightside form.search {
       display: none;
+   }
+   #container > div.wrap {
+	  float: none;
+	  position: relative;
+	  left: 25px;
+	  margin-top: 25px;
+	  width: 780px;
    }
 }     
         
