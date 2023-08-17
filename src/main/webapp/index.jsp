@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 	
+	
     <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
             <form class="search">
