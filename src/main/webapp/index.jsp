@@ -12,14 +12,17 @@
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
-                <a href="/message" title="쪽지함" class="icon message">로그인</a></li>
+            	<a href="${pageContext.request.contextPath}/admin/adminMain.do">
+            		<span>관리자페이지</span>
+            	</a>
+                <a href="/message" title="쪽지함" class="icon message">로그인</a>
                 <a href="/my" title="내 정보" class="icon my">회원가입</a>
             </div>
             <ul id="menu">
                 <li id="dropdown">
                     <a href="/">게시판</a>
                     <div class="dropdown-content">
-                        <a href="/category/preparatory.do">예비생</a>
+                        <a href="/category/preparatory">예비생</a>
                         <a href="/category/graduate">수료생</a>
                         <a href="/category/free">자유</a>
                         <a href="/category/free">우리반 게시판</a>
@@ -402,4 +405,5 @@
                 </div>
             </div>
         </div>
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
