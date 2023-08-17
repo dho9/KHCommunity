@@ -20,8 +20,4 @@ public class BoardController {
 	@GetMapping("/ticket.do")
 	public void ticket() {}
 
-	
-
-	
-	
 }
