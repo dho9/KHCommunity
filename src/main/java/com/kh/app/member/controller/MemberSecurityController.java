@@ -1,5 +1,7 @@
 package com.kh.app.member.controller;
 
+
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -29,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
+
 import com.kh.app.member.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequestMapping("/member")
 public class MemberSecurityController {
+
 
 	@Autowired
 	private MemberService memberService;
@@ -97,6 +101,7 @@ public class MemberSecurityController {
 				.status(HttpStatus.OK)
 				.body(Map.of("available", available, "memberId", memberId));
 	}
+
 	
 }
 
