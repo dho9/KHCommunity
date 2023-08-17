@@ -12,7 +12,7 @@
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
-                <a href="/message" title="쪽지함" class="icon message">로그인</a></li>
+                <a href="${pageContext.request.contextPath}/member/login.do" title="쪽지함" class="icon message">로그인</a></li>
                 <a href="/my" title="내 정보" class="icon my">회원가입</a>
             </div>
             <ul id="menu">
