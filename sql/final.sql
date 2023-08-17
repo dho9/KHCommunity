@@ -1018,4 +1018,14 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
-
+SELECT
+    b.board_name,
+    COUNT(p.post_id) AS post_count
+FROM
+    board b
+LEFT JOIN
+    post p ON b.board_id = p.board_id
+GROUP BY
+    b.board_name
+ORDER BY
+    post_count DESC, board_name;
