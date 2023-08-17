@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+
 <body>
     <nav>
         <div class="wrap">
@@ -108,7 +109,7 @@
             </div>
         </div>
         <div class="rightside">
-            <form action="" class="search">
+            <form action="${pageContext.request.contextPath}/board/boardSearch.do" class="search">
                 <input type="text" name="keyword" placeholder="전체 게시판의 글을 검색하세요!" class="text" />
             </form>
             <div class="card">
@@ -405,5 +406,5 @@
                 </div>
             </div>
         </div>
-
+		
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
