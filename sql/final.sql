@@ -2,15 +2,15 @@
 -- 계정
 --=============================================
 
-alter session set "_oracle_script" = true;
-
-create user kh
-identified by kh
-default tablespace users;
-
-alter user kh quota unlimited on users;
-
-grant connect, resource to kh;
+--alter session set "_oracle_script" = true;
+--
+--create user kh
+--identified by kh
+--default tablespace users;
+--
+--alter user kh quota unlimited on users;
+--
+--grant connect, resource to kh;
 
 
 --=============================================

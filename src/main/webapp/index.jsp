@@ -19,7 +19,7 @@
                 <li id="dropdown">
                     <a href="/">게시판</a>
                     <div class="dropdown-content">
-                        <a href="/category/preparatory">예비생</a>
+                        <a href="/category/preparatory.do">예비생</a>
                         <a href="/category/graduate">수료생</a>
                         <a href="/category/free">자유</a>
                         <a href="/category/free">우리반 게시판</a>
