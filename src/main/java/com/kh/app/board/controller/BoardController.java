@@ -17,7 +17,6 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@GetMapping("/ticket.do")
-	public void ticket() {}
+	
 
 }
