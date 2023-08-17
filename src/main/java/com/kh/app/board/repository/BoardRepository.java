@@ -10,6 +10,5 @@ import com.kh.app.board.entity.BoardDetails;
 @Mapper
 public interface BoardRepository {
 
-	List<BoardDetails> findAll(RowBounds rowBounds);
 
 }

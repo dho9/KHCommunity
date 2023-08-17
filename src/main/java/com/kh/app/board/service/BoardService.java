@@ -7,6 +7,5 @@ import com.kh.app.board.entity.BoardDetails;
 
 public interface BoardService {
 
-	List<BoardDetails> findAll(Map<String, Object> params);
 
 }
