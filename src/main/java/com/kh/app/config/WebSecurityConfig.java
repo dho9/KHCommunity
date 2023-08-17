@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/admin/*").permitAll()
 			.antMatchers("/board/*").permitAll()
 			.antMatchers("/ticket/*").permitAll()
-			
+			.antMatchers("/member/*").permitAll()
 			.anyRequest().authenticated();
 	
 	}

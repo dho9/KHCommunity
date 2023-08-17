@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.app.board.repository.BoardRepository">
+  <select id="findAllByKeyword" resultType="boardSearchDetails">
+    select
+	    b.board_name,
+	    p.title,
+        p.post_created_at,
+        p.post_like,
+	    c.content
+	from
+	    board b left join post p
+	        on b.board_id = p.board_id
+	    left join post_content c
+	        on b.board_id = c.board_id
+	 where
+        p.title like '%' || #{keyword} || '%' or c.content like '%' || #{keyword} || '%'
+  </select>
+  <resultMap type="boardSearchDetails" id="boardSearchDetailsMap">
+  	<id column="board_id" property="boardId"/>
+  	<result column="board_name" property="boardName"/>
+  	<result column="title" property="boardName"/>
+  	<result column="post_created_at" property="postCreatedAt"/>
+  	<result column="post_like" property="postLike"/>
+  	<result column="board_name" property="boardName"/>
+  </resultMap>
+  
+</mapper>
