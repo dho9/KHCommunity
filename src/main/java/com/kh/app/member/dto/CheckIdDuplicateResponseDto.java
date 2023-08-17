@@ -1,4 +1,4 @@
-package com.kh.app.board.entity;
+package com.kh.app.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Board {
-	private int boardId;
-	private String boardName;
-	private String boardCategory;
+public class CheckIdDuplicateResponseDto {
+	
+	private String memberId;
+	private boolean available;
+
 }
