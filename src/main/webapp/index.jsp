@@ -40,8 +40,7 @@
                 <li><a href="/calculator">스터디</a></li>
                 <li><a href="/friend">공지사항</a></li>
                 <li><a href="/friend">오늘 뭐먹지?</a></li>
-                <li><a href="https://bookstore.everytime.kr/">식권</a></li>
-                <li><a href="https://www.campuspick.com/">홍보</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/ticket.do">식권</a></li>
             </ul>
         </div>
     </nav>

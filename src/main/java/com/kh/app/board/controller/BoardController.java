@@ -15,7 +15,7 @@ import com.kh.app.board.service.BoardService;
 
 import lombok.extern.slf4j.Slf4j;
 
-//@Controller
+@Controller
 @Slf4j
 @RequestMapping("/board")
 public class BoardController {
@@ -23,5 +23,7 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
+	@GetMapping("/ticket.do")
+	public void ticket() {}
 	
 }
