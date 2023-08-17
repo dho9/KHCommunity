@@ -405,4 +405,18 @@
                 </div>
             </div>
         </div>
+        <script>
+        document.search.onsubmit = (e) => {
+        	e.preventDefault();
+        	
+        	$.ajax({
+        		url : "${pageContext.request.contenxtPath}/board/boardSerach.do",
+        		method : "GET",
+        		dataType : "json",
+        		success(responseData) {
+        			console.log(responseData);
+        		}
+        	});
+        }
+        </script>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
