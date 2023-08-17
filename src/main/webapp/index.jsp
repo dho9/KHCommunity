@@ -32,7 +32,7 @@
                     <p class="school">이태현</p>
                     <p class="school">disney1026</p>
                     <ul class="buttons">
-                        <li><a href="/my">내 정보</a></li>
+                        <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
                         <li><a href="/user/logout">로그아웃</a></li>
                     </ul>
                     <hr>
