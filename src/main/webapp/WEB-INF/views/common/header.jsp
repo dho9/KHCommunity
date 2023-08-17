@@ -38,7 +38,7 @@
     <nav>
         <div class="wrap">
             <div id="logo">
-                <a href="/"><img src="${pageContext.request.contextPath}/resources/images/로고.png"
+               <a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/images/로고.png"
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
@@ -49,7 +49,7 @@
                <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="내 정보" class="icon my">회원가입</a>
             </div>
             <ul id="menu">
-                <li><a href="${pageContext.request.contextPath}">게시판</a></li>
+                <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/notificationBoardList.do">공지사항</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do">우리반</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do">취업</a></li>

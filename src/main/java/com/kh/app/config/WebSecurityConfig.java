@@ -34,6 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/", "/index.jsp").permitAll()
 			.antMatchers("/board/*").permitAll()
 			.antMatchers("/admin/*").permitAll()
+			.antMatchers("/board/*").permitAll()
+			.antMatchers("/ticket/*").permitAll()
 			.antMatchers("/member/*").permitAll()
 			.anyRequest().authenticated();
 	

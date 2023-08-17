@@ -46,41 +46,6 @@ public class BoardController {
 		
 	}
 	
-	@GetMapping("/graduateBoardList.do")
-	public void graduateBoardList() {
-		
-	}
 	
-	@GetMapping("/preStudentBoardList.do")
-	public void preStudentBoardList() {
-		
-	}
-	
-	@GetMapping("/employeeBoardList.do")
-	public void employeeBoardList() {
-		
-	}
-	
-	@GetMapping("/notificationBoardList.do")
-	public void notificationBoardList() {
-		
-	}
-	
-	@GetMapping("/myClassBoardList.do")
-	public void myClassBoardList() {
-		
-	}
-	
-	@GetMapping("/jobSearchBoardList.do")
-	public void jobSearchBoardList() {
-		
-	}
-	
-	@GetMapping("/promotionBoardList.do")
-	public void promotionBoardList() {
-		
-	}
 
-	
-	
 }
