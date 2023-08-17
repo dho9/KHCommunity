@@ -160,7 +160,7 @@ body.appwebview nav {
   border-bottom: 1px solid #d6d6d6; background-color: #f2f2f2;
 }
 #submenu > div.wrap {
-  box-sizing: border-box; font-size: 0; text-align: center; white-space: nowrap; overflow: hidden; overflow-x: auto;
+  box-sizing: border-box; font-size: 0; text-align: center; white-space: nowrap; overflow: hidden; overflow-x: auto; height: 100px;
 }
 #submenu > div.wrap > div.divider {
   display: inline-block; width: 1px; height: 200px; background-color: #e3e3e3;
