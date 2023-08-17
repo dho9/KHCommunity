@@ -23,16 +23,5 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@GetMapping("/boardList.do")
-	public void boardList(@RequestParam(defaultValue = "1") int page, Model model) {
-		int limit = 10;
-		Map<String, Object> params = Map.of(
-				"page", page,
-				"limit", limit
-		);
-		List<BoardDetails> boards = boardService.findAll(params);
-		log.debug("boards = {}", boards);
-		model.addAttribute("boards", boards);
-		
-	}
+	
 }
