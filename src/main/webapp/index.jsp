@@ -69,7 +69,7 @@
             </div>
         </div>
         <div class="rightside">
-            <form action="" class="search">
+            <form action="${pageContext.request.contextPath}/board/boardSearch.do" class="search">
                 <input type="text" name="keyword" placeholder="전체 게시판의 글을 검색하세요!" class="text" />
             </form>
             <div class="card">

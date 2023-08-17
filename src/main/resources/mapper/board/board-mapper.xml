@@ -7,14 +7,15 @@
     select
 	    b.board_name,
 	    p.title,
-        p.post_created_at,
-        p.post_like,
-	    c.content
+	    p.post_created_at,
+	    p.post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
 	from
 	    board b left join post p
 	        on b.board_id = p.board_id
 	    left join post_content c
-	        on b.board_id = c.board_id
+	        on p.post_id = c.post_id
 	 where
         p.title like '%' || #{keyword} || '%' or c.content like '%' || #{keyword} || '%'
   </select>
@@ -25,6 +26,7 @@
   	<result column="post_created_at" property="postCreatedAt"/>
   	<result column="post_like" property="postLike"/>
   	<result column="board_name" property="boardName"/>
+  	<result column="comment_count" property="commentCount"/>
   </resultMap>
   
 </mapper>

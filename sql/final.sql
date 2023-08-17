@@ -92,22 +92,22 @@
 --===============================================
 -- 시퀀스 생성
 --===============================================
-create sequence seq_student_attach_id;
-create sequence seq_schedule_id;
-create sequence seq_vacation_id;
-create sequence seq_vacation_attach_id;
-create sequence seq_board_id;
-create sequence seq_post_id;
-create sequence seq_post_attach_id;
-create sequence seq_comment_id;
-create sequence seq_message_id;
-create sequence seq_report_id;
-create sequence seq_chat_id;
-create sequence seq_store_id;
-create sequence seq_ticket_id;
-create sequence seq_order_id;
-create sequence seq_chat_message_no;
-create sequence seq_curriculum_id;
+--create sequence seq_student_attach_id;
+--create sequence seq_schedule_id;
+--create sequence seq_vacation_id;
+--create sequence seq_vacation_attach_id;
+--create sequence seq_board_id;
+--create sequence seq_post_id;
+--create sequence seq_post_attach_id;
+--create sequence seq_comment_id;
+--create sequence seq_message_id;
+--create sequence seq_report_id;
+--create sequence seq_chat_id;
+--create sequence seq_store_id;
+--create sequence seq_ticket_id;
+--create sequence seq_order_id;
+--create sequence seq_chat_message_no;
+--create sequence seq_curriculum_id;
 --===============================================
 -- 테이블 생성
 --===============================================
@@ -240,7 +240,7 @@ CREATE TABLE favorite (
    board_id   number      NOT NULL,
    member_id   varchar2(20)      NOT NULL
 );
-
+        
 CREATE TABLE message_box (
    message_id   number      NOT NULL,
    send_id   varchar2(20)      NOT NULL,
@@ -923,6 +923,8 @@ VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', 'ehdgus',  'godwjd',0);
 
 --board
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '자유게시판');
+INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '히히게시판');
+INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '깔깔게시판');
 
 -- post
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
