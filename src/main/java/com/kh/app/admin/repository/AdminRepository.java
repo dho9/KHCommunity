@@ -1,7 +1,11 @@
 package com.kh.app.admin.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import com.kh.app.board.dto.BoardChartDto;
 
 
 @Mapper
@@ -27,6 +31,14 @@ public interface AdminRepository {
 
 	@Select("select count(*) from report where report_action is null")
 	int todayNewReportCount();
+
+	@Select("SELECT b.board_name as boardName, COUNT(p.post_id) AS postCount\r\n"
+			+ "FROM post p\r\n"
+			+ "JOIN board b ON p.board_id = b.board_id\r\n"
+			+ "GROUP BY b.board_name\r\n"
+			+ "ORDER BY postCount DESC, board_name\r\n"
+			+ "OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY")
+	List<BoardChartDto> findBoardNameAndPostCount();
 
 
 

@@ -1018,10 +1018,14 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
-SELECT p.board_id, COUNT(p.post_id) AS post_count,
-       b.board_name,
-       RANK() OVER (ORDER BY COUNT(p.post_id) DESC) AS post_rank
-FROM post p
-JOIN board b ON p.board_id = b.board_id
-GROUP BY p.board_id, b.board_name
-ORDER BY post_rank;
+SELECT
+    b.board_name,
+    COUNT(p.post_id) AS post_count
+FROM
+    board b
+LEFT JOIN
+    post p ON b.board_id = p.board_id
+GROUP BY
+    b.board_name
+ORDER BY
+    post_count DESC, board_name;

@@ -1,5 +1,9 @@
 package com.kh.app.admin.service;
 
+import java.util.List;
+
+import com.kh.app.board.dto.BoardChartDto;
+
 public interface AdminService {
 
 	int todayNewStudentCount();
@@ -15,6 +19,8 @@ public interface AdminService {
 	int todayNewPostCount();
 
 	int todayNewReportCount();
+
+	List<BoardChartDto> findBoardNameAndPostCount();
 
 
 }

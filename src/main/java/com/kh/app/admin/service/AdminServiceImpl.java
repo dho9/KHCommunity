@@ -1,9 +1,12 @@
 package com.kh.app.admin.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.app.admin.repository.AdminRepository;
+import com.kh.app.board.dto.BoardChartDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,5 +51,10 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int todayNewReportCount() {
 		return adminRepository.todayNewReportCount();
+	}
+	
+	@Override
+	public List<BoardChartDto> findBoardNameAndPostCount() {
+		return adminRepository.findBoardNameAndPostCount();
 	}
 }

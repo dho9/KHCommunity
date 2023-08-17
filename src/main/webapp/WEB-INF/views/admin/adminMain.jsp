@@ -138,7 +138,7 @@
       </div>
     </section>
     <br>
-    <footer></footer>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script>
 
@@ -169,13 +169,16 @@
         };
       });
 
+      var boardChartData = ${boardChartData};
+      console.log(boardChartData);
       var chart = bb.generate({
         data: {
           columns: [
-            ["자유게시판", 230],
-            ["취업/정보", 120],
-            ["우리반게시판", 120],
-            ["오늘 뭐먹지", 140],
+            ["${boardChartOne.boardName}", ${boardChartOne.postCount}],
+            ["${boardChartTwo.boardName}", ${boardChartTwo.postCount}],
+            ["${boardChartThree.boardName}", ${boardChartThree.postCount}],
+            ["${boardChartFour.boardName}", ${boardChartFour.postCount}],
+            ["${boardChartFive.boardName}", ${boardChartFive.postCount}],
           ],
           type: "donut", // for ESM specify as: donut()
         },
@@ -235,4 +238,5 @@
 
     </script>
   </body>
+  <footer></footer>
 </html>
