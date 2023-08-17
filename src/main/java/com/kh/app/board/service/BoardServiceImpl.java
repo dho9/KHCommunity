@@ -16,13 +16,4 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 
-	@Override
-	public List<BoardDetails> findAll(Map<String, Object> params) {
-		int limit = (int) params.get("limit");
-		int page = (int) params.get("page");
-		int offset = (page - 1) * limit;
-		
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		return boardRepository.findAll(rowBounds);
-	}
 }

@@ -405,5 +405,5 @@
                 </div>
             </div>
         </div>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
+
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
