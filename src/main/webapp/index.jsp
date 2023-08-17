@@ -46,6 +46,14 @@
     </nav>
 
     <div id="container" class="community" style="margin-top: 150px;">
+	
+    <div id="container" class="community" style="margin-top: 25px;">
+	
+    <div id="container" class="community" style="margin-top: 25px;">
+	
+    <div id="container" class="community" style="margin-top: 25px;">
+	
+    <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
             <form class="search">
                 <input type="search" name="keyword" class="text" placeholder="전체 게시판의 글을 검색하세요!">
