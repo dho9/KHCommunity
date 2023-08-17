@@ -974,13 +974,13 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 1
 INSERT INTO ticket_order (order_id, member_id, store_id, ticket_id, amount, total_price)
 VALUES (seq_order_id.NEXTVAL, 'gmlwls', 1, 1, 2, 10800);
 
---삭제 게시글 
-delete post where post_id =3;
---삭제 댓글
-delete post_comment where comment_id=2;
---삭제회원 
-delete member where member_id = 'test'; 
-delete member where member_id = 'test1'; 
+----삭제 게시글 
+--delete post where post_id =3;
+----삭제 댓글
+--delete post_comment where comment_id=2;
+----삭제회원 
+--delete member where member_id = 'test'; 
+--delete member where member_id = 'test1'; 
 
 select * from member;
 select * from student;

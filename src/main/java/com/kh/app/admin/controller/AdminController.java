@@ -22,4 +22,7 @@ public class AdminController {
 	
 	@GetMapping("/adminStudentList.do")
 	public void adminStudentList() {}
+	
+	@GetMapping("/employeeList.do")
+	public void employeeList() {}
 }
