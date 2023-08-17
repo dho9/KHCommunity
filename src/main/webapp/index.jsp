@@ -4,49 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<body>
-    <nav>
-        <div class="wrap">
-            <div id="logo">
-                <a href="/"><img src="${pageContext.request.contextPath}/resources/images/로고.png"
-                        style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
-            </div>
-            <div id="account">
-            	<a href="${pageContext.request.contextPath}/admin/adminMain.do">
-            		<span>관리자페이지</span>
-            	</a>
-                <a href="/message" title="쪽지함" class="icon message">로그인</a>
-                <a href="/my" title="내 정보" class="icon my">회원가입</a>
-            </div>
-            <ul id="menu">
-                <li id="dropdown">
-                    <a href="/">게시판</a>
-                    <div class="dropdown-content">
-                        <a href="/category/preparatory">예비생</a>
-                        <a href="/category/graduate">수료생</a>
-                        <a href="/category/free">자유</a>
-                        <a href="/category/free">우리반 게시판</a>
-                    </div>
-                </li>
-                <li id="dropdown">
-                    <a href="/timetable">공유</a>
-                    <div class="dropdown-content">
-                        <a href="/category/preparatory">취업정보</a>
-                        <a href="/category/graduate">정보</a>
-                        <a href="/category/free">질문</a>
-                    </div>
-                </li>
-                <li><a href="/lecture">장터</a></li>
-                <li><a href="/calculator">스터디</a></li>
-                <li><a href="/friend">공지사항</a></li>
-                <li><a href="/friend">오늘 뭐먹지?</a></li>
-                <li><a href="https://bookstore.everytime.kr/">식권</a></li>
-                <li><a href="https://www.campuspick.com/">홍보</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <div id="container" class="community" style="margin-top: 150px;">
+	
+    <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
             <form class="search">
                 <input type="search" name="keyword" class="text" placeholder="전체 게시판의 글을 검색하세요!">
@@ -406,6 +365,3 @@
             </div>
         </div>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
-        <%@ include file="/WEB-INF/views/common/footer.jsp" %>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git

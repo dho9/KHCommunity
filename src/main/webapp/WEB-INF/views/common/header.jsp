@@ -34,3 +34,59 @@
         gtag('config', 'UA-22022140-4');
         _gfn.logPageView();
     </script>
+    <body>
+    <nav>
+        <div class="wrap">
+            <div id="logo">
+                <a href="/"><img src="${pageContext.request.contextPath}/resources/images/로고.png"
+                        style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
+            </div>
+            <div id="account">
+            	<a href="${pageContext.request.contextPath}/admin/adminMain.do">
+            		<span>관리자페이지</span>
+            	</a>
+                <a href="/message" title="쪽지함" class="icon message">로그인</a>
+                <a href="/my" title="내 정보" class="icon my">회원가입</a>
+            </div>
+            <ul id="menu">
+                <li><a href="/">게시판</a></li>
+                <li><a href="/timetable">공유</a></li>
+                <li><a href="/lecture">장터</a></li>
+                <li><a href="/calculator">스터디</a></li>
+                <li><a href="/friend">공지사항</a></li>
+                <li><a href="/friend">오늘 뭐먹지?</a></li>
+                <li><a href="https://bookstore.everytime.kr/">식권</a></li>
+                <li><a href="https://www.campuspick.com/">홍보</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="submenu">
+		<div class="wrap">
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+				<li><a href="/389174" class="new">자유게시판</a></li>
+				<li><a href="/259430" class="new">장터게시판</a></li>
+				<li><a href="/389438" class="new">오늘 뭐 먹지?</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+				<li><a href="/389174" class="new">정보공유</a></li>
+				<li><a href="/259430" class="new">코드질문</a></li>
+				<li><a href="/389438" class="new">스터디</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+				<li><a href="/389174" class="new">수료생게시판</a></li>
+				<li><a href="/259430" class="new">예비생게시판</a></li>
+				<li><a href="/389438" class="new">직원 게시판</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<hr>
+		</div>
+	</div>
