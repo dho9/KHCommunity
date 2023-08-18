@@ -1,6 +1,7 @@
 package com.kh.app.admin.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -141,17 +142,24 @@ public class AdminController {
 	
 	// 수강생 목록 조회 - 유성근
 	@GetMapping("/adminStudentList.do")
-	public void adminStudentList(Model model, HttpServletRequest request) {
-		String searchType = request.getParameter("searchType");
-	    String searchKeyword = request.getParameter("searchKeyword");
-	    
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("searchType", searchType);
-		filters.put("searchKeyword", searchKeyword);
-		
-		List<AdminStudentListDto> students = adminService.findAllStudents(filters);
-		log.debug("students", students);
-		model.addAttribute("students", students);
+	public void adminStudentList(Model model,
+	                             @RequestParam(value = "searchType", required = false) String searchType,
+	                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+	                             @RequestParam(value = "student_type", required = false) String[] _studentTypes) {
+
+	    List<String> studentTypes = null;
+
+	    if (_studentTypes != null) {
+	        studentTypes = Arrays.asList(_studentTypes);
+	    }
+
+	    Map<String, Object> filters = new HashMap<>();
+	    filters.put("searchType", searchType);
+	    filters.put("searchKeyword", searchKeyword);
+	    filters.put("studentTypes", studentTypes);
+
+	    List<AdminStudentListDto> students = adminService.findAllStudents(filters);
+	    model.addAttribute("students", students);
 	}
 	
 	// 직원 목록 조회 - 이태현

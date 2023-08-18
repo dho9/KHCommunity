@@ -7,7 +7,7 @@
 --create user kh
 --identified by kh
 --default tablespace users;
---
+
 --alter user kh quota unlimited on users;
 --
 --grant connect, resource to kh;

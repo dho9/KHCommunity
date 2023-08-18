@@ -8,11 +8,19 @@
     <section>
       <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
           <div class="card-header flex" id="todayIssueHeader">
-			    <div class="d-flex justify-content-between align-items-center" style="font-weight: 900;">
-			        <span class="mb-0">수강생 목록 &nbsp;&nbsp;&nbsp;</span>
+			    <div class="d-flex justify-content-between align-items-center" >
+			        <span class="mb-0" style="font-weight: 900;">수강생 목록 &nbsp;&nbsp;&nbsp;</span>
 			        <div id="search-container">
 			            <form action="">
 			                <div class="d-flex align-items-center">
+			                    <div class="flex" style="width:600px;">
+								    <input type="checkbox" name="student_type" value='c' id="student_type0" ${param.student_type eq 'c' ? 'checked' : ''}/>
+								    <label for="student_type0">예비생</label>&nbsp;&nbsp;
+								    <input type="checkbox" name="student_type" value='s' id="student_type1" ${param.student_type eq 's' ? 'checked' : ''}/>
+								    <label for="student_type1">수강생</label>&nbsp;&nbsp;
+								    <input type="checkbox" name="student_type" value='p' id="student_type2" ${param.student_type eq 'p' ? 'checked' : ''}/>
+								    <label for="student_type2">수료생</label>
+								</div>
 			                    <select class="form-select" aria-label="Default select example" name="searchType" required>
 			                        <option value="" disabled selected>검색타입</option>
 			                        <option value="student_id" ${param.searchType eq 'student_id' ? 'selected' : '' }>수강생 ID</option>
@@ -106,20 +114,10 @@
             </div>
         </div>
       </div>
-      <div class="position-fixed bottom-0 end-0 p-3">
-        <div id="myToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-            <div class="toast-header">
-                <strong class="me-auto">알림</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                처리가 완료되었습니다.
-            </div>
-        </div>
-    </div>
     </section>
     
     <script>
+    
       document.addEventListener("DOMContentLoaded", function () {
         const tableRows = document.querySelectorAll("tr[data-bs-toggle='modal']");
     
@@ -191,10 +189,14 @@
             success(responseData) {
               // 서버 응답을 처리
               // 예: 성공 메시지를 표시하거나 다른 동작 수행
+              
+              alert('수강생 정보가 수정되었습니다.')
               location.href="${pageContext.request.contextPath}/admin/adminStudentList.do";
             }
           });
         }
+        
+        
       });
     </script>
     <footer></footer>

@@ -20,12 +20,17 @@
     	member m ON s.student_id = m.member_id
 	JOIN
     	curriculum c ON s.curriculum_id = c.curriculum_id
-    <if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
-	    where
-	    	${searchType} like '%' || #{searchKeyword} || '%'
-	    order by
-	    	${searchType}
-    </if>
+    <where>
+        <if test="studentTypes != null and !studentTypes.isEmpty()">
+            AND student_type IN
+            <foreach collection="studentTypes" item="studentType" open="(" separator="," close=")">
+                #{studentType}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+    </where>
     
   </select>
 </mapper>
