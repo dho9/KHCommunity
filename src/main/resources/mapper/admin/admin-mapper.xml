@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.app.admin.repository.AdminRepository">
+  <select id="findAllStudents" resultType="adminStudentListDto">
+    SELECT
+	    s.student_id,
+	    m.member_name,
+	    m.member_phone,
+	    m.birthday,
+	    m.member_email,
+	    c.curriculum_name,
+	    c.class_id,
+	    s.student_type,
+	    c.curriculum_end_at
+	FROM
+    	student s
+	JOIN
+    	member m ON s.student_id = m.member_id
+	JOIN
+    	curriculum c ON s.curriculum_id = c.curriculum_id
+    <if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+	    where
+	    	${searchType} like '%' || #{searchKeyword} || '%'
+	    order by
+	    	${searchType}
+    </if>
+    order by m.member_name
+  </select>
+</mapper>

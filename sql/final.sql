@@ -265,6 +265,8 @@ CREATE TABLE report (
    attaker_id   varchar2(20)      NOT NULL,
    report_content   varchar2(2000),
    report_type   varchar2(20),
+   report_send_date date,
+   report_check char(1),
    report_action   varchar2(2000)
 );
 
@@ -750,6 +752,8 @@ alter table post add constraint CK_post_status_check check (status_check in ('y'
 -- 임시저장 상태 유무
 alter table message_box add constraint CK_messagebox_read_check check (read_check in ('y', 'n'));
 -- 쪽지읽었는지 ?
+alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
+-- 신고처리됐는지?
 
 --=================================
 --트리거
@@ -969,8 +973,8 @@ INSERT INTO message_box (message_id, send_id, recieve_id, message_content, read_
 VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공부어떻게 해야함 ??', 'y');
 
 -- report
-INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type)
-VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판인데 왜 이상한 글 을 올렸어요','욕설');
+INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type, report_send_date, report_check)
+VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판인데 왜 이상한 글 을 올렸어요','욕설', sysdate, 'n');
 
 
 -- chat_room
@@ -1030,12 +1034,8 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
-
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
-
-
-    

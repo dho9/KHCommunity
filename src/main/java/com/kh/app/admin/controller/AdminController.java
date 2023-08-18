@@ -2,22 +2,30 @@ package com.kh.app.admin.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.app.admin.service.AdminService;
 import com.kh.app.member.entity.Member;
+import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -120,33 +128,54 @@ public class AdminController {
 		
 		// 수강생 미승인 내역 List
 		List<AdminStudentApproveDto> studentApproveList = adminService.studentApproveListThree();
-		log.debug("studentApproveList = {}", studentApproveList);
 		model.addAttribute("studentApproveList", studentApproveList);
 		
 		// 휴가 미승인 내역 List
 		List<AdminVacationApproveDto> vacationApproveList = adminService.vacationApproveListThree();
-		log.debug("vacationApproveList = {}", vacationApproveList);
 		model.addAttribute("vacationApproveList", vacationApproveList);
 		
 		// 신고현황 List
-//		List<ReportDto> reports = adminService.reportListSix();
+		List<AdminReportListDto> reports = adminService.reportListSix();
+		model.addAttribute("reports", reports);
 	}
 	
 	// 수강생 목록 조회 - 유성근
 	@GetMapping("/adminStudentList.do")
-	public void adminStudentList() {}
+	public void adminStudentList(Model model, HttpServletRequest request) {
+		String searchType = request.getParameter("searchType");
+	    String searchKeyword = request.getParameter("searchKeyword");
+	    
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("searchType", searchType);
+		filters.put("searchKeyword", searchKeyword);
+		
+		List<AdminStudentListDto> students = adminService.findAllStudents(filters);
+		log.debug("students", students);
+		model.addAttribute("students", students);
+	}
 	
+	// 직원 목록 조회 - 이태현
 	@GetMapping("/employeeList.do")
 	public void employeeList(Model model){
 		List<Member> members = adminService.findAllEmployee();
 		model.addAttribute("members", members);
 	}
 	
+	// 직원 Id로 검색 - 이태현
 	@GetMapping("/findById.do")
 	@ResponseBody
 	public Member findById(@RequestParam String id) {
 	    Member member = adminService.findById(id);
 	    log.debug("member = {}", member);
 	    return member;
+	}
+	
+	// 수강생 정보 수정 - 유성근
+	@PostMapping("/adminStudentUpdate.do")
+	public String adminStudentUpdate(@Valid AdminStudentListDto student) {
+		log.debug("student = {}", student);
+		int result = adminService.updateAdminStudent(student);
+		
+		return "redirect:/admin/adminStudentList.do";
 	}
 }
