@@ -2,18 +2,24 @@ package com.kh.app.ticket.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import com.kh.app.ticket.entity.Ticket;
+import com.kh.app.store.entity.Store;
+import com.kh.app.ticket.entity.TicketOrder;
 
 @Mapper
 public interface TicketRepository {
 
-	@Select("select * from store")
-	List<Ticket> findAll();
+	@Select("select ticket_id from ticket where store_id = #{storeId}")
+	int findTicketIdByStoreId(int storeId);
 
-	@Select("select * from store where store_id = ${id}")
-	Ticket findTicektById(int id);
+	@Insert("insert into "
+			+ "ticket_order"
+			+ " (order_id, member_id, store_id, ticket_id,amount,total_price) values"
+			+ "(#{orderId},#{memberId},#{storeId},#{ticketId},#{amount}, #{totalPrice})")
+	int createOrder(TicketOrder order);
+
 
 }

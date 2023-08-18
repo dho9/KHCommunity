@@ -98,6 +98,7 @@
 </div>
 </div>
 </div>
+	<form:form name="paymentFrm"></form:form>
 <script>
 var mapContainer = document.getElementById('map');
 var mapOption = {
@@ -154,7 +155,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
         
             function requestPay(quantity) {
                 var IMP = window.IMP; 
-                IMP.init("imp67011510"); 
+                IMP.init("imp32361472"); 
               
                 var today = new Date();   
                 var hours = today.getHours(); // 시
@@ -175,29 +176,41 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                         console.log(rsp);
                         const {name} = rsp;
                         const userId = 'alfn';
+                        const totalAmount = quantity * 3000; // 총 결제 금액을 계산
                       	
-                       sendPaymentDataToServer(rsp.merchant_uid,userId,name,quantity )
+                        sendPaymentDataToServer(rsp.merchant_uid, userId, name, quantity, totalAmount);
                     } else {
                         console.log(rsp);
                     }
                 });
             }
       
-            function  sendPaymentDataToServer(merchantUid, userId,name,quantity){
-            	$.ajax({
-            		url : '${pageContext.request.contextPath}/ticket/buyTicket.do',
-            		type : 'POST',
-            		 data: {
-                         payId: merchantUid,
-                         userId: name,
-                         storename: name,
-                         quantity: quantity
-                     },
-                 	success(responseData) {
-         				console.log(responseData);
-         				
-         			}
-            	})
+            function sendPaymentDataToServer(merchantUid, userId, name, quantity,totalAmount) {
+                const token = document.paymentFrm._csrf.value;
+                console.log(token);
+                
+                const requestData = {
+                	orderId: merchantUid,
+                	memberId: userId,
+                    storename: name,
+                    amount: quantity,
+                    totalPrice : totalAmount
+                    
+                };
+                console.log(requestData);
+                jQuery.ajax({
+                    url: '${pageContext.request.contextPath}/ticket/buyTicket.do',
+                    type: 'POST',
+                    contentType: 'application/json', // Content-Type 설정
+                    headers: {
+                        "X-CSRF-TOKEN": token
+                    },
+                    data: JSON.stringify(requestData) // 데이터를 JSON 형식으로 변환
+                }).done(function(data) {
+                	console.log("Payment successful:", data);
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Request Failed:", textStatus, errorThrown);
+                });
             }
             
         </script>
