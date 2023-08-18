@@ -18,7 +18,24 @@ spring:
     url: jdbc:oracle:thin:@localhost:1521:xe
     username: kh
     password: kh
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: khCommunityAD@gmail.com
+    password: ysdptbjcuexhqocu
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+            protocols: TLSv1.2 
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
 
 # logback
 logging:

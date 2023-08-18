@@ -11,4 +11,8 @@ public interface MemberService extends UserDetailsService{
 
 	Member findMemberById(String memberId);
 
+	String joinEmail(String email);
+	
+	
+
 }

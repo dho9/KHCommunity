@@ -4,14 +4,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="회원등록" name="title"/>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="/js/extensions.jquery-1.10.2.min.js"></script>
-  <script type="text/javascript" src="/js/extensions.underscore-min.js"></script>
-  
- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <script type="text/javascript" src="/js/extensions.underscore-min.js"></script> 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
  
 <style>
 *{margin:0;padding:0;border:0;-webkit-touch-callout:none}
@@ -26,7 +27,7 @@ input::placeholder,textarea::placeholder{color:#a6a6a6}
 input[type=button],input[type=email],input[type=number],input[type=password],input[type=search],input[type=text],input[type=submit],select,textarea{-webkit-appearance:none;letter-spacing:-0.5px}
 textarea{resize:none}
 #container div.input input[type=email],#container div.input input[type=password],#container div.input input[type=text],#container div.input select{display:block;box-sizing:border-box;margin-top:4px;padding:8px;width:100%;height:40px;line-height:24px;border:1px solid #ededed;border-radius:12px;color:#292929;font-size:16px;background-color:#f9f9f9;background-repeat:no-repeat;background-position:right 8px center;background-size:24px 24px}
-#container{padding:16px 24px 48px 24px}
+#container{padding:16px 24px 48px 24px; width:80%;}
 #container h2{line-height:30px;color:#292929;font-size:22px;font-weight:bold}
 #container h2:not(:first-of-type){margin-top:48px}
 #container h2.multiple{font-weight:normal}
@@ -75,22 +76,26 @@ textarea{resize:none}
 @media(min-width: 480px){#container{box-sizing:border-box;border:1px solid #ededed;border-radius:12px;margin:24px auto;padding:24px;width:480px}}
 button{color:#fff;font-weight:bold;background-color:#5B91BD}
 #mainbutton{text-align:center; margin-top:15px;}
-#container2 {display: flex; flex-direction: column; justify-content: center; align-items: center; height: 300px; /* 화면의 높이를 차지하도록 설정합니다. */ }
-form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하여 margin을 설정합니다. */}
-
+#container2 {display: flex; flex-direction: column; justify-content: center; align-items: center; height: 300px; /* 화면의 높이를 차지하도록 설정합니다. */ display:none; width: 30%; margin: 3% auto;}
+.form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하여 margin을 설정합니다. */ width:100%}
+.form-group input{width: 50%; display:inline-block; margin-right:1%;}
+.form-group button{width: 20%; display:inline-block;}
+.form-group label{width: 20%; display:inline-block;}
+#userEmail1 {width: 25%; display:inline-block;}
+.form-group select{width: 23%; display:inline-block; margin-right:1%;}
 </style>
 <body>
 <div id="mainbutton">
-	<button type="button" class="btn btn-primary btn-lg" id="mainbutton">약관동의</button>
-	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton">이메일인증</button>
-	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton">회원정보입력</button>
+	<button type="button" class="btn btn-primary btn-lg" id="mainbutton1">약관동의</button>
+	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton2">이메일인증</button>
+	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton3">회원정보입력</button>
 </div>
 
 <div id="container">
     <h2>약관 동의</h2>
     <div class="agreement">
       <label class="bold"><input type="checkbox" name="agreement_all" id="agreement_all"><figure class="checkbox"></figure>아래 약관에 모두 동의합니다.</label>
-      <label><input type="checkbox" name="agreement_service"><figure class="checkbox"></figure>서비스이용약관 동의 (필수)</label>
+      <label><input type="checkbox" name="agreement_service" required><figure class="checkbox"></figure>서비스이용약관 동의 (필수)</label>
       <div class="text">
 <h3>제1조(목적)</h3>
 <p>에브리타임 서비스 이용약관은 비누랩스 주식회사(이하 "회사"라 합니다)가 제공하는 에브리타임 서비스 및 캠퍼스픽 서비스의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임 사항 등을 규정함을 목적으로 합니다.</p>
@@ -292,7 +297,7 @@ form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하�
 </ol>
 
       </div>
-      <label><input type="checkbox" name="agreement_privacy"><figure class="checkbox"></figure>개인정보 수집 및 이용 동의 (필수)</label>
+      <label><input type="checkbox" name="agreement_privacy" required><figure class="checkbox"></figure>개인정보 수집 및 이용 동의 (필수)</label>
       <div class="text">
 <h3>수집하는 개인정보의 항목</h3>
 <p>회사는 서비스 제공을 위해, 회원가입 시점에 다음에 해당하는 개인정보를 수집합니다.</p>
@@ -346,7 +351,7 @@ form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하�
 <p>자세한 내용은 웹사이트 하단에 게시된 개인정보처리방침을 참고하시기 바랍니다</p>
 
       </div>
-      <label><input type="checkbox" name="agreement_rules"><figure class="checkbox"></figure>커뮤니티이용규칙 확인 (필수)</label>
+      <label><input type="checkbox" name="agreement_rules" required><figure class="checkbox"></figure>커뮤니티이용규칙 확인 (필수)</label>
       <div class="text">
 <!-- 공통 -->
 <h3>커뮤니티 이용규칙 안내</h3>
@@ -641,22 +646,35 @@ form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하�
     </div>
     
     <form class="identity" method="post" action="">
-    	<a class="button red"><button type="button" onclick="validateForm()" id="emailBtn">이메일인증</button></a>
+    	<a class="button red"><button type="button" id="emailBtn">이메일인증</button></a>
     </form>
   </div>
   
   <div id="container2">
 	   <form>
 	          <div class="form-group">
-	            <label for="exampleInputEmail1">Email address</label>
-	            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"><button type="button" class="btn btn-primary">코드전송</button>
+	           <!--  <label for="exampleInputEmail1">이메일</label>
+	            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+	            <button type="button" class="btn btn-primary">코드전송</button> -->
 	            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+	          	<label for="userEmail1">이메일</label>
+	          	<input type="text" class="form-control" name="userEmail1" id="userEmail1" placeholder="이메일" >
+				<select class="form-control" name="userEmail2" id="userEmail2" >
+					<option>@naver.com</option>
+					<option>@daum.net</option>
+					<option>@gmail.com</option>
+					<option>@hanmail.com</option>
+					<option>@nate.com</option>
+					<option>@yahoo.co.kr</option>
+				</select>
+				<button type="button" class="btn btn-primary" id="userMailbtn">코드전송</button>          	          
 	          </div>
+	         
 	          <div class="form-group">
-	            <label for="exampleInputPassword1">Password</label>
-	            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+	            <label for="verificationCode">인증번호</label>
+	            <input type="text" class="form-control" id="verificationCode" placeholder="인증번호 6자리를 입력해주세요">
+	          <button type="submit" class="btn btn-primary" id="emailSubmit">제출</button>
 	          </div>
-	          <button type="submit" class="btn btn-primary">제출</button>
 	   </form>
   </div>
   
@@ -681,11 +699,13 @@ form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하�
         updateSubmitButtonStatus();
       });
     });
-    
-    function validateForm() {
-        // 필수 체크박스 요소들
-        var requiredCheckboxes = document.querySelectorAll('input[type="checkbox"][required]');
 
+    const emailBtn = document.querySelector('#emailBtn');
+    const oldDiv = document.querySelector('#container'); // 기존 div 요소 선택
+   
+    emailBtn.addEventListener('click', function(event) {
+    	var requiredCheckboxes = document.querySelectorAll('input[type="checkbox"][required]');
+		console.log(requiredCheckboxes);
         // 필수 체크박스 중에서 하나라도 빠짐이 있으면 경고 메시지 출력
         var allChecked = true;
         for (var i = 0; i < requiredCheckboxes.length; i++) {
@@ -698,22 +718,41 @@ form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하�
             alert('필수 약관을 모두 동의해주세요!');
             return;
         }
-
-        // 검증이 통과되면 다음 단계로 이동
-        // 여기서는 단순히 새로운 페이지로 이동하는 것으로 대신합니다.
-        /* window.location.href = "https://www.example.com/register/step2"; */
-    }
-
-    
-    
-    const emailBtn = document.querySelector('#emailBtn');
-    const oldDiv = document.querySelector('#container'); // 기존 div 요소 선택
-   
-    emailBtn.addEventListener('click', function(event) {
-    	document.getElementById("container").style.display = "none";
+    	if(allChecked) {
+    		document.getElementById("container").style.display = "none";
+        	document.getElementById("container2").style.display = "block";
+        	window.scrollTo(0, 0);
+    	}
+    	
     });
-  
     
+
+	
+	$('#userMailbtn').click(function() {
+		
+		const userEmail = document.querySelector('#userEmail1');
+		console.log(userEmail.value);
+		if(userEmail.value != "" && userEmail.value != null){
+			const email = $('#userEmail1').val() + $('#userEmail2').val(); // 이메일 주소값 얻어오기!
+			console.log('완성된 이메일 : ' + email); // 이메일 오는지 확인
+			const checkInput = $('#verificationCode') // 인증번호 입력하는곳 
+		
+			$.ajax({
+				type : 'get',
+				url : '<c:url value ="/member/mailCheck?email="/>'+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+				success : function (data) {
+					console.log("data : " +  data);
+					checkInput.attr('disabled',false);
+					code =data;
+					alert('인증번호가 전송되었습니다.')
+				}			
+			}); 
+			
+		} else{
+    		alert('이메일을 입력해주세요.')
+    	}
+			
+	});    
 
   </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
