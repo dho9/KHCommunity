@@ -108,7 +108,6 @@ create sequence seq_report_id;
 create sequence seq_chat_id;
 create sequence seq_store_id;
 create sequence seq_ticket_id;
---create sequence seq_order_id;
 create sequence seq_chat_message_no;
 create sequence seq_curriculum_id;
 --===============================================
