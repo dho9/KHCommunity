@@ -74,8 +74,18 @@ textarea{resize:none}
 #container div.buttons a.red{color:#fff;font-weight:bold;background-color:#c62917}
 @media(min-width: 480px){#container{box-sizing:border-box;border:1px solid #ededed;border-radius:12px;margin:24px auto;padding:24px;width:480px}}
 button{color:#fff;font-weight:bold;background-color:#5B91BD}
+#mainbutton{text-align:center; margin-top:15px;}
+#container2 {display: flex; flex-direction: column; justify-content: center; align-items: center; height: 300px; /* 화면의 높이를 차지하도록 설정합니다. */ }
+form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하여 margin을 설정합니다. */}
+
 </style>
 <body>
+<div id="mainbutton">
+	<button type="button" class="btn btn-primary btn-lg" id="mainbutton">약관동의</button>
+	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton">이메일인증</button>
+	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton">회원정보입력</button>
+</div>
+
 <div id="container">
     <h2>약관 동의</h2>
     <div class="agreement">
@@ -633,10 +643,23 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
     <form class="identity" method="post" action="">
     	<a class="button red"><button type="button" onclick="validateForm()" id="emailBtn">이메일인증</button></a>
     </form>
-   
-   
-   
   </div>
+  
+  <div id="container2">
+	   <form>
+	          <div class="form-group">
+	            <label for="exampleInputEmail1">Email address</label>
+	            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"><button type="button" class="btn btn-primary">코드전송</button>
+	            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+	          </div>
+	          <div class="form-group">
+	            <label for="exampleInputPassword1">Password</label>
+	            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+	          </div>
+	          <button type="submit" class="btn btn-primary">제출</button>
+	   </form>
+  </div>
+  
 <script>
     document.querySelector('input[name="agreement_all"]').addEventListener('change', function() {
       var isChecked = this.checked;
@@ -645,6 +668,7 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
       checkboxes.forEach(function(checkbox) {
         checkbox.checked = isChecked;
       });
+      
     });
 
     var childCheckboxes = document.querySelectorAll('input[type="checkbox"]:not([name="agreement_all"])');
@@ -654,6 +678,7 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
         allCheckbox.checked = Array.from(childCheckboxes).every(function(child) {
           return child.checked;
         });
+        updateSubmitButtonStatus();
       });
     });
     
@@ -683,30 +708,12 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
     
     const emailBtn = document.querySelector('#emailBtn');
     const oldDiv = document.querySelector('#container'); // 기존 div 요소 선택
+   
     emailBtn.addEventListener('click', function(event) {
-      // 새로운 div 생성
-      const newDiv = document.createElement('div');
-      newDiv.classList.add('form-wrapper');
-      
-      // 내용 추가
-      newDiv.innerHTML = `
-        <form>
-          <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      `;
-
-      // 기존 div 대체
-      oldDiv.replaceWith(newDiv);
+    	document.getElementById("container").style.display = "none";
     });
   
+    
+
   </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
