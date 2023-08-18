@@ -90,11 +90,18 @@ public class MemberServiceImpl implements MemberService {
 		String toMail = email;
 		String title = "회원 가입 인증 이메일 입니다."; 
 		String content = 
-				"KH Community에 방문해주셔서 감사합니다." + 
-                "<br><br>" + 
-			    "인증 번호는 [" + authNumber + "] 입니다." + 
-			    "<br>" + 
-			    "해당 인증번호를 인증번호 입력란 기입하여 회원가입을 완료해주세요."; 
+				"<div style='margin:20px;'>"
+				+ "<h1>KH Community에 방문해주셔서 감사합니다.</h1>" 
+                + "<br><br>"
+			    + "<div align='center' style='border:1px solid black; font-family:verdana';>"
+			    + "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>"
+			    + "<div style='font-size:130%'>"
+			    + "[<mark>" + authNumber + "</mark>]"
+			    + "</div>" 
+			    + "</div>" 
+			    + "<br>"
+			    + "해당 인증번호를 인증번호 입력란 기입하여 회원가입을 완료해주세요."
+			    + "</div>"; 
 		mailSend(setFrom, toMail, title, content);
 		return authNumber;
 	}
