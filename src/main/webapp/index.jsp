@@ -1,9 +1,11 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+	
 	
     <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
@@ -30,7 +32,7 @@
                     <p class="school">이태현</p>
                     <p class="school">disney1026</p>
                     <ul class="buttons">
-                        <li><a href="/my">내 정보</a></li>
+                        <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
                         <li><a href="/user/logout">로그아웃</a></li>
                     </ul>
                     <hr>
@@ -67,7 +69,7 @@
             </div>
         </div>
         <div class="rightside">
-            <form action="" class="search">
+            <form action="${pageContext.request.contextPath}/board/boardSearch.do" class="search">
                 <input type="text" name="keyword" placeholder="전체 게시판의 글을 검색하세요!" class="text" />
             </form>
             <div class="card">
@@ -364,4 +366,5 @@
                 </div>
             </div>
         </div>
+
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>

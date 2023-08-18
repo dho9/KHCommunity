@@ -40,7 +40,7 @@
 --DROP TABLE message_box CASCADE CONSTRAINTS;
 --DROP TABLE chat_room CASCADE CONSTRAINTS;
 --DROP TABLE chat_message CASCADE CONSTRAINTS;
-
+--DROP TABLE authority CASCADE CONSTRAINTS;
 
 --=============================================
 -- 테이블 전체 삭제
@@ -92,22 +92,22 @@
 --===============================================
 -- 시퀀스 생성
 --===============================================
-create sequence seq_student_attach_id;
-create sequence seq_schedule_id;
-create sequence seq_vacation_id;
-create sequence seq_vacation_attach_id;
-create sequence seq_board_id;
-create sequence seq_post_id;
-create sequence seq_post_attach_id;
-create sequence seq_comment_id;
-create sequence seq_message_id;
-create sequence seq_report_id;
-create sequence seq_chat_id;
-create sequence seq_store_id;
-create sequence seq_ticket_id;
-create sequence seq_order_id;
-create sequence seq_chat_message_no;
-create sequence seq_curriculum_id;
+--create sequence seq_student_attach_id;
+--create sequence seq_schedule_id;
+--create sequence seq_vacation_id;
+--create sequence seq_vacation_attach_id;
+--create sequence seq_board_id;
+--create sequence seq_post_id;
+--create sequence seq_post_attach_id;
+--create sequence seq_comment_id;
+--create sequence seq_message_id;
+--create sequence seq_report_id;
+--create sequence seq_chat_id;
+--create sequence seq_store_id;
+--create sequence seq_ticket_id;
+--create sequence seq_order_id;
+--create sequence seq_chat_message_no;
+--create sequence seq_curriculum_id;
 --===============================================
 -- 테이블 생성
 --===============================================
@@ -118,13 +118,17 @@ CREATE TABLE member (
    member_name   varchar2(10),
    member_phone   varchar2(20),
    member_email   varchar2(100),
-   birthday   date,
-   member_role   char(1)
+   birthday   date
+);
+
+CREATE TABLE authority (
+   member_id   varchar2(20)      NOT NULL,
+   auth   varchar2(20)      NOT NULL
 );
 
 CREATE TABLE student (
    student_id   varchar2(20)      NOT NULL,
-   curriculum_id   number      NOT NULL,
+   curriculum_id   number,
    student_enroll_dated   date   DEFAULT sysdate   NULL,
    approve_check   char(1)      ,
    student_type   char(1)      
@@ -236,7 +240,7 @@ CREATE TABLE favorite (
    board_id   number      NOT NULL,
    member_id   varchar2(20)      NOT NULL
 );
-
+        
 CREATE TABLE message_box (
    message_id   number      NOT NULL,
    send_id   varchar2(20)      NOT NULL,
@@ -308,7 +312,6 @@ CREATE TABLE quit_member (
    member_phone   varchar2(20)      ,
    memebr_email   varchar2(100)      ,
    birthday   date      ,
-   member_role   char(1)      ,
    member_quit_date   date   DEFAULT sysdate   
 );
 
@@ -337,6 +340,10 @@ CREATE TABLE delete_comment (
    comment_ref   number      ,
    comment_created_at   date      ,
    comment_like   number      
+);
+
+ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
+   member_id
 );
 
 ALTER TABLE member ADD CONSTRAINT PK_MEMBER PRIMARY KEY (
@@ -721,7 +728,7 @@ REFERENCES ticket (
 --==============================================
 -- check 제약조건
 --==============================================
-alter table member add constraint CK_member_role check (member_role in ('e', 't', 's'));
+--alter table member add constraint CK_member_role check (member_role in ('e', 't', 's'));
 -- e -> 직원, t는 강사, s 는 학생 (예비, 수강, 수료 모두 s)
 alter table student add constraint CK_student_approve_check check (approve_check in ('y', 'n'));
 -- y는 인증ok, n은 인증x
@@ -753,7 +760,6 @@ BEGIN
         member_phone,
         memebr_email,
         birthday,
-        member_role,
         member_quit_date
     )
     VALUES (
@@ -763,7 +769,6 @@ BEGIN
         :OLD.member_phone,
         :OLD.member_email,
         :OLD.birthday,
-        :OLD.member_role,
         sysdate
     );
 END;
@@ -827,33 +832,39 @@ END;
 -- 더미데이터
 --==============================================
 -- member
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('godwjd', 'godwjd', '행정팀', '010-1234-5678', 'godwjd@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 'e');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('godwjd', 'godwjd', '행정팀', '010-1234-5678', 'godwjd@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('chdan', 'chdan', '총무팀', '010-9234-5678', 'chdan@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 'e');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('chdan', 'chdan', '총무팀', '010-9234-5678', 'chdan@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('dnsdud', 'dnsdud', '운영팀', '010-9234-5878', 'dnsdud@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 'e');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('dnsdud', 'dnsdud', '운영팀', '010-9234-5878', 'dnsdud@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('ehdgus', 'ehdgus', '김동현', '010-9999-5678', 'ehdgus@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 't');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('ehdgus', 'ehdgus', '김동현', '010-9999-5678', 'ehdgus@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('alfn', 'alfn', '한미루', '010-8888-5678', 'alfn@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 's');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('alfn', 'alfn', '한미루', '010-8888-5678', 'alfn@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('gmlwls', 'gmlwls', '신희진', '010-8288-5678', 'gmlwls@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 's');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('gmlwls', 'gmlwls', '신희진', '010-8288-5678', 'gmlwls@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('alsgml', 'alsgml', '정민희', '010-3888-5678', 'alsgml@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 's');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('alsgml', 'alsgml', '정민희', '010-3888-5678', 'alsgml@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('test', 'test', 'test', '010-1234-5678', 'test@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 'e');
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday, member_role)
-VALUES ('test1', 'test1', 'test1', '010-1234-5678', 'test1@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 's');
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test', 'test', 'test', '010-1234-5678', 'test@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test1', 'test1', 'test1', '010-1234-5678', 'test1@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
-
+INSERT INTO authority values('godwjd', 'ADMIN');
+INSERT INTO authority values('chdan', 'ADMIN');
+INSERT INTO authority values('dnsdud', 'ADMIN');
+INSERT INTO authority values('ehdgus', 'TEACHER');
+INSERT INTO authority values('alfn', 'STUDENT');
+INSERT INTO authority values('gmlwls', 'STUDENT');
+INSERT INTO authority values('alsgml', 'STUDENT');
 
 -- class
 INSERT INTO class (class_id) VALUES ('352');
@@ -912,6 +923,8 @@ VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', 'ehdgus',  'godwjd',0);
 
 --board
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '자유게시판');
+INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '히히게시판');
+INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '깔깔게시판');
 
 -- post
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
@@ -1005,6 +1018,16 @@ select * from ticket_order;
 select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
+select * from authority;
 
-
-
+SELECT
+    b.board_name,
+    COUNT(p.post_id) AS post_count
+FROM
+    board b
+LEFT JOIN
+    post p ON b.board_id = p.board_id
+GROUP BY
+    b.board_name
+ORDER BY
+    post_count DESC, board_name;

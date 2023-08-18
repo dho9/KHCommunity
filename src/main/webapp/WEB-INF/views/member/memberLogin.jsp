@@ -5,11 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>로그인</title>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
@@ -23,7 +19,6 @@
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
 
-</head>
 <body>
 
 				<!--로그인폼 -->
@@ -35,6 +30,7 @@
 					<div class="modal-body">
 						<c:if test="${param.error ne null}">
 							<div class="alert alert-danger" role="alert">
+								아이디 또는 비밀번호가 일치하지 않습니다.
 								아이디 또는 비밀번호가 일치하지 않습니다.
 							</div>
 						</c:if>
@@ -67,5 +63,4 @@
 		</div>
 	</div>
 	<!-- Modal 끝-->
-</body>
-</html>
+<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

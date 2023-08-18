@@ -24,7 +24,7 @@ spring:
 logging:
   level:
     root: info
-    '[com.sh.app]': debug
+    '[com.kh.app]': debug
     
 # mybatis
 mybatis:

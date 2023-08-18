@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -38,25 +39,24 @@
     <nav>
         <div class="wrap">
             <div id="logo">
-                <a href="/"><img src="${pageContext.request.contextPath}/resources/images/로고.png"
+               <a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/images/로고.png"
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
             	<a href="${pageContext.request.contextPath}/admin/adminMain.do">
             		<span>관리자페이지</span>
             	</a>
-                <a href="/message" title="쪽지함" class="icon message">로그인</a>
-                <a href="/my" title="내 정보" class="icon my">회원가입</a>
+               <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="쪽지함" class="icon message">로그인</a>
+               <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="내 정보" class="icon my">회원가입</a>
             </div>
             <ul id="menu">
-                <li><a href="/">게시판</a></li>
-                <li><a href="/timetable">공유</a></li>
-                <li><a href="/lecture">장터</a></li>
-                <li><a href="/calculator">스터디</a></li>
-                <li><a href="/friend">공지사항</a></li>
-                <li><a href="/friend">오늘 뭐먹지?</a></li>
-                <li><a href="https://bookstore.everytime.kr/">식권</a></li>
-                <li><a href="https://www.campuspick.com/">홍보</a></li>
+                <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;">게시판</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/notificationBoardList.do">공지사항</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do">우리반</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do">취업</a></li>
+                <li><a href="${pageContext.request.contextPath}/ticket/ticketList.do">식권</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do">홍보</a></li>
+                <li><a href="${pageContext.request.contextPath}/schedule/scheduleList.do">스케쥴</a></li>
             </ul>
         </div>
     </nav>
@@ -65,28 +65,29 @@
 			<div class="divider"></div>
 			<div class="group">
 				<ul>
-				<li><a href="/389174" class="new">자유게시판</a></li>
-				<li><a href="/259430" class="new">장터게시판</a></li>
-				<li><a href="/389438" class="new">오늘 뭐 먹지?</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/freeBoardList.do" class="new">자유게시판</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/marketBoardList.do" class="new">장터게시판</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/todayFoodBoardList.do" class="new">오늘 뭐 먹지?</a></li>
 				</ul>
 			</div>
 			<div class="divider"></div>
 			<div class="group">
 				<ul>
-				<li><a href="/389174" class="new">정보공유</a></li>
-				<li><a href="/259430" class="new">코드질문</a></li>
-				<li><a href="/389438" class="new">스터디</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do" class="new">정보공유</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/askCodeBoardList.do" class="new">코드질문</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/studyBoardList.do" class="new">스터디</a></li>
 				</ul>
 			</div>
 			<div class="divider"></div>
 			<div class="group">
 				<ul>
-				<li><a href="/389174" class="new">수료생게시판</a></li>
-				<li><a href="/259430" class="new">예비생게시판</a></li>
-				<li><a href="/389438" class="new">직원 게시판</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do" class="new">수료생게시판</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/preStudentBoardList.do" class="new">예비생게시판</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new">직원 게시판</a></li>
 				</ul>
 			</div>
 			<div class="divider"></div>
 			<hr>
 		</div>
 	</div>
+	<div id="jangjun">
