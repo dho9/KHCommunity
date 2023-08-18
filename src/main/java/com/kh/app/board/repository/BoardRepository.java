@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.dto.PostDetails;
 
 @Mapper
 public interface BoardRepository {
@@ -32,5 +33,9 @@ public interface BoardRepository {
 
 	@Insert("insert into favorite values (#{boardId}, #{memberId})")
 	int insertFavoriteByMemberId(int boardId, String memberId);
+	
+	BoardListDto findById(int id);
+
+	List<BoardListDto> employeeBoardFindAll();
 
 }

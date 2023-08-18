@@ -5,6 +5,7 @@ import java.util.List;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.dto.PostDetails;
 
 public interface BoardService {
 
@@ -23,5 +24,9 @@ public interface BoardService {
 	int deleteFavoriteByMemberId(int boardId, String memberId);
 
 	int insertFavoriteByMemberId(int boardId, String memberId);
+	
+	BoardListDto findById(int id);
+
+	List<BoardListDto> employeeBoardFindAll();
 
 }

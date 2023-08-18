@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.dto.PostDetails;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.member.entity.MemberDetails;
 
@@ -89,6 +90,16 @@ public class BoardController {
         return "/board/graduateBoardList";
 	}
 	
+	@GetMapping("/employeeBoardList.do")
+	public String employeeBoardList(Model model) {
+		List<BoardListDto> employeeBoardList = boardService.employeeBoardFindAll();
+        log.debug("employeeBoardList = {}", employeeBoardList);
+        
+        model.addAttribute("employeeBoardList", employeeBoardList);
+        
+        return "/board/employeeBoardList";
+	}
+	
 	
 	
 	/**
@@ -107,6 +118,11 @@ public class BoardController {
         return "/board/boardListByKeyword";
     }
 	
+	/**
+	 * 내 스크랩
+	 * @param principal
+	 * @return
+	 */
 	@GetMapping("/myBoards.do")
 	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
 //		String memberId = principal.getMemberId();
@@ -117,6 +133,12 @@ public class BoardController {
 				.body(Map.of("boards", boards));
 	}
 	
+	/**
+	 * 스크랩 했는지 안했는지
+	 * @param principal
+	 * @param _boardId
+	 * @return
+	 */
 	@GetMapping("/favorite.do")
 	public ResponseEntity<?> isFavorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
 //		String memberId = principal.getMemberId();
@@ -135,6 +157,12 @@ public class BoardController {
 				.body(Map.of("available", available));
 	}
 	
+	/**
+	 * 스크랩 기능
+	 * @param principal
+	 * @param _boardId
+	 * @return
+	 */
 	@PostMapping("/favorite.do")
 	public ResponseEntity<?> favorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
 //		String memberId = principal.getMemberId();
@@ -159,6 +187,18 @@ public class BoardController {
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(Map.of("available", available));
+		}
+	
+	/**
+	 * 게시글조회
+	 * @param id
+	 * @param model
+	 */
+	@GetMapping("/boardDetail.do")
+	public void boardDetail(@RequestParam int id, Model model) {
+		BoardListDto postDetail = boardService.findById(id);
+		log.debug("postDetail = {}", postDetail);
+		model.addAttribute("postDetail", postDetail);
 	}
 
 }

@@ -14,6 +14,8 @@
 }
 </style>
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -22,6 +24,11 @@
 		</h1>
 	</div>
 	<div class="wrap articles">
+		<button type="button" class="article" id="writeArticleButton" onclick="showInputForm()">
+			새 글을 작성해주세요!
+			<span class="material-symbols-outlined" style="float: right;">edit</span>
+		</button>
+		
 		<c:if test="${empty freeBoardLists}">
 			<article class="dialog">
 				조회된 게시글이 존재하지 않습니다.
@@ -30,8 +37,8 @@
 		<c:if test="${not empty freeBoardLists}">
 			<article>
 				<c:forEach items="${freeBoardLists}" var="board">
-					<a class="article" href="#">
-				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/"/>
+					<a class="article" href="${pageContext.request.contextPath}/board/boardDetail.do?id=${board.postId}">
+				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<h3 class="medium">익명</h3>
 					  	<time class="medium">
 						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
@@ -41,10 +48,10 @@
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/"/></li>
-					  		<li class="vote">${board.postLike}</li>
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/"/></li>
-					  		<li class="comment">${board.commentCount}</li>
+					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
+					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
+					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
 					  	</ul>
 					  	<hr>
 					</a>
@@ -52,85 +59,6 @@
 			</article>
 		</c:if>
 	</div>
-    <div class="rightside">
-        <form action="${pageContext.request.contextPath}/board/boardSearch.do" class="search">
-            <input type="text" name="keyword" placeholder="전체 게시판의 글을 검색하세요!" class="text" />
-        </form>
-        <div class="card">
-            <div class="board">
-                <h3>
-                    <a>실시간 인기 글</a>
-                </h3>
-                <a href="" class="article">
-                    <p class="title">내일 4학년 수강신청 파이팅</p>
-                    <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
-                    <h4>자유게시판</h4>
-                    <ul class="status">
-                        <li class="vote active">22</li>
-                        <li class="comment active">7</li>
-                    </ul>
-                    <hr>
-                </a>
-                <a href="" class="article">
-                    <p class="title">내일 4학년 수강신청 파이팅</p>
-                    <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
-                    <h4>자유게시판</h4>
-                    <ul class="status">
-                        <li class="vote active">22</li>
-                        <li class="comment active">7</li>
-                    </ul>
-                    <hr>
-                </a>
-                <a href="" class="article">
-                    <p class="title">내일 4학년 수강신청 파이팅</p>
-                    <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
-                    <h4>자유게시판</h4>
-                    <ul class="status">
-                        <li class="vote active">22</li>
-                        <li class="comment active">7</li>
-                    </ul>
-                    <hr>
-                </a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="board">
-                <h3>
-                    <a>공지사항</a>
-                </h3>
-                <a href="" class="article">
-                    <p class="title">내일 4학년 수강신청 파이팅</p>
-                    <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
-                    <h4>자유게시판</h4>
-                    <ul class="status">
-                        <li class="vote active">22</li>
-                        <li class="comment active">7</li>
-                    </ul>
-                    <hr>
-                </a>
-                <a href="" class="article">
-                    <p class="title">내일 4학년 수강신청 파이팅</p>
-                    <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
-                    <h4>자유게시판</h4>
-                    <ul class="status">
-                        <li class="vote active">22</li>
-                        <li class="comment active">7</li>
-                    </ul>
-                    <hr>
-                </a>
-                <a href="" class="article">
-                    <p class="title">내일 4학년 수강신청 파이팅</p>
-                    <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
-                    <h4>자유게시판</h4>
-                    <ul class="status">
-                        <li class="vote active">22</li>
-                        <li class="comment active">7</li>
-                    </ul>
-                    <hr>
-                </a>
-            </div>
-        </div>
-    </div>
     <form:form name="tokenFrm">
     </form:form>
     <script>
@@ -192,4 +120,5 @@
         });
     };
     </script>
+<%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<<<<<<< HEAD
 <style>
 .new{
 text-decoration: none;
@@ -14,6 +15,9 @@ text-decoration: none;
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+=======
+
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -22,12 +26,16 @@ text-decoration: none;
     <meta charset="utf-8">
     <meta name="referrer" content="origin">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <%-- 
     <link type="text/css" href="/css/common.css" rel="stylesheet">
     <link type="text/css" href="/css/common.partial.css" rel="stylesheet">
-    <link type="text/css" href="/css/container.community.css" rel="stylesheet">
+    <link type="text/css" href="/css/container.community.css" rel="stylesheet"> 
+    --%>
     <link href="/favicon.ico" rel="shortcut icon">
 
 </head>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
+ <%-- 
  <script type="text/javascript">
         var _serverTime = 1691975017995;
         var _clientTime = new Date().getTime();
@@ -43,6 +51,7 @@ text-decoration: none;
         gtag('config', 'UA-22022140-4');
         _gfn.logPageView();
     </script>
+     --%>
     <body>
     <nav>
         <div class="wrap">
@@ -51,27 +60,27 @@ text-decoration: none;
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
-            	<a href="${pageContext.request.contextPath}/admin/adminMain.do"  style="text-decoration: none;">
+            	<a href="${pageContext.request.contextPath}/admin/adminMain.do">
             		<span>관리자페이지</span>
             	</a>
-               <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="쪽지함" class="icon message" style="text-decoration: none;">로그인</a>
-               <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="내 정보" class="icon my"> style="text-decoration: none;"회원가입</a>
+               <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="쪽지함" class="icon message">로그인</a>
+               <a href="${pageContext.request.contextPath}/member/memberCreate2.do" title="내 정보" class="icon my">회원가입</a>
             </div>
             <ul id="menu">
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;">게시판</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/notificationBoardList.do" style="text-decoration: none;">공지사항</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do" style="text-decoration: none;">우리반</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
-                <li><a href="${pageContext.request.contextPath}/ticket/ticketList.do" style="text-decoration: none;">식권</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
-                <li><a href="${pageContext.request.contextPath}/schedule/scheduleList.do" style="text-decoration: none;">스케쥴</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/notificationBoardList.do">공지사항</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do">우리반</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do">취업</a></li>
+                <li><a href="${pageContext.request.contextPath}/ticket/ticketList.do">식권</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do">홍보</a></li>
+                <li><a href="${pageContext.request.contextPath}/schedule/scheduleList.do">스케쥴</a></li>
             </ul>
         </div>
     </nav>
-    <div id="submenu" >
+    <div id="submenu">
 		<div class="wrap">
 			<div class="divider"></div>
-			<div class="group" >
+			<div class="group">
 				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/freeBoardList.do" class="new">자유게시판</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/marketBoardList.do" class="new">장터게시판</a></li>
@@ -80,17 +89,17 @@ text-decoration: none;
 			</div>
 			<div class="divider"></div>
 			<div class="group">
-				<ul >
+				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do" class="new">정보공유</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/askCodeBoardList.do" class="new">코드질문</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/studyBoardList.do" class="new">스터디</a></li>
 				</ul>
 			</div>
 			<div class="divider"></div>
-			<div class="group" >
+			<div class="group">
 				<ul>
-				<li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do" class="new" >수료생게시판</a></li>
-				<li><a href="${pageContext.request.contextPath}/board/preStudentBoardList.do" class="new" >예비생게시판</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do" class="new">수료생게시판</a></li>
+				<li><a href="${pageContext.request.contextPath}/board/preStudentBoardList.do" class="new">예비생게시판</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new">직원 게시판</a></li>
 				</ul>
 			</div>

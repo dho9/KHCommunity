@@ -44,6 +44,7 @@
   	
   <select id="freeBoardFindAll" resultType="boardListDto">
   	select 
+  		p.post_id,
 	    p.title,
 	    p.post_created_at,
 	    p.post_like,
@@ -60,6 +61,7 @@
   
   <select id="preStudentBoardFindAll" resultType="boardListDto">
   	select 
+  		p.post_id,
 	    p.title,
 	    p.post_created_at,
 	    p.post_like,
@@ -76,6 +78,7 @@
   
    <select id="graduateBoardFindAll" resultType="boardListDto">
   	select 
+  		p.post_id,
 	    p.title,
 	    p.post_created_at,
 	    p.post_like,
@@ -89,6 +92,38 @@
 	where
 	    p.board_id=3
   </select>
+  
+  <select id="employeeBoardFindAll" resultType="boardListDto">
+  	select 
+  		p.post_id,
+	    p.title,
+	    p.post_created_at,
+	    p.post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=4
+  </select>
+  
+  <select id="findById" resultType="boardListDto">
+	select 
+  		p.post_id,
+	    p.title,
+	    p.post_created_at,
+	    p.post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.post_id=#{id}
+	</select>
   <resultMap type="boardListDto" id="boardListDtoMap">
   	<id column="post_id" property="postId"/>
   	<result column="title" property="title"/>
@@ -97,5 +132,8 @@
   	<result column="comment_count" property="commentCount"/>
   	<result column="board_id" property="boardId"/>
   </resultMap>
+  
+  
+	
   
 </mapper>
