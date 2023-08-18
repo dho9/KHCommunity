@@ -8,4 +8,6 @@ public interface BoardService {
 
 	List<BoardSearchDetails> findAllByKeyword(String keyword);
 
+	List<BoardSearchDetails> findAllByMemberId(String memberId);
+
 }

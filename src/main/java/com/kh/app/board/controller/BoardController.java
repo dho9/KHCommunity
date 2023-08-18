@@ -1,8 +1,12 @@
 package com.kh.app.board.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.board.entity.BoardSearchDetails;
 import com.kh.app.board.service.BoardService;
+import com.kh.app.member.entity.MemberDetails;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,9 +66,19 @@ public class BoardController {
     public String boardSearch(@RequestParam String keyword, Model model) {
         List<BoardSearchDetails> boards = boardService.findAllByKeyword(keyword);
         log.debug("boards = {}", boards);
-        model.addAttribute("boards", boards);
-        model.addAttribute("keyword", keyword);
+        model.addAttribute("boards = {}", boards);
+        model.addAttribute("keyword = {}", keyword);
         return "/board/boardListByKeyword";
     }
+	
+	@GetMapping("/myBoards.do")
+	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
+//		String memberId = principal.getMemberId();
+		List<BoardSearchDetails> boards = boardService.findAllByMemberId("gmlwls");
+		log.debug("boards = {}", boards);
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("boards", boards));
+	}
 
 }

@@ -25,8 +25,22 @@
   	<result column="title" property="boardName"/>
   	<result column="post_created_at" property="postCreatedAt"/>
   	<result column="post_like" property="postLike"/>
-  	<result column="board_name" property="boardName"/>
   	<result column="comment_count" property="commentCount"/>
+  </resultMap>
+  
+  
+  <select id="findAllByMemberId" resultType="boardSearchDetails">
+    select
+	    b.board_name
+	from
+	    favorite f left join board b
+	        on f.board_id = b.board_id
+	where
+	    f.member_id = #{member_id}
+  </select>
+  <resultMap type="boardSearchDetails" id="myBoardsMap">
+  	<id column="board_id" property="boardId"/>
+  	<result column="board_name" property="boardName"/>
   </resultMap>
   
 </mapper>

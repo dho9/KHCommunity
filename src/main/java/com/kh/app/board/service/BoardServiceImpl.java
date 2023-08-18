@@ -20,5 +20,10 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardSearchDetails> findAllByKeyword(String keyword) {
 		return boardRepository.findAllByKeyword(keyword);
 	}
+	
+	@Override
+	public List<BoardSearchDetails> findAllByMemberId(String memberId) {
+		return boardRepository.findAllByMemberId(memberId);
+	}
 
 }

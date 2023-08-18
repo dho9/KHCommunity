@@ -12,4 +12,6 @@ public interface BoardRepository {
 
 	List<BoardSearchDetails> findAllByKeyword(String keyword);
 
+	List<BoardSearchDetails> findAllByMemberId(String memberId);
+
 }
