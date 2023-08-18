@@ -35,7 +35,8 @@
 					  	<h1 class="large" style="font-size : 20px;">${postDetail.title}</h2> <br>
 					  	<p class="large">${postDetail.content}</p> <br>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<%-- 좋아요 버튼 --%>
+					  		<li><button type="button" style="border: none; background: none;"><img src="${pageContext.request.contextPath}/resources/images/like.png"/></button></li>
 					  		<li class="vote" style="margin-top: 5px;">${postDetail.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
