@@ -20,18 +20,16 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
 
 <body>
-
 				<!--로그인폼 -->
 				
 				<!-- https://getbootstrap.com/docs/4.1/components/forms/#overview -->
 				<form:form
 					action="${pageContext.request.contextPath}/member/memberLogin.do"
-					method="post">
+					method="POST">
 					<div class="modal-body">
 						<c:if test="${param.error ne null}">
 							<div class="alert alert-danger" role="alert">
-								아이디 또는 비밀번호가 일치하지 않습니다.
-								아이디 또는 비밀번호가 일치하지 않습니다.
+								아이디 또는 비밀번호가 일치하지 않습니다.						
 							</div>
 						</c:if>
 						<input 
@@ -39,7 +37,7 @@
 							placeholder="아이디" value="honggd" required> 
 						<br /> 
 						<input
-							type="password" class="form-control" name="password"
+							type="password" class="form-control" name="memberPwd"
 							placeholder="비밀번호" value="1234" required>
 					</div>
 					<div class="modal-footer d-flex flex-column" style="align-items : unset;">

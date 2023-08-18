@@ -679,11 +679,15 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 	            <input type="text" class="form-control" id="verificationCode" placeholder="인증번호 6자리를 입력해주세요">
 	          <button type="button" class="btn btn-primary" id="emailSubmit">제출</button>
 	          <br/>
-	          <div id="verificationResult">	          
+	          
+	          </div>
+	   </form>
+	   <form action="${pageContext.request.contextPath}/member/memberCreate2.do" method="GET">
+	   		<input type="hidden" name="fullEmail" value="123456">
+	   		<div id="verificationResult">	          
 			  	<span id="mail-check-warn">인증결과</span>
-			  	<button type="button" class="btn btn-primary" disabled>회원정보 입력</button>
-	          </div>
-	          </div>
+			  	<button class="btn btn-primary" id="enrollInfo" disabled>회원정보 입력</button>
+	        </div>
 	   </form>
   </div>
   
@@ -750,7 +754,8 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 			const email = $('#userEmail1').val() + $('#userEmail2').val();
 			console.log('완성된 이메일 : ' + email);
 			const checkInput = $('#verificationCode');
-		
+			document.querySelector("[name = fullEmail]").value = email;
+			
 			$.ajax({
 				type : 'get',
 				url : '<c:url value ="/member/mailCheck?email="/>'+email,
@@ -788,6 +793,12 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 		}
 	});
 	
+	document.getElementById("enrollInfo").onclick=(e)=>{
+		// e.preventDefault();
+		console.log(document.querySelector("[name = fullEmail]").value);
+		
+		
+	}
 
   </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

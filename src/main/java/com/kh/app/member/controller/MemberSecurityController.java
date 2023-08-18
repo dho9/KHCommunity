@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.MemberLoginDto;
+import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 
@@ -46,9 +49,13 @@ public class MemberSecurityController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@GetMapping("/memberCreate2.do")
+	@GetMapping("/memberCreate.do")
 	public void memberCreate() {}
 	
+	@GetMapping("/memberCreate2.do")
+	public void memberCreate2(@RequestParam String fullEmail, Model model) {
+		model.addAttribute("email", fullEmail);
+	}
 	
 	@PostMapping("/memberCreate2.do")
 	public String create(
@@ -73,7 +80,7 @@ public class MemberSecurityController {
 	}
 	
 	@GetMapping("/memberLogin.do")
-	public void memberLogin() {}
+	public void memberLogin() {	}
 	
 	@GetMapping("/memberDetail.do")
 	public void memberDetail(Authentication authentication, @AuthenticationPrincipal MemberDetails member) {
@@ -87,6 +94,7 @@ public class MemberSecurityController {
 	
 	}	
 	
+
 	@GetMapping("/checkIdDuplicate.do")
 	@ResponseBody
 	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId){
@@ -104,12 +112,14 @@ public class MemberSecurityController {
 
 	@GetMapping("/mailCheck")
 	@ResponseBody
-	public String mailCheck(String email) {
+	public String mailCheck(String email, Model model) {
 	
 		log.debug("email = {}", email);
+		model.addAttribute("email", email);
 		
 		return memberService.joinEmail(email);
 	}
+	
 
 }
 
