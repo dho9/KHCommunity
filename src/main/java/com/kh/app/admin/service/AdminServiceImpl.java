@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.app.admin.repository.AdminRepository;
+import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
@@ -20,6 +21,9 @@ public class AdminServiceImpl implements AdminService {
 	private AdminRepository adminRepository;
 	
 	@Override
+	public List<Member> findAllEmployee() {
+		return adminRepository.findAllEmployee();
+	}
 	public int todayNewStudentCount() {	
 		return adminRepository.todayNewStudentCount();
 	}
@@ -85,4 +89,8 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.vacationApproveListThree();
 	}
 	
+	public Member findById(String id) {
+		return adminRepository.findById(id);
+	}
+
 }

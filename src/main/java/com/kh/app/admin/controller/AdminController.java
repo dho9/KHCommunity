@@ -6,12 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.app.admin.service.AdminService;
+import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
@@ -131,4 +135,18 @@ public class AdminController {
 	// 수강생 목록 조회 - 유성근
 	@GetMapping("/adminStudentList.do")
 	public void adminStudentList() {}
+	
+	@GetMapping("/employeeList.do")
+	public void employeeList(Model model){
+		List<Member> members = adminService.findAllEmployee();
+		model.addAttribute("members", members);
+	}
+	
+	@GetMapping("/findById.do")
+	@ResponseBody
+	public Member findById(@RequestParam String id) {
+	    Member member = adminService.findById(id);
+	    log.debug("member = {}", member);
+	    return member;
+	}
 }

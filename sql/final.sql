@@ -994,13 +994,13 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 1
 INSERT INTO ticket_order (order_id, member_id, store_id, ticket_id, amount, total_price)
 VALUES (seq_order_id.NEXTVAL, 'gmlwls', 1, 1, 2, 10800);
 
---삭제 게시글 
-delete post where post_id =3;
---삭제 댓글
-delete post_comment where comment_id=2;
---삭제회원 
-delete member where member_id = 'test'; 
-delete member where member_id = 'test1'; 
+----삭제 게시글 
+--delete post where post_id =3;
+----삭제 댓글
+--delete post_comment where comment_id=2;
+----삭제회원 
+--delete member where member_id = 'test'; 
+--delete member where member_id = 'test1'; 
 
 select * from member;
 select * from student;
@@ -1027,8 +1027,22 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
+
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
+
+SELECT
+    b.board_name,
+    COUNT(p.post_id) AS post_count
+FROM
+    board b
+LEFT JOIN
+    post p ON b.board_id = p.board_id
+GROUP BY
+    b.board_name
+ORDER BY
+    post_count DESC, board_name;
+    

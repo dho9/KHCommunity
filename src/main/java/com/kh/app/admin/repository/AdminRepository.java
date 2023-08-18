@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
@@ -74,5 +75,11 @@ public interface AdminRepository {
 			+ "WHERE\r\n"
 			+ "    v.vacation_approve_check = '2'")
 	List<AdminVacationApproveDto> vacationApproveListThree();
+
+	@Select("select * from member where member_role = 'e'")
+	List<Member> findAllEmployee();
+
+	@Select("select * from member where member_id = #{id}")
+	Member findById(String id);
 
 }

@@ -2,12 +2,15 @@ package com.kh.app.admin.service;
 
 import java.util.List;
 
+import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 public interface AdminService {
 
+	List<Member> findAllEmployee();
+	
 	int todayNewStudentCount();
 
 	int todayNewEmployee();
@@ -23,6 +26,8 @@ public interface AdminService {
 	int todayNewReportCount();
 
 	List<BoardChartDto> findBoardNameAndPostCount();
+	
+	Member findById(String id);
 
 	int threeDaysAgoPostCount();
 
