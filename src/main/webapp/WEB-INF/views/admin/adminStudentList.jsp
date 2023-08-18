@@ -6,9 +6,28 @@
 <%@ include file="/WEB-INF/views/common/adminLeftBar.jsp" %>
     <section>
       <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
-          <div class="card-header" id="todayIssueHeader">
-              수강생 목록
-          </div>
+          <div class="card-header flex" id="todayIssueHeader">
+			    <div class="d-flex justify-content-between align-items-center" style="font-weight: 900;">
+			        <span class="mb-0">수강생 목록 &nbsp;&nbsp;&nbsp;</span>
+			        <div id="search-container">
+			            <form action="">
+			                <div class="d-flex align-items-center">
+			                    <select class="form-select" aria-label="Default select example" name="searchType" required>
+			                        <option value="" disabled selected>검색타입</option>
+			                        <option value="studentId" ${param.searchType eq 'studentId' ? 'selected' : '' }>수강생 ID</option>
+			                        <option value="memberName" ${param.searchType eq 'memberName' ? 'selected' : '' }>이름</option>
+			                        <option value="classId" ${param.searchType eq 'classId' ? 'selected' : '' }>반</option>
+			                    </select>
+			                    <div class="input-group">
+			                    	&nbsp;
+			                        <input type="search" class="form-control" name="searchKeyword" aria-describedby="button-addon2">
+			                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
+			                    </div>
+			                </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
           <div class="card-body" id="todayIssueBody">
               <table class="table table-hover text-center">
                   <thead>
@@ -23,13 +42,14 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="1" data-first-id="khendev23" data-second-name="유성근" data-phone="01011112222" data-birthday="1996-03-31" data-subject="JAVA" data-class="352" data-email="khendev23@gmail.com" data-lastDay="2023-09-06" data-handle="@mdo">
-                          <td>1</td>
-                          <td>khendev23</td>
-                          <td>유성근</td>
-                          <td>JAVA</td>
-                          <td>352</td>
-                          <td>수강생</td>
+                  	<c:forEach items="${students}" var="student" varStatus="vs">
+                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" data-phone="${student.memberPhone}" data-birthday="${student.birthday}" data-subject="${student.curriculumName}" data-class="${student.classId}" data-email="${student.memberEmail}" data-lastDay="${student.curriculumEndAt}" data-handle="@mdo">
+                          <td>${vs.count}</td>
+                          <td>${student.studentId}</td>
+                          <td>${student.memberName}</td>
+                          <td>${student.curriculumName}</td>
+                          <td>${student.classId}</td>
+                          <td>${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}</td>
                           <td>
                             <button style="border: 0; background-color: transparent;">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
@@ -38,36 +58,7 @@
                             </button>
                           </td>
                       </tr>
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="2" data-first-id="sukey0331" data-second-name="김성근" data-phone="01011112223" data-birthday="1996-03-31" data-subject="정보보안" data-class="231" data-email="sukey0331@daum.net"data-lastDay="2023-09-06" data-handle="@fat">
-                          <td>2</td>
-                          <td>sukey0331</td>
-                          <td>김성근</td>
-                          <td>정보보안</td>
-                          <td>231</td>
-                          <td>예비생</td>
-                          <td>
-                            <button style="border: 0; background-color: transparent;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                              </svg>
-                            </button>
-                          </td>
-                      </tr>
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="3" data-first-id="choco0331" data-second-name="최성근" data-phone="01011112224" data-birthday="1996-03-31" data-subject="JAVA" data-class="351" data-email="choco0331@nate.com" data-lastDay="2023-09-06" data-handle="@twitter">
-                          <td>3</td>
-                          <td>choco0331</td>
-                          <td>최성근</td>
-                          <td>JAVA</td>
-                          <td>351</td>
-                          <td>수료생</td>
-                          <td>
-                            <button style="border: 0; background-color: transparent;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                              </svg>
-                            </button>
-                          </td>
-                      </tr>
+                  	</c:forEach>
                   </tbody>
               </table>
               <br>
@@ -83,10 +74,11 @@
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-6">
-                        <iframe src="${pageContext.request.contextPath}/resources/pdf/쓰리고근로계약서.pdf" style="width: 100%; height: 500px;"></iframe>
+                        <iframe class="border rounded-4" src="${pageContext.request.contextPath}/resources/pdf/쓰리고근로계약서.pdf" style="width: 100%; height: 500px;"></iframe>
                     </div>
                     <div class="col-md-6">
-                      <form id="dataForm" method="post" action="process_form.jsp" style="font-size: 20px;">
+                   	  <div class="border rounded-4" style="padding:20px;">
+                      <form  id="dataForm" method="post" action="process_form.jsp" style="font-size: 20px;">
                           <input type="hidden" name="rowId" id="modalRowId">
                           ID : <input type="text" name="firstId" id="modalFirstId" readonly> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
                           이름 : <input type="text" name="secondName" id="modalSecondName" readonly> <br>
@@ -97,9 +89,10 @@
                           반 : <input type="text" name="className" id="modalClass" readonly> <br>
                           수료일 : <input type="date" name="lastDay" id="modalLastDay"><br>
                           <hr>
-                          <button type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
-                          <button type="button" id="btnBan">강퇴</button> 
+                          <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+                          <button class="btn btn-danger" type="button" id="btnBan">강퇴</button> 
                       </form>
+                   	  </div>
                     </div>
                   </div>
                 </div>

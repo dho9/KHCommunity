@@ -266,6 +266,8 @@ CREATE TABLE report (
    attaker_id   varchar2(20)      NOT NULL,
    report_content   varchar2(2000),
    report_type   varchar2(20),
+   report_send_date date,
+   report_check char(1),
    report_action   varchar2(2000)
 );
 
@@ -751,6 +753,8 @@ alter table post add constraint CK_post_status_check check (status_check in ('y'
 -- 임시저장 상태 유무
 alter table message_box add constraint CK_messagebox_read_check check (read_check in ('y', 'n'));
 -- 쪽지읽었는지 ?
+alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
+-- 신고처리됐는지?
 
 --=================================
 --트리거
@@ -970,8 +974,8 @@ INSERT INTO message_box (message_id, send_id, recieve_id, message_content, read_
 VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공부어떻게 해야함 ??', 'y');
 
 -- report
-INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type)
-VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판인데 왜 이상한 글 을 올렸어요','욕설');
+INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type, report_send_date, report_check)
+VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판인데 왜 이상한 글 을 올렸어요','욕설', sysdate, 'n');
 
 
 -- chat_room
@@ -1046,3 +1050,24 @@ GROUP BY
 ORDER BY
     post_count DESC, board_name;
     
+select * from report where report_check = 'n';
+
+select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)
+where  report_check = 'n' and (rownum between 1 and 6);
+
+SELECT
+    s.student_id,
+    m.member_name,
+    m.member_phone,
+    m.birthday,
+    m.member_email,
+    c.curriculum_name,
+    c.class_id,
+    s.student_type,
+    c.curriculum_end_at
+FROM
+    student s
+JOIN
+    member m ON s.student_id = m.member_id
+JOIN
+    curriculum c ON s.curriculum_id = c.curriculum_id;

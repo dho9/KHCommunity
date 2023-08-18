@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.kh.app.admin.repository.AdminRepository;
 import com.kh.app.member.entity.Member;
+import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -91,6 +93,16 @@ public class AdminServiceImpl implements AdminService {
 	
 	public Member findById(String id) {
 		return adminRepository.findById(id);
+	}
+	
+	@Override
+	public List<AdminReportListDto> reportListSix() {
+		return adminRepository.reportListSix();
+	}
+	
+	@Override
+	public List<AdminStudentListDto> findAllStudents() {
+		return adminRepository.findAllStudents();
 	}
 
 }

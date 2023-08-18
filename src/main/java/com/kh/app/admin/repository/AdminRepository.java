@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.kh.app.member.entity.Member;
+import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 
@@ -81,5 +83,27 @@ public interface AdminRepository {
 
 	@Select("select * from member where member_id = #{id}")
 	Member findById(String id);
+
+	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)\r\n"
+			+ "where  report_check = 'n' and (rownum between 1 and 6)")
+	List<AdminReportListDto> reportListSix();
+
+	@Select("SELECT\r\n"
+			+ "    s.student_id,\r\n"
+			+ "    m.member_name,\r\n"
+			+ "    m.member_phone,\r\n"
+			+ "    m.birthday,\r\n"
+			+ "    m.member_email,\r\n"
+			+ "    c.curriculum_name,\r\n"
+			+ "    c.class_id,\r\n"
+			+ "    s.student_type,\r\n"
+			+ "    c.curriculum_end_at\r\n"
+			+ "FROM\r\n"
+			+ "    student s\r\n"
+			+ "JOIN\r\n"
+			+ "    member m ON s.student_id = m.member_id\r\n"
+			+ "JOIN\r\n"
+			+ "    curriculum c ON s.curriculum_id = c.curriculum_id")
+	List<AdminStudentListDto> findAllStudents();
 
 }
