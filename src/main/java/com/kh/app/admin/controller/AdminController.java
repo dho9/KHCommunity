@@ -186,4 +186,10 @@ public class AdminController {
 		
 		return "redirect:/admin/adminStudentList.do";
 	}
+	
+	// 수강생 삭제
+	@PostMapping("/adminStudentDelete.do")
+	public String adminStudentDelete() {
+		return null;
+	}
 }
