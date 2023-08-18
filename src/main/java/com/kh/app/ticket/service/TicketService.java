@@ -2,12 +2,16 @@ package com.kh.app.ticket.service;
 
 import java.util.List;
 
-import com.kh.app.ticket.entity.Ticket;
+import com.kh.app.store.entity.Store;
+import com.kh.app.ticket.entity.TicketOrder;
 
 public interface TicketService {
 
-	List<Ticket> findAll();
+	int findTicketIdByStoreId(int storeId);
 
-	Ticket findTicektById(int id);
+	int createOrder(TicketOrder order);
+
+
+
 
 }

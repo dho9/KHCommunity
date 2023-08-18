@@ -1,13 +1,17 @@
 package com.kh.app.admin.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.app.member.entity.Member;
+import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 
@@ -81,5 +85,15 @@ public interface AdminRepository {
 
 	@Select("select * from member where member_id = #{id}")
 	Member findById(String id);
+
+	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)\r\n"
+			+ "where  report_check = 'n' and (rownum between 1 and 6)")
+	List<AdminReportListDto> reportListSix();
+
+	
+	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters);
+
+	@Update("update student set student_Type = #{studentType} where student_id = #{studentId}")
+	int updateAdminStudent(AdminStudentListDto student);
 
 }

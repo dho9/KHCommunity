@@ -1,7 +1,8 @@
 package com.kh.app.config;
 
+import javax.sql.DataSource;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -9,23 +10,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 
 @SuppressWarnings("deprecation")
 @EnableWebSecurity //@Configration 상속
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().mvcMatchers("/resources/**");
-	
+		
 	}
 	
 
@@ -34,12 +35,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 			.antMatchers("/", "/index.jsp").permitAll()
-			.antMatchers("/board/**").permitAll()
-			.antMatchers("/admin/**").permitAll()
-			.antMatchers("/board/**").permitAll()
-			.antMatchers("/ticket/**").permitAll()
-			.antMatchers("/member/**").permitAll()
+
+			.antMatchers("/board/*").permitAll()
+			.antMatchers("/admin/*").permitAll()
+			.antMatchers("/board/*").permitAll()
+			.antMatchers("/ticket/*").permitAll()
+			.antMatchers("/member/*").permitAll()
+			.antMatchers("/store/*").permitAll()
 			.anyRequest().authenticated();
+
 	
 		
 		http.formLogin() // 
@@ -54,21 +58,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.logoutUrl("/member/memberLogout.do")
 		.logoutSuccessUrl("/")
 		.permitAll();
-	
-	// csrf (cross site request forgery) 공격대비 토큰 사용 (기본값)
-	// http.csrf().disable(); // 토큰 사용안함
-	
-	// remember-me관련
-	/*
-	 * http.rememberMe() .tokenRepository(tokenRepository())
-	 * .key("hello-springboot-secret") .tokenValiditySeconds(60 * 60 * 24 * 14); //
-	 * 2주
-	 * 
-	 * http.oauth2Login() .loginPage("/member/memberLogin.do") .userInfoEndpoint()
-	 * .userService(oauth2UserService);
-	 */
 	}
-	
-	
 	
 }
