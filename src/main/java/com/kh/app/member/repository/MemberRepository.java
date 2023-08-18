@@ -16,7 +16,7 @@ public interface MemberRepository {
 	@Insert("insert into authority values(#{memberId}, 'STUDENT')")
 	int insertAuthority(MemberCreateDto member);
 
-	@Insert("insert into authority values(#{memberId}, null, default, 'n', 'c')")
+	@Insert("insert into student values(#{memberId}, null, default, 'n', null, null,  'c')")
 	int insertStudent(MemberCreateDto member);
 	
 	@Select("select * from member where member_id = #{memberId}")
