@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.ticket.entity.Ticket;
 import com.kh.app.ticket.service.TicketService;
@@ -24,8 +25,15 @@ public class TicketController {
 	@GetMapping("/ticketList.do")
 	public void ticketList(Model model) {
 		List<Ticket> ticket = ticketService.findAll();
-		 log.debug("ticekt = {}", ticket);
+//		 log.debug("ticekt = {}", ticket);
 		model.addAttribute("stores", ticket);
+		
+	}
+	@GetMapping("/ticketDetail.do")
+	public void ticketDetail(@RequestParam int id, Model model) {
+		Ticket ticket = ticketService.findTicektById(id);
+//		 log.debug("ticekt = {}", ticket);
+		model.addAttribute("store", ticket);
 		
 	}
 	
