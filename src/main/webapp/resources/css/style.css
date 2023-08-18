@@ -42,7 +42,7 @@
             vertical-align: middle;
             margin-right: 140px;
             margin-bottom: ;
-            /* �븘�슂�뿉 �뵲�씪 留덉쭊 議곗젙 */
+            /* 占쎈툡占쎌뒄占쎈퓠 占쎈뎡占쎌뵬 筌띾뜆彛� 鈺곌퀣�젟 */
         }
 
         #menu {
@@ -54,12 +54,12 @@
         @charset "utf-8";
 /*
 CSS Hack
-IE6 �씠�븯留� : _color: white
-IE7 �씠�븯留� : *color: white
+IE6 占쎌뵠占쎈릭筌랃옙 : _color: white
+IE7 占쎌뵠占쎈릭筌랃옙 : *color: white
 */
 
 * { margin: 0; padding: 0; -webkit-touch-callout: none; }
-body,div,nav,aside,article,h1,h2,h3,h4,ol,ul,li,dl,dt,dd,p,span,form,th,td,input,textarea,select,pre,address { color: #666; font-family: "留묒� 怨좊뵓", �룍��,  "Apple SD Gothic Neo", tahoma; _font-family: �룍��, tahoma; font-size: 12px; letter-spacing: -0.5px; }
+body,div,nav,aside,article,h1,h2,h3,h4,ol,ul,li,dl,dt,dd,p,span,form,th,td,input,textarea,select,pre,address { color: #666; font-family: "筌띾쵐占� �⑥쥓逾�", 占쎈즻占쏙옙,  "Apple SD Gothic Neo", tahoma; _font-family: 占쎈즻占쏙옙, tahoma; font-size: 12px; letter-spacing: -0.5px; }
 body { background-color: #f8f8f8; }
 body.selectDisabled { -ms-user-select: none; -moz-user-select: none; -webkit-user-select: none; user-select: none; }
 img { border: 0; }
@@ -141,10 +141,10 @@ body.appwebview nav {
   width: 70px; color: transparent; font-size: 0; background-repeat: no-repeat; background-position: center center;
 }
 #account a.icon.message {
-  background-image: url('../images/濡쒓렇�씤.png'); background-size: 60px 60px;
+  background-image: url('../images/로그인.png'); background-size: 60px 60px;
 }
 #account a.icon.my {
- background-image: url('../images/�쉶�썝媛��엯.png');background-size: 60px 60px;
+ background-image: url('../images/회원가입.png');background-size: 60px 60px;
 }
 #account a.icon span.badge {
   position: absolute; right: -4px; top: -4px; display: inline-block; padding: 0 6px; line-height: 16px; border-radius: 10px; color: #fff; font-size: 12px; font-weight: bold; background-color: #c62917;
@@ -412,7 +412,7 @@ aside > div.title > ol.buttons > li > a.image.setting {
     background-color: #f8f8f8;
   }
   aside > div.menu > ol > li > a.primary:after {
-    content: '湲곕낯�떆媛꾪몴'; float: right; color: #a6a6a6; font-size: 12px;
+    content: '疫꿸퀡�궚占쎈뻻揶쏄쑵紐�'; float: right; color: #a6a6a6; font-size: 12px;
   }
 
   /*** pc container ***/
@@ -935,10 +935,10 @@ dl, ul, ol, menu, li {
    background-image: url('/images/new/container.articles.comment.png');
 }
 #container div.card > div.board > a.article > ul.status > li.vote.active {
-   color: #c62917; background-image: url('../images/�뾼吏�泥�.png');
+   color: #c62917; background-image: url('../images/占쎈씔筌욑옙筌ｏ옙.png');
 }
 #container div.card > div.board > a.article > ul.status > li.comment.active {
-   color: #0ca5af; background-image: url('../images/�뙎湲�.png');
+   color: #0ca5af; background-image: url('../images/占쎈솊疫뀐옙.png');
 }
 #container div.card > div.board > a.article > span.star {
    display: block; margin-bottom: 5px; width: 60px; height: 12px; background: transparent url('/images/app.subject.rating.details.star.off.png') no-repeat; background-size: 60px 12px;
