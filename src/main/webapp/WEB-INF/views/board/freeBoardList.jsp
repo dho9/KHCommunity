@@ -4,6 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -11,6 +13,11 @@
 		</h1>
 	</div>
 	<div class="wrap articles">
+		<button type="button" class="article" id="writeArticleButton" onclick="showInputForm()">
+			새 글을 작성해주세요!
+			<span class="material-symbols-outlined" style="float: right;">edit</span>
+		</button>
+		
 		<c:if test="${empty freeBoardLists}">
 			<article class="dialog">
 				조회된 게시글이 존재하지 않습니다.
@@ -41,6 +48,10 @@
 			</article>
 		</c:if>
 	</div>
+	<script>
+	 
+	</script>
+	
     
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

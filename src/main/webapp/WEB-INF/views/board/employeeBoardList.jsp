@@ -11,6 +11,10 @@
 		</h1>
 	</div>
 	<div class="wrap articles">
+		<button type="button" class="article" id="writeArticleButton" onclick="showInputForm()">
+			새 글을 작성해주세요!
+			<span class="material-symbols-outlined" style="float: right;">edit</span>
+		</button>
 		<c:if test="${empty employeeBoardList}">
 			<article class="dialog">
 				조회된 게시글이 존재하지 않습니다.

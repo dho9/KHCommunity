@@ -14,12 +14,16 @@
     <meta charset="utf-8">
     <meta name="referrer" content="origin">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <%-- 
     <link type="text/css" href="/css/common.css" rel="stylesheet">
     <link type="text/css" href="/css/common.partial.css" rel="stylesheet">
-    <link type="text/css" href="/css/container.community.css" rel="stylesheet">
+    <link type="text/css" href="/css/container.community.css" rel="stylesheet"> 
+    --%>
     <link href="/favicon.ico" rel="shortcut icon">
 
 </head>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
+ <%-- 
  <script type="text/javascript">
         var _serverTime = 1691975017995;
         var _clientTime = new Date().getTime();
@@ -35,6 +39,7 @@
         gtag('config', 'UA-22022140-4');
         _gfn.logPageView();
     </script>
+     --%>
     <body>
     <nav>
         <div class="wrap">
