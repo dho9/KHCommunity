@@ -86,6 +86,9 @@ public class MemberSecurityController {
 		log.debug("authorities = {}", authorities);
 	
 	}	
+	
+	@GetMapping("/checkIdDuplicate.do")
+	@ResponseBody
 	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId){
 		boolean available = false;
 		try {

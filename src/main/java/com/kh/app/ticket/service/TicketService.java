@@ -8,4 +8,6 @@ public interface TicketService {
 
 	List<Ticket> findAll();
 
+	Ticket findTicektById(int id);
+
 }
