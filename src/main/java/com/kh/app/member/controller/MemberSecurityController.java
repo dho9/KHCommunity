@@ -47,11 +47,19 @@ public class MemberSecurityController {
 	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/memberCreate.do")
-	public void memberCreate() {
+	public void memberCreate() {}
+	
+	@GetMapping("/memberCreate2.do")
+	public void memberCreate2(@RequestParam String fullEmail, Model model) {
+		model.addAttribute("email", fullEmail);
 	}
+	
+	@PostMapping("/memberCreate2.do")
+	public String create(
+			@Valid MemberCreateDto member,
+			BindingResult bindingResult, 
+			RedirectAttributes redirectAttr) {
 
-	@PostMapping("/memberCreate.do")
-	public String create(@Valid MemberCreateDto member, BindingResult bindingResult, RedirectAttributes redirectAttr) {
 		log.debug("member = {}", member);
 
 		if (bindingResult.hasErrors()) {
@@ -70,10 +78,11 @@ public class MemberSecurityController {
 	}
 
 	
-	  @GetMapping("/memberLogin.do") 
-	  public void memberLogin() {}
-	 
-	  
+
+	@GetMapping("/memberLogin.do")
+	public void memberLogin() {	}
+	
+
 	@GetMapping("/memberDetail.do")
 	public void memberDetail(Authentication authentication, @AuthenticationPrincipal MemberDetails member) {
 		log.debug("authentication = {}", authentication);
@@ -83,8 +92,10 @@ public class MemberSecurityController {
 		log.debug("principal = {}", principal);
 		log.debug("credentials = {}", credentials);
 		log.debug("authorities = {}", authorities);
+	
+	}	
+	
 
-	}
 
 	@GetMapping("/checkIdDuplicate.do")
 	@ResponseBody
@@ -101,11 +112,13 @@ public class MemberSecurityController {
 
 	@GetMapping("/mailCheck")
 	@ResponseBody
-	public String mailCheck(String email) {
+	public String mailCheck(String email, Model model) {
 
 		log.debug("email = {}", email);
-
+		model.addAttribute("email", email);
+		
 		return memberService.joinEmail(email);
 	}
+	
 
 }

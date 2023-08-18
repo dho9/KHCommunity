@@ -22,27 +22,32 @@
 .container{width: 30%; text-align: center;}
 </style>
 <body>
-
 				<!--로그인폼 -->
 				
 				<!-- https://getbootstrap.com/docs/4.1/components/forms/#overview -->
-				<div class="container">
-					<form:form
-						action="${pageContext.request.contextPath}/member/memberLogin.do"
-						method="post">
-						<div class="modal-body">
-							<c:if test="${param.error ne null}">
-								<div class="alert alert-danger" role="alert">
-									아이디 또는 비밀번호가 일치하지 않습니다.
-								</div>
-							</c:if>
-							<input 
-								type="text" class="form-control" name="memberId"
-								placeholder="아이디" value="eogh" required> 
-							<br /> 
-							<input
-								type="password" class="form-control" name="memberPwd"
-								placeholder="비밀번호" value="eogh" required>
+
+				<form:form
+					action="${pageContext.request.contextPath}/member/memberLogin.do"
+					method="POST">
+					<div class="modal-body">
+						<c:if test="${param.error ne null}">
+							<div class="alert alert-danger" role="alert">
+								아이디 또는 비밀번호가 일치하지 않습니다.						
+							</div>
+						</c:if>
+						<input 
+							type="text" class="form-control" name="memberId"
+							placeholder="아이디" value="honggd" required> 
+						<br /> 
+						<input
+							type="password" class="form-control" name="memberPwd"
+							placeholder="비밀번호" value="1234" required>
+					</div>
+					<div class="modal-footer d-flex flex-column" style="align-items : unset;">
+						<div>
+							<!--  <a href="${pageContext.request.contextPath }/oauth/kakao/login.do">카카오 로그인</a>-->
+							<a href="${pageContext.request.contextPath }/oauth2/authorization/kakao">카카오 로그인</a>
+
 						</div>
 						<div class="modal-footer d-flex flex-column" style="align-items : unset;">
 							<div>

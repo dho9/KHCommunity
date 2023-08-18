@@ -50,8 +50,9 @@
             	<a href="${pageContext.request.contextPath}/admin/adminMain.do" style="text-decoration: none;">
             		<span>관리자페이지</span>
             	</a>
-               <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="쪽지함" class="icon message" style="text-decoration: none;">로그인</a>
-               <a href="${pageContext.request.contextPath}/member/memberCreate2.do" title="내 정보" class="icon my" style="text-decoration: none;">회원가입</a>
+               <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="로그인" class="icon message">로그인</a>
+               <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="회원가입" class="icon my">회원가입</a>
+
             </div>
             <ul id="menu">
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
