@@ -2,9 +2,11 @@ package com.kh.app.admin.service;
 
 import java.util.List;
 
+import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 public interface AdminService {
@@ -38,6 +40,8 @@ public interface AdminService {
 	List<AdminStudentApproveDto> studentApproveListThree();
 
 	List<AdminVacationApproveDto> vacationApproveListThree();
+
+	Employee insertEmployee(EmployeeCreateDto employee);
 
 
 }

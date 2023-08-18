@@ -102,6 +102,13 @@
                     </span>
                     <a href="${pageContext.request.contextPath}/admin/employeeList.do">직원 관리</a>
                   </div>
+                  <div class="userManagement">
+                    &nbsp;&nbsp;&nbsp;
+                    <span style="color:white;" width="16" height="16">
+                      - ➕
+                    </span>
+                    <a href="${pageContext.request.contextPath}/admin/insertMember.do">직원 등록</a>
+                  </div>
                 </div>
               </li>
             </ul>

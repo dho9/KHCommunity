@@ -73,7 +73,7 @@
                             <form id="dataForm" method="post" action="process_form.jsp" style="font-size: 20px;">
                                 <input type="hidden" name="rowId" id="modalRowId"> ID :
                                 <input type="text" name="firstId" id="modalFirstId" readonly>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br> 부서 : <input type="text" name="secondName"
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br> 이름 : <input type="text" name="secondName"
                                     id="modalSecondName" readonly> <br> 연락처 : <input type="text" name="phone"
                                     id="modalPhone" readonly> <br> Email : <input type="text" name="email" id="modalEmail"
                                     readonly> <br> 생년월일 : <input type="date" name="birthday" id="modalBirthday"
@@ -112,10 +112,10 @@ function handleIdSubmit() {
         url: contextPath + '/admin/findById.do',
         data: { id: findById },
         success: function (response) {
-            console.log(response);
             if (response && response.memberId) {
                 const member = [response];
                 updateMembersTable(member);
+	            console.log(response);
             } else {
                 console.log("No member found.");
             }
@@ -123,23 +123,28 @@ function handleIdSubmit() {
     });
 }
 
-function updateMembersTable(member) {
+function updateMembersTable(memberArray) {
     const tableBody = document.querySelector("#membersTableBody");
-    
-    // 기존 테이블 내용을 지우지 않고 기존 행을 업데이트
-    tableBody.innerHTML = ''; // 기존 내용을 초기화
-    
-    	const newRow = `
+	console.log(memberArray);
+    // 기존 테이블 내용을 지우기
+    tableBody.innerHTML = '';
+
+    if (memberArray.length > 0) {
+		const {memberId, memberName, memberPhone, memberEmail, birthday} = memberArray;
+        const member = memberArray[0]; // 배열의 첫 번째 요소를 가져옴
+		console.log(member);
+        // 새로운 행을 생성하여 HTML 코드 작성
+        const newRow = `
             <tr data-bs-toggle="modal" data-bs-target="#myModal"
-                data-row-id="1" data-first-id="${member.memberId}"
+                data-row-id="1" data-first-id= "sadfasdfasdf"
                 data-second-name="${member.memberName}"
                 data-phone="${member.memberPhone}"
                 data-birthday="${member.birthday}"
                 data-email="${member.memberEmail}" data-handle="@mdo">
-                <td>${member.memberId}</td>
-                <td>${member.memberName}</td>
-                <td>${member.memberPhone}</td>
-                <td>${member.memberEmail}</td>
+                <td>\${member.memberId}</td>
+                <td>\${member.memberName}</td>
+                <td>\${member.memberPhone}</td>
+                <td>\${member.memberEmail}</td>
                 <td>
                     <button style="border: 0; background-color: transparent;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -151,7 +156,10 @@ function updateMembersTable(member) {
                 </td>
             </tr>
         `;
-        tableBody.innerHTML += newRow;
+
+        // 새로운 행을 테이블의 맨 아래에 추가
+        tableBody.insertAdjacentHTML("beforeend", newRow);
+    }
 }
       document.addEventListener("DOMContentLoaded", function () {
         const tableRows = document.querySelectorAll("tr[data-bs-toggle='modal']");
@@ -176,10 +184,6 @@ function updateMembersTable(member) {
             document.getElementById("modalPhone").value = phone;
             document.getElementById("modalBirthday").value = birthday;
             document.getElementById("modalEmail").value = email;
-            document.getElementById("modalSubject").value = subject;
-            document.getElementById("modalClass").value = className;
-            document.getElementById("modalLastDay").value = lastDay;
-            document.getElementById("modalHandle").value = handle;
           });
         });
     

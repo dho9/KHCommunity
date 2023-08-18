@@ -1,6 +1,8 @@
 package com.kh.app.admin.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -10,14 +12,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.app.admin.service.AdminService;
+import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -149,4 +155,31 @@ public class AdminController {
 	    log.debug("member = {}", member);
 	    return member;
 	}
+	
+	@GetMapping("/insertMember.do")
+	public void insertMember() {}
+	
+	@RequestMapping(value = "/insertMember.do", method = RequestMethod.POST)
+    public String insertMember(
+            @RequestParam String id,
+            @RequestParam String pw,
+            @RequestParam String name,
+            @RequestParam LocalDate birthday,
+            @RequestParam String email,
+            @RequestParam String phone,
+            @RequestParam String dept) {
+		LocalDateTime currentTime = LocalDateTime.now();
+		EmployeeCreateDto _employee = 
+				EmployeeCreateDto.builder()
+				.id(id)
+				.dept(dept)
+				.employeeEnrollDate(currentTime)
+				.build();
+		
+		
+		Employee employee = adminService.insertEmployee(_employee);
+		
+		
+        return "redirect:/admin/employeeList.do";
+    }
 }
