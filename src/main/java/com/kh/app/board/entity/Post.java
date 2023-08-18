@@ -16,9 +16,9 @@ public class Post {
 	private String memberId;
 	private String title;
 	private LocalDateTime postCreatedAt;
-	private CommentCheck commentCheck;
+	private boolean commentCheck;
 	private int postLike;
-	private AttachCheck attachCheck;
-	private StatusCheck statusCheck;
+	private boolean attachCheck;
+	private boolean statusCheck;
 	private String tag;
 }

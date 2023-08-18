@@ -13,4 +13,7 @@ public interface TicketRepository {
 	@Select("select * from store")
 	List<Ticket> findAll();
 
+	@Select("select * from store where store_id = ${id}")
+	Ticket findTicektById(int id);
+
 }

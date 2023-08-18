@@ -994,7 +994,7 @@ delete post_comment where comment_id=2;
 --삭제회원 
 delete member where member_id = 'test'; 
 delete member where member_id = 'test1'; 
-
+    
 select * from member;
 select * from student;
 select * from class;
