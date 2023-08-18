@@ -104,5 +104,4 @@ public class AdminServiceImpl implements AdminService {
 	public List<AdminStudentListDto> findAllStudents() {
 		return adminRepository.findAllStudents();
 	}
-
 }
