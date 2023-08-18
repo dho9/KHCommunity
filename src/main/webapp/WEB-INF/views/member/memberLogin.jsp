@@ -18,11 +18,14 @@
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
-
+<style>
+.container{width: 30%; text-align: center;}
+</style>
 <body>
 				<!--로그인폼 -->
 				
 				<!-- https://getbootstrap.com/docs/4.1/components/forms/#overview -->
+
 				<form:form
 					action="${pageContext.request.contextPath}/member/memberLogin.do"
 					method="POST">
@@ -44,21 +47,26 @@
 						<div>
 							<!--  <a href="${pageContext.request.contextPath }/oauth/kakao/login.do">카카오 로그인</a>-->
 							<a href="${pageContext.request.contextPath }/oauth2/authorization/kakao">카카오 로그인</a>
+
 						</div>
-						<div class="d-flex justify-content-between">
+						<div class="modal-footer d-flex flex-column" style="align-items : unset;">
 							<div>
-								<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me"/>
-								<label for="remember-me" class="form-check-label">Remember me</label>
+								<!--  <a href="${pageContext.request.contextPath }/oauth/kakao/login.do">카카오 로그인</a>-->
+								<a href="${pageContext.request.contextPath }/oauth2/authorization/kakao">카카오 로그인</a>
 							</div>
-							<div>
-								<button type="submit" class="btn btn-outline-success">로그인</button>
-								<button type="button" class="btn btn-outline-success" data-dismiss="modal">취소</button>
+							<div class="d-flex justify-content-between">
+								<div>
+									<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me"/>
+									<label for="remember-me" class="form-check-label">Remember me</label>
+								</div>
+								<div>
+									<button type="submit" class="btn btn-outline-success">로그인</button>
+									<button type="button" class="btn btn-outline-success" data-dismiss="modal">취소</button>
+								</div>
 							</div>
 						</div>
+						</form:form>
 					</div>
-				</form:form>
-			</div>
-		</div>
-	</div>
+
 	<!-- Modal 끝-->
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

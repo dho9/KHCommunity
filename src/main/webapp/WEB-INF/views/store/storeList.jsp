@@ -8,7 +8,7 @@
   <ul class="list-group" style="max-width: 800px;"> <!-- 리스트로 감싸기 -->
     <c:forEach items="${stores}" var="store">
       <li class="list-group-item"> <!-- 각 항목을 리스트 아이템으로 만들기 -->
-        <a href="${pageContext.request.contextPath}/ticket/ticketDetail.do?id=${store.storeId}" style="text-decoration: none;">
+        <a href="${pageContext.request.contextPath}/store/storeDetail.do?id=${store.storeId}" style="text-decoration: none;">
           <div class="card" style="max-width: 800px;">
             <div class="row g-0">
               <div class="col-md-4">

@@ -1,7 +1,5 @@
 package com.kh.app.member.controller;
 
-
-
 import java.util.Collection;
 import java.util.Map;
 
@@ -41,14 +39,13 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequestMapping("/member")
 public class MemberSecurityController {
-
-
+	
 	@Autowired
 	private MemberService memberService;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@GetMapping("/memberCreate.do")
 	public void memberCreate() {}
 	
@@ -62,26 +59,30 @@ public class MemberSecurityController {
 			@Valid MemberCreateDto member,
 			BindingResult bindingResult, 
 			RedirectAttributes redirectAttr) {
+
 		log.debug("member = {}", member);
-		
-		if(bindingResult.hasErrors()) {
+
+		if (bindingResult.hasErrors()) {
 			ObjectError error = bindingResult.getAllErrors().get(0);
 			redirectAttr.addFlashAttribute("msg", error.getDefaultMessage());
 			return "redirect:/member/memberCreate.do";
-		} 
-		
+		}
+
 		String rawPassword = member.getMemberPwd();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		member.setMemberPwd(encodedPassword);
-		
+
 		int result = memberService.insertMember(member);
 		redirectAttr.addFlashAttribute("msg", "회원가입을 축하드립니다.");
 		return "redirect:/";
 	}
+
 	
+
 	@GetMapping("/memberLogin.do")
 	public void memberLogin() {	}
 	
+
 	@GetMapping("/memberDetail.do")
 	public void memberDetail(Authentication authentication, @AuthenticationPrincipal MemberDetails member) {
 		log.debug("authentication = {}", authentication);
@@ -95,25 +96,24 @@ public class MemberSecurityController {
 	}	
 	
 
+
 	@GetMapping("/checkIdDuplicate.do")
 	@ResponseBody
-	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId){
+	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId) {
 		boolean available = false;
 		try {
-			UserDetails memberDetails = memberService.loadUserByUsername(memberId);	
-		} catch(UsernameNotFoundException e) {
+			UserDetails memberDetails = memberService.loadUserByUsername(memberId);
+		} catch (UsernameNotFoundException e) {
 			available = true;
 		}
-		
-		return  ResponseEntity
-				.status(HttpStatus.OK)
-				.body(Map.of("available", available, "memberId", memberId));
+
+		return ResponseEntity.status(HttpStatus.OK).body(Map.of("available", available, "memberId", memberId));
 	}
 
 	@GetMapping("/mailCheck")
 	@ResponseBody
 	public String mailCheck(String email, Model model) {
-	
+
 		log.debug("email = {}", email);
 		model.addAttribute("email", email);
 		
@@ -122,4 +122,3 @@ public class MemberSecurityController {
 	
 
 }
-

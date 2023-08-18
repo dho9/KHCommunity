@@ -17,4 +17,5 @@ public class Member {
 	private String memberPhone;
 	private LocalDate birthday;
 	private String memberEmail;
+
 }
