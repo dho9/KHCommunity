@@ -306,7 +306,7 @@ CREATE TABLE ticket (
 );
 
 CREATE TABLE ticket_order (
-   order_id   number      NOT NULL,
+   order_id    varchar2(20)       NOT NULL,
    member_id   varchar2(20)      NOT NULL,
    store_id   number      NOT NULL,
    ticket_id   number      NOT NULL,
@@ -1030,44 +1030,3 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
-
-
-INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
-VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
-
-INSERT INTO post_content (post_id, board_id, content)
-VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
-
-SELECT
-    b.board_name,
-    COUNT(p.post_id) AS post_count
-FROM
-    board b
-LEFT JOIN
-    post p ON b.board_id = p.board_id
-GROUP BY
-    b.board_name
-ORDER BY
-    post_count DESC, board_name;
-    
-select * from report where report_check = 'n';
-
-select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)
-where  report_check = 'n' and (rownum between 1 and 6);
-
-SELECT
-    s.student_id,
-    m.member_name,
-    m.member_phone,
-    m.birthday,
-    m.member_email,
-    c.curriculum_name,
-    c.class_id,
-    s.student_type,
-    c.curriculum_end_at
-FROM
-    student s
-JOIN
-    member m ON s.student_id = m.member_id
-JOIN
-    curriculum c ON s.curriculum_id = c.curriculum_id;

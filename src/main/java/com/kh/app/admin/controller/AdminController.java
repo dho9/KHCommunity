@@ -2,14 +2,20 @@ package com.kh.app.admin.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -130,14 +136,21 @@ public class AdminController {
 		
 		// 신고현황 List
 		List<AdminReportListDto> reports = adminService.reportListSix();
-		log.debug("reports = {}", reports);
 		model.addAttribute("reports", reports);
 	}
 	
 	// 수강생 목록 조회 - 유성근
 	@GetMapping("/adminStudentList.do")
-	public void adminStudentList(Model model) {
-		List<AdminStudentListDto> students = adminService.findAllStudents();
+	public void adminStudentList(Model model, HttpServletRequest request) {
+		String searchType = request.getParameter("searchType");
+	    String searchKeyword = request.getParameter("searchKeyword");
+	    
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("searchType", searchType);
+		filters.put("searchKeyword", searchKeyword);
+		
+		List<AdminStudentListDto> students = adminService.findAllStudents(filters);
+		log.debug("students", students);
 		model.addAttribute("students", students);
 	}
 	
@@ -155,5 +168,14 @@ public class AdminController {
 	    Member member = adminService.findById(id);
 	    log.debug("member = {}", member);
 	    return member;
+	}
+	
+	// 수강생 정보 수정 - 유성근
+	@PostMapping("/adminStudentUpdate.do")
+	public String adminStudentUpdate(@Valid AdminStudentListDto student) {
+		log.debug("student = {}", student);
+		int result = adminService.updateAdminStudent(student);
+		
+		return "redirect:/admin/adminStudentList.do";
 	}
 }

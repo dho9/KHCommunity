@@ -1,6 +1,7 @@
 package com.kh.app.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +102,12 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public List<AdminStudentListDto> findAllStudents() {
-		return adminRepository.findAllStudents();
+	public List<AdminStudentListDto> findAllStudents(Map<String, Object> filters) {
+		return adminRepository.findAllStudents(filters);
+	}
+	
+	@Override
+	public int updateAdminStudent(AdminStudentListDto student) {
+		return adminRepository.updateAdminStudent(student);
 	}
 }

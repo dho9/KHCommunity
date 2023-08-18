@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="/WEB-INF/views/common/adminLeftBar.jsp" %>
     <section>
       <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
@@ -14,13 +15,13 @@
 			                <div class="d-flex align-items-center">
 			                    <select class="form-select" aria-label="Default select example" name="searchType" required>
 			                        <option value="" disabled selected>검색타입</option>
-			                        <option value="studentId" ${param.searchType eq 'studentId' ? 'selected' : '' }>수강생 ID</option>
-			                        <option value="memberName" ${param.searchType eq 'memberName' ? 'selected' : '' }>이름</option>
-			                        <option value="classId" ${param.searchType eq 'classId' ? 'selected' : '' }>반</option>
+			                        <option value="student_id" ${param.searchType eq 'student_id' ? 'selected' : '' }>수강생 ID</option>
+			                        <option value="member_name" ${param.searchType eq 'member_name' ? 'selected' : '' }>이름</option>
+			                        <option value="class_id" ${param.searchType eq 'class_id' ? 'selected' : '' }>반</option>
 			                    </select>
 			                    <div class="input-group">
 			                    	&nbsp;
-			                        <input type="search" class="form-control" name="searchKeyword" aria-describedby="button-addon2">
+			                        <input type="search" class="form-control" name="searchKeyword" aria-describedby="button-addon2" value="${param.searchKeyword}">
 			                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
 			                    </div>
 			                </div>
@@ -43,7 +44,7 @@
                   </thead>
                   <tbody>
                   	<c:forEach items="${students}" var="student" varStatus="vs">
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" data-phone="${student.memberPhone}" data-birthday="${student.birthday}" data-subject="${student.curriculumName}" data-class="${student.classId}" data-email="${student.memberEmail}" data-lastDay="${student.curriculumEndAt}" data-handle="@mdo">
+                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" data-phone="${student.memberPhone}" data-birthday="${student.birthday}" data-subject="${student.curriculumName}" data-class="${student.classId}" data-email="${student.memberEmail}" data-lastDay="${student.curriculumEndAt}" data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" data-handle="@mdo">
                           <td>${vs.count}</td>
                           <td>${student.studentId}</td>
                           <td>${student.memberName}</td>
@@ -77,21 +78,26 @@
                         <iframe class="border rounded-4" src="${pageContext.request.contextPath}/resources/pdf/쓰리고근로계약서.pdf" style="width: 100%; height: 500px;"></iframe>
                     </div>
                     <div class="col-md-6">
-                   	  <div class="border rounded-4" style="padding:20px;">
-                      <form  id="dataForm" method="post" action="process_form.jsp" style="font-size: 20px;">
+                   	  <div class="border rounded-4" style="padding:30px;">
+                      <form:form id="dataForm" method="POST" name="modalFrm" action="${pageContext.request.contextPath}/admin/adminStudentUpdate.do" style="font-size: 20px;">
                           <input type="hidden" name="rowId" id="modalRowId">
                           ID : <input type="text" name="firstId" id="modalFirstId" readonly> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
                           이름 : <input type="text" name="secondName" id="modalSecondName" readonly> <br>
                           연락처 : <input type="text" name="phone" id="modalPhone" readonly> <br>
                           생년월일 : <input type="date" name="birthday" id="modalBirthday" readonly> <br>
                           이메일 : <input type="text" name="email" id="modalEmail" readonly> <br>
-                          과목 : <input type="text" name="subject" id="modalSubject" readonly> <br>
-                          반 : <input type="text" name="className" id="modalClass" readonly> <br>
-                          수료일 : <input type="date" name="lastDay" id="modalLastDay"><br>
+                          수료일 : <input type="date" name="lastDay" id="modalLastDay" readonly><br>
+                          학생타입 : <!-- 학생타입 : 예비생 -->
+								<input type="radio" name="studentType" id="modalStudentType1" value="c">예비생
+								<!-- 학생타입 : 수강생 -->
+								<input type="radio" name="studentType" id="modalStudentType2" value="s">수강생
+								<!-- 학생타입 : 수료생 -->
+								<input type="radio" name="studentType" id="modalStudentType3" value="p">수료생
+                          <br>
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                           <button class="btn btn-danger" type="button" id="btnBan">강퇴</button> 
-                      </form>
+                      </form:form>
                    	  </div>
                     </div>
                   </div>
@@ -100,6 +106,17 @@
             </div>
         </div>
       </div>
+      <div class="position-fixed bottom-0 end-0 p-3">
+        <div id="myToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="toast-header">
+                <strong class="me-auto">알림</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                처리가 완료되었습니다.
+            </div>
+        </div>
+    </div>
     </section>
     
     <script>
@@ -117,7 +134,9 @@
             const subject = row.getAttribute("data-subject");
             const className = row.getAttribute("data-class");
             const lastDay = row.getAttribute("data-lastDay");
+            const studentType = row.getAttribute("data-studentType");
             const handle = row.getAttribute("data-handle");
+            const studentTypeValue = row.getAttribute("data-studentType");
     
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
@@ -126,44 +145,53 @@
             document.getElementById("modalPhone").value = phone;
             document.getElementById("modalBirthday").value = birthday;
             document.getElementById("modalEmail").value = email;
-            document.getElementById("modalSubject").value = subject;
-            document.getElementById("modalClass").value = className;
             document.getElementById("modalLastDay").value = lastDay;
-            document.getElementById("modalHandle").value = handle;
+            // document.getElementById("modalStudentType").value = studentType;
+            document.getElementById("modalStudentType1").checked = (studentTypeValue === "예비생");
+            document.getElementById("modalStudentType2").checked = (studentTypeValue === "수강생");
+            document.getElementById("modalStudentType3").checked = (studentTypeValue === "수료생");
           });
         });
     
         // 수정 버튼 클릭 이벤트 처리
         $("#btnEdit").on("click", function () {
-          showConfirmation("edit", "edit_process.jsp");
+          showConfirmation("${pageContext.request.contextPath}/admin/adminStudentUpdate.do");
         });
     
         // 강퇴 버튼 클릭 이벤트 처리
         $("#btnBan").on("click", function () {
-          showConfirmation("ban", "ban_process.jsp");
+          showConfirmation("${pageContext.request.contextPath}/admin/adminStudentDelete.do");
         });
     
         // 확인 메시지 표시 후 데이터 전송 함수 호출
-        function showConfirmation(action, url) {
+        function showConfirmation(url) {
           if (confirm("정말로 진행하시겠습니까?")) {
-            sendDataToServer(action, url);
+            sendDataToServer(url);
           }
         }
     
         // 서버로 데이터를 전송하는 함수
-        function sendDataToServer(action, url) {
-          const formData = new FormData($("#dataForm")[0]);
-          formData.append("action", action);
-    
+        function sendDataToServer(url) {
+          const modalFrm = document.modalFrm;
+          const studentId = modalFrm.firstId.value;
+          const studentType = modalFrm.studentType.value;
+    	  console.log(studentId);
+          const token = document.modalFrm._csrf.value;
+          console.log(url);
           $.ajax({
             type: "POST",
             url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
+            data: {
+            	studentId,
+            	studentType
+            },
+            headers: {
+                "X-CSRF-TOKEN": token
+            },
+            success(responseData) {
               // 서버 응답을 처리
               // 예: 성공 메시지를 표시하거나 다른 동작 수행
+              location.href="${pageContext.request.contextPath}/admin/adminStudentList.do";
             }
           });
         }

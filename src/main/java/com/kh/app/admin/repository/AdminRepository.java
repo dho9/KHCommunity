@@ -1,9 +1,11 @@
 package com.kh.app.admin.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.app.member.entity.Member;
 import com.kh.app.report.dto.AdminReportListDto;
@@ -88,22 +90,10 @@ public interface AdminRepository {
 			+ "where  report_check = 'n' and (rownum between 1 and 6)")
 	List<AdminReportListDto> reportListSix();
 
-	@Select("SELECT\r\n"
-			+ "    s.student_id,\r\n"
-			+ "    m.member_name,\r\n"
-			+ "    m.member_phone,\r\n"
-			+ "    m.birthday,\r\n"
-			+ "    m.member_email,\r\n"
-			+ "    c.curriculum_name,\r\n"
-			+ "    c.class_id,\r\n"
-			+ "    s.student_type,\r\n"
-			+ "    c.curriculum_end_at\r\n"
-			+ "FROM\r\n"
-			+ "    student s\r\n"
-			+ "JOIN\r\n"
-			+ "    member m ON s.student_id = m.member_id\r\n"
-			+ "JOIN\r\n"
-			+ "    curriculum c ON s.curriculum_id = c.curriculum_id")
-	List<AdminStudentListDto> findAllStudents();
+	
+	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters);
+
+	@Update("update student set student_Type = #{studentType} where student_id = #{studentId}")
+	int updateAdminStudent(AdminStudentListDto student);
 
 }

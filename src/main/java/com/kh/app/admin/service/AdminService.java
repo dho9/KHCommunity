@@ -1,6 +1,9 @@
 package com.kh.app.admin.service;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import com.kh.app.member.entity.Member;
 import com.kh.app.report.dto.AdminReportListDto;
@@ -43,7 +46,9 @@ public interface AdminService {
 
 	List<AdminReportListDto> reportListSix();
 
-	List<AdminStudentListDto> findAllStudents();
+	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters);
+
+	int updateAdminStudent(AdminStudentListDto student);
 
 
 }
