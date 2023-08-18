@@ -9,6 +9,8 @@ public interface BoardService {
 
 	List<BoardSearchDetails> findAllByKeyword(String keyword);
 
+	List<BoardSearchDetails> findAllByMemberId(String memberId);
+	
 	List<BoardListDto> freeBoardFindAll();
 
 	List<BoardListDto> preStudentBoardFindAll();

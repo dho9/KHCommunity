@@ -21,6 +21,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public List<BoardSearchDetails> findAllByMemberId(String memberId) {
+		return boardRepository.findAllByMemberId(memberId);
+	}
+	
 	public List<BoardListDto> freeBoardFindAll() {
 		return boardRepository.freeBoardFindAll();
 	}
