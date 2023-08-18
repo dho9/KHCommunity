@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.app.member.repository.MemberRepository">
+  <!-- 
+  <insert id="insertMember">
+  	insert into
+  		member
+  	values (
+  		#{memberId}, #{password}, #{name}, #{birthday}, #{email}, default
+  	)
+  </insert> 
+  -->
+  
+  <!-- 
+  <select id="loadUserByUsername" resultMap="memberAuthMap">
+  	select
+  		*
+  	from
+  		member
+  	where 
+  		member_id = #{username}
+  </select>
+  collection/association태그 사용시 나머지 컬럼에 대한 id/result태그 생략 불가
+  <resultMap type="memberDetails" id="memberAuthMap">
+  	<id column="member_id" property="memberId"/>
+  	<result column="password" property="password"/>
+  	<result column="name" property="name"/>
+  	<result column="birthday" property="birthday"/>
+  	<result column="email" property="email"/>
+  	<result column="created_at" property="createdAt"/>
+  	collection 1:N관계의 테이블 조회시 사용
+  	<collection 
+  		property="authorities"
+  		column="member_id"
+  		ofType="simpleGrantedAuthority"
+  		select="findAuthorities"></collection>
+  </resultMap>
+  
+  
+  <select id="findAuthorities" resultMap="simpleGrantedAuthorityMap">
+  	select
+  		*
+  	from
+  		authority
+  	where
+  		member_id = #{member_id}
+  </select>
+  
+  <resultMap type="simpleGrantedAuthority" id="simpleGrantedAuthorityMap">
+  	<constructor>
+  		<arg column="auth" javaType="string"/>
+  	</constructor>
+  </resultMap> 
+  -->
+  <select id="loadUserByUsername" resultMap="memberAuthMap">
+	select
+	    *
+	from 
+	    member M
+	  left join authority A
+	    on M.member_id = A.member_id
+	where 
+	    M.member_id = #{username}
+  </select>
+
+
+  <!-- collection태그를 사용할때 result태그는 생략할 수 없다. -->
+  <resultMap id="memberAuthMap" type="memberDetails">
+      <id column="member_id" property="memberId"/>
+      <result column="member_pwd" property="memberPwd"/>
+      <result column="member_name" property="memberName"/>
+      <result column="member_phone" property="memberPhone"/>
+      <result column="member_email" property="memberEmail"/>
+      <result column="birthday" property="birthday"/>
+      <collection property="authorities"
+                  ofType="simpleGrantedAuthority">
+          <constructor>
+              <!-- javaType 필수 -->
+              <arg column="auth" javaType="string"/>
+          </constructor>
+      </collection>
+  </resultMap>
+  
+  
+</mapper>

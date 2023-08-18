@@ -7,7 +7,9 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="회원등록" name="title"/>
 </jsp:include>
-
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/js/extensions.jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="/js/extensions.underscore-min.js"></script> 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
 .btn-group-lg>.btn, .btn-lg {width:125px; padding: 0.5rem 1rem; margin: 50px; font-size: 1.25rem; line-height: 1.5; border-radius: 0.3rem;} 
@@ -15,9 +17,22 @@
 .form-control {margin: 5px;}
 #button-container {margin-right:-16px;}
 
+/* 회원 가입 */
+/* div#enroll-container { width:500px; }
+div#enroll-container input, div#enroll-container select { margin-bottom:10px; }
+div#enroll-container table th { text-align:right; padding-right:10px; }
+div#enroll-container table td { text-align:left; } */
+
+
+/* 중복아이디체크관련 */
+div#memberId-container { position:relative; padding:0px; }
+div#memberId-container span.guide { display:none; font-size:12px; position:absolute; top:12px; right:10px; }
+div#memberId-container span.ok { color:green; }
+div#memberId-container span.error { color:red; }
+
 </style>
 <div id="enroll-container" class="mx-auto text-center">
-	<form:form name="memberCreateFrm" action="" method="POST">
+	<form:form name="memberCreateFrm" action="" method="GET">
 		<table class="mx-auto w-75">
 			<tr>
 				<th>아이디</th>
@@ -28,7 +43,7 @@
 							   placeholder="4글자이상"
 							   name="memberId" 
 							   id="memberId"
-							   value="alfn"
+							   value="eogh"
 							   pattern="\w{4,}"
 							   required>
 						<span class="guide ok">이 아이디는 사용가능합니다.</span>
@@ -40,7 +55,7 @@
 			<tr>
 				<th>패스워드</th>
 				<td>
-					<input type="password" class="form-control" name="password" id="password" value="eogh" required>
+					<input type="password" class="form-control" name="memberPwd" id="password" value="eogh" required>
 				</td>
 			</tr>
 			<tr>
@@ -52,13 +67,13 @@
 			<tr>
 				<th>이름</th>
 				<td>	
-					<input type="text" class="form-control" name="name" id="name" value="황대호" required>
+					<input type="text" class="form-control" name="memberName" id="name" value="황대호" required>
 				</td>
 			</tr>
 			<tr>
 				<th>전화번호</th>
 				<td>	
-					<input type="phone" class="form-control" name="phone" id="phone" value="01012341234"/>
+					<input type="phone" class="form-control" name="memberPhone" id="phone" value="010-1234-1234"/>
 				</td>
 			</tr> 
 			<tr>
@@ -135,6 +150,7 @@ document.memberCreateFrm.onsubmit = (e) => {
 	const idValid = document.querySelector("#idValid");
 	const password = document.querySelector("#password");
 	const passwordConfirmation = document.querySelector("#passwordConfirmation");
+
 	
 	if(idValid === "0") {
 		alert("사용가능한 아이디를 작성해주세요.");
