@@ -208,8 +208,10 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                     data: JSON.stringify(requestData) // 데이터를 JSON 형식으로 변환
                 }).done(function(data) {
                 	console.log("Payment successful:", data);
+                	alert(data);
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     console.error("AJAX Request Failed:", textStatus, errorThrown);
+                    alert(errorThrown);
                 });
             }
             

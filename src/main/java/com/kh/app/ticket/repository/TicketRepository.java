@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.store.entity.Store;
 import com.kh.app.ticket.entity.TicketOrder;
