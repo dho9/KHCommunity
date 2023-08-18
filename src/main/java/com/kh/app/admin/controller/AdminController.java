@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kh.app.admin.service.AdminService;
 import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,7 +70,6 @@ public class AdminController {
 		
 		// 게시판 현황 - 게시판 이름, 게시글 수 조회
 		List<BoardChartDto> boardChartDtos = adminService.findBoardNameAndPostCount();
-		log.debug("boardChartDtos = {}", boardChartDtos);
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonData = objectMapper.writeValueAsString(boardChartDtos);
 		model.addAttribute("boardChartData", jsonData);
@@ -77,19 +78,58 @@ public class AdminController {
 		BoardChartDto boardChartThree = null;
 		BoardChartDto boardChartFour = null;
 		BoardChartDto boardChartFive = null;
-		for(int i = 0; i<boardChartDtos.size(); i++) {
-			boardChartOne = boardChartDtos.get(0);
-			boardChartTwo = boardChartDtos.get(1);
-			boardChartThree = boardChartDtos.get(2);
-			boardChartFour = boardChartDtos.get(3);
-			boardChartFive = boardChartDtos.get(4);
+		
+		if (boardChartDtos.size() > 0) {
+		    boardChartOne = boardChartDtos.get(0);
 		}
+
+		if (boardChartDtos.size() > 1) {
+		    boardChartTwo = boardChartDtos.get(1);
+		}
+
+		if (boardChartDtos.size() > 2) {
+		    boardChartThree = boardChartDtos.get(2);
+		}
+
+		if (boardChartDtos.size() > 3) {
+		    boardChartFour = boardChartDtos.get(3);
+		}
+
+		if (boardChartDtos.size() > 4) {
+		    boardChartFive = boardChartDtos.get(4);
+		}
+		
 		model.addAttribute("boardChartOne", boardChartOne);
 		model.addAttribute("boardChartTwo", boardChartTwo);
 		model.addAttribute("boardChartThree", boardChartThree);
 		model.addAttribute("boardChartFour", boardChartFour);
 		model.addAttribute("boardChartFive", boardChartFive);
 		
+		// 3일전 게시글 수
+		int threeDaysAgoPostCount = adminService.threeDaysAgoPostCount();
+		
+		// 2일전 게시글 수
+		int twoDaysAgoPostCount = adminService.twoDaysAgoPostCount();
+		
+		// 1일전 게시글 수
+		int yesterdayPostCount = adminService.yesterdayPostCount();
+		
+		model.addAttribute("threeDaysAgoPostCount", threeDaysAgoPostCount);
+		model.addAttribute("twoDaysAgoPostCount", twoDaysAgoPostCount);
+		model.addAttribute("yesterdayPostCount", yesterdayPostCount);
+		
+		// 수강생 미승인 내역 List
+		List<AdminStudentApproveDto> studentApproveList = adminService.studentApproveListThree();
+		log.debug("studentApproveList = {}", studentApproveList);
+		model.addAttribute("studentApproveList", studentApproveList);
+		
+		// 휴가 미승인 내역 List
+		List<AdminVacationApproveDto> vacationApproveList = adminService.vacationApproveListThree();
+		log.debug("vacationApproveList = {}", vacationApproveList);
+		model.addAttribute("vacationApproveList", vacationApproveList);
+		
+		// 신고현황 List
+//		List<ReportDto> reports = adminService.reportListSix();
 	}
 	
 	// 수강생 목록 조회 - 유성근

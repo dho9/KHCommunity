@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 public interface AdminService {
 
@@ -26,6 +28,16 @@ public interface AdminService {
 	List<BoardChartDto> findBoardNameAndPostCount();
 	
 	Member findById(String id);
+
+	int threeDaysAgoPostCount();
+
+	int twoDaysAgoPostCount();
+
+	int yesterdayPostCount();
+
+	List<AdminStudentApproveDto> studentApproveListThree();
+
+	List<AdminVacationApproveDto> vacationApproveListThree();
 
 
 }
