@@ -102,6 +102,14 @@ public class MemberSecurityController {
 				.body(Map.of("available", available, "memberId", memberId));
 	}
 
+	@GetMapping("/mailCheck")
+	@ResponseBody
+	public String mailCheck(String email) {
 	
+		log.debug("email = {}", email);
+		
+		return memberService.joinEmail(email);
+	}
+
 }
 
