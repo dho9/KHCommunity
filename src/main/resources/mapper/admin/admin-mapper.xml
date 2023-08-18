@@ -26,6 +26,6 @@
 	    order by
 	    	${searchType}
     </if>
-    order by m.member_name
+    
   </select>
 </mapper>
