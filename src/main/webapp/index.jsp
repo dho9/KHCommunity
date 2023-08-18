@@ -13,7 +13,7 @@
 	display: block;
 }
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 	
     <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">

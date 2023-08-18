@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/ticket/*").permitAll()
 			.antMatchers("/member/*").permitAll()
 			.anyRequest().authenticated();
-	
+		
 	}
 	
 	

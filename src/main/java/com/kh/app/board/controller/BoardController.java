@@ -8,13 +8,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.board.dto.BoardListDto;
-import com.kh.app.board.entity.BoardSearchDetails;
+import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.member.entity.MemberDetails;
 
@@ -23,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 @RequestMapping("/board")
+@Transactional
 public class BoardController {
 	
 	@Autowired
@@ -94,21 +99,66 @@ public class BoardController {
 	 */
 	@GetMapping("/boardSearch.do")
     public String boardSearch(@RequestParam String keyword, Model model) {
-        List<BoardSearchDetails> boards = boardService.findAllByKeyword(keyword);
+        List<BoardSearchDto> boards = boardService.findAllByKeyword(keyword);
         log.debug("boards = {}", boards);
-        model.addAttribute("boards = {}", boards);
-        model.addAttribute("keyword = {}", keyword);
+        log.debug("keyword = {}", keyword);
+        model.addAttribute("boards", boards);
+        model.addAttribute("keyword", keyword);
         return "/board/boardListByKeyword";
     }
 	
 	@GetMapping("/myBoards.do")
 	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
 //		String memberId = principal.getMemberId();
-		List<BoardSearchDetails> boards = boardService.findAllByMemberId("gmlwls");
+		List<BoardSearchDto> boards = boardService.findAllByMemberId("gmlwls");
 		log.debug("boards = {}", boards);
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(Map.of("boards", boards));
+	}
+	
+	@GetMapping("/favorite.do")
+	public ResponseEntity<?> isFavorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
+//		String memberId = principal.getMemberId();
+		int boardId = Integer.parseInt(_boardId);
+		
+		Favorite favorite = boardService.findFavoriteByMemberId(boardId, "gmlwls");
+		log.debug("favorite = {}", favorite);
+		
+		boolean available = true;
+		if(favorite == null)
+			available = false;
+		log.debug("availalbe = {}", available);
+		
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("available", available));
+	}
+	
+	@PostMapping("/favorite.do")
+	public ResponseEntity<?> favorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
+//		String memberId = principal.getMemberId();
+		int boardId = Integer.parseInt(_boardId);
+		
+		Favorite favorite = boardService.findFavoriteByMemberId(boardId, "gmlwls");
+		log.debug("favorite = {}", favorite);
+		
+		boolean available = true;
+		if(favorite == null)
+			available = false;
+		log.debug("availalbe = {}", available);
+		
+		int result = 0;
+		if(available) {
+			result = boardService.deleteFavoriteByMemberId(boardId, "gmlwls");
+		}
+		else {
+			result = boardService.insertFavoriteByMemberId(boardId, "gmlwls");
+		}
+		
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("available", available));
 	}
 
 }

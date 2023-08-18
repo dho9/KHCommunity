@@ -3,11 +3,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<style>
+.bi-star, .bi-star-fill {
+	font-size: 30px;
+    color: #f8fd20;
+    float: right;
+    cursor: pointer;
+}
+</style>
+
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
 			<a>자유게시판</a>
+			<i class="bi bi-star" data-value="${freeBoardLists[0].boardId}"></i>
 		</h1>
 	</div>
 	<div class="wrap articles">
@@ -120,4 +131,65 @@
             </div>
         </div>
     </div>
+    <form:form name="tokenFrm">
+    </form:form>
+    <script>
+    window.onload = () => {
+    	console.log(document.querySelector('.bi').dataset.value);
+    	$.ajax({
+    		url : "${pageContext.request.contextPath}/board/favorite.do",
+    		data : {
+                _boardId : document.querySelector('.bi').dataset.value
+            },
+    		method : "GET",
+    		dataType : "json",
+    		success(responseData) {
+    			console.log(responseData);
+    			const {available} = responseData;
+    			
+    			const star = document.querySelector('.bi');
+    			if(available) {
+                	star.classList.remove('bi-star');
+                	star.classList.add('bi-star-fill');
+                }
+                else {
+                	star.classList.add('bi-star');
+                	star.classList.remove('bi-star-fill');
+                }
+    		}
+    	});
+    }
+    
+    document.querySelector('.bi').onclick = (e) => {
+    	console.log(e.target.dataset.value);
+    	
+    	const token = document.tokenFrm._csrf.value;
+    	
+        $.ajax({
+            url : "${pageContext.request.contextPath}/board/favorite.do",
+            data : {
+                _boardId : e.target.dataset.value
+            },
+            headers: {
+                "X-CSRF-TOKEN": token
+            },
+            method : "POST",
+            dataType : "json",
+            success(responseData) {
+                console.log(responseData);
+                const {available} = responseData;
+                
+                const star = document.querySelector('.bi');
+                if(available) {
+                	star.classList.add('bi-star');
+                	star.classList.remove('bi-star-fill');
+                }
+                else {
+                	star.classList.remove('bi-star');
+                	star.classList.add('bi-star-fill');
+                }
+            }
+        });
+    };
+    </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
