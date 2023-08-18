@@ -35,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 			.antMatchers("/", "/index.jsp").permitAll()
+
 			.antMatchers("/board/*").permitAll()
 			.antMatchers("/admin/*").permitAll()
 			.antMatchers("/board/*").permitAll()
@@ -42,7 +43,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/member/*").permitAll()
 			.antMatchers("/store/*").permitAll()
 			.anyRequest().authenticated();
+
+	
 		
+		http.formLogin() // 
+		.loginPage("/member/memberLogin.do")
+		.loginProcessingUrl("/member/memberLogin.do")
+		.usernameParameter("memberId")
+		.passwordParameter("memberPwd")
+		.defaultSuccessUrl("/")
+		.permitAll();
+	
+		http.logout()
+		.logoutUrl("/member/memberLogout.do")
+		.logoutSuccessUrl("/")
+		.permitAll();
 	}
 	
 }
