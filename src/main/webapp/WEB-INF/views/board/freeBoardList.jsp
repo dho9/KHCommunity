@@ -19,8 +19,8 @@
 		<c:if test="${not empty freeBoardLists}">
 			<article>
 				<c:forEach items="${freeBoardLists}" var="board">
-					<a class="article" href="#">
-				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/"/>
+					<a class="article" href="${pageContext.request.contextPath}/board/boardDetail.do?id=${board.postId}">
+				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<h3 class="medium">익명</h3>
 					  	<time class="medium">
 						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
@@ -30,10 +30,10 @@
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/"/></li>
-					  		<li class="vote">${board.postLike}</li>
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/"/></li>
-					  		<li class="comment">${board.commentCount}</li>
+					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
+					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
+					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
 					  	</ul>
 					  	<hr>
 					</a>

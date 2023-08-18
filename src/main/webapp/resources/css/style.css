@@ -789,6 +789,13 @@ aside > div.title > ol.buttons > li > a.image.setting {
     height: 20px;
     border-radius: 4px;
 }
+
+#container > div.articles > article img.picture.large {
+    margin: 0 5px 5px 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+}
 #container > div.articles > article img.picture {
     float: left;
 }

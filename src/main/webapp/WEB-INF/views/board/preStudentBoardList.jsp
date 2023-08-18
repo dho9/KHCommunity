@@ -7,7 +7,7 @@
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
-			<a>자유게시판</a>
+			<a>예비생게시판</a>
 		</h1>
 	</div>
 	<div class="wrap articles">
@@ -19,8 +19,8 @@
 		<c:if test="${not empty preStudentBoardList}">
 			<article>
 				<c:forEach items="${preStudentBoardList}" var="board">
-					<a class="article" href="#">
-				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/"/>
+					<a class="article" href="${pageContext.request.contextPath}/board/boardDetail.do?id=${board.postId}">
+				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<h3 class="medium">익명</h3>
 					  	<time class="medium">
 						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
@@ -30,10 +30,10 @@
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/"/></li>
-					  		<li class="vote">${board.postLike}</li>
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/"/></li>
-					  		<li class="comment">${board.commentCount}</li>
+					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
+					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
+					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
 					  	</ul>
 					  	<hr>
 					</a>
@@ -55,7 +55,9 @@
                     <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
                     <h4>자유게시판</h4>
                     <ul class="status">
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
                         <li class="vote active">22</li>
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
                         <li class="comment active">7</li>
                     </ul>
                     <hr>
@@ -65,7 +67,9 @@
                     <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
                     <h4>자유게시판</h4>
                     <ul class="status">
+                       	<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
                         <li class="vote active">22</li>
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
                         <li class="comment active">7</li>
                     </ul>
                     <hr>
@@ -75,7 +79,9 @@
                     <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
                     <h4>자유게시판</h4>
                     <ul class="status">
+                        <li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
                         <li class="vote active">22</li>
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
                         <li class="comment active">7</li>
                     </ul>
                     <hr>
@@ -92,7 +98,9 @@
                     <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
                     <h4>자유게시판</h4>
                     <ul class="status">
+	                    <li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
                         <li class="vote active">22</li>
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
                         <li class="comment active">7</li>
                     </ul>
                     <hr>
@@ -102,7 +110,9 @@
                     <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
                     <h4>자유게시판</h4>
                     <ul class="status">
+	                    <li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
                         <li class="vote active">22</li>
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
                         <li class="comment active">7</li>
                     </ul>
                     <hr>
@@ -112,7 +122,9 @@
                     <p class="small">하나도 빼놓지 말고 다 잡으세용</p>
                     <h4>자유게시판</h4>
                     <ul class="status">
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
                         <li class="vote active">22</li>
+                    	<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
                         <li class="comment active">7</li>
                     </ul>
                     <hr>
