@@ -46,4 +46,7 @@ public interface AdminRepository {
 	@Select("select * from member where member_role = 'e'")
 	List<Member> findAllEmployee();
 
+	@Select("select * from member where member_id = #{id}")
+	Member findById(String id);
+
 }

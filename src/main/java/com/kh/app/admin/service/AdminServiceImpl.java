@@ -61,4 +61,9 @@ public class AdminServiceImpl implements AdminService {
 	public List<BoardChartDto> findBoardNameAndPostCount() {
 		return adminRepository.findBoardNameAndPostCount();
 	}
+	
+	@Override
+	public Member findById(String id) {
+		return adminRepository.findById(id);
+	}
 }

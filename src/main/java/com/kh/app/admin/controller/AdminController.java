@@ -6,10 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.app.admin.service.AdminService;
 import com.kh.app.member.entity.Member;
@@ -96,7 +99,14 @@ public class AdminController {
 	@GetMapping("/employeeList.do")
 	public void employeeList(Model model){
 		List<Member> members = adminService.findAllEmployee();
-		log.debug("members = {}", members);
-		
+		model.addAttribute("members", members);
+	}
+	
+	@GetMapping("/findById.do")
+	@ResponseBody
+	public Member findById(@RequestParam String id) {
+	    Member member = adminService.findById(id);
+	    log.debug("member = {}", member);
+	    return member;
 	}
 }
