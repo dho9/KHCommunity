@@ -76,19 +76,23 @@ textarea{resize:none}
 @media(min-width: 480px){#container{box-sizing:border-box;border:1px solid #ededed;border-radius:12px;margin:24px auto;padding:24px;width:480px}}
 button{color:#fff;font-weight:bold;background-color:#5B91BD}
 #mainbutton{text-align:center; margin-top:15px;}
+#mainbutton button{display:inline-block; margin: 1.5%; width: 15%;}
 #container2 {display: flex; flex-direction: column; justify-content: center; align-items: center; height: 300px; /* 화면의 높이를 차지하도록 설정합니다. */ display:none; width: 30%; margin: 3% auto;}
 .form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하여 margin을 설정합니다. */ width:100%}
-.form-group input{width: 50%; display:inline-block; margin-right:1%;}
+.form-group input{width: 53.7%; display:inline-block; margin-right:1%;}
 .form-group button{width: 20%; display:inline-block;}
-.form-group label{width: 20%; display:inline-block;}
-#userEmail1 {width: 25%; display:inline-block;}
-.form-group select{width: 23%; display:inline-block; margin-right:1%;}
+.form-group label{width: 23.5%; display:inline-block;}
+#userEmail1 {width: 28%; display:inline-block;}
+.form-group select{width: 24%; display:inline-block; margin-right:1%;}
+#verificationResult {text-align: center; width: 100%;}
+#verificationResult button,span{width: 100%; display:inline-block; margin: 2% 0; color: white;}
+
 </style>
 <body>
 <div id="mainbutton">
 	<button type="button" class="btn btn-primary btn-lg" id="mainbutton1">약관동의</button>
-	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton2">이메일인증</button>
-	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton3">회원정보입력</button>
+	<button type="button" class="btn btn-outline-primary btn-lg" id="mainbutton2">이메일인증</button>
+	<button type="button" class="btn btn-outline-primary btn-lg" id="mainbutton3">회원정보입력</button>
 </div>
 
 <div id="container">
@@ -673,7 +677,12 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 	          <div class="form-group">
 	            <label for="verificationCode">인증번호</label>
 	            <input type="text" class="form-control" id="verificationCode" placeholder="인증번호 6자리를 입력해주세요">
-	          <button type="submit" class="btn btn-primary" id="emailSubmit">제출</button>
+	          <button type="button" class="btn btn-primary" id="emailSubmit">제출</button>
+	          <br/>
+	          <div id="verificationResult">	          
+			  	<span id="mail-check-warn">인증결과</span>
+			  	<button type="button" class="btn btn-primary" disabled>회원정보 입력</button>
+	          </div>
 	          </div>
 	   </form>
   </div>
@@ -721,25 +730,30 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
     	if(allChecked) {
     		document.getElementById("container").style.display = "none";
         	document.getElementById("container2").style.display = "block";
+        	
+        	document.getElementById("mainbutton1").classList.remove('btn-primary');
+        	document.getElementById("mainbutton1").classList.add('btn-outline-primary');
+
+        	document.getElementById("mainbutton2").classList.add('btn-primary');
+        	document.getElementById("mainbutton2").classList.remove('btn-outline-primary');
+        	
         	window.scrollTo(0, 0);
     	}
     	
     });
     
-
 	
-	$('#userMailbtn').click(function() {
-		
+	$('#userMailbtn').click(function() {		
 		const userEmail = document.querySelector('#userEmail1');
-		console.log(userEmail.value);
+		
 		if(userEmail.value != "" && userEmail.value != null){
-			const email = $('#userEmail1').val() + $('#userEmail2').val(); // 이메일 주소값 얻어오기!
-			console.log('완성된 이메일 : ' + email); // 이메일 오는지 확인
-			const checkInput = $('#verificationCode') // 인증번호 입력하는곳 
+			const email = $('#userEmail1').val() + $('#userEmail2').val();
+			console.log('완성된 이메일 : ' + email);
+			const checkInput = $('#verificationCode');
 		
 			$.ajax({
 				type : 'get',
-				url : '<c:url value ="/member/mailCheck?email="/>'+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+				url : '<c:url value ="/member/mailCheck?email="/>'+email,
 				success : function (data) {
 					console.log("data : " +  data);
 					checkInput.attr('disabled',false);
@@ -753,6 +767,27 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
     	}
 			
 	});    
+	
+	$('#verificationCode').blur(function () {
+		const inputCode = $(this).val();
+
+		const $resultMsg = $('#mail-check-warn');
+		
+		if(inputCode === code){
+			$resultMsg.html('인증번호가 일치합니다.');
+			$resultMsg.css('color','green');
+			$('#userMailbtn').attr('disabled',true);
+			$('#userEamil1').attr('readonly',true);
+			$('#userEamil2').attr('readonly',true);
+			$('#userEmail2').attr('onFocus', 'this.initialSelect = this.selectedIndex');
+	        $('#userEmail2').attr('onChange', 'this.selectedIndex = this.initialSelect');
+	        $('#verificationResult button').attr('disabled',false);
+		}else{
+			$resultMsg.html('인증번호가 불일치 합니다.');
+			$resultMsg.css('color','red');
+		}
+	});
+	
 
   </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

@@ -46,11 +46,11 @@ public class MemberSecurityController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@GetMapping("/memberCreate.do")
+	@GetMapping("/memberCreate2.do")
 	public void memberCreate() {}
 	
 	
-	@PostMapping("/memberCreate.do")
+	@PostMapping("/memberCreate2.do")
 	public String create(
 			@Valid MemberCreateDto member,
 			BindingResult bindingResult, 
@@ -63,9 +63,9 @@ public class MemberSecurityController {
 			return "redirect:/member/memberCreate.do";
 		} 
 		
-		String rawPassword = member.getPassword();
+		String rawPassword = member.getMemberPwd();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
-		member.setPassword(encodedPassword);
+		member.setMemberPwd(encodedPassword);
 		
 		int result = memberService.insertMember(member);
 		redirectAttr.addFlashAttribute("msg", "회원가입을 축하드립니다.");
@@ -92,7 +92,7 @@ public class MemberSecurityController {
 	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId){
 		boolean available = false;
 		try {
-			UserDetails memberDetails = memberService.loadUserByUsername(memberId);		
+			UserDetails memberDetails = memberService.loadUserByUsername(memberId);	
 		} catch(UsernameNotFoundException e) {
 			available = true;
 		}

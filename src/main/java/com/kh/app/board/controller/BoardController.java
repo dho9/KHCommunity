@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.board.dto.BoardListDto;
+import com.kh.app.board.dto.PostDetails;
 import com.kh.app.board.entity.BoardSearchDetails;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.member.entity.MemberDetails;
@@ -84,6 +85,16 @@ public class BoardController {
         return "/board/graduateBoardList";
 	}
 	
+	@GetMapping("/employeeBoardList.do")
+	public String employeeBoardList(Model model) {
+		List<BoardListDto> employeeBoardList = boardService.employeeBoardFindAll();
+        log.debug("employeeBoardList = {}", employeeBoardList);
+        
+        model.addAttribute("employeeBoardList", employeeBoardList);
+        
+        return "/board/employeeBoardList";
+	}
+	
 	
 	
 	/**
@@ -109,6 +120,18 @@ public class BoardController {
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(Map.of("boards", boards));
+	}
+	
+	/**
+	 * 게시글조회
+	 * @param id
+	 * @param model
+	 */
+	@GetMapping("/boardDetail.do")
+	public void boardDetail(@RequestParam int id, Model model) {
+		BoardListDto postDetail = boardService.findById(id);
+		log.debug("postDetail = {}", postDetail);
+		model.addAttribute("postDetail", postDetail);
 	}
 
 }
