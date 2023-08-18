@@ -2,10 +2,13 @@ package com.kh.app.admin.service;
 
 import java.util.List;
 
+import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 
 public interface AdminService {
 
+	List<Member> findAllEmployee();
+	
 	int todayNewStudentCount();
 
 	int todayNewEmployee();
@@ -21,6 +24,8 @@ public interface AdminService {
 	int todayNewReportCount();
 
 	List<BoardChartDto> findBoardNameAndPostCount();
+	
+	Member findById(String id);
 
 
 }

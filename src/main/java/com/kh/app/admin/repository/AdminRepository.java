@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 
 
@@ -41,5 +42,11 @@ public interface AdminRepository {
 	List<BoardChartDto> findBoardNameAndPostCount();
 
 
+
+	@Select("select * from member where member_role = 'e'")
+	List<Member> findAllEmployee();
+
+	@Select("select * from member where member_id = #{id}")
+	Member findById(String id);
 
 }
