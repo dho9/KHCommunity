@@ -16,34 +16,34 @@
 --=============================================
 -- 테이블 삭제
 --=============================================
-DROP TABLE member CASCADE CONSTRAINTS;
-DROP TABLE class CASCADE CONSTRAINTS;
-DROP TABLE teacher CASCADE CONSTRAINTS;
-DROP TABLE employee CASCADE CONSTRAINTS;
-DROP TABLE board CASCADE CONSTRAINTS;
-DROP TABLE post_content CASCADE CONSTRAINTS;
-DROP TABLE post_attachment CASCADE CONSTRAINTS;
-DROP TABLE favorite CASCADE CONSTRAINTS;
-DROP TABLE report CASCADE CONSTRAINTS;
-DROP TABLE talker CASCADE CONSTRAINTS;
-DROP TABLE store CASCADE CONSTRAINTS;
-DROP TABLE ticket CASCADE CONSTRAINTS;
-DROP TABLE ticket_order CASCADE CONSTRAINTS;
-DROP TABLE student_attachment CASCADE CONSTRAINTS;
-DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
-DROP TABLE student CASCADE CONSTRAINTS;
-DROP TABLE scheduler CASCADE CONSTRAINTS;
-DROP TABLE vacation CASCADE CONSTRAINTS;
-DROP TABLE post CASCADE CONSTRAINTS;
-DROP TABLE post_comment CASCADE CONSTRAINTS;
-DROP TABLE message_box CASCADE CONSTRAINTS;
-DROP TABLE chat_room CASCADE CONSTRAINTS;
-DROP TABLE chat_message CASCADE CONSTRAINTS;
-DROP TABLE authority CASCADE CONSTRAINTS;
-DROP TABLE curriculum CASCADE CONSTRAINTS;
-DROP TABLE quit_member CASCADE CONSTRAINTS;
-DROP TABLE delete_post CASCADE CONSTRAINTS;
-DROP TABLE delete_comment CASCADE CONSTRAINTS;
+--DROP TABLE member CASCADE CONSTRAINTS;
+--DROP TABLE class CASCADE CONSTRAINTS;
+--DROP TABLE teacher CASCADE CONSTRAINTS;
+--DROP TABLE employee CASCADE CONSTRAINTS;
+--DROP TABLE board CASCADE CONSTRAINTS;
+--DROP TABLE post_content CASCADE CONSTRAINTS;
+--DROP TABLE post_attachment CASCADE CONSTRAINTS;
+--DROP TABLE favorite CASCADE CONSTRAINTS;
+--DROP TABLE report CASCADE CONSTRAINTS;
+--DROP TABLE talker CASCADE CONSTRAINTS;
+--DROP TABLE store CASCADE CONSTRAINTS;
+--DROP TABLE ticket CASCADE CONSTRAINTS;
+--DROP TABLE ticket_order CASCADE CONSTRAINTS;
+--DROP TABLE student_attachment CASCADE CONSTRAINTS;
+--DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
+--DROP TABLE student CASCADE CONSTRAINTS;
+--DROP TABLE scheduler CASCADE CONSTRAINTS;
+--DROP TABLE vacation CASCADE CONSTRAINTS;
+--DROP TABLE post CASCADE CONSTRAINTS;
+--DROP TABLE post_comment CASCADE CONSTRAINTS;
+--DROP TABLE message_box CASCADE CONSTRAINTS;
+--DROP TABLE chat_room CASCADE CONSTRAINTS;
+--DROP TABLE chat_message CASCADE CONSTRAINTS;
+--DROP TABLE authority CASCADE CONSTRAINTS;
+--DROP TABLE curriculum CASCADE CONSTRAINTS;
+--DROP TABLE quit_member CASCADE CONSTRAINTS;
+--DROP TABLE delete_post CASCADE CONSTRAINTS;
+--DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --=============================================
 -- 테이블 전체 삭제
 --=============================================
@@ -65,33 +65,33 @@ DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --=============================================
 -- 계정에 속한 모든 트리거를 삭제합니다.
 --=============================================
-BEGIN
-  FOR trg IN (SELECT trigger_name FROM user_triggers) LOOP
-        EXECUTE IMMEDIATE 'DROP TRIGGER ' || trg.trigger_name;
-    END LOOP;
- END;
-/
+--BEGIN
+--  FOR trg IN (SELECT trigger_name FROM user_triggers) LOOP
+--        EXECUTE IMMEDIATE 'DROP TRIGGER ' || trg.trigger_name;
+--    END LOOP;
+-- END;
+--/
 
 
 --===============================================
 -- 시퀀스 삭제
 --===============================================
-drop sequence seq_student_attach_id;
-drop sequence seq_schedule_id;
-drop sequence seq_vacation_id;
-drop sequence seq_vacation_attach_id;
-drop sequence seq_board_id;
-drop sequence seq_post_id;
-drop sequence seq_post_attach_id;
-drop sequence seq_comment_id;
-drop sequence seq_message_id;
-drop sequence seq_report_id;
-drop sequence seq_chat_id;
-drop sequence seq_store_id;
-drop sequence seq_ticket_id;
-drop sequence seq_order_id;
-drop sequence seq_chat_message_no;
-drop sequence seq_curriculum_id;
+--drop sequence seq_student_attach_id;
+--drop sequence seq_schedule_id;
+--drop sequence seq_vacation_id;
+--drop sequence seq_vacation_attach_id;
+--drop sequence seq_board_id;
+--drop sequence seq_post_id;
+--drop sequence seq_post_attach_id;
+--drop sequence seq_comment_id;
+--drop sequence seq_message_id;
+--drop sequence seq_report_id;
+--drop sequence seq_chat_id;
+--drop sequence seq_store_id;
+--drop sequence seq_ticket_id;
+--drop sequence seq_order_id;
+--drop sequence seq_chat_message_no;
+--drop sequence seq_curriculum_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -108,7 +108,6 @@ create sequence seq_report_id;
 create sequence seq_chat_id;
 create sequence seq_store_id;
 create sequence seq_ticket_id;
-create sequence seq_order_id;
 create sequence seq_chat_message_no;
 create sequence seq_curriculum_id;
 --===============================================
@@ -989,22 +988,25 @@ INSERT INTO chat_message (chat_no,chat_id, employee_id  , chat_content) VALUES (
 
 -- store
 INSERT INTO store (store_id, store_name, post_number, address, store_type)
-VALUES (seq_store_id.NEXTVAL, '맥주창고', '06132', '서울특별시 강남구 강남대로94길 86 2층 우편번호', '음식점');
+VALUES (seq_store_id.NEXTVAL, '맥주창고', '06132', '서울특별시 강남구 강남대로94길 86 2층', '음식점');
+
+INSERT INTO store (store_id, store_name, post_number, address, store_type)
+VALUES (seq_store_id.NEXTVAL, '중리', '06236', '서울 강남구 테헤란로20길 15 메이플라워멤버스빌오피스텔', '음식점');
 
 -- ticket
 INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 1, 5900);
+INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2, 3000);
 
 -- order
-INSERT INTO ticket_order (order_id, member_id, store_id, ticket_id, amount, total_price)
-VALUES (seq_order_id.NEXTVAL, 'gmlwls', 1, 1, 2, 10800);
 
-----삭제 게시글 
---delete post where post_id =3;
-----삭제 댓글
---delete post_comment where comment_id=2;
-----삭제회원 
---delete member where member_id = 'test'; 
---delete member where member_id = 'test1'; 
+
+--삭제 게시글 
+delete post where post_id =3;
+--삭제 댓글
+delete post_comment where comment_id=2;
+--삭제회원 
+delete member where member_id = 'test'; 
+delete member where member_id = 'test1'; 
 
 select * from member;
 select * from student;
@@ -1025,8 +1027,15 @@ select * from chat_room;
 select * from talker;
 select * from chat_message;
 select * from store;
+select * from ticket;
 select * from ticket_order;
 select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
+
+INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
+VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
+
+INSERT INTO post_content (post_id, board_id, content)
+VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
