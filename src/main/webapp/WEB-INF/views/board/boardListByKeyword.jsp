@@ -23,14 +23,6 @@
 			<article>
 				<c:forEach items="${boards}" var="board">
 					<a class="article" href="#">
-				  		<!-- <c:choose>
-						  	<c:when test="${board.memberId eq board.memberId}">
-						  		${board.memberId}
-						  	</c:when>
-						  	<c:otherwise>
-						  		익명
-						  	</c:otherwise>
-				  		</c:choose> -->
 				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/"/>
 				  		<h3 class="medium">익명</h3>
 					  	<time class="medium">
@@ -40,7 +32,7 @@
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
-					  	<a class="boardname" href="#">${board.boardName}</a>
+					  	<p>${board.boardName}</p>
 					  	<ul class="status">
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/"/></li>
 					  		<li class="vote">${board.postLike}</li>

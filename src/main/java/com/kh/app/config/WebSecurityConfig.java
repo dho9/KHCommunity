@@ -43,8 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/member/*").permitAll()
 			.antMatchers("/store/*").permitAll()
 			.anyRequest().authenticated();
-
-	
 		
 		http.formLogin() // 
 		.loginPage("/member/memberLogin.do")

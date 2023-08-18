@@ -9,12 +9,11 @@
 .accordion {
 	display: none;
 }
-.active + .accordion {
+.active {
 	display: block;
 }
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	
+
     <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
             <form class="search">
@@ -50,7 +49,7 @@
                 <div class="menus">
                     <a href="/myarticle" class="myarticle">내가 쓴 글</a>
                     <a href="/mycommentarticle" class="mycommentarticle">댓글 단 글</a>
-                    <a class="myscrap" id="myscrap">즐겨찾기</a>
+                    <a class="myBoard" id="myBoard">즐겨찾기</a>
                     <div class="favorite"></div>
                     <hr>
                 </div>
@@ -297,31 +296,37 @@
             </div>
         </div>
 <script>
-document.querySelector('#myscrap').onclick = () => {
-	$.ajax({
-		url : "${pageContext.request.contextPath}/board/myBoards.do",
-		method : "GET",
-		dataType : "json",
-		success(responseData) {
-			console.log(responseData.boards);
-			const favorite = document.querySelector(".favorite");
-			
-			let html = "";
-			for(const board of responseData.boards) {
-				const {boardName} = board;
-				html += `
-		          	<a class="accordion">\${boardName}</a>
-				`;
-			};
-			favorite.innerHTML = html;
-			console.log("나와?");
-			
-		    const accordions = document.querySelectorAll('.accordion');
-	        for (const accordion of accordions) {
-	            accordion.classList.toggle('active');
-	        }
-		}
-	});
-};
+document.querySelector('#myBoard').addEventListener('mouseover', () => {
+    $.ajax({
+        url: "${pageContext.request.contextPath}/board/myBoards.do",
+        method: "GET",
+        dataType: "json",
+        success(responseData) {
+            const favorite = document.querySelector(".favorite");
+
+            let html = "";
+            for (const board of responseData.boards) {
+                const { boardName } = board;
+                html += `
+                    <a class="accordion">\${boardName}</a>
+                `;
+            }
+
+            favorite.innerHTML = html;
+
+            const accordions = document.querySelectorAll('.accordion');
+
+            for (const accordion of accordions) {
+				accordion.classList.toggle('active');
+				favorite.style.display = "block";
+            }
+        }
+    });
+});
+
+document.querySelector('#myBoard').addEventListener('mouseout', () => {
+    const favorite = document.querySelector(".favorite");
+    favorite.style.display = "none";
+});
 </script>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>

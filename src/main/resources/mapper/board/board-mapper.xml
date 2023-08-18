@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.app.board.repository.BoardRepository">
-  <select id="findAllByKeyword" resultType="boardSearchDetails">
+  <select id="findAllByKeyword" resultType="boardSearchDto">
     select
 	    b.board_name,
 	    p.title,
@@ -19,7 +19,7 @@
 	 where
         p.title like '%' || #{keyword} || '%' or c.content like '%' || #{keyword} || '%'
   </select>
-  <resultMap type="boardSearchDetails" id="boardSearchDetailsMap">
+  <resultMap type="boardSearchDto" id="boardSearchDtoMap">
   	<id column="board_id" property="boardId"/>
   	<result column="board_name" property="boardName"/>
   	<result column="title" property="boardName"/>
@@ -28,7 +28,7 @@
   	<result column="comment_count" property="commentCount"/>
   </resultMap>
   
-  <select id="findAllByMemberId" resultType="boardSearchDetails">
+  <select id="findAllByMemberId" resultType="boardSearchDto">
     select
 	    b.board_name
 	from
@@ -37,7 +37,7 @@
 	where
 	    f.member_id = #{member_id}
   </select>
-  <resultMap type="boardSearchDetails" id="myBoardsMap">
+  <resultMap type="boardSearchDto" id="myBoardsMap">
   	<id column="board_id" property="boardId"/>
   	<result column="board_name" property="boardName"/>
   </resultMap>
@@ -49,7 +49,8 @@
 	    p.post_created_at,
 	    p.post_like,
 	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id
 	from
 	    post p join post_content c
 	    	on
@@ -65,7 +66,8 @@
 	    p.post_created_at,
 	    p.post_like,
 	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id
 	from
 	    post p join post_content c
 	    	on
@@ -81,7 +83,8 @@
 	    p.post_created_at,
 	    p.post_like,
 	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id
 	from
 	    post p join post_content c
 	    	on
@@ -127,6 +130,7 @@
   	<result column="post_created_at" property="postCreatedAt"/>
   	<result column="post_like" property="postLike"/>
   	<result column="comment_count" property="commentCount"/>
+  	<result column="board_id" property="boardId"/>
   </resultMap>
   
   
