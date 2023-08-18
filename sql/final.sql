@@ -16,98 +16,101 @@
 --=============================================
 -- 테이블 삭제
 --=============================================
---DROP TABLE member CASCADE CONSTRAINTS;
---DROP TABLE class CASCADE CONSTRAINTS;
---DROP TABLE subject CASCADE CONSTRAINTS;
---DROP TABLE teacher CASCADE CONSTRAINTS;
---DROP TABLE employee CASCADE CONSTRAINTS;
---DROP TABLE board CASCADE CONSTRAINTS;
---DROP TABLE post_content CASCADE CONSTRAINTS;
---DROP TABLE post_attachment CASCADE CONSTRAINTS;
---DROP TABLE favorite CASCADE CONSTRAINTS;
---DROP TABLE report CASCADE CONSTRAINTS;
---DROP TABLE talker CASCADE CONSTRAINTS;
---DROP TABLE store CASCADE CONSTRAINTS;
---DROP TABLE ticket CASCADE CONSTRAINTS;
---DROP TABLE ticket_order CASCADE CONSTRAINTS;
---DROP TABLE student_attachment CASCADE CONSTRAINTS;
---DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
---DROP TABLE student CASCADE CONSTRAINTS;
---DROP TABLE scheduler CASCADE CONSTRAINTS;
---DROP TABLE vacation CASCADE CONSTRAINTS;
---DROP TABLE post CASCADE CONSTRAINTS;
---DROP TABLE post_comment CASCADE CONSTRAINTS;
---DROP TABLE message_box CASCADE CONSTRAINTS;
---DROP TABLE chat_room CASCADE CONSTRAINTS;
---DROP TABLE chat_message CASCADE CONSTRAINTS;
---DROP TABLE authority CASCADE CONSTRAINTS;
-
+DROP TABLE member CASCADE CONSTRAINTS;
+DROP TABLE class CASCADE CONSTRAINTS;
+DROP TABLE teacher CASCADE CONSTRAINTS;
+DROP TABLE employee CASCADE CONSTRAINTS;
+DROP TABLE board CASCADE CONSTRAINTS;
+DROP TABLE post_content CASCADE CONSTRAINTS;
+DROP TABLE post_attachment CASCADE CONSTRAINTS;
+DROP TABLE favorite CASCADE CONSTRAINTS;
+DROP TABLE report CASCADE CONSTRAINTS;
+DROP TABLE talker CASCADE CONSTRAINTS;
+DROP TABLE store CASCADE CONSTRAINTS;
+DROP TABLE ticket CASCADE CONSTRAINTS;
+DROP TABLE ticket_order CASCADE CONSTRAINTS;
+DROP TABLE student_attachment CASCADE CONSTRAINTS;
+DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
+DROP TABLE student CASCADE CONSTRAINTS;
+DROP TABLE scheduler CASCADE CONSTRAINTS;
+DROP TABLE vacation CASCADE CONSTRAINTS;
+DROP TABLE post CASCADE CONSTRAINTS;
+DROP TABLE post_comment CASCADE CONSTRAINTS;
+DROP TABLE message_box CASCADE CONSTRAINTS;
+DROP TABLE chat_room CASCADE CONSTRAINTS;
+DROP TABLE chat_message CASCADE CONSTRAINTS;
+DROP TABLE authority CASCADE CONSTRAINTS;
+DROP TABLE curriculum CASCADE CONSTRAINTS;
+DROP TABLE quit_member CASCADE CONSTRAINTS;
+DROP TABLE delete_post CASCADE CONSTRAINTS;
+DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --=============================================
 -- 테이블 전체 삭제
 --=============================================
--- BEGIN
+--BEGIN
 --    FOR tab IN (SELECT table_name FROM user_tables) LOOP
 --        EXECUTE IMMEDIATE 'DROP TABLE ' || tab.table_name || ' CASCADE CONSTRAINTS';
 --    END LOOP;
 -- END;
--- /
+--/
 --=============================================
 -- 계정에 속한 모든 시퀀스를 삭제합니다.
 --=============================================
--- BEGIN
---    FOR seq IN (SELECT sequence_name FROM user_sequences WHERE sequence_name LIKE 'SEQ\_%' ESCAPE '\') LOOP
---        EXECUTE IMMEDIATE 'DROP SEQUENCE ' || seq.sequence_name;
---    END LOOP;
--- END;
--- /
+--BEGIN
+--  FOR seq IN (SELECT sequence_name FROM user_sequences WHERE sequence_name LIKE 'SEQ\_%' ESCAPE '\') LOOP
+--       EXECUTE IMMEDIATE 'DROP SEQUENCE ' || seq.sequence_name;
+--   END LOOP;
+--END;
+--/
 --=============================================
 -- 계정에 속한 모든 트리거를 삭제합니다.
 --=============================================
---BEGIN
---    FOR trg IN (SELECT trigger_name FROM user_triggers) LOOP
---        EXECUTE IMMEDIATE 'DROP TRIGGER ' || trg.trigger_name;
---    END LOOP;
--- END;
--- /
+BEGIN
+  FOR trg IN (SELECT trigger_name FROM user_triggers) LOOP
+        EXECUTE IMMEDIATE 'DROP TRIGGER ' || trg.trigger_name;
+    END LOOP;
+ END;
+/
 
 
 --===============================================
 -- 시퀀스 삭제
 --===============================================
---drop sequence seq_student_attach_id;
---drop sequence seq_schedule_id;
---drop sequence seq_vacation_id;
---drop sequence seq_vacation_attach_id;
---drop sequence seq_board_id;
---drop sequence seq_post_id;
---drop sequence seq_post_attach_id;
---drop sequence seq_comment_id;
---drop sequence seq_message_id;
---drop sequence seq_report_id;
---drop sequence seq_chat_id;
---drop sequence seq_store_id;
---drop sequence seq_ticket_id;
---drop sequence seq_order_id;
---drop sequence seq_chat_message_no;
+drop sequence seq_student_attach_id;
+drop sequence seq_schedule_id;
+drop sequence seq_vacation_id;
+drop sequence seq_vacation_attach_id;
+drop sequence seq_board_id;
+drop sequence seq_post_id;
+drop sequence seq_post_attach_id;
+drop sequence seq_comment_id;
+drop sequence seq_message_id;
+drop sequence seq_report_id;
+drop sequence seq_chat_id;
+drop sequence seq_store_id;
+drop sequence seq_ticket_id;
+drop sequence seq_order_id;
+drop sequence seq_chat_message_no;
+drop sequence seq_curriculum_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
---create sequence seq_student_attach_id;
---create sequence seq_schedule_id;
---create sequence seq_vacation_id;
---create sequence seq_vacation_attach_id;
---create sequence seq_board_id;
---create sequence seq_post_id;
---create sequence seq_post_attach_id;
---create sequence seq_comment_id;
---create sequence seq_message_id;
---create sequence seq_report_id;
---create sequence seq_chat_id;
---create sequence seq_store_id;
---create sequence seq_ticket_id;
---create sequence seq_order_id;
---create sequence seq_chat_message_no;
---create sequence seq_curriculum_id;
+create sequence seq_student_attach_id;
+create sequence seq_schedule_id;
+create sequence seq_vacation_id;
+create sequence seq_vacation_attach_id;
+create sequence seq_board_id;
+create sequence seq_post_id;
+create sequence seq_post_attach_id;
+create sequence seq_comment_id;
+create sequence seq_message_id;
+create sequence seq_report_id;
+create sequence seq_chat_id;
+create sequence seq_store_id;
+create sequence seq_ticket_id;
+create sequence seq_order_id;
+create sequence seq_chat_message_no;
+create sequence seq_curriculum_id;
 --===============================================
 -- 테이블 생성
 --===============================================
@@ -129,9 +132,11 @@ CREATE TABLE authority (
 CREATE TABLE student (
    student_id   varchar2(20)      NOT NULL,
    curriculum_id   number,
-   student_enroll_dated   date   DEFAULT sysdate   NULL,
+   student_enroll_date   date   DEFAULT sysdate   NULL,
    approve_check   char(1)      ,
-   student_type   char(1)      
+   approve_request_date date,
+   approve_complete_date date,
+   student_type   char(1)
 );
 
 
@@ -178,7 +183,9 @@ CREATE TABLE scheduler (
 CREATE TABLE vacation (
    vacation_id   number      NOT NULL,
    student_id   varchar2(20)      NOT NULL,
-   teacher_id   varchar2(20)      NOT NULL,
+   vacation_start_date date,
+   vacation_end_date date,
+   teacher_id   varchar2(20),
    employee_id   varchar2(20)   ,
    vacation_send_date   date   DEFAULT sysdate,
    vacation_approve_check   char(2)
@@ -877,22 +884,22 @@ INSERT INTO teacher (teacher_id,teacher_enroll_date)
 VALUES ('ehdgus', '20/01/01');
 
 -- curriculum
-INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'352','ehdgus','자바','352_JAVA_융합','22/12/31',sysdate);
-INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'351','ehdgus','자바','352_JAVA_융합','22/12/31',sysdate);
-INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'353','ehdgus','자바','352_JAVA_융합','22/12/31',sysdate);
+INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'352','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
+INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'351','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
+INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'353','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
 
 -- student
-INSERT INTO student (student_id, curriculum_id, approve_check, student_type)
-VALUES ('alfn', '1', 'n', 'c');
+INSERT INTO student (student_id, curriculum_id, approve_check, approve_request_date, approve_complete_date,  student_type)
+VALUES ('alfn', '1', 'n', '23/08/18', null, 'c');
 
-INSERT INTO student (student_id, curriculum_id, approve_check, student_type)
-VALUES ('gmlwls', '2','y', 's');
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('gmlwls', '2','y', '23/08/18', sysdate, 's');
 
-INSERT INTO student (student_id, curriculum_id, approve_check, student_type)
-VALUES ('alsgml', '3', 'y', 'p');
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('alsgml', '3', 'y', '23/08/18', sysdate, 'p');
 
-INSERT INTO student (student_id, curriculum_id, approve_check, student_type)
-VALUES ('test1', '3', 'y', 'p');
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
 
 --employee
 INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('godwjd', '행정', '2020/02/02');
@@ -909,17 +916,17 @@ VALUES (seq_schedule_id.NEXTVAL, 'alsgml', '자바공부하기', '2023/08/01');
 
 
 -- vacation
-INSERT INTO vacation (vacation_id, student_id, teacher_id, vacation_approve_check)
-VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', 'ehdgus',  '1');
+INSERT INTO vacation (vacation_id, student_id, vacation_start_date, vacation_end_date, vacation_approve_check)
+VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', '23/08/20', '23/08/20', '1');
 
-INSERT INTO vacation (vacation_id, student_id, teacher_id,employee_id   , vacation_approve_check)
-VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', 'ehdgus',  'godwjd',2);
+INSERT INTO vacation (vacation_id, student_id, vacation_start_date,  vacation_end_date, teacher_id, vacation_approve_check)
+VALUES (seq_vacation_id.NEXTVAL, 'gmlwls',  '23/08/21',  '23/08/21', 'ehdgus', 2);
 
-INSERT INTO vacation (vacation_id, student_id, teacher_id,employee_id   , vacation_approve_check)
-VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', 'ehdgus',  'godwjd',3);
+INSERT INTO vacation (vacation_id, student_id,  vacation_start_date, vacation_end_date, teacher_id,employee_id   , vacation_approve_check)
+VALUES (seq_vacation_id.NEXTVAL, 'gmlwls',  '23/08/22', '23/08/22', 'ehdgus',  'godwjd',3);
 
-INSERT INTO vacation (vacation_id, student_id, teacher_id,employee_id   , vacation_approve_check)
-VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', 'ehdgus',  'godwjd',0);
+INSERT INTO vacation (vacation_id, student_id, vacation_start_date, vacation_end_date, teacher_id,employee_id   , vacation_approve_check)
+VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', '23/09/06', '23/09/06', 'ehdgus',  'godwjd',0);
 
 --board
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '자유게시판');
@@ -1020,14 +1027,8 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
-SELECT
-    b.board_name,
-    COUNT(p.post_id) AS post_count
-FROM
-    board b
-LEFT JOIN
-    post p ON b.board_id = p.board_id
-GROUP BY
-    b.board_name
-ORDER BY
-    post_count DESC, board_name;
+INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
+VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
+
+INSERT INTO post_content (post_id, board_id, content)
+VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');

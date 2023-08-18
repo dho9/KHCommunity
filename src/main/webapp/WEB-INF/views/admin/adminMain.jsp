@@ -73,39 +73,37 @@
 			    </div>
 			  </div>
               <div class="card-body">
+			  <c:forEach items="${studentApproveList}" var="studentApprove">
                 <div class="warning-box" style="display: flex; padding: 20px 0 0 20px;">
                   <div class="warning-img">
                     <img src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" style="width: 90px;">
                   </div>
                   <div class="warning-content" style="float: left; text-align: left; line-height: 0.7; padding-top: 9px;">
                     <p style="font-weight: 600;">
-                      <span style="background-color: burlywood; border-radius: 10px; padding: 4px;;">수강생 승인</span> JAVA반 수강생 KH타임 회원 신청합니다.
+                      <span style="background-color: burlywood; border-radius: 10px; padding: 4px;;">수강생 승인</span> ${studentApprove.curriculumName} 수강생 KH타임 회원 신청합니다.
                     </p>
-                    <p style="font-size: 13px;">&nbsp;hellojava | 2023.08.10</p>
+                    <p style="font-size: 13px;">&nbsp;${studentApprove.studentId} | ${studentApprove.approveRequestDate}</p>
                   </div>  
-                </div>
+                </div>			  
+			  </c:forEach>
+			  <c:forEach items="${vacationApproveList}" var="vacationApprove">
                 <div class="warning-box" style="display: flex; padding: 20px 0 0 20px;">
                   <div class="warning-img">
                     <img src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" style="width: 90px;">
                   </div>
                   <div class="warning-content" style="float: left; text-align: left; line-height: 0.7; padding-top: 9px;">
                     <p style="font-weight: 600;">
-                      <span style="background-color: burlywood; border-radius: 10px; padding: 4px;">수강생 승인</span> 정보보안반 수강생 KH타임 회원 신청합니다.
+					  <c:if test="${vacationApprove.vacationStartDate == vacationApprove.vacationEndDate}">
+        	              <span style="background-color: darkseagreen; border-radius: 10px; padding: 4px;">휴가 승인</span> ${vacationApprove.classId} ${vacationApprove.memberName} / ${vacationApprove.vacationStartDate} 휴가 신청합니다.
+					  </c:if>
+					  <c:if test="${vacationApprove.vacationStartDate != vacationApprove.vacationEndDate}">
+        	              <span style="background-color: darkseagreen; border-radius: 10px; padding: 4px;">휴가 승인</span> ${vacationApprove.classId} ${vacationApprove.memberName} / ${vacationApprove.vacationStartDate}~${vacationApprove.vacationEndDate} 휴가 신청합니다.
+					  </c:if>
                     </p>
-                    <p style="font-size: 13px;">&nbsp;byesecurity | 2023.08.12</p>
+                    <p style="font-size: 13px;">&nbsp;${vacationApprove.studentId} | ${vacationApprove.vacationSendDate}</p>
                   </div>  
                 </div>
-                <div class="warning-box" style="display: flex; padding: 20px 0 0 20px;">
-                  <div class="warning-img">
-                    <img src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" style="width: 90px;">
-                  </div>
-                  <div class="warning-content" style="float: left; text-align: left; line-height: 0.7; padding-top: 9px;">
-                    <p style="font-weight: 600;">
-                      <span style="background-color: darkseagreen; border-radius: 10px; padding: 4px;">휴가 승인</span> 352 이장준 / 8월 7일 휴가 신청합니다.
-                    </p>
-                    <p style="font-size: 13px;">&nbsp;lotteworld | 2023.08.04</p>
-                  </div>  
-                </div>
+			  </c:forEach>
               </div>
             </div>
           </div>
@@ -171,15 +169,34 @@
 
       var boardChartData = ${boardChartData};
       console.log(boardChartData);
+      var propertyCount = Object.keys(boardChartData).length;
+      console.log("boardChartData의 속성 수: " + propertyCount);
+      
+      var chartColumns = [];
+
+	  if (propertyCount >= 1) {		  
+		  chartColumns.push(["${boardChartOne.boardName}", ${boardChartOne.postCount}]);
+	  }
+    	  
+      if (propertyCount >= 2) {
+    	  chartColumns.push(["${boardChartTwo.boardName}", ${boardChartTwo.postCount}]);
+      }
+
+      if (propertyCount >= 3) {
+    	  chartColumns.push(["${boardChartThree.boardName}", ${boardChartThree.postCount}]);
+      }
+
+      if (propertyCount >= 4) {
+    	  chartColumns.push(["${boardChartFour.boardName}", ${boardChartFour.postCount}]);
+      }
+
+      if (propertyCount >= 5) {
+    	  chartColumns.push(["${boardChartFive.boardName}", ${boardChartFive.postCount}]);
+      }
+      
       var chart = bb.generate({
         data: {
-          columns: [
-            ["${boardChartOne.boardName}", ${boardChartOne.postCount}],
-            ["${boardChartTwo.boardName}", ${boardChartTwo.postCount}],
-            ["${boardChartThree.boardName}", ${boardChartThree.postCount}],
-            ["${boardChartFour.boardName}", ${boardChartFour.postCount}],
-            ["${boardChartFive.boardName}", ${boardChartFive.postCount}],
-          ],
+          columns: chartColumns,
           type: "donut", // for ESM specify as: donut()
         },
         donut: {
@@ -209,7 +226,7 @@
         x: "x",
         columns: [
           ["x", threeMonth + "/" + threeDay, twoMonth + "/" + twoDay, yesMonth + "/" + yesDay, todMonth + "/" + todDay],
-          ["총 게시글수", 330, 200, 270, 300]
+          ["총 게시글수", ${threeDaysAgoPostCount}, ${twoDaysAgoPostCount}, ${yesterdayPostCount}, ${todayNewPostCount}]
         ],
         type: "bar" // for ESM specify as: bar()
       };

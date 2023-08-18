@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.kh.app.admin.repository.AdminRepository;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,4 +59,30 @@ public class AdminServiceImpl implements AdminService {
 	public List<BoardChartDto> findBoardNameAndPostCount() {
 		return adminRepository.findBoardNameAndPostCount();
 	}
+	
+	@Override
+	public int threeDaysAgoPostCount() {
+		return adminRepository.threeDaysAgoPostCount();
+	}
+	
+	@Override
+	public int twoDaysAgoPostCount() {
+		return adminRepository.twoDaysAgoPostCount();
+	}
+	
+	@Override
+	public int yesterdayPostCount() {
+		return adminRepository.yesterdayPostCount();
+	}
+	
+	@Override
+	public List<AdminStudentApproveDto> studentApproveListThree() {
+		return adminRepository.studentApproveListThree();
+	}
+	
+	@Override
+	public List<AdminVacationApproveDto> vacationApproveListThree() {
+		return adminRepository.vacationApproveListThree();
+	}
+	
 }
