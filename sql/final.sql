@@ -960,7 +960,7 @@ INSERT INTO post_comment (comment_id, post_id, board_id, member_id, comment_cont
 VALUES (seq_comment_id.NEXTVAL, 3, 1, 'alsgml', '삭제테스트댓글', 1, NULL);
 
 -- favorite
-INSERT INTO favorite (board_id, member_id) VALUES (1, 'gmlwls');
+INSERT INTO favorite (board_id, member_id) VALUES (22, 'gmlwls');
 INSERT INTO favorite (board_id, member_id) VALUES (1, 'alsgml');
 
 -- message_box

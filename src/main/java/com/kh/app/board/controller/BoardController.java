@@ -119,7 +119,7 @@ public class BoardController {
     }
 	
 	/**
-	 * 내 스크랩
+	 * 내 즐겨찾기
 	 * @param principal
 	 * @return
 	 */
@@ -134,7 +134,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * 스크랩 했는지 안했는지
+	 * 즐겨찾기 했는지 안했는지
 	 * @param principal
 	 * @param _boardId
 	 * @return
@@ -158,7 +158,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * 스크랩 기능
+	 * 즐겨찾기 기능
 	 * @param principal
 	 * @param _boardId
 	 * @return
