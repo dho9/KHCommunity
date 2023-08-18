@@ -10,11 +10,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,12 +24,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.app.member.dto.MemberCreateDto;
-import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
-
 import com.kh.app.member.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -89,6 +86,9 @@ public class MemberSecurityController {
 		log.debug("authorities = {}", authorities);
 	
 	}	
+	
+	@GetMapping("/checkIdDuplicate.do")
+	@ResponseBody
 	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId){
 		boolean available = false;
 		try {
