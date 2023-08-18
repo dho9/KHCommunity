@@ -19,4 +19,9 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		return ticketRepository.findAll();
 	}
+	@Override
+	public Ticket findTicektById(int id) {
+		// TODO Auto-generated method stub
+		return ticketRepository.findTicektById(id);
+	}
 }

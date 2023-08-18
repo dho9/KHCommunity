@@ -4,1073 +4,755 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="회원등록" name="title"/>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
-
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/js/extensions.jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="/js/extensions.underscore-min.js"></script> 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+ 
+<style>
+*{margin:0;padding:0;border:0;-webkit-touch-callout:none}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:rgba(0,0,0,.05)}
+address,h1,h2,h3,h4,h5,h6{font-weight:normal}
+article,aside,div,figure,nav{display:block}
+body{color:#292929;font-family:"맑은 고딕","돋움","Apple SD Gothic Neo",sans-serif;letter-spacing:-0.5px;background-color:#fff;user-select:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+dl,li,ol,ul{list-style-type:none}
+hr{clear:both;width:auto;height:0;box-sizing:border-box;background-color:rgba(0,0,0,0)}
+img{display:block}input,select,textarea{outline:none}
+input::placeholder,textarea::placeholder{color:#a6a6a6}
+input[type=button],input[type=email],input[type=number],input[type=password],input[type=search],input[type=text],input[type=submit],select,textarea{-webkit-appearance:none;letter-spacing:-0.5px}
+textarea{resize:none}
+#container div.input input[type=email],#container div.input input[type=password],#container div.input input[type=text],#container div.input select{display:block;box-sizing:border-box;margin-top:4px;padding:8px;width:100%;height:40px;line-height:24px;border:1px solid #ededed;border-radius:12px;color:#292929;font-size:16px;background-color:#f9f9f9;background-repeat:no-repeat;background-position:right 8px center;background-size:24px 24px}
+#container{padding:16px 24px 48px 24px; width:80%;}
+#container h2{line-height:30px;color:#292929;font-size:22px;font-weight:bold}
+#container h2:not(:first-of-type){margin-top:48px}
+#container h2.multiple{font-weight:normal}
+#container p.description{margin-top:8px;line-height:20px;color:#737373;font-size:14px}
+#container p.description strong{color:#292929}
+#container div.input{margin-top:24px}
+#container div.input div.label{display:flex;padding:0 8px}
+#container div.input div.label label{flex:auto;line-height:20px;color:#737373;font-size:12px;font-weight:bold}
+#container div.input div.label p{flex-shrink:0;line-height:20px;color:#a6a6a6;font-size:12px}
+#container div.input select{background-image:url("/images/register.input.select.png")}
+#container div.input input[type=email],#container div.input input[type=password],#container div.input input[type=text]{padding-right:40px}
+#container div.input input[type=email]:focus,#container div.input input[type=password]:focus,#container div.input input[type=text]:focus{background-color:#fff}
+#container div.input input[type=email].search,#container div.input input[type=password].search,#container div.input input[type=text].search{background-image:url("/images/register.input.search.png")}
+#container div.input input[type=email].caution,#container div.input input[type=password].caution,#container div.input input[type=text].caution{background-image:url("/images/register.input.caution.png")}
+#container div.input input[type=email].pass,#container div.input input[type=password].pass,#container div.input input[type=text].pass{background-image:url("/images/register.input.pass.png")}
+#container div.input div.caution{display:none;margin:4px 0 0 8px;line-height:20px;color:#c62917;font-size:12px}
+#container input[type=submit]{display:block;margin-top:24px;width:100%;height:40px;border:0;border-radius:12px;color:#fff;font-size:16px;font-weight:bold;background-color:#c62917}
+#container ol.campuses{margin-top:16px}
+#container ol.campuses li a{display:block;line-height:40px;padding:0 8px;color:#444;font-size:16px;cursor:pointer}
+#container ol.campuses li a strong{color:#c62917}
+#container ol.campuses li.empty{line-height:20px;padding:0 8px;color:#a6a6a6;font-size:14px}
+#container div.agreement{margin-top:16px}#container div.agreement label{display:block;line-height:40px;color:#292929;font-size:12px;cursor:pointer}
+#container div.agreement label.bold{font-weight:bold}
+/* #container div.agreement label input[type=checkbox]{display:none} */
+#container div.agreement label input[type=checkbox]:checked~figure.checkbox{background-image:url("/images/register.agreement.checkbox.checked.png")}
+#container div.agreement label figure.checkbox{display:inline-block;margin:13px 8px 0 0;width:14px;height:14px;background-image:url("/images/register.agreement.checkbox.unchecked.png");background-size:14px 14px;vertical-align:top}
+#container div.agreement div.text{overflow:auto;padding:8px;box-sizing:border-box;height:144px;border:1px solid #ededed;border-radius:12px;background-color:#f9f9f9}
+#container div.agreement div.text.small{height:auto}
+#container div.agreement div.text h3{line-height:18px;color:#737373;font-size:12px;font-weight:bold}
+#container div.agreement div.text h3:not(:first-of-type){margin-top:16px}
+#container div.agreement div.text h4{margin-top:4px;line-height:18px;color:#737373;font-size:12px;font-weight:bold}
+#container div.agreement div.text p{margin-top:4px;line-height:18px;color:#737373;font-size:12px}
+#container div.agreement div.text p:first-child{margin-top:0}
+#container div.agreement div.text ol{margin-top:4px;padding-left:12px}
+#container div.agreement div.text ol li{list-style-type:decimal;line-height:18px;color:#737373;font-size:12px}
+#container div.agreement div.text ol ol{margin-top:0;padding-left:12px}#container div.agreement div.text ol ol li{list-style-type:disc}
+#container div.agreement div.text ol ol ol li{list-style-type:circle}#container form{margin-top:24px}
+#container form[data-type=ipin]{margin-top:8px}
+#container form a{display:block;line-height:40px;border-radius:12px;font-size:16px;text-align:center;cursor:pointer}
+#container form a.red{color:#fff;font-weight:bold;background-color:#5B91BD}
+#container form a.normal{color:#737373;background-color:#f2f2f2}
+#container div.buttons{margin-top:24px}
+#container div.buttons a{display:block;margin-bottom:8px;height:40px;line-height:40px;border-radius:12px;font-size:16px;text-align:center;cursor:pointer}
+#container div.buttons a.normal{color:#737373;background-color:#f2f2f2}
+#container div.buttons a.red{color:#fff;font-weight:bold;background-color:#c62917}
+@media(min-width: 480px){#container{box-sizing:border-box;border:1px solid #ededed;border-radius:12px;margin:24px auto;padding:24px;width:480px}}
+button{color:#fff;font-weight:bold;background-color:#5B91BD}
+#mainbutton{text-align:center; margin-top:15px;}
+#container2 {display: flex; flex-direction: column; justify-content: center; align-items: center; height: 300px; /* 화면의 높이를 차지하도록 설정합니다. */ display:none; width: 30%; margin: 3% auto;}
+.form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하여 margin을 설정합니다. */ width:100%}
+.form-group input{width: 50%; display:inline-block; margin-right:1%;}
+.form-group button{width: 20%; display:inline-block;}
+.form-group label{width: 20%; display:inline-block;}
+#userEmail1 {width: 25%; display:inline-block;}
+.form-group select{width: 23%; display:inline-block; margin-right:1%;}
+</style>
 <body>
-<div class="container">
-    <div class="inner">
-        <h1 class="logo_naver">
-            <a href="http://naver.com" class="link">
-                <span class="blind">네이버</span>
-            </a>
-        </h1>
-        <div class="content">
-            <div class="lang_select_wrap">
-                <select class="select" id="selectLang">
-                    <option value="ko_KR">한국어</option>
-                    <option value="en_US">English</option>
-                    <option value="zh-Hans_CN">中文(简体)</option>
-                    <option value="zh-Hant_TW">中文(台灣)</option>
-                    <option value="ja_JP">日本語</option>
-                </select>
-                <div class="current_text" aria-hidden="true">한국어</div>
-            </div>
-            <h2 class="blind">네이버 회원가입</h2>
-            <form id="join_form" method="GET" action="/user2/join/begin" class="form btn_fixed">
-                <input type="hidden" id="token_sjoin" name="token_sjoin" value="HDbeb61R1b8nvz20">
-                <input type="hidden" id="langSelect" name="langSelect" value="ko_KR">
+<div id="mainbutton">
+	<button type="button" class="btn btn-primary btn-lg" id="mainbutton1">약관동의</button>
+	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton2">이메일인증</button>
+	<button type="button" class="btn btn-secondary btn-lg" id="mainbutton3">회원정보입력</button>
+</div>
 
-                <div class="form_content">
-                    <div class="form_section">
-                        <div class="check_terms">
-                            <div class="check_wrap">
-                                <input type="checkbox" id="chk_all" class="blind" />
-                                <label for="chk_all">
-                                    <span class="text check_all">전체 동의하기</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="terms_desc">실명 인증된 아이디로 가입, 위치기반서비스 이용약관(선택), 이벤트・혜택 정보 수신(선택) 동의를 포함합니다.</div>
-                        <ul class="terms_list">
-                            <li class="terms_item">
-                                <div class="check_terms">
-                                    <div class="check_wrap">
-                                        <input type="checkbox" id="termsService" class="blind" />
-                                        <label for="termsService">
-                                            <em class="option point">[필수]</em>
-                                            <div class="text_wrap">
-                                                <span class="text">네이버 이용약관</span>
-                                                <a href="https://policy.naver.com/policy/service.html" class="link_arrow" target="_blank">
-                                                    <span class="blind"></span>
-                                                </a>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="terms_box" tabindex="0">
-                                    <!-- 네이버 이용약관 동의 -->
-<div class="article">
-	<h3 class="article_title">여러분을 환영합니다.</h3>
-	<p class="article_text">
-		네이버 서비스 및 제품(이하 ‘서비스’)을 이용해 주셔서 감사합니다. 본 약관은 다양한 네이버 서비스의 이용과
-		관련하여 네이버 서비스를 제공하는 네이버 주식회사(이하 ‘네이버’)와 이를 이용하는 네이버 서비스 회원(이하
-		‘회원’) 또는 비회원과의 관계를 설명하며, 아울러 여러분의 네이버 서비스 이용에 도움이 될 수 있는 유익한
-		정보를 포함하고 있습니다.
-	</p>
-	<p class="article_text">
-		네이버 서비스를 이용하시거나 네이버 서비스 회원으로 가입하실 경우 여러분은 본 약관 및 관련 운영 정책을
-		확인하거나 동의하게 되므로, 잠시 시간을 내시어 주의 깊게 살펴봐 주시기 바랍니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">다양한 네이버 서비스를 즐겨보세요.</h3>
-	<p class="article_text">
-		네이버는 <a href="http://www.naver.com/" target="_blank">www.naver.com</a>을 비롯한 네이버 도메인의
-		웹사이트 및 응용프로그램(어플리케이션, 앱)을 통해 정보 검색, 다른 이용자와의 커뮤니케이션, 콘텐츠 제공,
-		상품 쇼핑 등 여러분의 생활에 편리함을 더할 수 있는 다양한 서비스를 제공하고 있습니다.<br />
-		여러분은 PC, 휴대폰 등 인터넷 이용이 가능한 각종 단말기를 통해 각양각색의 네이버 서비스를 자유롭게
-		이용하실 수 있으며, 개별 서비스들의 구체적인 내용은 각 서비스 상의 안내, 공지사항,
-		<a href="https://help.naver.com/support/home.nhn" target="_blank">네이버 웹고객센터(이하 ‘고객센터’)</a>
-		도움말 등에서 쉽게 확인하실 수 있습니다.
-	</p>
-	<p class="article_text">
-		네이버는 기본적으로 여러분 모두에게 동일한 내용의 서비스를 제공합니다. 다만, '청소년보호법' 등 관련
-		법령이나 기타 개별 서비스 제공에서의 특별한 필요에 의해서 연령 또는 일정한 등급을 기준으로 이용자를
-		구분하여 제공하는 서비스의 내용, 이용 시간, 이용 횟수 등을 다르게 하는 등 일부 이용을 제한하는 경우가
-		있습니다. 자세한 내용은 역시 각 서비스 상의 안내, 공지사항, 고객센터 도움말 등에서 확인하실 수 있습니다.
-	</p>
-	<p class="article_text">
-		네이버 서비스에는 기본적으로 본 약관이 적용됩니다만 네이버가 다양한 서비스를 제공하는 과정에서 부득이 본
-		약관 외 별도의 약관, 운영정책 등을 적용하는 경우(예, 네이버페이, V LIVE 등)가 있습니다. 그리고 네이버
-		계열사가 제공하는 특정 서비스의 경우에도(예, LINE, SNOW등) 해당 운영 회사가 정한 고유의 약관, 운영정책
-		등이 적용될 수 있습니다. 이러한 내용은 각각의 해당 서비스 초기 화면에서 확인해 주시기 바랍니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">회원으로 가입하시면 네이버 서비스를 보다 편리하게 이용할 수 있습니다.</h3>
-	<p class="article_text">
-		여러분은 본 약관을 읽고 동의하신 후 회원 가입을 신청하실 수 있으며, 네이버는 이에 대한 승낙을 통해 회원
-		가입 절차를 완료하고 여러분께 네이버 서비스 이용 계정(이하 ‘계정’)을 부여합니다. 계정이란 회원이 네이버
-		서비스에 로그인한 이후 이용하는 각종 서비스 이용 이력을 회원 별로 관리하기 위해 설정한 회원 식별 단위를
-		말합니다. 회원은 자신의 계정을 통해 좀더 다양한 네이버 서비스를 보다 편리하게 이용할 수 있습니다. 이와
-		관련한 상세한 내용은 <em>계정 운영정책</em> 및 고객센터 내
-		<a href="https://help.naver.com/support/contents/contents.nhn?serviceNo=532&categoryNo=1441" target="_blank">네이버 회원가입 방법</a>
-		등에서 확인해 주세요.
-	</p>
-	<p class="article_text">
-		네이버는 단체에 속한 여러 구성원들이 공동의 계정으로 네이버 서비스를 함께 이용할 수 있도록 단체회원
-		계정도 부여하고 있습니다. 단체회원 구성원들은 하나의 계정 및 아이디(ID)를 공유하되 각자 개별적으로
-		설정한 비밀번호를 입력하여 계정에 로그인하고 각종 서비스를 이용하게 됩니다. 단체회원은 관리자와 멤버로
-		구성되며, 관리자는 구성원 전부로부터 권한을 위임 받아 단체회원을 대표하고 단체회원 계정을 운용합니다.<br />
-		따라서 관리자는 단체회원 계정을 통해 별도 약관 또는 기존 약관 개정에 대해 동의하거나 단체회원에서 탈퇴할
-		수 있고, 멤버들의 단체회원 계정 로그인 방법 및 이를 통한 게시물 게재 등 네이버 서비스 이용을 관리(게시물
-		삭제 포함)할 수 있습니다. 본 약관에서 규정한 사항은 원칙적으로 구성원 모두에게 적용되며, 각각의 구성원은
-		다른 구성원들의 단체회원 계정 및 아이디(ID)를 통한 서비스 이용에 관해 연대책임을 부담합니다.
-	</p>
-	<p class="article_text">
-		단체회원 계정 사용에서의 관리자, 멤버 등의 권한 및 (공동)책임에 관한 사항 등은 <em>계정 운영정책</em> 및
-		고객센터 내
-		<a href="https://help.naver.com/support/contents/contents.nhn?serviceNo=532&categoryNo=16952" target="_blank">네이버 단체회원(단체 아이디) 소개</a>
-		등에서 확인해 주시기 바랍니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">여러분이 제공한 콘텐츠를 소중히 다룰 것입니다.</h3>
-	<p class="article_text">
-		네이버는 여러분이 게재한 게시물이 네이버 서비스를 통해 다른 이용자들에게 전달되어 우리 모두의 삶을 더욱
-		풍요롭게 해줄 것을 기대합니다. 게시물은 여러분이 타인 또는 자신이 보게 할 목적으로 네이버 서비스 상에
-		게재한 부호, 문자, 음성, 음향, 그림, 사진, 동영상, 링크 등으로 구성된 각종 콘텐츠 자체 또는 파일을
-		말합니다.
-	</p>
-	<p class="article_text">
-		네이버는 여러분의 생각과 감정이 표현된 콘텐츠를 소중히 보호할 것을 약속 드립니다. 여러분이 제작하여
-		게재한 게시물에 대한 지식재산권 등의 권리는 당연히 여러분에게 있습니다.
-	</p>
-	<p class="article_text">
-		한편, 네이버 서비스를 통해 여러분이 게재한 게시물을 적법하게 제공하려면 해당 콘텐츠에 대한 저장, 복제,
-		수정, 공중 송신, 전시, 배포, 2차적 저작물 작성(단, 번역에 한함) 등의 이용 권한(기한과 지역 제한에 정함이
-		없으며, 별도 대가 지급이 없는 라이선스)이 필요합니다.<br />
-		게시물 게재로 여러분은 네이버에게 그러한 권한을 부여하게 되므로, 여러분은 이에 필요한 권리를 보유하고
-		있어야 합니다.
-	</p>
-	<p class="article_text">
-		네이버는 여러분이 부여해 주신 콘텐츠 이용 권한을 저작권법 등 관련 법령에서 정하는 바에 따라 네이버
-		서비스 내 노출, 서비스 홍보를 위한 활용, 서비스 운영, 개선 및 새로운 서비스 개발을 위한 연구, 웹 접근성
-		등 법률상 의무 준수, 외부 사이트에서의 검색, 수집 및 링크 허용을 위해서만 제한적으로 행사할 것입니다.<br />
-		만약, 그 밖의 목적을 위해 부득이 여러분의 콘텐츠를 이용하고자 할 경우엔 사전에 여러분께 설명을 드리고
-		동의를 받도록 하겠습니다.
-	</p>
-	<p class="article_text">
-		또한 여러분이 제공한 소중한 콘텐츠는 네이버 서비스를 개선하고 새로운 네이버 서비스를 제공하기 위해
-		인공지능 분야 기술 등의 연구 개발 목적으로 네이버 및 네이버 계열사에서 사용될 수 있습니다. 네이버는
-		지속적인 연구 개발을 통해 여러분께 좀 더 편리하고 유용한 서비스를 제공해 드릴 수 있도록 최선을
-		다하겠습니다.
-	</p>
-	<p class="article_text">
-		네이버는 여러분이 자신이 제공한 콘텐츠에 대한 네이버 또는 다른 이용자들의 이용 또는 접근을 보다 쉽게
-		관리할 수 있도록 다양한 수단을 제공하기 위해 노력하고 있습니다. 여러분은 네이버 서비스 내에 콘텐츠 삭제,
-		비공개 등의 관리기능이 제공되는 경우 이를 통해 직접 타인의 이용 또는 접근을 통제할 수 있고, 고객센터를
-		통해서도 콘텐츠의 삭제, 비공개, 검색결과 제외 등의 조치를 요청할 수 있습니다.<br />
-		다만, 일부 네이버 서비스의 경우 삭제, 비공개 등의 처리가 어려울 수 있으며, 이러한 내용은 각 서비스 상의
-		안내, 공지사항, 고객센터 도움말 등에서 확인해 주시길 부탁 드립니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">여러분의 개인정보를 소중히 보호합니다.</h3>
-	<p class="article_text">
-		네이버는 서비스의 원활한 제공을 위하여 회원이 동의한 목적과 범위 내에서만 개인정보를 수집∙이용하며,
-		개인정보 보호 관련 법령에 따라 안전하게 관리합니다. 네이버가 이용자 및 회원에 대해 관련 개인정보를
-		안전하게 처리하기 위하여 기울이는 노력이나 기타 상세한 사항은
-		<a href="http://policy.naver.com/policy/privacy.html" target="_blank">개인정보 처리방침</a>에서 확인하실
-		수 있습니다.
-	</p>
-	<p class="article_text">
-		네이버는 여러분이 서비스를 이용하기 위해 일정 기간 동안 로그인 혹은 접속한 기록이 없는 경우, 전자메일,
-		서비스 내 알림 또는 기타 적절한 전자적 수단을 통해 사전에 안내해 드린 후 여러분의 정보를 파기하거나 분리
-		보관할 수 있으며, 만약 이로 인해 서비스 제공을 위해 필수적인 정보가 부족해질 경우 부득이 관련 서비스
-		이용계약을 해지할 수 있습니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">타인의 권리를 존중해 주세요.</h3>
-	<p class="article_text">
-		여러분이 무심코 게재한 게시물로 인해 타인의 저작권이 침해되거나 명예훼손 등 권리 침해가 발생할 수
-		있습니다. 네이버는 이에 대한 문제 해결을 위해 ‘정보통신망 이용촉진 및 정보보호 등에 관한 법률’ 및
-		‘저작권법’ 등을 근거로 권리침해 주장자의 요청에 따른 게시물 게시중단, 원 게시자의 이의신청에 따른 해당
-		게시물 게시 재개 등을 내용으로 하는
-		<a href="https://inoti.naver.com/inoti/main.nhn" target="_blank">게시중단요청서비스</a>를 운영하고
-		있습니다. 보다 상세한 내용 및 절차는 고객센터 내
-		<a href="https://help.naver.com/support/contents/contents.nhn?serviceNo=958&categoryNo=3423" target="_blank">게시중단요청서비스 소개</a>를 참고해 주세요.
-	</p>
-	<p class="article_text">
-		한편, 네이버 서비스를 통해 타인의 콘텐츠를 이용한다고 하여 여러분이 해당 콘텐츠에 대한 지식재산권을
-		보유하게 되는 것은 아닙니다. 여러분이 해당 콘텐츠를 자유롭게 이용하기 위해서는 그 이용이 저작권법 등
-		관련 법률에 따라 허용되는 범위 내에 있거나, 해당 콘텐츠의 지식재산권자로부터 별도의 이용 허락을 받아야
-		하므로 각별한 주의가 필요합니다.
-	</p>
-	<p class="article_text">
-		네이버는 여러분이 네이버 서비스를 마음껏 이용할 수 있도록 여러분께 네이버 서비스에 수반되는 관련
-		소프트웨어 사용에 관한 이용 권한을 부여합니다. 이 경우 여러분의 자유로운 이용은 네이버가 제시하는 이용
-		조건에 부합하는 범위 내에서만 허용되고, 이러한 권한은 양도가 불가능하며, 비독점적 조건 및
-		<a href="http://policy.naver.com/policy/disclaimer.html" target="_blank">법적고지</a>가 적용된다는 점을
-		유의해 주세요.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">네이버에서 제공하는 다양한 포인트를 요긴하게 활용해 보세요.</h3>
-	<p class="article_text">
-		네이버는 여러분이 네이버 서비스를 효율적으로 이용할 수 있도록 포인트를 부여하고 있습니다. 포인트는
-		여러분의 일정한 네이버 서비스 이용과 연동하여 네이버가 임의로 책정하거나 조정하여 지급하는 일정한 계산
-		단위를 갖는 서비스 상의 가상 데이터를 말합니다. 포인트는 재산적 가치가 없기 때문에 금전으로 환불 또는
-		전환할 수 없지만, 포인트의 많고 적음에 따라 여러분의 네이버 서비스 이용에 영향을 주는 경우가 있으므로
-		경우에 따라 적절히 활용해 보세요.
-	</p>
-	<p class="article_text">
-		네이버는 네이버 서비스의 효율적 이용을 지원하거나 서비스 운영을 개선하기 위해 필요한 경우 사전에
-		여러분께 안내 드린 후 부득이 포인트의 일부 또는 전부를 조정할 수 있습니다. 그리고 포인트는 네이버가 정한
-		기간에 따라 주기적으로 소멸할 수도 있으니 포인트가 부여되는 네이버 서비스 이용 시 유의해 주시기
-		바랍니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">네이버 서비스 이용과 관련하여 몇 가지 주의사항이 있습니다.</h3>
-	<p class="article_text">
-		네이버는 여러분이 네이버 서비스를 자유롭고 편리하게 이용할 수 있도록 최선을 다하고 있습니다. 다만,
-		여러분이 네이버 서비스를 보다 안전하게 이용하고 네이버 서비스에서 여러분과 타인의 권리가 서로 존중되고
-		보호받으려면 여러분의 도움과 협조가 필요합니다. 여러분의 안전한 서비스 이용과 권리 보호를 위해 부득이
-		아래와 같은 경우 여러분의 게시물 게재나 네이버 서비스 이용이 제한될 수 있으므로, 이에 대한 확인 및
-		준수를 요청 드립니다.
-	</p>
-	<ul class="article_text">
-		<li class="article_text_list">
-			회원 가입 시 이름, 생년월일, 휴대전화번호 등의 정보를 허위로 기재해서는 안 됩니다. 회원 계정에 등록된
-			정보는 항상 정확한 최신 정보가 유지될 수 있도록 관리해 주세요. 자신의 계정을 다른 사람에게 판매, 양도,
-			대여 또는 담보로 제공하거나 다른 사람에게 그 사용을 허락해서는 안 됩니다. 아울러 자신의 계정이 아닌
-			타인의 계정을 무단으로 사용해서는 안 됩니다. 이에 관한 상세한 내용은 <em>계정 운영정책</em>을 참고해
-			주시기 바랍니다.
-		</li>
-		<li class="article_text_list">
-			타인에 대해 직접적이고 명백한 신체적 위협을 가하는 내용의 게시물, 타인의 자해 행위 또는 자살을
-			부추기거나 권장하는 내용의 게시물, 타인의 신상정보, 사생활 등 비공개 개인정보를 드러내는 내용의
-			게시물, 타인을 지속적으로 따돌리거나 괴롭히는 내용의 게시물, 성매매를 제안, 알선, 유인 또는 강요하는
-			내용의 게시물, 공공 안전에 대해 직접적이고 심각한 위협을 가하는 내용의 게시물은 제한될 수 있습니다.
-		</li>
-		<li class="article_text_list">
-			관련 법령상 금지되거나 형사처벌의 대상이 되는 행위를 수행하거나 이를 교사 또는 방조하는 등의 범죄 관련
-			직접적인 위험이 확인된 게시물, 관련 법령에서 홍보, 광고, 판매 등을 금지하고 있는 물건 또는 서비스를
-			홍보, 광고, 판매하는 내용의 게시물, 타인의 지식재산권 등을 침해하거나 모욕, 사생활 침해 또는 명예훼손
-			등 타인의 권리를 침해하는 내용이 확인된 게시물은 제한될 수 있습니다.
-		</li>
-		<li class="article_text_list">
-			자극적이고 노골적인 성행위를 묘사하는 등 타인에게 성적 수치심을 유발시키거나 왜곡된 성 의식 등을
-			야기할 수 있는 내용의 게시물, 타인에게 잔혹감 또는 혐오감을 일으킬 수 있는 폭력적이고 자극적인 내용의
-			게시물, 본인 이외의 자를 사칭하거나 허위사실을 주장하는 등 타인을 기만하는 내용의 게시물, 과도한 욕설,
-			비속어 등을 계속하여 반복적으로 사용하여 심한 혐오감 또는 불쾌감을 일으키는 내용의 게시물은 제한될 수
-			있습니다.
-		</li>
-		<li class="article_text_list">
-			자동화된 수단을 활용하는 등 네이버 서비스의 기능을 비정상적으로 이용하여 게재된 게시물, 네이버 각 개별
-			서비스의 제공 취지와 부합하지 않는 내용의 게시물은 다른 이용자들의 정상적인 네이버 서비스 이용에
-			불편을 초래하고 더 나아가 네이버의 원활한 서비스 제공을 방해하므로 역시 제한될 수 있습니다. 기타
-			제한되는 게시물에 관한 상세한 내용은 <em>게시물 운영정책</em> 및 각 개별 서비스에서의 약관, 운영정책
-			등을 참고해 주시기 바랍니다.
-		</li>
-		<li class="article_text_list">
-			네이버의 사전 허락 없이 자동화된 수단(예: 매크로 프로그램, 로봇(봇), 스파이더, 스크래퍼 등)을 이용하여
-			네이버 서비스 회원으로 가입을 시도 또는 가입하거나, 네이버 서비스에 로그인을 시도 또는 로그인하거나,
-			네이버 서비스 상에 게시물을 게재하거나, 네이버 서비스를 통해 커뮤니케이션하거나(예: 전자메일, 쪽지
-			등), 네이버 서비스에 게재된 회원의 아이디(ID), 게시물 등을 수집하거나, 네이버 검색 서비스에서 특정
-			질의어로 검색하거나 혹은 그 검색결과에서 특정 검색결과를 선택(이른바 ‘클릭’)하는 등 이용자(사람)의
-			실제 이용을 전제로 하는 네이버 서비스의 제공 취지에 부합하지 않는 방식으로 네이버 서비스를 이용하거나
-			이와 같은 네이버 서비스에 대한 어뷰징(남용) 행위를 막기 위한 네이버의 기술적 조치를 무력화하려는
-			일체의 행위(예: IP를 지속적으로 바꿔가며 접속하는 행위, Captcha를 외부 솔루션 등을 통해 우회하거나
-			무력화 하는 행위 등)를 시도해서는 안 됩니다.
-		</li>
-		<li class="article_text_list">
-			네이버의 동의 없이 자동화된 수단에 의해 네이버 서비스 상에 광고가 게재되는 영역 또는 그 밖의 영역에
-			부호, 문자, 음성, 음향, 그림, 사진, 동영상, 링크 등으로 구성된 각종 콘텐츠 자체 또는 파일을 삽입해서는
-			안 됩니다. 또한, 네이버 서비스 또는 이에 포함된 소프트웨어를 복사, 수정할 수 없으며, 이를 판매, 양도,
-			대여 또는 담보로 제공하거나 타인에게 그 이용을 허락해서는 안 됩니다. 네이버 서비스에 포함된
-			소프트웨어를 역 설계, 소스코드 추출 시도, 복제, 분해, 모방, 기타 변형하는 등의 행위도 금지됩니다(다만,
-			오픈소스에 해당되는 경우 그 자체 조건에 따릅니다). 그 밖에 바이러스나 기타 악성 코드를 업로드하거나
-			네이버 서비스의 원활한 운영을 방해할 목적으로 서비스 기능을 비정상적으로 이용하는 행위 역시
-			금지됩니다.
-		</li>
-	</ul>
-	<p class="article_text">
-		네이버는 본 약관의 범위 내에서 게시물 운영정책, 각 개별 서비스에서의 약관 또는 운영정책, 각 서비스 상의
-		안내, 공지사항, 고객센터 도움말 등을 두어, 여러분에게 안정적이고 원활한 서비스 이용이 가능하도록
-		지원하고 있습니다. 각 세부 정책에는 여러분이 참고할 수 있도록 보다 구체적인 유의사항을 포함하고 있으니,
-		본 약관 본문 및 구성 페이지 상의 링크 등을 통해 이를 확인해 주시기 바랍니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">부득이 서비스 이용을 제한할 경우 합리적인 절차를 준수합니다.</h3>
-	<p class="article_text">
-		네이버는 다양한 정보와 의견이 담긴 여러분의 콘텐츠를 소중히 다룰 것을 약속 드립니다만, 여러분이 게재한
-		게시물이 관련 법령, 본 약관, 게시물 운영정책, 각 개별 서비스에서의 약관, 운영정책 등에 위배되는 경우,
-		부득이 이를 비공개 또는 삭제 처리하거나 게재를 거부할 수 있습니다. 다만, 이것이 네이버가 모든 콘텐츠를
-		검토할 의무가 있다는 것을 의미하지는 않습니다.
-	</p>
-	<p class="article_text">
-		또한 여러분이 관련 법령, 본 약관, 계정 및 게시물 운영정책, 각 개별 서비스에서의 약관, 운영정책 등을
-		준수하지 않을 경우, 네이버는 여러분의 관련 행위 내용을 확인할 수 있으며, 그 확인 결과에 따라 네이버
-		서비스 이용에 대한 주의를 당부하거나, 네이버 서비스 이용을 일부 또는 전부, 일시 또는 영구히 정지시키는
-		등 그 이용을 제한할 수 있습니다. 한편, 이러한 이용 제한에도 불구하고 더 이상 네이버 서비스 이용계약의
-		온전한 유지를 기대하기 어려운 경우엔 부득이 여러분과의 이용계약을 해지할 수 있습니다.
-	</p>
-	<p class="article_text">
-		부득이 여러분의 서비스 이용을 제한해야 할 경우 명백한 법령 위반이나 타인의 권리침해로서 긴급한 위험 또는
-		피해 차단이 요구되는 사안 외에는 위와 같은 단계적 서비스 이용제한 원칙을 준수 하겠습니다. 명백한 법령
-		위반 등을 이유로 부득이 서비스 이용을 즉시 영구 정지시키는 경우 서비스 이용을 통해 획득한 포인트 및 기타
-		혜택 등은 모두 소멸되고 이에 대해 별도로 보상하지 않으므로 유의해 주시기 바랍니다. 서비스 이용 제한의
-		조건, 세부 내용 등은 계정 운영정책 및 각 개별 서비스에서의 운영정책을 참고하시기 바랍니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">네이버의 잘못은 네이버가 책임집니다.</h3>
-	<p class="article_text">
-		네이버는 여러분이 네이버 서비스를 이용함에 있어 네이버의 고의 또는 과실로 인하여 손해를 입게 될 경우
-		관련 법령에 따라 여러분의 손해를 배상합니다. 다만, 천재지변 또는 이에 준하는 불가항력으로 인하여
-		네이버가 서비스를 제공할 수 없거나 이용자의 고의 또는 과실로 인하여 서비스를 이용할 수 없어 발생한
-		손해에 대해서 네이버는 책임을 부담하지 않습니다.
-	</p>
-	<p class="article_text">
-		그리고 네이버가 손해배상책임을 부담하는 경우에도 통상적으로 예견이 불가능하거나 특별한 사정으로 인한
-		특별 손해 또는 간접 손해, 기타 징벌적 손해에 대해서는 관련 법령에 특별한 규정이 없는 한 책임을 부담하지
-		않습니다.
-	</p>
-	<p class="article_text">
-		한편, 네이버 서비스를 매개로 한 여러분과 다른 회원 간 또는 여러분과 비회원 간의 의견 교환, 거래 등에서
-		발생한 손해나 여러분이 서비스 상에 게재된 타인의 게시물 등의 콘텐츠를 신뢰함으로써 발생한 손해에
-		대해서도 네이버는 특별한 사정이 없는 한 이에 대해 책임을 부담하지 않습니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">언제든지 네이버 서비스 이용계약을 해지하실 수 있습니다.</h3>
-	<p class="article_text">
-		네이버에게는 참 안타까운 일입니다만, 회원은 언제든지 네이버 서비스 이용계약 해지를 신청하여 회원에서
-		탈퇴할 수 있으며, 이 경우 네이버는 관련 법령 등이 정하는 바에 따라 이를 지체 없이 처리하겠습니다.
-	</p>
-	<p class="article_text">
-		네이버 서비스 이용계약이 해지되면, 관련 법령 및 개인정보처리방침에 따라 네이버가 해당 회원의 정보를
-		보유할 수 있는 경우를 제외하고, 해당 회원 계정에 부속된 게시물 일체를 포함한 회원의 모든 데이터는
-		소멸됨과 동시에 복구할 수 없게 됩니다. 다만, 이 경우에도 다른 회원이 별도로 담아갔거나 스크랩한 게시물과
-		공용 게시판에 등록한 댓글 등의 게시물은 삭제되지 않으므로 반드시 해지 신청 이전에 삭제하신 후 탈퇴하시기
-		바랍니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">일부 네이버 서비스에는 광고가 포함되어 있습니다.</h3>
-	<p class="article_text">
-		여러분이 다양한 네이버 서비스를 이용하다 보면 간혹 일부 개별 서비스에 광고가 포함된 경우가 있습니다.
-		네이버 서비스를 이용하면서 발생할 수 있는 데이터 통신요금은 가입하신 통신사업자와의 이용계약에 따라
-		여러분이 부담하며, 포함된 광고 열람으로 인해 추가적으로 발생하는 비용 역시 여러분이 부담합니다.
-	</p>
-	<p class="article_text">
-		원하는 네이버 서비스를 이용하기 위해 원하지 않는 광고를 봐야 하는 경우가 있습니다. 이는 여러분에게
-		제공하는 다양한 네이버 서비스를 원칙적으로 무료로 제공할 수 있게 해주는 데 기여하며, 더 나아가 네이버가
-		연구 개발에 투자하여 더 나은 서비스를 제공할 수 있는 기반이 됩니다. 최근 타사의 일부 서비스들이 광고
-		없는 서비스 이용을 강조하며 주된 서비스를 유료로 제공하고 있는 관행이 이를 뒷받침합니다.
-	</p>
-	<p class="article_text">
-		네이버는 여러분의 본의 아닌 불편이나 부담이 최소화될 수 있는 방법에 대해 항상 고민하고 개선해
-		나가겠습니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">서비스 중단 또는 변경 시 꼭 알려드리겠습니다.</h3>
-	<p class="article_text">
-		네이버는 연중 무휴, 1일 24시간 안정적으로 서비스를 제공하기 위해 최선을 다하고 있습니다만, 컴퓨터, 서버
-		등 정보통신설비의 보수점검, 교체 또는 고장, 통신두절 등 운영상 상당한 이유가 있는 경우 부득이 서비스의
-		전부 또는 일부를 중단할 수 있습니다.
-	</p>
-	<p class="article_text">
-		한편, 네이버는 서비스 운영 또는 개선을 위해 상당한 필요성이 있는 경우 서비스의 전부 또는 일부를 수정,
-		변경 또는 종료할 수 있습니다. 무료로 제공되는 서비스의 전부 또는 일부를 수정, 변경 또는 종료하게 된 경우
-		관련 법령에 특별한 규정이 없는 한 별도의 보상을 하지 않습니다.
-	</p>
-	<p class="article_text">
-		이 경우 네이버는 예측 가능한 경우 상당기간 전에 이를 안내하며, 만약 예측 불가능한 경우라면 사후 지체
-		없이 상세히 설명하고 안내 드리겠습니다. 또한 서비스 중단의 경우에는 여러분 자신의 콘텐츠를 백업할 수
-		있도록 합리적이고 충분한 기회를 제공하도록 하겠습니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">주요 사항을 잘 안내하고 여러분의 소중한 의견에 귀 기울이겠습니다.</h3>
-	<p class="article_text">
-		네이버는 서비스 이용에 필요한 주요사항을 적시에 잘 안내해 드릴 수 있도록 힘쓰겠습니다. 회원에게 통지를
-		하는 경우 전자메일, 서비스 내 알림 또는 기타 적절한 전자적 수단을 통해 개별적으로 알려 드릴 것이며, 다만
-		회원 전체에 대한 통지가 필요할 경우엔 7일 이상
-		<a href="http://www.naver.com" target="_blank">www.naver.com</a>을 비롯한 네이버 도메인의 웹사이트 및
-		응용프로그램(어플리케이션, 앱) 초기 화면 또는 공지사항 등에 관련 내용을 게시하도록 하겠습니다.
-	</p>
-	<p class="article_text">
-		네이버는 여러분의 소중한 의견에 귀 기울이겠습니다. 여러분은 언제든지 고객센터를 통해 서비스 이용과
-		관련된 의견이나 개선사항을 전달할 수 있으며, 네이버는 합리적 범위 내에서 가능한 그 처리과정 및 결과를
-		여러분께 전달할 수 있도록 하겠습니다.
-	</p>
-</div>
-<div class="article">
-	<h3 class="article_title">
-		여러분이 쉽게 알 수 있도록 약관 및 운영정책을 게시하며 사전 공지 후 개정합니다.
-	</h3>
-	<p class="article_text">
-		네이버는 본 약관의 내용을 여러분이 쉽게 확인할 수 있도록 서비스 초기 화면에 게시하고 있습니다.
-	</p>
-	<p class="article_text">
-		네이버는 수시로 본 약관, 계정 및 게시물 운영정책을 개정할 수 있습니다만, 관련 법령을 위배하지 않는 범위
-		내에서 개정할 것이며, 사전에 그 개정 이유와 적용 일자를 서비스 내에 알리도록 하겠습니다. 또한 여러분에게
-		불리할 수 있는 중대한 내용의 약관 변경의 경우에는 최소 30일 이전에 해당 서비스 내 공지하고 별도의 전자적
-		수단(전자메일, 서비스 내 알림 등)을 통해 개별적으로 알릴 것입니다.
-	</p>
-	<p class="article_text">
-		네이버는 변경된 약관을 게시한 날로부터 효력이 발생되는 날까지 약관 변경에 대한 여러분의 의견을
-		기다립니다. 위 기간이 지나도록 여러분의 의견이 네이버에 접수되지 않으면, 여러분이 변경된 약관에 따라
-		서비스를 이용하는 데에 동의하는 것으로 간주됩니다. 네이버로서는 매우 안타까운 일이지만, 여러분이 변경된
-		약관에 동의하지 않는 경우 변경된 약관의 적용을 받는 해당 서비스의 제공이 더 이상 불가능하게 될 수
-		있습니다.
-	</p>
-	<p class="article_text">
-		네이버 서비스에는 기본적으로 본 약관이 적용됩니다만, 부득이 각 개별 서비스의 고유한 특성을 반영하기 위해
-		본 약관 외 별도의 약관, 운영정책이 추가로 적용될 때가 있습니다. 따라서 별도의 약관, 운영정책에서 그 개별
-		서비스 제공에 관하여 본 약관, 계정 및 게시물 운영정책과 다르게 정한 경우에는 별도의 약관, 운영정책이
-		우선하여 적용됩니다. 이러한 내용은 각각의 개별 서비스 초기 화면에서 확인해 주시기 바랍니다.
-	</p>
-	<p class="article_text">
-		본 약관은 한국어를 정본으로 합니다. 본 약관 또는 네이버 서비스와 관련된 여러분과 네이버와의 관계에는
-		대한민국의 법령이 적용됩니다. 그리고 본 약관 또는 네이버 서비스와 관련하여 여러분과 네이버 사이에 분쟁이
-		발생할 경우, 그 분쟁의 처리는 대한민국 '민사소송법'에서 정한 절차를 따릅니다.
-	</p>
-	<ul class="article_text">
-		<li class="article_text_list">공지 일자: 2018년 3월 30일</li>
-		<li class="article_text_list">적용 일자: 2018년 5월 1일</li>
-	</ul>
-	<p class="article_text">
-		네이버 서비스와 관련하여 궁금하신 사항이 있으시면
-		<a href="https://help.naver.com/" target="_blank">고객센터</a>(대표번호: 1588 – 3820/ 평일
-		09:00~18:00)로 문의 주시기 바랍니다.
-	</p>
-</div>                                </div>
-                            </li>
-                            <li class="terms_item">
-                                <div class="check_terms">
-                                    <div class="check_wrap">
-                                        <input type="checkbox" id="termsPrivacy" class="blind" />
-                                        <label for="termsPrivacy">
-                                            <em class="option point">[필수]</em>
-                                            <div class="text_wrap">
-                                                <span class="text">개인정보 수집 및 이용</span>
-                                                <a href="https://policy.naver.com/policy/privacy.html" class="link_arrow" target="_blank">
-                                                    <span class="blind"></span>
-                                                </a>
-                                            </div>
-                                        </label>
-                                    </div>
-                                    <a href="#" id="termForChild" class="link_guide" target="_blank">🧒🏻 어린이용 안내</a>
-                                </div>
-                                <div class="terms_box" tabindex="0">
-                                    <!-- 개인정보 수집 및 이용에 대한 안내 -->
-<div class="article">
-    <p class="article_text">
-        개인정보보호법에 따라 네이버에 회원가입 신청하시는 분께 수집하는 개인정보의 항목, 개인정보의 수집 및
-        이용목적, 개인정보의 보유 및 이용기간, 동의 거부권 및 동의 거부 시 불이익에 관한 사항을 안내 드리오니
-        자세히 읽은 후 동의하여 주시기 바랍니다.
-    </p>
-</div>
-<div class="article">
-    <h3 class="article_title">1. 수집하는 개인정보</h3>
-    <p class="article_text">
-        이용자는 회원가입을 하지 않아도 정보 검색, 뉴스 보기 등 대부분의 네이버 서비스를 회원과 동일하게 이용할
-        수 있습니다. 이용자가 메일, 캘린더, 카페, 블로그 등과 같이 개인화 혹은 회원제 서비스를 이용하기 위해
-        회원가입을 할 경우, 네이버는 서비스 이용을 위해 필요한 최소한의 개인정보를 수집합니다.
-    </p>
-    <div class="clause">
-        <h4 class="clause_title">회원가입 시점에 네이버가 이용자로부터 수집하는 개인정보는 아래와 같습니다.</h4>
-        <ul class="sections">
-            <li class="sections_section">
-                - 회원 가입 시 필수항목으로 아이디, 비밀번호, 이름, 생년월일, 성별, 휴대전화번호를, 선택항목으로 본인확인 이메일주소를 수집합니다. 실명 인증된 아이디로 가입 시, 암호화된 동일인 식별정보(CI), 중복가입 확인정보(DI), 내외국인 정보를 함께 수집합니다. 만14세 미만 아동의 경우, 법정대리인 정보(법정대리인의 이름, 생년월일, 성별, 중복가입확인정보(DI), 휴대전화번호)를 추가로 수집합니다.<br>
-                - 비밀번호 없이 회원 가입 시에는 필수항목으로 아이디, 이름, 생년월일, 휴대전화번호를, 선택항목으로 비밀번호를 수집합니다.
-            </li>
-            <li class="sections_section">
-                - 단체 회원가입 시 필수 항목으로 단체아이디, 비밀번호, 단체이름, 이메일주소, 휴대전화번호를, 선택항목으로 단체 대표자명을 수집합니다.
-            </li>
-        </ul>
-        <h4 class="clause_title">서비스 이용 과정에서 이용자로부터 수집하는 개인정보는 아래와 같습니다.</h4>
-        <p class="clause_text">
-            - 회원정보 또는 개별 서비스에서 프로필 정보(별명, 프로필 사진)를 설정할 수 있습니다. 회원정보에 별명을 입력하지 않은 경우에는 마스킹 처리된 아이디가 별명으로 자동 입력됩니다.<br>
-            - 네이버 내의 개별 서비스 이용, 이벤트 응모 및 경품 신청 과정에서 해당 서비스의 이용자에 한해 추가 개인정보 수집이 발생할 수 있습니다. 추가로 개인정보를 수집할 경우에는 해당 개인정보 수집 시점에서 이용자에게 ‘수집하는 개인정보 항목, 개인정보의 수집 및 이용목적, 개인정보의 보관기간’에 대해 안내 드리고 동의를 받습니다.</p> <br><br>
-                <strong>서비스 이용 과정에서 IP 주소, 쿠키, 서비스 이용 기록, 기기정보, 위치정보가 생성되어 수집될 수 있습니다. 또한 이미지 및 음성을 이용한 검색 서비스 등에서 이미지나 음성이 수집될 수 있습니다.</strong><br>
-                구체적으로 1) 서비스 이용 과정에서 이용자에 관한 정보를 자동화된 방법으로 생성하여 이를 저장(수집)하거나, 2) 이용자 기기의 고유한 정보를 원래의 값을 확인하지 못 하도록 안전하게 변환하여 수집합니다.<br>
+<div id="container">
+    <h2>약관 동의</h2>
+    <div class="agreement">
+      <label class="bold"><input type="checkbox" name="agreement_all" id="agreement_all"><figure class="checkbox"></figure>아래 약관에 모두 동의합니다.</label>
+      <label><input type="checkbox" name="agreement_service" required><figure class="checkbox"></figure>서비스이용약관 동의 (필수)</label>
+      <div class="text">
+<h3>제1조(목적)</h3>
+<p>에브리타임 서비스 이용약관은 비누랩스 주식회사(이하 "회사"라 합니다)가 제공하는 에브리타임 서비스 및 캠퍼스픽 서비스의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임 사항 등을 규정함을 목적으로 합니다.</p>
 
-            서비스 이용 과정에서 위치정보가 수집될 수 있으며,<br>
-            네이버에서 제공하는 위치기반 서비스에 대해서는 '네이버 위치기반서비스 이용약관'에서 자세하게 규정하고 있습니다.<br>
-            이와 같이 수집된 정보는 개인정보와의 연계 여부 등에 따라 개인정보에 해당할 수 있고, 개인정보에 해당하지 않을 수도 있습니다.
-        </p>
+<h3>제2조(정의)</h3>
+<ol>
+  <li>이 약관에서 사용하는 용어의 정의는 다음과 같습니다.</li>
+  <ol>
+    <li>"서비스"란, 회사가 제공하는 모든 서비스 및 기능을 말합니다.</li>
+    <li>"이용자"란, 이 약관에 따라 서비스를 이용하는 회원 및 비회원을 말합니다.</li>
+    <li>"회원"이란, 서비스에 회원등록을 하고 서비스를 이용하는 자를 말합니다.</li>
+    <li>"비회원"이란, 서비스에 회원등록을 하지 않고 서비스를 이용하는 자를 말합니다.</li>
+    <li>"게시물"이란, 서비스에 게재된 문자, 사진, 영상, 첨부파일, 광고 등을 말합니다.</li>
+    <li>"커뮤니티"란, 게시물을 게시할 수 있는 공간을 말합니다.</li>
+    <li>"이용 기록"이란, 이용자가 서비스를 이용하면서 직접 생성한 시간표, 친구, 학점 정보 등을 말합니다.</li>
+    <li>"로그 기록"이란, 이용자가 서비스를 이용하면서 자동으로 생성된 IP 주소, 접속 시간 등을 말합니다.</li>
+    <li>"기기 정보"란, 이용자의 통신 기기에서 수집된 유저 에이전트, ADID 등을 말합니다.</li>
+    <li>"계정"이란, 이용계약을 통해 생성된 회원의 고유 아이디와 이에 수반하는 정보를 말합니다.</li>
+    <li>"서비스 내부 알림 수단"이란, 팝업, 알림, 1:1 대화, 내 정보 메뉴 등을 말합니다.</li>
+    <li>"연락처"란, 회원가입, 본인 인증, 문의 창구 등을 통해 수집된 이용자의 이메일, 휴대전화 번호 등을 의미합니다.</li>
+    <li>"관련법"이란, 정보통신망 이용촉진 및 정보보호 등에 관한 법률, 전기통신사업법, 개인정보보호법 등 관련 있는 국내 법령을 말합니다.</li>
+    <li>"본인 인증"이란, 아이핀, 휴대전화 번호 등을 이용한 본인 확인 절차를 말합니다.</li>
+    <li>"학교 인증"이란, 학생증, 학교 웹메일, 증명서 등을 이용한 학적 확인 절차를 말합니다.</li>
+  </ol>
+  <li>제1항에서 정의되지 않은 이 약관 내 용어의 의미는 일반적인 이용관행에 의합니다.</li>
+</ol>
+
+<h3>제3조(약관 등의 명시와 설명 및 개정)</h3>
+<ol>
+  <li>회사는 이 약관을 서비스 초기화면, 회원가입 화면 및 "내 정보" 메뉴 등에 게시하거나 기타의 방법으로 회원에게 공지합니다.</li>
+  <li>회사는 필요하다고 인정되는 경우, 관련법을 위배하지 않는 범위에서 이 약관을 개정할 수 있습니다.</li>
+  <li>회사는 약관을 개정할 경우, 적용 일자 및 개정 사유를 명시하여 현행약관과 함께 개정약관 적용 일자 7일 전부터 "공지사항"을 통해 공지합니다. 다만, 개정 내용이 회원의 권리 및 의무에 중대한 영향을 미치는 경우에는 적용 일자 30일 전부터 회원의 연락처 또는 서비스 내부 알림 수단으로 개별 공지합니다.</li>
+  <li>회원은 개정 약관에 동의하지 않을 경우, 제7조(서비스 이용계약의 종료)에 따른 회원 탈퇴 방법으로 거부 의사를 표시할 수 있습니다. 단, 회사가 약관 개정 시 "개정 약관의 적용 일자까지 회원이 거부 의사를 표시하지 아니할 경우 약관의 개정에 동의한 것으로 간주한다"는 내용을 고지하였음에도 불구하고 회원이 약관 개정에 대한 거부 의사를 표시하지 아니하면, 회사는 적용 일자부로 개정 약관에 동의한 것으로 간주합니다.</li>
+  <li>회원은 약관 일부분만을 동의 또는 거부할 수 없습니다.</li>
+  <li>회사는 제1항부터 제4항까지를 준수하였음에도 불구하고 회원이 약관 개정 사실을 알지 못함으로써 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</li>
+</ol>
+
+<h3>제4조(서비스의 제공)</h3>
+<ol>
+  <li>회사는 다음 서비스를 제공합니다.</li>
+  <ol>
+    <li>시간표, 학점계산기 등 대학 생활 편의 서비스</li>
+    <li>대학교별 폐쇄형 커뮤니티 서비스</li>
+    <li>대학, 문화, 활동, 취업 정보 제공 서비스</li>
+    <li>할인, 이벤트, 프로모션, 광고 정보 제공 서비스</li>
+    <li>다른 회사 및 단체와의 제휴나 협력을 통해 제공하는 서비스</li>
+    <li>기타 회사가 정하는 서비스</li>
+  </ol>
+  <li>에브리타임은 학생증, 학교 웹메일, 증명서 등을 통해 해당 대학교의 학부 재학생 및 졸업생 또는 해당연도 입학생으로 인증받은 이용자에 한해 커뮤니티를 이용할 수 있는 폐쇄형 서비스입니다. 에브리타임은 대학교별로 개별 운영되므로, 학교 인증을 받지 않은 이용자 및 불특정 다수의 일반 이용자는 커뮤니티를 포함한 대부분의 기능에 접근할 수 없습니다.</li>
+  <li>회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스를 변경할 수 있습니다.</li>
+  <li>회사는 이용자의 개인정보 및 서비스 이용 기록에 따라 서비스 이용에 차이를 둘 수 있습니다.</li>
+  <li>회사는 설비의 보수, 교체, 점검 또는 기간통신사업자의 서비스 중지, 인터넷 장애 등의 사유로 인해 일시적으로 서비스 제공이 어려울 경우, 통보 없이 일시적으로 서비스 제공을 중단할 수 있습니다.</li>
+  <li>회사는 천재지변, 전쟁, 경영 악화 등 불가항력적인 사유로 인해 서비스를 더 이상 제공하기 어려울 경우, 통보 없이 서비스 제공을 영구적으로 중단할 수 있습니다.</li>
+  <li>회사는 제4항부터 제6항까지 및 다음 내용으로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</li>
+  <ol>
+    <li>모든 서비스, 게시물, 이용 기록의 진본성, 무결성, 신뢰성, 이용가능성의 보장</li>
+    <li>서비스 이용 중 타인과 상호 간에 합의한 내용</li>
+    <li>게시물, 광고의 버튼, 하이퍼링크 등 외부로 연결된 서비스와 같이 회사가 제공하지 않은 서비스에서 발생한 피해</li>
+    <li>회사가 관련 법령에 따라 요구되는 보호조치를 이행하였음에도 불구하고, 네트워크의 안정성을 해치는 행위 또는 악성 프로그램 등에 의하여 발생하는 예기치 못한 이용자의 피해</li>
+    <li>이용자의 귀책 사유 또는 회사의 귀책 사유가 아닌 사유로 발생한 이용자의 피해</li>
+  </ol>
+</ol>
+
+<h3>제5조(서비스 이용계약의 성립)</h3>
+<ol>
+  <li>회사와 회원의 서비스 이용계약은 서비스를 이용하고자 하는 자(이하 "가입 신청자"라고 합니다)가 서비스 내부의 회원가입 양식에 따라 필요한 회원정보를 기입하고, 이 약관, 개인정보 수집 및 이용 동의, 커뮤니티 이용규칙 등에 명시적인 동의를 한 후, 신청한 회원가입 의사 표시(이하 "이용신청"이라 합니다)를 회사가 승낙함으로써 체결됩니다.</li>
+  <li>제1항의 승낙은 신청순서에 따라 순차적으로 처리되며, 회원가입의 성립 시기는 회사의 회원가입이 완료되었음을 알리는 승낙의 통지가 회원에게 도달하거나, 이에 준하는 권한이 회원에게 부여되는 시점으로 합니다.</li>
+  <li>회사는 만 14세 미만 이용자의 이용신청을 금지하고 있습니다. 가입 신청자는 이용신청 시 만 14세 이상에 해당한다는 항목에 명시적인 동의를 함으로써 회원은 만 14세 이상임을 진술하고 보증합니다.</li>
+  <li>회사는 부정사용방지 및 본인확인을 위해 회원에게 본인 인증 및 학교 인증을 요청할 수 있습니다.</li>
+  <li>회사는 가입 신청자의 이용신청에 있어 다음 각 호에 해당하는 경우, 이용신청을 영구적으로 승낙하지 않거나 유보할 수 있습니다.</li>
+  <ol>
+    <li>회사가 정한 이용신청 요건에 충족되지 않을 경우</li>
+    <li>가입 신청자가 만 14세 미만인 경우</li>
+    <li>제12조(금지행위)에 해당하는 행위를 하거나 해당하는 행위를 했던 이력이 있을 경우</li>
+    <li>회사의 기술 및 설비 상 서비스를 제공할 수 없는 경우</li>
+    <li>기타 회사가 합리적인 판단에 의하여 필요하다고 인정하는 경우</li>
+  </ol>
+  <li>회사는 제3항부터 제5항까지로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</li>
+</ol>
+
+<h3>제6조(개인정보의 관리 및 보호)</h3>
+<ol>
+  <li>회사는 관계 법령이 정하는 바에 따라 회원의 개인정보를 보호하기 위해 노력합니다. 개인정보의 보호 및 이용에 관해서는 관련 법령 및 회사의 개인정보 처리방침을 따릅니다.</li>
+  <li>회원은 개인정보에 변동이 있을 경우, 즉시 "내 정보" 메뉴 및 문의 창구를 이용하여 정보를 최신화해야 합니다.</li>
+  <li>회원의 아이디, 비밀번호, 이메일, 대학생 정보 등 모든 개인정보의 관리책임은 본인에게 있으므로, 타인에게 양도 및 대여할 수 없으며 유출되지 않도록 관리해야 합니다. 만약 본인의 아이디 및 비밀번호를 타인이 사용하고 있음을 인지했을 경우, 즉시 문의 창구로 알려야 하고, 안내가 있는 경우 이에 따라야 합니다.</li>
+  <li>회사는 회원이 제2항과 제3항을 이행하지 않아 발생한 피해에 대해, 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</li>
+</ol>
+
+<h3>제7조(서비스 이용계약의 종료)</h3>
+<ol>
+  <li>회원은 언제든지 본인의 계정으로 로그인한 뒤 서비스 내부의 "탈퇴하기" 버튼을 누르는 방법으로 탈퇴를 요청할 수 있으며, 그 외 문의 창구 등을 통한 탈퇴 요청은 처리되지 않습니다. 회사는 해당 요청을 확인한 후 탈퇴를 처리합니다.</li>
+  <li>회원은 관리하고 있는 커뮤니티가 있을 경우, 이를 양도하거나 삭제하기 전까지 탈퇴를 할 수 없습니다.</li>
+  <li>탈퇴 처리가 완료 되었더라도, 회원이 게시한 게시물은 삭제되지 않습니다.</li>
+  <li>회사는 회원이 제12조(금지행위)에 해당하는 행위를 하거나 해당하는 행위를 했던 이력이 있을 경우, 제13조(서비스 제공의 중단 및 서비스 이용계약의 해지)에 따라 서비스 제공을 중단하거나 서비스 이용계약을 해지할 수 있습니다.</li>
+  <li>회사는 제1항부터 제4항까지로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</li>
+</ol>
+
+<h3>제8조(회원에 대한 통지)</h3>
+<ol>
+  <li>회사가 회원에 대한 통지가 필요한 경우, 회원의 연락처 또는 서비스 내부 알림 수단을 이용할 수 있습니다.</li>
+  <li>회사는 회원 전체에 대한 통지의 경우 공지사항에 게시함으로써 전 항의 통지에 갈음할 수 있습니다. 단, 회원의 권리 및 의무에 중대한 영향을 미치는 사항에 대해서는 1항에 따릅니다.</li>
+  <li>회사가 회원에게 "30일 이내에 의사를 표시하지 아니할 경우 동의한 것으로 간주한다"는 내용을 고지하였음에도 불구하고 회원이 의사를 표시하지 아니하면, 회사는 통지 내용에 동의한 것으로 간주합니다.</li>
+</ol>
+
+<h3>제9조(저작권의 귀속)</h3>
+<ol>
+  <li>회사는 유용하고 편리한 서비스를 제공하기 위해, 2009년부터 서비스 및 서비스 내부의 기능(시간표, 강의평가, 책방 서비스 등)의 체계와 다양한 기능(학점계산기, 검색 기능 등)을 직접 설계 및 운영하고 있는 데이터베이스 제작자에 해당합니다. 회사는 저작권법에 따라 데이터베이스 제작자는 복제권 및 전송권을 포함한 데이터베이스 전부에 대한 권리를 가지고 있으며, 이는 법률에 따라 보호를 받는 대상입니다. 그러므로 이용자는 데이터베이스 제작자인 회사의 승인 없이 데이터베이스의 전부 또는 일부를 복제·배포·방송 또는 전송할 수 없습니다.</li>
+  <li>회사가 작성한 게시물에 대한 권리는 회사에 귀속되며, 회원이 작성한 게시물에 대한 권리는 회원에게 귀속됩니다.</li>
+  <li>회원이 서비스에 게시물을 작성하는 경우 해당 게시물은 서비스에 노출될 수 있고 필요한 범위 내에서 사용, 저장, 복제, 수정, 공중송신, 전시, 배포 등의 방식으로 해당 게시물을 이용할 수 있도록 허락하는 전 세계적인 라이선스를 회사에 제공하게 됩니다. 이 경우, 회사는 저작권법을 준수하며 회원은 언제든지 문의 창구 및 서비스 내부의 관리 기능이 제공되는 경우에는 해당 관리 기능을 이용하여 가능한 범위에 한해 해당 게시물에 대한 삭제, 수정, 비공개 등의 조치를 취할 수 있습니다.</li>
+  <li>회사는 제3항 이외의 방법으로 회원의 게시물을 이용할 경우, 해당 회원으로부터 개별적이고 명시적인 동의를 받아야 합니다.</li>
+</ol>
+
+<h3>제10조(게시물의 삭제 및 접근 차단)</h3>
+<ol>
+  <li>누구든지 게시물로 인해 사생활 침해나 명예훼손 등 권리가 침해된 경우 회사에 해당 게시물의 삭제 또는 반박내용의 게재를 요청할 수 있습니다. 이 때 회사는 해당 게시물을 삭제할 수 있으며, 만약 권리 침해 여부가 불분명하거나 당사자 간 다툼이 예상될 경우에는 해당 게시물에 대한 접근을 30일간 임시적으로 차단하는 조치를 취할 수 있습니다.</li>
+  <li>회사가 제1항에 따라 회원의 게시물을 삭제하거나 접근을 임시적으로 차단하는 경우, 해당 게시물이 작성된 커뮤니티에 필요한 조치를 한 사실을 명시하고, 불가능한 사유가 없을 경우 이를 요청한 자와 해당 게시물을 작성한 회원에게 그 사실을 통지합니다.</li>
+</ol>
+
+<h3>제11조(광고의 게재 및 발신)</h3>
+<ol>
+  <li>회사는 서비스의 제공을 위해 서비스 내부에 광고를 게재할 수 있습니다.</li>
+  <li>회사는 이용자의 이용 기록을 활용한 광고를 게재할 수 있습니다.</li>
+  <li>회사는 회원이 광고성 정보 수신에 명시적으로 동의한 경우, 회원이 동의한 수단을 통해 광고성 정보를 발신할 수 있습니다.</li>
+  <li>회사는 광고 게재 및 동의된 광고성 정보의 발신으로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</li>
+</ol>
+
+<h3>제12조(금지행위)</h3>
+<ol>
+  <li>이용자는 다음과 같은 행위를 해서는 안됩니다.</li>
+  <ol>
+    <li>성적 도의관념에 반하는 행위</li>
+    <ol>
+      <li>정보통신망 이용촉진 및 정보보호 등에 관한 법률에 따른 유해정보 유통 행위</li>
+      <li>전기통신사업법에 따른 불법촬영물등 유통 행위</li>
+      <li>청소년보호법에 따른 청소년유해매체물 유통 행위</li>
+      <li>방송통신심의위원회의 정보통신에 관한 심의규정에 따른 심의기준의 성적 도의관념에 반하는 행위</li>
+      <li>커뮤니티 이용규칙 금지행위에 따른 불건전 만남, 유흥, 성매매 등 내용 유통 행위</li>
+    </ol>
+    <li>홍보/판매 행위</li>
+    <ol>
+      <li>이 약관이 적용되는 서비스 및 기능과 동일하거나 유사한 서비스 및 기능에 대한 직·간접적 홍보 행위</li>
+      <li>서비스, 브랜드, 사이트, 애플리케이션, 사업체, 단체 등을 알리거나 가입, 방문을 유도하기 위한 직·간접적 홍보 행위</li>
+      <li>계정 판매 및 공유, 대리 게시, 서포터즈 등을 통해 여러 학교에 다발적으로 게시되는 동일한 주제에 대한 직·간접적 홍보 행위</li>
+      <li>비상업적 목적의 일상 생활과 관련된 중고 품목 이외의 품목 등 커뮤니티 이용규칙 금지행위에 따른 홍보 및 판매 행위</li>
+    </ol>
+    <li>개인정보 또는 계정 기만, 침해, 공유 행위</li>
+    <ol>
+      <li>개인정보를 허위, 누락, 오기, 도용하여 작성하는 행위</li>
+      <li>타인의 개인정보 및 계정을 수집, 저장, 공개, 이용하는 행위</li>
+      <li>자신과 타인의 개인정보를 제3자에게 공개, 양도, 승계하는 행위</li>
+      <li>다중 계정을 생성 및 이용하는 행위</li>
+      <li>자신의 계정을 이용하여 타인의 요청을 이행하는 행위</li>
+    </ol>
+    <li>시스템 부정행위</li>
+    <ol>
+      <li>특정 대학교의 학부 재학생 및 졸업생이 아닌 이용자가 해당 대학교의 학부 재학생 및 졸업생인 것처럼 기만하여 서비스를 이용하는 행위</li>
+      <li>프로그램, 스크립트, 봇을 이용한 서비스 접근 등 사람이 아닌 컴퓨팅 시스템을 통한 서비스 접근 행위</li>
+      <li>API 직접 호출, 유저 에이전트 조작, 패킷 캡처, 비정상적인 반복 조회 및 요청 등 허가하지 않은 방식의 서비스 이용 행위</li>
+      <li>회사의 모든 재산에 대한 침해 행위</li>
+    </ol>
+    <li>업무 방해 행위</li>
+    <ol>
+      <li>서비스 관리자 또는 이에 준하는 자격을 허가 없이 취득하여 권한을 행사하거나, 사칭하여 허위의 정보를 발설하는 행위</li>
+      <li>회사 및 타인의 명예를 훼손하거나 기타 업무를 방해하는 행위</li>
+      <li>서비스 내부 정보 일체를 허가 없이 이용, 변조, 삭제 및 외부로 유출하는 행위</li>
+    </ol>
+    <li>기타 현행법에 어긋나거나 부적절하다고 판단되는 행위</li>
+  </ol>
+  <li>이용자는 제1항에 기재된 내용 외에 이 약관과 커뮤니티 이용규칙에서 규정한 내용에 반하는 행위를 해서는 안됩니다.</li>
+  <li>이용자가 제1항에 해당하는 행위를 할 경우, 회사는 이 약관 제13조(서비스 제공의 중단 및 서비스 이용계약의 해지)에 따라 서비스 제공을 중단하거나 서비스 이용계약을 해지할 수 있습니다.</li>
+</ol>
+
+<h3>제13조(서비스 제공의 중단 및 서비스 이용계약의 해지)</h3>
+<ol>
+  <li>이용자가 이 약관 및 커뮤니티 이용규칙에서 이 조항 적용이 명시된 금지행위 및 이에 준하는 행위를 할 경우, 회사는 서비스 보호를 위해 다음과 같은 조치를 최대 영구적으로 취할 수 있습니다. 해당 조치는 서비스 보호를 위해 불가피하다고 판단될 경우, 회사가 제공하는 모든 서비스의 동일인으로 확인되는 모든 계정에 일괄적으로 적용될 수 있습니다.</li>
+  <ol>
+    <li>회원의 서비스 이용 권한, 자격, 혜택 제한 및 회수</li>
+    <li>회원과 체결된 이용계약의 해지</li>
+    <li>회원가입, 본인 인증, 학교 인증 거부</li>
+    <li>회원의 커뮤니티, 게시물, 닉네임, 프로필 사진, 이용 기록을 삭제, 중단, 수정, 변경</li>
+    <li>그 외 서비스의 정상적인 운영을 위해 회사가 필요하다고 판단되는 조치</li>
+  </ol>
+  <li>회사는 서비스 제공 중단 및 서비스 이용계약 해지 시, 회원의 연락처 또는 서비스 내부 알림 수단을 통하여 그 사실을 사유와 함께 개별 통지합니다. 회원은 해당 통지를 받은 날로부터 7일 이내에 문의 창구로 이의를 제기할 수 있습니다.</li>
+  <li>회사는 이용자의 귀책 사유로 인한 서비스 제공 중단 및 서비스 이용계약의 해지로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</li>
+</ol>
+
+<h3>제14조(재판권 및 준거법)</h3>
+<ol>
+  <li>회사와 이용자 간에 발생한 분쟁에 관한 소송은 민사소송법상의 관할 법원에 제소합니다.</li>
+  <li>회사와 이용자 간에 제기된 소송에는 대한민국 법을 준거법으로 합니다.</li>
+</ol>
+
+<h3>제15조(기타)</h3>
+<ol>
+  <li>이 약관은 2022년 6월 14일에 개정되었습니다.</li>
+  <li>이 약관에도 불구하고, 회사와 이용자가 이 약관의 내용과 다르게 합의한 사항이 있는 경우에는 해당 내용을 우선으로 합니다</li>
+  <li>회사는 필요한 경우 약관의 하위 규정을 정할 수 있으며, 이 약관과 하위 규정이 상충하는 경우에는 이 약관의 내용이 우선 적용됩니다.</li>
+  <li>이 약관에서 정하지 아니한 사항과 이 약관의 해석에 관하여는 관련법 또는 관례에 따릅니다.</li>
+</ol>
+
+      </div>
+      <label><input type="checkbox" name="agreement_privacy" required><figure class="checkbox"></figure>개인정보 수집 및 이용 동의 (필수)</label>
+      <div class="text">
+<h3>수집하는 개인정보의 항목</h3>
+<p>회사는 서비스 제공을 위해, 회원가입 시점에 다음에 해당하는 개인정보를 수집합니다.</p>
+<ol>
+  <li>학교, 아이디, 비밀번호, 이메일, 이름, 휴대전화 번호, 통신사 정보, 생년월일, 성별, 입학연도, 닉네임, 연계정보(CI, DI)</li>
+</ol>
+<p>
+  ※ 각 항목 또는 추가적으로 수집이 필요한 개인정보 및 개인정보를 포함한 자료는 이용자 응대 과정과 서비스 내부 알림 수단 등을 통해 별도의 동의 절차를 거쳐 요청·수집될 수 있습니다.<br>
+  ※ 서비스 이용 과정에서 기기 정보(유저 에이전트), 이용 기록(시간표, 친구, 학점 정보), 로그 기록(IP 주소, 접속 시간)이 자동으로 수집될 수 있습니다.
+</p>
+
+<h3>수집한 개인정보의 처리 목적</h3>
+<p>회원가입 시점에 수집된 개인정보는 다음의 목적에 한해 이용됩니다.</p>
+<ol>
+  <li>가입 및 탈퇴 의사 확인, 회원 식별 및 관리, 재학생 및 졸업생 확인</li>
+  <li>개인정보 및 관심에 기반한 이용자 친화적 서비스 제공 및 기존·신규 시스템 개발·유지·개선</li>
+  <li>불법·약관 위반 게시물 게시와 같은 부정행위 방지를 위한 운영 시스템 개발·유지·개선</li>
+  <li>문의, 제휴 문의, 광고 문의, 게시 요청, 교내단체 게시판 개설 요청 관련 응대 및 처리</li>
+  <li>회원관리, 서비스 운영 및 유지보수를 위한 통계 자료 도출</li>
+</ol>
+
+<h3><strong style="font-size: 120%">수집한 개인정보의 보관 및 파기</strong></h3>
+<p>회사는 서비스를 제공하는 동안 개인정보 처리방침 및 관련법에 의거하여 회원의 개인정보를 지속적으로 관리 및 보관합니다. <strong style="font-size: 120%">탈퇴 및 동의 철회 등 개인정보 수집 및 이용 목적이 달성될 경우 수집된 개인정보는 즉시 파기하고 있으며, 내부 방침에 따라 일정 기간 보관 후 파기하는 정보는 아래와 같습니다.</strong></p>
+<ol>
+  <li><strong style="font-size: 120%">회원 탈퇴 시 개인정보는 탈퇴 시점으로부터 14일 보관 후 파기합니다.</strong></li>
+  <li><strong style="font-size: 120%">아래의 정보는 비식별화하여 일정 기간 보관 후 파기합니다</strong></li>
+  <ol>
+    <li>※ 비식별화란? 일방향 암호화 처리를 통해 개인정보를 익명 처리하는 과정을 말합니다. 비식별화된 정보는 복호화가 불가능하며, 회사를 포함하여 누구라도 이 정보로 개인을 식별하거나 유추할 수 없습니다.</li>
+    <li><strong style="font-size: 120%">연계정보 (CI) : 탈퇴 시점으로부터 최대 1년</strong></li>
+    <li><strong style="font-size: 120%">부정행위 시 학교 인증 및 연계정보 : 이용제한 종료일로부터 최대 1년</strong></li>
+    <li><strong style="font-size: 120%">강의 평가 포인트와 연계된 정보 : 탈퇴 시점으로부터 최대 5년</strong></li>
+  </ol>
+  <li><strong style="font-size: 120%">아래의 정보는 수집 시점으로부터 최대 1년 간 보관 후 파기합니다.</strong></li>
+  <ol>
+    <li><strong style="font-size: 120%">로그 기록</strong></li>
+    <li><strong style="font-size: 120%">기기 정보</strong></li>
+  </ol>
+  <li><strong style="font-size: 120%">1년 이상 로그인 및 접속을 하지 않은 회원의 경우 휴면 계정으로 전환됩니다.</strong></li>
+  <ol>
+    <li><strong style="font-size: 120%">휴면 계정 전환 시 분리보관 되는 개인정보 : 3년간 미 접속 시 영구 삭제</strong></li>
+    <li><strong style="font-size: 120%">단, 학교 인증 관련 개인정보 및 이용기록은 분리보관하지 않고 즉시 파기 됩니다.</strong></li>
+  </ol>
+</ol>
+<p>
+  ※ 회사는 위와 같이 파기 사유가 발생한 개인정보는 지체없이 재생이 불가능한 방법으로 파기됩니다. 전자적 파일 형태로 기록·저장된 개인정보는 기록을 재생할 수 없도록 파기하며, 종이 문서에 기록·저장된 개인정보는 분쇄기로 분쇄하거나 소각하여 파기합니다.<br>
+  ※ 위 항에도 불구하고 법령에 의해 개인정보를 보존해야 하는 경우, 해당 개인정보는 물리적·논리적으로 분리하여 해당 법령에서 정한 기간에 따라 저장합니다.
+</p>
+
+<h3>기타</h3>
+<p>개인정보 수집 및 이용에 동의하지 않을 권리가 있으며, 거부할 경우 회원가입이 불가합니다.</p>
+<p>자세한 내용은 웹사이트 하단에 게시된 개인정보처리방침을 참고하시기 바랍니다</p>
+
+      </div>
+      <label><input type="checkbox" name="agreement_rules" required><figure class="checkbox"></figure>커뮤니티이용규칙 확인 (필수)</label>
+      <div class="text">
+<!-- 공통 -->
+<h3>커뮤니티 이용규칙 안내</h3>
+<p>커뮤니티 이용규칙은 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 제정되었습니다. 서비스 내 모든 커뮤니티는 커뮤니티 이용규칙에 의해 운영되므로, 이용자는 커뮤니티 이용 전 반드시 모든 내용을 숙지하여야 합니다.</p>
+<p>방송통신심의위원회의 정보통신에 관한 심의규정, 현행 법률, 서비스 이용약관 및 커뮤니티 이용규칙을 위반하거나, 사회 통념 및 관련 법령을 기준으로 타 이용자에게 악영향을 끼치는 경우, 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다.</p>
+<p>커뮤니티 이용규칙은 불법 행위, 각종 차별 및 혐오, 사회적 갈등 조장, 타인의 권리 침해, 다른 이용자에게 불쾌감을 주는 행위, 커뮤니티 유출 행위, 시스템 장애를 유발하는 비정상 행위 등 커뮤니티 분위기 형성과 운영에 악영향을 미치는 행위들을 제한하기 위해 지속적으로 개정됩니다. 중대한 변경 사항이 있는 경우에는 공지사항을 통해 고지하므로 반드시 확인해주시기 바랍니다.</p>
+<p>커뮤니티 이용규칙에서 사용된 용어의 정의는 서비스 이용약관을 따릅니다.</p>
+
+<!-- 공통 -->
+<h3>커뮤니티 운영 시스템</h3>
+<p>커뮤니티 운영 시스템은 서비스 이용약관 및 커뮤니티 이용규칙 위반을 빠르게 감지하고 조치하기 위해 도입되었습니다. 또한 현행 법률에 따른 청소년유해매체물, 권리 침해, 비정상적인 이용 등의 규칙 위반 행위에 대해 선제적으로 필터링하여 대응할 수 있도록, AI를 기반으로 시스템을 지속적으로 발전시키고 있습니다.</p>
+<p>방송통신심의위원회의 정보통신에 관한 심의규정, 현행 법률, 서비스 이용약관 및 커뮤니티 이용규칙 위반이 확인될 경우, 게시물이 삭제되고 서비스 이용이 일정 기한 제한됩니다. 위반 횟수가 누적될수록 이용 제한 기한 및 수준이 증가할 수 있습니다.</p>
+<p>단, 생명 경시 행위, 가족 및 고인 모독 행위, 성적 도의관념에 반하는 행위, 비정상적 서비스 이용과 같이 중대한 커뮤니티 이용규칙 및 현행 법률 위반 행위가 적발될 경우 즉시 1년 이상 서비스 이용이 제한됩니다. 또한 노출 및 음란물 게시 행위, 범죄 및 불법 행위, 계정 판매 및 대리 게시 행위, 홍보/판매 행위와 같이 서비스 이용약관 제12조 및 심각한 현행 법률 위반 행위가 적발될 경우, 서비스 보호 및 안정적인 커뮤니티 운영을 위해 서비스 이용약관 13조에 따라 5년 이상 서비스 이용이 제한되거나, 영구적으로 서비스 이용계약이 해지되며 더 이상 서비스를 이용하실 수 없습니다.</p>
+<p>이용 제한 시, 관련한 내용이 서비스 내부 알림 수단을 통해 개별 통지되며, 제한 기한, 적용 범위, 근거 게시물 등 상세 내용을 [내 정보]에서 확인하실 수 있습니다. 또한 개인정보 처리방침에 따른 기간 동안 관련 개인정보 및 로그가 수집되어 파기되지 않고 보존됩니다.</p>
+<p>서비스 이용 중 서비스 이용 약관 및 커뮤니티 이용규칙에 어긋난다고 판단되는 게시물 작성, 1:1 대화 발송, 게시판 개설, 닉네임 및 프로필 사진 지정, 악용 행위를 발견하셨을 경우, 원활하고 신속한 처리를 위해 해당 게시물의 신고 버튼을 눌러 신고해주시기 바랍니다. 신고 시 게시물 처리 및 시스템 운영을 위해 최소한의 로그가 수집 및 보관되며, 1:1 대화에 대한 신고가 접수된 경우에는 추가적으로 대화 내용 일부가 일시적으로 저장될 수 있습니다.</p>
+
+<!-- 에브리타임 -->
+<h3>유출 방지 시스템</h3>
+<p>유출 방지 시스템은 게시물 및 자료를 외부로 유출하는 행위를 실시간으로 감지하고 조치하기 위해 도입되었습니다.</p>
+<p>커뮤니티의 게시물을 복사·스크린샷·촬영하여 외부 사이트·대화방에 게시하거나, 타인에게 관련한 내용을 공유하거나, 게시판·시간표·강의평가를 크롤링하는 등 게시물 및 자료 유출이 적발될 경우, 서비스 이용약관 13조에 따라 5년 이상 서비스 이용이 제한되거나, 영구적으로 서비스 이용계약이 해지되며 더 이상 서비스를 이용하실 수 없습니다. 만약 외부 유출을 발견하셨을 경우, <a href="https://everytime.kr/support/qna?category=board_leak">[게시물 유출 신고]</a>를 통해 신고해주시기 바랍니다.</p>
+<p>모든 이용자는 외부 유출 행위로 인해 발생한 모든 피해에 대해 민형사상 책임과 손해를 배상할 책임이 있습니다.</p>
+
+<!-- 공통 -->
+<h3>금지 행위</h3>
+<p>이용자 보호 및 원활한 서비스 제공을 위해 다음에 해당하는 게시물 작성, 1:1 대화 발송, 게시판 개설, 닉네임 및 프로필 사진 지정, 악용 행위를 금지하고 있습니다. 본 커뮤니티 이용규칙은 방송통신심의위원회의 정보통신에 관한 심의규정에 따른 심의기준을 기반으로 합니다.</p>
+
+<!-- 공통 -->
+<h4>일반 금지 행위</h4>
+<ol>
+  <li>국제 평화, 국제 질서 및 국가 간의 우의를 현저히 해할 우려가 있는 행위</li>
+  <ol>
+    <li>인종차별·테러 등 국제 평화 및 국제질서를 현저히 해할 우려가 있는 행위</li>
+    <li>외국의 국기·국장 등을 모독함으로써 국익에 반하거나 국가 간의 우의를 현저히 해할 우려가 있는 행위</li>
+    <li>그 밖에 외국의 정치·종교·문화·사회에 대한 비방·비하·멸시 등 국가 간의 우의를 현저히 해할 우려가 있는 행위</li>
+  </ol>
+  <li>헌법에 위배되거나 국가의 존립을 해하는 행위</li>
+  <ol>
+    <li>국가의 존립·안전이나 자유민주적 기본질서를 현저히 위태롭게 할 우려가 있는 행위</li>
+    <li>헌법을 부정하거나 국가기관을 마비시킬 우려가 현저한 행위</li>
+    <li>법령에 따라 분류된 비밀 등 국가기밀을 누설하는 행위</li>
+    <li>「국가보안법」에서 금지하는 행위를 수행하는 행위</li>
+    <li>헌법에 반하여 역사적 사실을 현저히 왜곡하는 행위</li>
+  </ol>
+  <li>범죄 기타 법령에 위반되는 행위</li>
+  <ol>
+    <li>범죄를 목적으로 하거나 예비·음모·교사·방조할 우려가 현저한 행위</li>
+    <li>범죄의 수단이나 방법 또는 범죄에 이르는 과정이나 결과를 구체적으로 묘사하여 범죄를 조장할 우려가 있는 행위</li>
+    <li>범죄, 범죄인 또는 범죄단체 등을 미화하여 범죄를 정당하다고 보이게 할 우려가 있는 행위</li>
+    <li>그 밖에 범죄 및 법령에 위반되는 위법행위를 조장하여 건전한 법질서를 현저히 해할 우려가 있는 행위</li>
+  </ol>
+  <li>사회통념상 일반인의 성욕을 자극하여 성적 흥분을 유발하고 정상적인 성적 수치심을 해하여 성적 도의관념에 반하는 행위</li>
+  <ol>
+    <li>신체 부위 또는 성적 행위를 노골적으로 표현 또는 묘사하는 행위</li>
+    <li>자극적이고 혐오스런 성적표현 및 남녀 신체에 관한 은어 및 비속어를 사용하여 성행위를 구체적으로 묘사하는 행위</li>
+    <li>성폭력행위를 노골적으로 묘사하는 행위</li>
+    <li>성행위와 관련된 신음소리 등을 극히 자극적으로 묘사하는 행위</li>
+    <li>신체의 일부 또는 도구를 이용한 유사성교행위를 노골적으로 묘사하는 행위</li>
+    <li>자위행위 및 전희를 구체적으로 묘사하는 행위</li>
+    <li>수간, 시간, 혼음, 근친상간, 가학성·피학성 음란증, 관음증 등 비정상적인 행위를 구체적으로 묘사한 행위</li>
+    <li>아동 또는 청소년을 성적 유희의 대상으로 직접적이고 구체적으로 묘사한 행위</li>
+    <li>불건전한 모임, 대화, 통화 등 온·오프라인 만남 행위</li>
+    <li>유흥 관련 정보 공유, 매매·알선 행위 등 불법 행위</li>
+    <li>그 밖에 일반인의 성적 수치심을 현저히 해할 우려가 있는 행위</li>
+  </ol>
+  <li>폭력성·잔혹성·혐오성 등이 심각한 행위</li>
+  <ol>
+    <li>장애인, 노인, 임산부, 아동 등 사회적인 약자 또는 부모, 스승 등에 대한 살상, 폭행, 협박, 학대행위 등을 구체적으로 묘사하는 행위</li>
+    <li>오물, 신체 분비물 등을 구체적·사실적으로 묘사하여 혐오감을 불러일으키는 행위</li>
+    <li>수술 장면 등 의료행위를 지나치게 상세히 표현하여 혐오감을 불러일으키는 행위</li>
+    <li>흉기 그 밖의 위험한 물건 등을 사용하여 과도하게 신체 또는 시체를 손상하는 등 생명을 경시하는 잔혹한 행위</li>
+    <li>동물에 대한 학대, 사체, 포식 등을 구체적으로 표현하여 잔혹감 또는 혐오감을 주는 행위</li>
+    <li>과도한 욕설 등 저속한 언어 등을 사용하여 혐오감 또는 불쾌감을 주는 행위</li>
+    <li>그 밖에 사람 또는 동물 등에 대한 육체적·정신적 고통 등을 사실적·구체적으로 표현하여 잔혹 또는 혐오감을 주는 행위</li>
+  </ol>
+  <li>사회통합 및 사회질서를 저해하는 행위</li>
+  <ol>
+    <li>고인에 대한 별명, 농담, 밈(Meme), 자료, 특수문자, 이모티콘 등 비난, 희화적 표현 등 고인 모독 행위</li>
+    <li>도박 등 사행심을 조장하는 행위</li>
+    <li>현금, 수표, 증권, 신용 상품 등을 대출, 거래하는 행위</li>
+    <li>미신숭배 등 비과학적인 생활태도를 조장하거나 정당화하는 행위</li>
+    <li>특정 종교, 종파 또는 종교의식을 비방, 왜곡하거나 교리를 설파 및 전도, 포교하는 행위</li>
+    <li>장애인, 노약자 등 사회적인 소외계층을 비하하는 행위</li>
+    <li>학교교육 등 교육을 왜곡하여 현저히 교육기풍을 해하는 행위</li>
+    <li>합리적 이유없이 성별, 종교, 장애, 나이, 사회적 신분, 출신, 인종, 지역, 직업 등을 차별하거나 이에 대한 편견을 조장하는 행위</li>
+    <li>자살을 목적으로 하거나 이를 미화, 방조 또는 권유하여 자살 충동을 일으킬 우려가 있는 행위</li>
+    <li>정당한 사유 없이 정보통신시스템, 데이터 또는 프로그램 등을 훼손·멸실·변경·위조하거나 그 운용을 방해하는 내용의 행위</li>
+    <li>「청소년 보호법」에 따른 청소년유해매체물로서 상대방의 연령 확인, 표시의무 등 법령에 따른 의무를 이행하지 아니하고 영리를 목적으로 제공하는 내용의 행위</li>
+    <li>성매매를 알선, 유도, 조장, 방조하는 행위</li>
+    <li>분란 및 갈등을 유도하거나 조장하는 행위</li>
+    <li>그 밖에 사회적 혼란을 현저히 야기할 우려가 있는 행위</li>
+  </ol>
+  <li>타인의 권리를 침해하는 행위</li>
+  <ol>
+    <li>다른 이용자에게 불쾌감이나 불편함을 주는 행위</li>
+    <li>개인정보 유포 등 사생활의 비밀과 자유를 침해할 우려가 현저한 행위</li>
+    <li>정당한 권한 없이 타인의 사진, 영상 등을 게재하여 타인의 인격권을 현저히 침해하는 행위</li>
+    <li>사람을 비방할 목적으로 공공연하게 타인을 모욕하거나 사실 또는 거짓의 사실을 드러내어 타인의 명예를 훼손하는 행위</li>
+    <li>공포심이나 불안감을 유발하는 부호·문언·음향·화상 또는 영상을 반복적으로 상대방에게 도달하도록 하는 행위</li>
+    <li>정당한 권한없이 타인의 상표 또는 저작물 등을 사용, 실시 또는 매개하는 등 특허권, 상표권, 디자인권, 저작권 등 지적재산권을 침해하는 행위</li>
+    <li>정당한 권한 없이 강의를 매매하거나 수강신청 매크로 및 시스템 취약점을 공유하는 등 타인의 학습권을 침해하는 행위</li>
+    <li>내용·결말을 발설하거나, 혐오를 불러일으키거나, 속이거나, 놀라게 하는 행위</li>
+    <li>그 밖에 정당한 권한없이 타인의 권리를 침해하는 행위</li>
+  </ol>
+  <li>자살예방법에 반하는 자살 및 자해 유발정보 유통 행위</li>
+  <ol>
+    <li>자살 및 자해 동반자 모집 정보</li>
+    <li>자살 및 자해에 대한 구체적인 방법을 제시하는 정보</li>
+    <li>자살 및 자해를 실행하거나 유도하는 내용을 담은 문서, 사진 또는 동영상 등의 정보</li>
+    <li>자살위해물건의 판매 또는 활용에 관한 정보</li>
+    <li>기타 명백히 자살 및 자해 유발을 목적으로 하는 정보</li>
+  </ol>
+  <li>의료법·약사법·관세법·전파법·외국환거래법 등 법률에 반하는 거래 불가능 품목 거래 행위</li>
+  <ol>
+    <li>주류, 담배, 마약류</li>
+    <li>안경, 콘택트렌즈, 의약품, 헌혈증, 건강기능식품, 의료기기</li>
+    <li>이미테이션 제품, 저작물 복사본</li>
+    <li>청소년유해매체물</li>
+    <li>2,000불 이상의 달러/외화</li>
+    <li>암표 등 수익 목적의 재판매 행위</li>
+    <li>그 외 관련법에 의해 거래가 금지되거나, 온라인을 통해 거래가 금지된 물품</li>
+  </ol>
+  <li>악용/오용 행위</li>
+  <ol>
+    <li>익명을 이용한 여론 조작 행위</li>
+    <li>신고, 공감, 스크랩 유도 및 악용 행위</li>
+    <li>내용 없는 외부 링크 게시, 외부 서비스 이용 강제·유도 등 서비스 이탈 유도 행위</li>
+    <li>동일하거나 유사한 문자 및 문구를 하나의 게시물에 반복적으로 입력하는 행위</li>
+    <li>동일하거나 유사한 주제의 게시물을 하나 이상의 커뮤니티에 반복적으로 게시하는 행위</li>
+    <li>다수의 이용자가 동일하거나 유사한 주제의 게시물을 집단으로 게시하는 행위</li>
+    <li>이용자에게 혼란을 주기 위한 목적으로 거짓·허위 정보를 포함한 게시물을 작성하는 행위</li>
+    <li>게시판/커뮤니티의 주제에 어울리지 않거나 내부 규칙에 어긋나는 게시물 작성 행위</li>
+    <li>각 서비스의 운영 목적 및 성격에 부합하지 않는 게시물 작성 행위 (강의평, 시험정보, 장터, 책방, 학식, 스터디, 팀원 모집 등)</li>
+    <li>회사 또는 이에 준하는 자격을 사칭하여 권한을 행사하거나 어떠한 정보를 발설하는 행위</li>
+  </ol>
+  <li>비정상적 시스템 이용 행위</li>
+  <ol>
+    <li>오류를 발생시키는 특수문자 및 제목 및 내용이 없는 게시물 작성 행위</li>
+    <li>커뮤니티 유출, 시스템 해킹, 게시물 크롤링 등 서비스에 악영향을 주는 행위</li>
+    <li>특정 대학교의 학부 재학생 및 졸업생이 아닌 이용자가 게시물을 작성하는 행위</li>
+  </ol>
+  <li>기타</li>
+  <ol>
+    <li>위 행위를 간접적으로 또는 유추 가능하도록 행하는 행위</li>
+    <li>위 행위를 파일, 이미지, 동영상으로 첨부하는 행위</li>
+    <li>본인 또는 타인이 행한 금지행위를 인용하는 행위</li>
+    <li>타인으로 하여금 위 행위를 행하도록 간접적으로 돕거나 독려하는 행위</li>
+    <li>기타 위 행위와 비슷한 목적을 달성하기 위한 행위 일체</li>
+  </ol>
+</ol>
+
+<!-- 에브리타임 -->
+<h4>정치·사회 관련 금지 행위</h4>
+<ol>
+  <li>시사·이슈 게시판 금지 행위</li>
+  <ol>
+    <li>언론·시민단체 등 관련 단체 옹호, 추천, 반대, 비하 행위</li>
+    <li>특정 정당·후보에 대한 지지, 비방, 투표 독려 행위</li>
+    <li>다른 이용자를 특정 정치 단체 관련자 및 특정 이념 옹호자로 몰아가는 행위</li>
+    <li>다양한 의견을 배척하고 여론을 하나로 수렴하는 행위</li>
+    <li>다른 이용자나 게시물에 대한 욕설, 비난, 비꼬는 행위</li>
+    <li>기타 정치·사회 관련 갈등을 조장할 수 있는 행위 일체</li>
+  </ol>
+  <li>시사·이슈 외 게시판 금지 행위</li>
+  <ol>
+    <li>국가기관(정부·공무원), 정치 관련 단체(정치인·정당·시민단체), 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위</li>
+    <li>정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위</li>
+    <li>성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위</li>
+    <li>위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위</li>
+  </ol>
+</ol>
+
+<!-- 에브리타임 -->
+<h4>홍보 및 판매 관련 금지 행위</h4>
+<ol>
+  <li>홍보게시판 금지 행위</li>
+  <ol>
+    <li>커뮤니티 이용규칙이 적용되는 서비스 및 기능과 동일하거나 유사한 서비스 및 기능에 대한 직·간접적 홍보</li>
+    <li>바이럴을 목적으로 대외활동, 대리 게시 요청, 계정 공유 등을 통해 여러 학교에 다발적으로 게시되는 동일한 주제에 대한 홍보</li>
+    <li>신용카드, 보험, 의료 광고</li>
+    <li>성인, 도박, 베팅 사이트 홍보</li>
+    <li>계정 판매/공유/양도</li>
+  </ol>
+  <li>동아리·학회 게시판 금지 행위</li>
+  <ol>
+    <li>외부 단체·법인·기관·사업체에서 운영하거나 소속된 동아리 홍보</li>
+    <li>기관·정치인·정당·종교·시민단체와 직간접적으로 연관되거나, 관련한 활동을 하는 동아리 홍보</li>
+    <li>대학생이 아닌 회원을 모집하는 동아리 홍보</li>
+    <li>인력 모집을 위한 구인·구직 목적의 동아리 홍보</li>
+    <li>만남·소개팅 형식의 동아리 홍보</li>
+  </ol>
+  <li>책방, 장터 게시판 금지 행위</li>
+  <ol>
+    <li>비상업적 목적의 일상 생활과 관련된 중고 품목 이외의 품목 판매 행위</li>
+  </ol>
+  <li>그 외 게시판 금지 행위</li>
+  <ol>
+    <li>공모전, 대외활동, 채용, 서포터즈, 이벤트, 아카데미, 공연, 영화 홍보</li>
+    <li>교육, 의료, 식당, 부동산, 배달, 공유 사업 홍보</li>
+    <li>애플리케이션, 웹사이트, SNS, 블로그, 카페, 스토어, 서비스 홍보</li>
+    <li>채팅, 사진 교환, 동호회, 소개팅, 만남, 주선 홍보</li>
+    <li>구독, 좋아요, 학우 참여, 모집, 링크 클릭, 추천인 입력, 앱 설치, 설문조사, 회원가입 요청</li>
+    <li>서비스 및 재화 판매, 공동구매, 펀딩, 후원, 모금, 기부금품 요청</li>
+    <li>계정 공유 및 판매 요청, 홍보·소개 요청, 바이럴 이벤트 등 게시물 대리 작성</li>
+    <li>그 밖에 영리 여부와 관계없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위</li>
+    <li>위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위</li>
+  </ol>
+</ol>
+
+<!-- 에브리타임 -->
+<h3>게시물 작성·수정·삭제 규칙</h3>
+<ol>
+  <li>게시물 작성</li>
+  <ol>
+    <li>홍보게시판과 동아리·학회 게시판 중 어느 한 곳에 글을 작성했을 경우, 두 게시판 모두 3일 동안 글을 작성할 수 없습니다.</li>
+    <li>그 외 게시판은 게시판 별로 5분에 한 번만 작성할 수 있습니다.</li>
+  </ol>
+  <li>게시물 수정 및 삭제</li>
+  <ol>
+    <li>홍보게시판과 동아리·학회 게시판은 글 작성 후 60분이 지나면, 3일간 작성한 글을 수정하거나 삭제할 수 없습니다.</li>
+    <li>질문 글, 강의평, 시험정보, 책방, 대학백과 답변 및 후기는 작성 시 안내에 따라 게시 이후 삭제할 수 없습니다.</li>
+  </ol>
+  <li>HOT 게시물 선정</li>
+  <ol>
+    <li>공감 10개를 받으면 자동으로 선정됩니다.</li>
+    <li>시사·이슈 게시판, 장터게시판, 동아리·학회 게시판, 홍보게시판은 선정되지 않습니다.</li>
+    <li>게시판 관리자가 HOT 게시판 선정 옵션을 끄거나, 이용량이 적어 휴면 상태로 분류된 게시판은 공감 10개를 받더라도 선정되지 않습니다.</li>
+  </ol>
+  <li>BEST 게시물 선정</li>
+  <ol>
+    <li>공감 100개를 받으면 자동으로 선정됩니다.</li>
+  </ol>
+</ol>
+
+<!-- 에브리타임 -->
+<h3>게시판 관리자 제도</h3>
+<ol>
+  <li>게시판 관리자는 자신이 관리중인 게시판에 올라오는 게시물을 공지로 지정하거나 삭제, 이용제한할 수 있습니다.</li>
+  <li>게시판 관리자는 에브리타임 계정을 탈퇴할 수 없습니다. 탈퇴를 위해서는 자신이 관리중인 게시판을 삭제하거나 다른 회원에게 관리자 권한을 양도해야 합니다. 단, 게시판 개설 혹은 마지막 게시물 게시 이후, 14일 동안 활동이 없는 게시판만 삭제할 수 있습니다.</li>
+  <li>다음에 해당하는 경우, 게시판이 숨겨지거나, 폐쇄되거나, 게시판 관리자 권한이 박탈될 수 있습니다.</li>
+  <ol>
+    <li>커뮤니티 이용규칙에 어긋나는 주제의 게시판을 생성했을 경우</li>
+    <li>게시판 관리자가 커뮤니티 이용규칙을 어길 경우</li>
+    <li>커뮤니티 이용규칙에 어긋나는 게시물이 삭제되지 않을 경우</li>
+    <li>게시판에 14일 이상 게시물이 올라오지 않을 경우</li>
+    <li>게시판 관리자가 존재하지 않을 경우</li>
+  </ol>
+</ol>
+
+<!-- 공통 -->
+<h3>허위사실 유포 및 명예훼손 게시물에 대한 게시 중단 요청</h3>
+<ol>
+  <li>모든 게시물은 AI 커뮤니티 운영 시스템에 의해 처리되며, 요청에 의해 사전 검토되거나 임의로 처리되지 않습니다.</li>
+  <li>게시물로 인해 저작권 침해, 명예훼손, 기타 권리 침해를 당했다고 판단되실 경우, 추가적인 권리 침해를 방지하기 위해 <a href="https://everytime.kr/support/report">권리침해신고센터(https://everytime.kr/support/report)</a>에서 해당 게시물에 대한 게시 중단 요청을 할 수 있습니다.</li>
+  <li>이후 담당자의 확인을 통해 게시 중단 조치가 이루어지며, 게시 중단 사유가 공개됩니다.</li>
+</ol>
+
+<!-- 공통 -->
+<h3>전기통신사업법에 따른 불법촬영물 유통 금지</h3>
+<ol>
+  <li>회사는 전기통신사업법, 방송통신심의위원회의 정보통신에 관한 심의규정에 따른 불법촬영물등 유해정보를 차단하기 위한 기술적·관리적 조치를 취하고 있습니다.</li>
+  <li>관련 법령에 따라 시스템에 의해 불법촬영물등 유해정보로 식별되는 자료는 즉시 삭제 또는 블라인드 되고, 해당 게시물 작성자는 일시적으로 최대 7일간 서비스 이용이 제한될 수 있습니다.</li>
+  <li>실제 불법촬영물등 유해정보를 게재할 경우 전기통신사업법에 따라 게시물 삭제 조치 및 회원 자격이 영구적으로 해지되며, 관련 법률에 따라 처벌받을 수 있습니다.</li>
+  <li>불법촬영물, 허위영상물, 아동·청소년 성착취물 등 불법촬영물등으로 의심되는 게시물을 발견하셨을 경우, <a href="https://everytime.kr/support/report">유해정보신고센터(https://everytime.kr/support/report)</a>로 신고해주시기 바랍니다.</li>
+</ol>
+
+<!-- 에브리타임 -->
+<h3>기타</h3>
+<p>커뮤니티 이용규칙은 쾌적한 서비스 운영을 위해 주기적으로 업데이트됩니다.</p>
+<p>회사는 이용자가 커뮤니티 운영 시스템, 금지 행위, 게시물 작성·수정·삭제 규칙 등 커뮤니티 이용규칙을 숙지하지 않아 발생하는 피해에 대하여 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.</p>
+<p>이 커뮤니티 이용규칙은 2023년 6월 9일에 개정되었습니다.</p>
+
+      </div>
+      <label class="bold"><input type="checkbox" name="agreement_ad"><figure class="checkbox"></figure>광고성 정보 수신 동의 (선택)</label>
+      <div class="text small">
+<p>영화/전시 초대 이벤트, 대학생 특별 할인 혜택 등 다양한 이벤트 및 정보를 서비스에서 만나보실 수 있습니다.</p>
+<ol>
+  <li>항목 : 마케팅 수신 동의</li>
+  <li>목적 : 서비스 및 이벤트 정보 안내</li>
+  <li>기간 : 탈퇴 후 최대 1년</li>
+</ol>
+
+      </div>
+      <label class="bold"><input type="checkbox" name="agreement_identity"><figure class="checkbox"></figure>본인 명의를 이용하여 가입을 진행하겠습니다.</label>
+      <div class="text small">
+        <h3>부모님, 친구 등 타인의 명의로 가입할 수 없습니다.</h3>
+        <p>에브리타임은 철저한 학교 인증과 안전한 익명 커뮤니티를 제공하기 위해, 가입 시 본인 인증 수단을 통해 본인 여부를 확인하고, 커뮤니티 이용 시 증명 자료 제출을 통해 재학 여부를 확인합니다. 두 정보가 일치하지 않을 경우 서비스를 이용하실 수 없습니다.</p>
+      </div>
+      <label class="bold"><input type="checkbox" name="agreement_age14"><figure class="checkbox"></figure>만 14세 이상입니다.</label>
+      <div class="text small">
+        <p>에브리타임은 국내 대학생을 위한 서비스이며, 본인 인증을 통해 만 14세 이상만 가입할 수 있습니다.</p>
+      </div>
     </div>
-</div>
-<div class="article">
-    <h3 class="article_title">2. 수집한 개인정보의 이용</h3>
-    <p class="article_text">
-        네이버 및 네이버 관련 제반 서비스(모바일 웹/앱 포함)의 회원관리, 서비스 개발・제공 및 향상, 안전한
-        인터넷 이용환경 구축 등 아래의 목적으로만 개인정보를 이용합니다.
-    </p>
-    <ul class="sections">
-        <li class="sections_section">
-            - 회원 가입 의사의 확인, 연령 확인 및 법정대리인 동의 진행, 이용자 및 법정대리인의 본인 확인, 이용자
-            식별, 회원탈퇴 의사의 확인 등 회원관리를 위하여 개인정보를 이용합니다.
-        </li>
-        <li class="sections_section">
-            - 콘텐츠 등 기존 서비스 제공(광고 포함)에 더하여, 인구통계학적 분석, 서비스 방문 및 이용기록의 분석,
-            개인정보 및 관심에 기반한 이용자간 관계의 형성, 지인 및 관심사 등에 기반한 맞춤형 서비스 제공 등 신규
-            서비스 요소의 발굴 및 기존 서비스 개선 등을 위하여 개인정보를 이용합니다.
-        </li>
-        <li class="sections_section">
-            - 법령 및 네이버 이용약관을 위반하는 회원에 대한 이용 제한 조치, 부정 이용 행위를 포함하여 서비스의
-            원활한 운영에 지장을 주는 행위에 대한 방지 및 제재, 계정도용 및 부정거래 방지, 약관 개정 등의 고지사항
-            전달, 분쟁조정을 위한 기록 보존, 민원처리 등 이용자 보호 및 서비스 운영을 위하여 개인정보를
-            이용합니다.
-        </li>
-        <li class="sections_section">
-            - 유료 서비스 제공에 따르는 본인인증, 구매 및 요금 결제, 상품 및 서비스의 배송을 위하여 개인정보를
-            이용합니다.
-        </li>
-        <li class="sections_section">
-            - <strong>이벤트 정보 및 참여기회 제공, 광고성 정보 제공 등 마케팅 및 프로모션 목적으로 개인정보를 이용합니다.</strong>
-        </li>
-        <li class="sections_section">
-            - 서비스 이용기록과 접속 빈도 분석, 서비스 이용에 대한 통계, 서비스 분석 및 통계에 따른 맞춤 서비스
-            제공 및 광고 게재 등에 개인정보를 이용합니다.
-        </li>
-        <li class="sections_section">
-            - 보안, 프라이버시, 안전 측면에서 이용자가 안심하고 이용할 수 있는 서비스 이용환경 구축을 위해
-            개인정보를 이용합니다.
-        </li>
-    </ul>
-</div>
-<div class="article">
-    <h3 class="article_title">3. 개인정보의 보관기간</h3>
-    <div class="clause large">
-        <h4 class="clause_title">
-            회사는 원칙적으로 이용자의 개인정보를 회원 탈퇴 시 지체없이 파기하고 있습니다.<br>
-            단, 이용자에게 개인정보 보관기간에 대해 별도의 동의를 얻은 경우, 또는 법령에서 일정 기간 정보보관
-            의무를 부과하는 경우에는 해당 기간 동안 개인정보를 안전하게 보관합니다.
-        </h4>
-    </div>
-    <div class="clause">
-        <h4 class="clause_title">
-            이용자에게 개인정보 보관기간에 대해 회원가입 시 또는 서비스 가입 시 동의를 얻은 경우는 아래와
-            같습니다.
-        </h4>
-        <ul class="sections">
-            <li class="sections_section">
-                - 부정 가입 및 이용 방지 <br />부정 이용자의 가입인증 휴대전화번호 또는 DI (만14세 미만의 경우
-                법정대리인DI) : 탈퇴일로부터 6개월 보관 <br />탈퇴한 이용자의 휴대전화번호(복호화가 불가능한 일방향
-                암호화(해시처리)) : 탈퇴일로부터 6개월 보관
-            </li>
-            <li class="sections_section">
-                - QR코드 복구 요청 대응 <br />QR코드 등록 정보:삭제 시점으로부터6개월 보관
-            </li>
-            <li class="sections_section">
-                - 스마트플레이스 분쟁 조정 및 고객문의 대응 <br />휴대전화번호:등록/수정/삭제 요청 시로부터 최대1년
-            </li>
-            <li class="sections_section">
-                - 네이버 플러스 멤버십 서비스 혜택 중복 제공 방지 <br />암호화처리(해시처리)한DI :혜택 제공
-                종료일로부터6개월 보관
-            </li>
-            <li class="sections_section">
-                - 지식iN eXpert 재가입 신청 및 부정 이용 방지 <br />eXpert 서비스 및 eXpert 센터 가입 등록정보 :
-                신청일로부터 6개월(등록 거절 시, 거절 의사 표시한 날로부터 30일) 보관
-            </li>
-        </ul>
-    </div>
-    <div class="clause">
-        <h4 class="clause_title">
-            전자상거래 등에서의 소비자 보호에 관한 법률, 전자문서 및 전자거래 기본법, 통신비밀보호법 등 법령에서
-            일정기간 정보의 보관을 규정하는 경우는 아래와 같습니다. 네이버는 이 기간 동안 법령의 규정에 따라
-            개인정보를 보관하며, 본 정보를 다른 목적으로는 절대 이용하지 않습니다.
-        </h4>
-        <ul class="sections">
-            <li class="sections_section">
-                - 전자상거래 등에서 소비자 보호에 관한 법률 <br />계약 또는 청약철회 등에 관한 기록: 5년 보관
-                <br />대금결제 및 재화 등의 공급에 관한 기록: 5년 보관 <br />소비자의 불만 또는 분쟁처리에 관한
-                기록: 3년 보관
-            </li>
-            <li class="sections_section">
-                - 전자문서 및 전자거래 기본법 <br />공인전자주소를 통한 전자문서 유통에 관한 기록 : 10년 보관
-            </li>
-            <li class="sections_section">
-                - 전자서명 인증 업무 <br />인증서와 인증 업무에 관한 기록: 인증서 효력 상실일로부터 10년 보관
-            </li>
-            <li class="sections_section">- 통신비밀보호법 <br />로그인 기록: 3개월<br /><br /></li>
-        </ul>
-        <p class="clause_text">
-            참고로 네이버는 ‘개인정보 유효기간제’에 따라 1년간 서비스를 이용하지 않은 회원의 개인정보를 별도로
-            분리 보관하여 관리하고 있습니다.
-        </p>
-    </div>
-</div>
-<div class="article">
-    <h3 class="article_title">4. 개인정보 수집 및 이용 동의를 거부할 권리</h3>
-    <p class="clause_text">
-        이용자는 개인정보의 수집 및 이용 동의를 거부할 권리가 있습니다. 회원가입 시 수집하는 최소한의 개인정보,
-        즉, 필수 항목에 대한 수집 및 이용 동의를 거부하실 경우, 회원가입이 어려울 수 있습니다.
-    </p>
-</div>                                </div>
-                            </li>
-                            <li class="terms_item">
-                                <div class="check_terms">
-                                    <div class="check_wrap">
-                                        <input type="checkbox" id="checkRealname" name="checkRealname" value="Y" class="blind" />
-                                        <label for="checkRealname">
-                                            <em class="option">[선택]</em>
-                                            <span class="text">실명 인증된 아이디로 가입</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="terms_box">
-                                    <div class="article">
-                                        <p class="article_text">실명 인증된 아이디로 가입하시면 본인인증이 필요한 서비스(네이버 페이, 쇼핑, 멤버십 등)를 가입 후 바로 이용하실 수 있어요.</p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="terms_item">
-                                <div class="check_terms">
-                                    <div class="check_wrap">
-                                        <input type="checkbox" id="termsLocation" name="termsLocation" value="Y" class="blind" />
-                                        <label for="termsLocation">
-                                            <em class="option">[선택]</em>
-                                            <div class="text_wrap">
-                                                <span class="text">위치기반서비스 이용약관</span>
-                                                <a href="https://policy.naver.com/policy-mobile/term.html?type=3" class="link_arrow" target="_blank">
-                                                    <span class="blind"></span>
-                                                </a>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="terms_box" tabindex="0">
-                                    <!-- 위치정보 이용약관 동의 -->
-<div class="article">
-    <p class="article_text">
-        위치기반서비스 이용약관에 동의하시면,
-        <strong>위치를 활용한 광고 정보 수신 등을 포함하는 네이버 위치기반 서비스</strong>를 이용할 수 있습니다.
-    </p>
-</div>
-<div class="article">
-    <h3 class="article_title">제 1 조 (목적)</h3>
-    <p class="article_text">
-        이 약관은 네이버 주식회사 (이하 “회사”)가 제공하는 위치기반서비스와 관련하여 회사와 개인위치정보주체와의
-        권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
-    </p>
-</div>
-<div class="article">
-    <h3 class="article_title">제 2 조 (약관 외 준칙)</h3>
-    <p class="article_text">
-        이 약관에 명시되지 않은 사항은 위치정보의 보호 및 이용 등에 관한 법률, 개인정보보호법, 정보통신망
-        이용촉진 및 정보보호 등에 관한 법률, 전기통신기본법, 전기통신사업법 등 관계법령과 회사의 이용약관 및
-        개인정보처리방침, 회사가 별도로 정한 지침 등에 의합니다.
-    </p>
-</div>
-<div class="article">
-    <h3 class="article_title">제 3 조 (서비스 내용 및 요금)</h3>
-    <ol class="section">
-        <li>
-            <p>① 회사는 위치정보사업자로부터 위치정보를 전달받아 아래와 같은 위치기반서비스를 제공합니다.</p>
-            <ol class="section">
-                <li>
-                    1. GeoTagging 서비스: 게시물 또는 이용자가 저장하는 콘텐츠에 포함된 개인위치정보주체 또는 이동성
-                    있는 기기의 위치정보가 게시물과 함께 저장됩니다. 저장된 위치정보는 별도의 활용없이 보관되거나,
-                    또는 장소를 기반으로 콘텐츠를 분류하거나 검색할 수 있는 기능이 제공될 수도 있습니다.
-                </li>
-                <li>
-                    2. 위치정보를 활용한 검색결과 및 콘텐츠 제공 : 정보 검색을 요청하거나 개인위치정보주체 또는 이동성
-                    있는 기기의 위치정보를 제공 시 본 위치정보를 이용한 검색결과, 주변결과(맛집, 주변업체, 교통수단
-                    등), 번역결과를 제시합니다.
-                </li>
-                <li>
-                    3. 이용자 위치를 활용한 광고정보 제공: 검색결과 또는 기타 서비스 이용 과정에서 개인위치정보주체
-                    또는 이동성 있는 기기의 위치를 이용하여 광고소재를 제시합니다.
-                </li>
-                <li>
-                    4. 이용자 보호 및 부정 이용 방지: 개인위치정보주체 또는 이동성 있는 기기의 위치를 이용하여
-                    권한없는 자의 비정상적인 서비스 이용 시도 등을 차단합니다.
-                </li>
-                <li>
-                    5. 길 안내 등 생활편의 서비스 제공: 교통정보와 길 안내 등 최적의 경로를 지도로 제공하며, 주변
-                    시설물 찾기, 뉴스/날씨 등 생활정보, 긴급구조 서비스, 주소 자동 입력 등 다양한 운전 및 생활 편의
-                    서비스를 제공합니다.
-                </li>
-            </ol>
-        </li>
-        <li>② 제1항 위치기반서비스의 이용요금은 무료입니다.</li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 4 조 (개인위치정보주체의 권리)</h3>
-    <ol class="section">
-        <li>
-            ① 개인위치정보주체는 개인위치정보 수집 범위 및 이용약관의 내용 중 일부 또는 개인위치정보의 이용ㆍ제공
-            목적, 제공받는 자의 범위 및 위치기반서비스의 일부에 대하여 동의를 유보할 수 있습니다.
-        </li>
-        <li>
-            ② 개인위치정보주체는 개인위치정보의 수집ㆍ이용ㆍ제공에 대한 동의의 전부 또는 일부를 철회할 수
-            있습니다.
-        </li>
-        <li>
-            ③ 개인위치정보주체는 언제든지 개인위치정보의 수집ㆍ이용ㆍ제공의 일시적인 중지를 요구할 수 있습니다. 이
-            경우 회사는 요구를 거절하지 아니하며, 이를 위한 기술적 수단을 갖추고 있습니다
-        </li>
-        <li>
-            <p>
-                ④ 개인위치정보주체는 회사에 대하여 아래 자료의 열람 또는 고지를 요구할 수 있고, 당해 자료에 오류가
-                있는 경우에는 그 정정을 요구할 수 있습니다. 이 경우 회사는 정당한 이유 없이 요구를 거절하지
-                아니합니다.
-            </p>
-            <ol class="section">
-                <li>1. 개인위치정보주체에 대한 위치정보 수집ㆍ이용ㆍ제공사실 확인자료</li>
-                <li>
-                    2. 개인위치정보주체의 개인위치정보가 위치정보의 보호 및 이용 등에 관한 법률 또는 다른 법령의
-                    규정에 의하여 제3자에게 제공된 이유 및 내용
-                </li>
-            </ol>
-        </li>
-        <li>
-            ⑤ 회사는 개인위치정보주체가 동의의 전부 또는 일부를 철회한 경우에는 지체 없이 수집된 개인위치정보 및
-            위치정보 수집ㆍ이용ㆍ제공사실 확인자료를 파기합니다.단, 동의의 일부를 철회하는 경우에는 철회하는
-            부분의 개인위치정보 및 위치정보 수집ㆍ이용ㆍ제공사실 확인자료에 한합니다.
-        </li>
-        <li>
-            ⑥ 개인위치정보주체는 제1항 내지 제4항의 권리행사를 위하여 이 약관 제13조의 연락처를 이용하여 회사에
-            요구할 수 있습니다.
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 5 조 (법정대리인의 권리)</h3>
-    <ol class="section">
-        <li>
-            ① 회사는 만14세 미만 아동으로부터 개인위치정보를 수집ㆍ이용 또는 제공하고자 하는 경우에는 만14세 미만
-            아동과 그 법정대리인의 동의를 받아야 합니다.
-        </li>
-        <li>
-            ② 법정대리인은 만14세 미만 아동의 개인위치정보를 수집ㆍ이용ㆍ제공에 동의하는 경우 동의유보권,
-            동의철회권 및 일시중지권, 열람ㆍ고지요구권을 행사할 수 있습니다.
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 6 조 (위치정보 이용·제공사실 확인자료 보유근거 및 보유기간)</h3>
-    <ol class="section">
-        <li>
-            회사는 위치정보의 보호 및 이용 등에 관한 법률 제16조 제2항에 근거하여 개인위치정보주체에 대한 위치정보
-            수집·이용·제공사실 확인자료를 위치정보시스템에 자동으로 기록하며, 6개월 이상 보관합니다.
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 7 조 (서비스의 변경 및 중지)</h3>
-    <ol class="section">
-        <li>
-            ① 회사는 위치기반서비스사업자의 정책변경 등과 같이 회사의 제반 사정 또는 법률상의 장애 등으로 서비스를
-            유지할 수 없는 경우, 서비스의 전부 또는 일부를 제한, 변경하거나 중지할 수 있습니다.
-        </li>
-        <li>
-            ② 제1항에 의한 서비스 중단의 경우에는 회사는 사전에 인터넷 등에 공지하거나 개인위치정보주체에게
-            통지합니다.
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 8 조 (개인위치정보 제3자 제공 시 즉시 통보)</h3>
-    <ol class="section">
-        <li>
-            ① 회사는 개인위치정보주체의 동의 없이 당해 개인위치정보주체의 개인위치정보를 제3자에게 제공하지
-            아니하며, 제3자 제공 서비스를 제공하는 경우에는 제공받는 자 및 제공목적을 사전에 개인위치정보주체에게
-            고지하고 동의를 받습니다.
-        </li>
-        <li>
-            ② 회사는 개인위치정보를 개인위치정보주체가 지정하는 제3자에게 제공하는 경우에는 개인위치정보를 수집한
-            당해 통신단말장치로 매회 개인위치정보주체에게 제공받는 자, 제공일시 및 제공목적을 즉시 통보합니다.
-        </li>
-        <li>
-            <p>
-                ③ 다만, 아래에 해당하는 경우에는 개인위치정보주체가 미리 특정하여 지정한 통신단말장치 또는
-                전자우편주소 등으로 통보합니다.
-            </p>
-            <ol class="section">
-                <li>
-                    1.개인위치정보를 수집한 당해 통신단말장치가 문자, 음성 또는 영상의 수신기능을 갖추지 아니한 경우
-                </li>
-                <li>
-                    2.개인위치정보주체가 개인위치정보를 수집한 당해 통신단말장치 외의 통신단말장치 또는 전자우편주소
-                    등으로 통보할 것을 미리 요청한 경우
-                </li>
-            </ol>
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 9 조 (8세 이하의 아동 등의 보호의무자의 권리)</h3>
-    <ol class="section">
-        <li>
-            <p>
-                ① 회사는 아래의 경우에 해당하는 자(이하 “8세 이하의 아동 등"이라 함)의 보호의무자가 8세 이하의 아동
-                등의 생명 또는 신체보호를 위하여 개인위치정보의 이용 또는 제공에 동의하는 경우에는 본인의 동의가
-                있는 것으로 봅니다.
-            </p>
-            <ol class="section">
-                <li>1. 8세 이하의 아동</li>
-                <li>2. 피성년후견인</li>
-                <li>
-                    3. 장애인복지법 제2조제2항제2호의 규정에 의한 정신적 장애를 가진 자로서 장애인고용촉진 및
-                    직업재활법 제2조제2호의 규정에 의한 중증장애인에 해당하는 자(장애인복지법 제32조의 규정에 의하여
-                    장애인등록을 한 자에 한정)
-                </li>
-            </ol>
-        </li>
-        <li>
-            ② 8세 이하의 아동 등의 생명 또는 신체의 보호를 위하여 개인위치정보의 이용 또는 제공에 동의를 하고자
-            하는 보호의무자는 서면동의서에 보호의무자임을 증명하는 서면을 첨부하여 회사에 제출하여야 합니다.
-        </li>
-        <li>
-            ③ 보호의무자는 8세 이하의 아동 등의 개인위치정보 이용 또는 제공에 동의하는 경우 개인위치정보주체
-            권리의 전부를 행사할 수 있습니다
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 10 조 (개인위치정보의 보유목적 및 이용기간)</h3>
-    <ol class="section">
-        <li>
-            ① 회사는 위치기반서비스를 제공하기 위해 필요한 최소한의 기간 동안 개인위치정보를 보유 및 이용합니다.
-        </li>
-        <li>
-            ② 회사는 대부분의 위치기반서비스에서 개인위치정보를 일회성 또는 임시로 이용 후 지체없이 파기합니다.
-            단, ‘GeoTagging’ 서비스와 같이 이용자가 게시물, 콘텐츠와 함께 개인위치정보를 네이버 서비스에 게시 또는
-            보관하는 경우, 해당 게시물, 콘텐츠의 보관기간 동안 개인위치정보가 함께 보관됩니다.
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 11 조 (손해배상)</h3>
-    <ol class="section">
-        <li>
-            개인위치정보주체는 회사의 위치정보의 보호 및 이용 등에 관한 법률 제15조 내지 26조의 규정을 위반한
-            행위로 손해를 입은 경우에 회사에 대하여 손해배상을 청구할 수 있습니다. 이 경우 회사는 고의 또는 과실이
-            없음을 입증하지 아니하면 책임을 면할 수 없습니다.
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 12 조 (분쟁의 조정)</h3>
-    <ol class="section">
-        <li>
-            ① 회사는 위치정보와 관련된 분쟁에 대하여 개인위치정보주체와 협의가 이루어지지 아니하거나 협의를 할 수
-            없는 경우에는 방송통신위원회에 재정을 신청할 수 있습니다.
-        </li>
-        <li>
-            ② 회사 또는 개인위치정보주체는 위치정보와 관련된 분쟁에 대해 당사자간 협의가 이루어지지 아니하거나
-            협의를 할 수 없는 경우에는 개인정보보호법에 따라 개인정보분쟁조정위원회에 조정을 신청할 수 있습니다.
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">제 13 조 (사업자 정보 및 위치정보 관리책임자)</h3>
-    <ol class="section">
-        <li>
-            <p>① 회사의 상호, 주소 및 연락처는 다음과 같습니다.</p>
-            <ol class="section">
-                <li>- 상호: 네이버주식회사</li>
-                <li>- 주소: 경기도 성남시 분당구 정자일로 95, NAVER 1784 (우)13561</li>
-                <li>- 전화번호: 1588-3820</li>
-            </ol>
-        </li>
-        <li>
-            <p>
-                ② 회사는 다음과 같이 위치정보 관리책임자를 지정하여 이용자들이 서비스 이용과정에서 발생한 민원사항
-                처리를 비롯하여 개인위치정보주체의 권리 보호를 위해 힘쓰고 있습니다.
-            </p>
-            <ol class="section">
-                <li>- 위치정보 관리책임자 : 이진규 CPO / DPO (개인정보 보호책임자 겸직)</li>
-                <li>
-                    - 메일 :
-                    <a href="https://help.naver.com/alias/privacy/privacy_25.naver" target="_blank">문의하기</a>
-                </li>
-            </ol>
-        </li>
-    </ol>
-</div>
-<div class="article">
-    <h3 class="article_title">부칙</h3>
-    <h4 class="article_title">제1조 시행일</h4>
-    <ol class="section">
-        <li>
-            2022년 4월 27일부터 시행되던 종전의 약관은 본 약관으로 대체하며, 본 약관은 2022년 5월 18일부터
-            적용됩니다.
-        </li>
-    </ol>
-</div>                                </div>
-                            </li>
-                            <li class="terms_item">
-                                <div class="check_terms">
-                                    <div class="check_wrap">
-                                        <input type="checkbox" id="termsEmail" name="termsEmail" value="Y" class="blind" />
-                                        <label for="termsEmail">
-                                            <em class="option">[선택]</em>
-                                            <div class="text_wrap">
-                                                <span class="text">이벤트・혜택 정보 수신</span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="terms_box">
-                                    <div class="article">
-                                        <p class="article_text">
-                                            네이버 서비스 및 제휴 이벤트・혜택 등의 정보를 휴대전화(네이버앱 알림 또는 문자), 이메일로 받을 수 있습니다. 일부 서비스(별개의 회원 체계 운영, 네이버 가입 후 추가 가입하는 서비스 등)의 경우, 수신에 대해 별도로 안내드리며 동의를 구합니다.
-                                        </p>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="join_link_area">
-                        <a href="/user2/join/groupJoin?lang=ko_KR" class="link">단체, 비즈니스 회원 가입</a>
-                    </div>
-                </div>
-                <div class="btn_submit_wrap">
-                    <button type="button" id="btnAgree" class="btn_submit" disabled>다음</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<script type="text/javascript" src="/inc/common/js/jquery.min.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function() {
-        $(window).on("pageshow", function () {
-            $("#chk_all").prop("checked",false);
-            setTerms();
-        });
+    
+    <form class="identity" method="post" action="">
+    	<a class="button red"><button type="button" id="emailBtn">이메일인증</button></a>
+    </form>
+  </div>
+  
+  <div id="container2">
+	   <form>
+	          <div class="form-group">
+	           <!--  <label for="exampleInputEmail1">이메일</label>
+	            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+	            <button type="button" class="btn btn-primary">코드전송</button> -->
+	            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+	          	<label for="userEmail1">이메일</label>
+	          	<input type="text" class="form-control" name="userEmail1" id="userEmail1" placeholder="이메일" >
+				<select class="form-control" name="userEmail2" id="userEmail2" >
+					<option>@naver.com</option>
+					<option>@daum.net</option>
+					<option>@gmail.com</option>
+					<option>@hanmail.com</option>
+					<option>@nate.com</option>
+					<option>@yahoo.co.kr</option>
+				</select>
+				<button type="button" class="btn btn-primary" id="userMailbtn">코드전송</button>          	          
+	          </div>
+	         
+	          <div class="form-group">
+	            <label for="verificationCode">인증번호</label>
+	            <input type="text" class="form-control" id="verificationCode" placeholder="인증번호 6자리를 입력해주세요">
+	          <button type="submit" class="btn btn-primary" id="emailSubmit">제출</button>
+	          </div>
+	   </form>
+  </div>
+  
+<script>
+    document.querySelector('input[name="agreement_all"]').addEventListener('change', function() {
+      var isChecked = this.checked;
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]:not([name="agreement_all"])');
 
-        checkSupportedBorwser();
-        $("#selectLang").val("ko_KR").prop("selected", true);
-        $("#chk_all").prop("checked",false);
-        setTerms();
-
-        $("#selectLang").change(function() {
-            let lang = $("#selectLang").val()
-            changeLang(lang);
-        });
-
-        $("#chk_all").click(function() {
-                nclk(this,'AGR.allKR','','',event);
-            setTerms();
-        })
-
-        $("#termsService").click(function() {
-            viewTerms();
-        })
-
-        $("#termsPrivacy").click(function() {
-            viewTerms();
-        })
-
-        $("#checkRealname").click(function(event) {
-            nclk(this,'AGR.realNmOp','','',event);
-            viewTerms();
-        })
-
-        $("#termsLocation").click(function() {
-            viewTerms();
-        })
-
-        $("#termsEmail").click(function() {
-            viewTerms();
-        })
-
-        $("#btnAgree").click(function(event) {
-                nclk(this,'BTN.confirm','','',event);
-            submitAgree();
-            return false;
-        })
-
-        $("#termForChild").click(function() {
-            let agent = "PC";
-            let url = "/user2/join/kidGuide";
-
-            if(agent == "M") {
-                location.href = url;
-            } else {
-                window.open(url, "_blank");
-            }
-            return false;
-        })
-
+      checkboxes.forEach(function(checkbox) {
+        checkbox.checked = isChecked;
+      });
+      
     });
 
-    function changeLang(lang) {
-        location.replace("/user2/join/agree?lang=" + lang + "&agentType=");
-    }
+    var childCheckboxes = document.querySelectorAll('input[type="checkbox"]:not([name="agreement_all"])');
+    childCheckboxes.forEach(function(childCheckbox) {
+      childCheckbox.addEventListener('change', function() {
+        var allCheckbox = document.querySelector('input[name="agreement_all"]');
+        allCheckbox.checked = Array.from(childCheckboxes).every(function(child) {
+          return child.checked;
+        });
+        updateSubmitButtonStatus();
+      });
+    });
 
-    function setTerms() {
-        if ($("#chk_all").is(":checked")) {
-            $("#termsService").prop("checked",true);
-            $("#termsPrivacy").prop("checked",true);
-            $("#checkRealname").prop("checked",true);
-            $("#termsLocation").prop("checked",true);
-            $("#termsEmail").prop("checked",true);
-        } else {
-            $("#termsService").prop("checked",false);
-            $("#termsPrivacy").prop("checked",false);
-            $("#checkRealname").prop("checked",false);
-            $("#termsLocation").prop("checked",false);
-            $("#termsEmail").prop("checked",false);
+    const emailBtn = document.querySelector('#emailBtn');
+    const oldDiv = document.querySelector('#container'); // 기존 div 요소 선택
+   
+    emailBtn.addEventListener('click', function(event) {
+    	var requiredCheckboxes = document.querySelectorAll('input[type="checkbox"][required]');
+		console.log(requiredCheckboxes);
+        // 필수 체크박스 중에서 하나라도 빠짐이 있으면 경고 메시지 출력
+        var allChecked = true;
+        for (var i = 0; i < requiredCheckboxes.length; i++) {
+            if (!requiredCheckboxes[i].checked) {
+                allChecked = false;
+                break;
+            }
         }
-        checkTerms();
-        return true;
-    }
-
-    function checkSupportedBorwser() {
-        let ua = navigator.userAgent;
-        let msg = "인터넷 익스플로러 8.0 이하 버전은 지원하지 않습니다.";
-
-        if(ua.indexOf("MSIE 6") > 0 || ua.indexOf("MSIE 7") > 0 || ua.indexOf("MSIE 8") > 0)  {
-            alert(msg);
-            location.replace("https://campaign.naver.com/goodbye_ie10/");
+        if (!allChecked) {
+            alert('필수 약관을 모두 동의해주세요!');
+            return;
         }
-    }
+    	if(allChecked) {
+    		document.getElementById("container").style.display = "none";
+        	document.getElementById("container2").style.display = "block";
+        	window.scrollTo(0, 0);
+    	}
+    	
+    });
+    
 
-    function viewTerms() {
+	
+	$('#userMailbtn').click(function() {
+		
+		const userEmail = document.querySelector('#userEmail1');
+		console.log(userEmail.value);
+		if(userEmail.value != "" && userEmail.value != null){
+			const email = $('#userEmail1').val() + $('#userEmail2').val(); // 이메일 주소값 얻어오기!
+			console.log('완성된 이메일 : ' + email); // 이메일 오는지 확인
+			const checkInput = $('#verificationCode') // 인증번호 입력하는곳 
+		
+			$.ajax({
+				type : 'get',
+				url : '<c:url value ="/member/mailCheck?email="/>'+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+				success : function (data) {
+					console.log("data : " +  data);
+					checkInput.attr('disabled',false);
+					code =data;
+					alert('인증번호가 전송되었습니다.')
+				}			
+			}); 
+			
+		} else{
+    		alert('이메일을 입력해주세요.')
+    	}
+			
+	});    
 
-        if( !$("#termsService").is(":checked") || !$("#termsPrivacy").is(":checked")
-            || !$("#checkRealname").is(":checked")
-            || !$("#termsLocation").is(":checked") || !$("#termsEmail").is(":checked")) {
-            $("#chk_all").prop("checked",false);
-        }
-
-        if( $("#termsService").is(":checked") && $("#termsPrivacy").is(":checked")
-            && $("#checkRealname").is(":checked")
-            && $("#termsLocation").is(":checked") && $("#termsEmail").is(":checked")) {
-            $("#chk_all").prop("checked",true);
-        }
-        checkTerms();
-        return true;
-    }
-
-    function checkTerms() {
-        let res = true;
-
-        if ($("#termsService").is(":checked") == false || $("#termsPrivacy").is(":checked") == false) {
-            $("#btnAgree").prop("disabled", true);
-            res = false;
-        } else {
-            $("#btnAgree").prop("disabled", false);
-        }
-
-        return res;
-    }
-
-    function submitAgree() {
-        if (checkTerms() != true) {
-            return false;
-        }
-
-        $("#join_form").submit();
-        return true;
-    }
-</script>
+  </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
