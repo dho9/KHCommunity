@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.app.board.dto.BoardListDto;
+import com.kh.app.board.dto.PostDetails;
 import com.kh.app.board.entity.BoardSearchDetails;
 import com.kh.app.board.repository.BoardRepository;
 
@@ -37,6 +38,16 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardListDto> graduateBoardFindAll() {
 		return boardRepository.graduateBoardFindAll();
+	}
+	
+	@Override
+	public BoardListDto findById(int id) {
+		return boardRepository.findById(id);
+	}
+	
+	@Override
+	public List<BoardListDto> employeeBoardFindAll() {
+		return boardRepository.employeeBoardFindAll();
 	}
 
 }

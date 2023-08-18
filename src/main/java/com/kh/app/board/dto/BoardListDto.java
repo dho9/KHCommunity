@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class BoardListDto{
+	private int postId;
 	private String title;
 	private String content;
 	private LocalDateTime postCreatedAt;

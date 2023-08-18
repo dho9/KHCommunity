@@ -773,6 +773,17 @@ aside > div.title > ol.buttons > li > a.image.setting {
     font-size: 15px;
     text-align: center;
 }
+
+#container > div.articles > #writeArticleButton {
+    width: 780px;
+    display: block;
+    padding: 15px;
+    border: solid 3px lightgray;
+    font-size: 17px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+}
+
 #container > div.articles > article > a.article {
     display: block;
     padding: 15px;
@@ -787,6 +798,13 @@ aside > div.title > ol.buttons > li > a.image.setting {
     margin: 0 5px 5px 0;
     width: 20px;
     height: 20px;
+    border-radius: 4px;
+}
+
+#container > div.articles > article img.picture.large {
+    margin: 0 5px 5px 0;
+    width: 35px;
+    height: 35px;
     border-radius: 4px;
 }
 #container > div.articles > article img.picture {
@@ -918,7 +936,7 @@ dl, ul, ol, menu, li {
    float: left;
 }
 #container div.card > div.board > a.article > ul.status > li {
-   float: left; margin-right: 5px; padding-left: 15px; height: 14px; line-height: 14px;
+   float: left; margin-right: 5px; padding-left: 0px; height: 14px; line-height: 14px;
    color: #a6a6a6; font-size: 11px; letter-spacing: 0; background-repeat: no-repeat; background-size: 11px 11px; background-position: left center;
 }
 #container div.card > div.board > a.article > ul.status > li.vote {
