@@ -15,29 +15,28 @@
         <div class="card-body" id="todayIssueBody">
           <span>신규 수강생</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">2</span>
-          &nbsp;&nbsp;&nbsp;&nbsp; 
+          <span style="color: tomato; font-weight: 600">${todayNewStudentCount}</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <span>신규 직원(강사 포함)</span>
+          &nbsp;
+          <span style="color: tomato; font-weight: 600">${todayTotalEmployee}</span>
+          <br />
+          <br />
           <span>가입 승인</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">2</span>
+          <span style="color: tomato; font-weight: 600">${approvementStudentCount }</span>
           &nbsp;&nbsp;&nbsp;&nbsp; 
           <span>휴가 승인</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">1</span>
+          <span style="color: tomato; font-weight: 600">${approvementStudentVacationCount }</span>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <br />
-          <br />
           <span>신규 게시글</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">1</span>
+          <span style="color: tomato; font-weight: 600">${todayNewPostCount }</span>
           &nbsp;&nbsp;&nbsp;&nbsp; 
           <span>신고내역</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">0</span>
-          &nbsp;&nbsp;&nbsp;&nbsp; 
-          <span>상담내역</span>
-          &nbsp;
-          <span style="color: tomato; font-weight: 600">2</span>
+          <span style="color: tomato; font-weight: 600">${todayNewReportCount }</span>
         </div>
       </div>
     </section>
@@ -139,7 +138,7 @@
       </div>
     </section>
     <br>
-    <footer></footer>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script>
 
@@ -170,13 +169,16 @@
         };
       });
 
+      var boardChartData = ${boardChartData};
+      console.log(boardChartData);
       var chart = bb.generate({
         data: {
           columns: [
-            ["자유게시판", 230],
-            ["취업/정보", 120],
-            ["우리반게시판", 120],
-            ["오늘 뭐먹지", 140],
+            ["${boardChartOne.boardName}", ${boardChartOne.postCount}],
+            ["${boardChartTwo.boardName}", ${boardChartTwo.postCount}],
+            ["${boardChartThree.boardName}", ${boardChartThree.postCount}],
+            ["${boardChartFour.boardName}", ${boardChartFour.postCount}],
+            ["${boardChartFive.boardName}", ${boardChartFive.postCount}],
           ],
           type: "donut", // for ESM specify as: donut()
         },
@@ -236,4 +238,5 @@
 
     </script>
   </body>
+  <footer></footer>
 </html>
