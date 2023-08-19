@@ -1,7 +1,5 @@
 package com.kh.app.member.controller;
 
-
-
 import java.util.Collection;
 import java.util.Map;
 
@@ -17,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.MemberLoginDto;
+import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 
@@ -38,43 +39,50 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequestMapping("/member")
 public class MemberSecurityController {
-
-
+	
 	@Autowired
 	private MemberService memberService;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-	@GetMapping("/memberCreate2.do")
+
+	@GetMapping("/memberCreate.do")
 	public void memberCreate() {}
 	
+	@GetMapping("/memberCreate2.do")
+	public void memberCreate2(@RequestParam String fullEmail, Model model) {
+		model.addAttribute("email", fullEmail);
+	}
 	
 	@PostMapping("/memberCreate2.do")
 	public String create(
 			@Valid MemberCreateDto member,
 			BindingResult bindingResult, 
 			RedirectAttributes redirectAttr) {
+
 		log.debug("member = {}", member);
-		
-		if(bindingResult.hasErrors()) {
+
+		if (bindingResult.hasErrors()) {
 			ObjectError error = bindingResult.getAllErrors().get(0);
 			redirectAttr.addFlashAttribute("msg", error.getDefaultMessage());
 			return "redirect:/member/memberCreate.do";
-		} 
-		
+		}
+
 		String rawPassword = member.getMemberPwd();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		member.setMemberPwd(encodedPassword);
-		
+
 		int result = memberService.insertMember(member);
 		redirectAttr.addFlashAttribute("msg", "회원가입을 축하드립니다.");
 		return "redirect:/";
 	}
+
 	
+
 	@GetMapping("/memberLogin.do")
-	public void memberLogin() {}
+	public void memberLogin() {	}
 	
+
 	@GetMapping("/memberDetail.do")
 	public void memberDetail(Authentication authentication, @AuthenticationPrincipal MemberDetails member) {
 		log.debug("authentication = {}", authentication);
@@ -87,29 +95,30 @@ public class MemberSecurityController {
 	
 	}	
 	
+
+
 	@GetMapping("/checkIdDuplicate.do")
 	@ResponseBody
-	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId){
+	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId) {
 		boolean available = false;
 		try {
-			UserDetails memberDetails = memberService.loadUserByUsername(memberId);	
-		} catch(UsernameNotFoundException e) {
+			UserDetails memberDetails = memberService.loadUserByUsername(memberId);
+		} catch (UsernameNotFoundException e) {
 			available = true;
 		}
-		
-		return  ResponseEntity
-				.status(HttpStatus.OK)
-				.body(Map.of("available", available, "memberId", memberId));
+
+		return ResponseEntity.status(HttpStatus.OK).body(Map.of("available", available, "memberId", memberId));
 	}
 
 	@GetMapping("/mailCheck")
 	@ResponseBody
-	public String mailCheck(String email) {
-	
+	public String mailCheck(String email, Model model) {
+
 		log.debug("email = {}", email);
+		model.addAttribute("email", email);
 		
 		return memberService.joinEmail(email);
 	}
+	
 
 }
-

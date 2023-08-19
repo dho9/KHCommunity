@@ -30,9 +30,17 @@ div#memberId-container span.guide { display:none; font-size:12px; position:absol
 div#memberId-container span.ok { color:green; }
 div#memberId-container span.error { color:red; }
 
+
+#mainbutton{text-align:center; margin-top:15px;}
+#mainbutton button{display:inline-block; margin: 1.5%; width: 15%;}
 </style>
+<div id="mainbutton">
+	<button type="button" class="btn btn-outline-primary btn-lg" id="mainbutton1">약관동의</button>
+	<button type="button" class="btn btn-outline-primary btn-lg" id="mainbutton2">이메일인증</button>
+	<button type="button" class="btn btn-primary btn-lg" id="mainbutton3">회원정보입력</button>
+</div>
 <div id="enroll-container" class="mx-auto text-center">
-	<form:form name="memberCreateFrm" action="" method="GET">
+	<form:form name="memberCreateFrm" action="" method="POST">
 		<table class="mx-auto w-75">
 			<tr>
 				<th>아이디</th>
@@ -79,7 +87,7 @@ div#memberId-container span.error { color:red; }
 			<tr>
 				<th>이메일</th>
 				<td>	
-					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="eogh@naver.com">
+					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="${email}" readonly>
 				</td>
 			</tr>
 			

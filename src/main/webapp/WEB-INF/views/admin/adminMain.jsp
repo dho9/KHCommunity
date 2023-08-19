@@ -9,7 +9,7 @@
         <div class="card-header" id="todayIssueHeader" style="font-weight: 700; font-size: 1.05em;">
           오늘의 이슈
           <span class="badge text-bg-secondary" style="background-color: tomato">
-            7
+            ${todayNewStudentCount+todayTotalEmployee+approvementStudentCount+approvementStudentVacationCount+todayNewPostCount+todayNewReportCount}
           </span>
         </div>
         <div class="card-body" id="todayIssueBody">
@@ -24,19 +24,19 @@
           <br />
           <span>가입 승인</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">${approvementStudentCount }</span>
+          <span style="color: tomato; font-weight: 600">${approvementStudentCount}</span>
           &nbsp;&nbsp;&nbsp;&nbsp; 
           <span>휴가 승인</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">${approvementStudentVacationCount }</span>
+          <span style="color: tomato; font-weight: 600">${approvementStudentVacationCount}</span>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <span>신규 게시글</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">${todayNewPostCount }</span>
+          <span style="color: tomato; font-weight: 600">${todayNewPostCount}</span>
           &nbsp;&nbsp;&nbsp;&nbsp; 
           <span>신고내역</span>
           &nbsp;
-          <span style="color: tomato; font-weight: 600">${todayNewReportCount }</span>
+          <span style="color: tomato; font-weight: 600">${todayNewReportCount}</span>
         </div>
       </div>
     </section>
@@ -111,24 +111,27 @@
             <div class="card" style="width: 635px; height:540px;">
               <div class="card-header" style="font-weight: 700; font-size: 1.05em;">신고현황</div>
               <div class="card-body">
+              	<c:forEach items="${reports}" var="report">
                 <div class="warning-box" style="display: flex; padding: 20px 0 0 20px;">
                   <div class="warning-img">
                     <img src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" style="width: 90px;">
                   </div>
                   <div class="warning-content" style="float: left; text-align: left; line-height: 0.7; padding-top: 9px;">
-                    <p style="font-weight: 600;">[게시글 신고] 스팸 광고입니다.</p>
-                    <p style="font-size: 13px;">&nbsp;sukey0331 | 2023.07.10</p>
+                  	<c:if test="${report.postId != 0}">
+	                    <p style="font-weight: 600;">[게시글 신고] ${report.reportContent}</p>
+                  	</c:if>
+                  	<c:if test="${report.commentId != 0}">
+	                    <p style="font-weight: 600;">[댓글 신고] ${report.reportContent}</p>
+                  	</c:if>
+                  	<c:if test="${report.messageId != 0}">
+	                    <p style="font-weight: 600;">[쪽지 신고] ${report.reportContent}</p>
+                  	</c:if>
+                    <p style="font-size: 13px;">&nbsp;신고자 ${report.reporterId} | ${report.reportSendDate} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    	<span style="color:red;">신고대상유저 ${report.attakerId}</span>
+                    </p>
                   </div>
                 </div>
-                <div class="warning-box" style="display: flex; padding: 20px 0 0 20px;">
-                  <div class="warning-img">
-                    <img src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" style="width: 90px;">
-                  </div>
-                  <div class="warning-content" style="float: left; text-align: left; line-height: 0.7; padding-top: 9px;">
-                    <p style="font-weight: 600;">[댓글 신고] 롯데월드 갔다왔다고 욕합니다. 혼내주세요.</p>
-                    <p style="font-size: 13px;">&nbsp;이장준 | 2023.07.10</p>
-                  </div>
-                </div>
+              	</c:forEach>
               </div>
             </div>
           </div>
@@ -137,7 +140,7 @@
     </section>
     <br>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
     <script>
 
       $(function(){

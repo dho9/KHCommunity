@@ -1,6 +1,7 @@
 package com.kh.app.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,10 +9,12 @@ import org.springframework.stereotype.Service;
 import com.kh.app.admin.repository.AdminRepository;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
+import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -106,4 +109,17 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.insertMember(member);
 	}
 
+	public List<AdminReportListDto> reportListSix() {
+		return adminRepository.reportListSix();
+	}
+	
+	@Override
+	public List<AdminStudentListDto> findAllStudents(Map<String, Object> filters) {
+		return adminRepository.findAllStudents(filters);
+	}
+	
+	@Override
+	public int updateAdminStudent(AdminStudentListDto student) {
+		return adminRepository.updateAdminStudent(student);
+	}
 }
