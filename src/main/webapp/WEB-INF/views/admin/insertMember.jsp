@@ -23,8 +23,6 @@ a{text-decoration: none;}
     padding: 15px 5px;
     background-color: #fff;
 }
-
-
 </style>
 <section>
 	<div class="card"
@@ -76,6 +74,19 @@ a{text-decoration: none;}
 	</div>
 </section>
 <footer></footer>
+<script>
+    $(function() {
+        var submitButton = $('input[type="submit"]');
+        submitButton.on('click', function(e) {
+        	e.preventDefault(); // 기본 제출 동작을 막음
+            if(confirm('회원을 등록하시겠습니까?')) {
+                $('form[name="insertMemberFrm"]').submit();
+            } else {
+            	return false;
+            }
+        });
+    });
+</script>
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

@@ -24,6 +24,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
+import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -159,7 +160,7 @@ public class AdminController {
 	@GetMapping("/insertMember.do")
 	public void insertMember() {}
 	
-	@RequestMapping(value = "/insertMember.do", method = RequestMethod.POST)
+	@PostMapping("/insertMember.do")
     public String insertMember(
             @RequestParam String id,
             @RequestParam String pw,
@@ -169,16 +170,26 @@ public class AdminController {
             @RequestParam String phone,
             @RequestParam String dept) {
 		LocalDateTime currentTime = LocalDateTime.now();
+		// member 등록
+		MemberCreateDto _member = 
+				MemberCreateDto.builder()
+				.memberId(id)
+				.memberPwd(pw)
+				.memberName(name)
+				.memberPhone(phone)
+				.email(email)
+				.birthday(birthday)
+				.build();
+		// employee 등록
 		EmployeeCreateDto _employee = 
 				EmployeeCreateDto.builder()
 				.id(id)
 				.dept(dept)
 				.employeeEnrollDate(currentTime)
 				.build();
-		
-		
-		Employee employee = adminService.insertEmployee(_employee);
-		
+		log.debug("member = {}", _member);
+//		int result1 = adminService.insertMember(_member);
+//		int result2 = adminService.insertEmployee(_employee);
 		
         return "redirect:/admin/employeeList.do";
     }

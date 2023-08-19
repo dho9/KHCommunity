@@ -2,6 +2,7 @@ package com.kh.app.admin.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -10,6 +11,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
+import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 
@@ -84,6 +86,10 @@ public interface AdminRepository {
 	@Select("SELECT m.* FROM member m INNER JOIN authority a ON m.member_id = a.member_id WHERE a.auth = 'ADMIN' AND m.member_id = #{id}")
 	Member findById(String id);
 
-	Employee insertEmployee(EmployeeCreateDto employee);
+	@Insert("insert into employee values (#{id}, #{dept}, #{employeeEnrollDate}")
+	int insertEmployee(EmployeeCreateDto employee);
+
+	@Insert("insert into member values (#{memberId}, #{memberPwd}, #{memberName}, #{memberPhone}, #{email}, #{birthday})")
+	int insertMember(MemberCreateDto member);
 
 }

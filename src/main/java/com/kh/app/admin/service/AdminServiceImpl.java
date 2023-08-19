@@ -11,6 +11,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
+import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -96,8 +97,13 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public Employee insertEmployee(EmployeeCreateDto employee) {
+	public int insertEmployee(EmployeeCreateDto employee) {
 		return adminRepository.insertEmployee(employee);
+	}
+	
+	@Override
+	public int insertMember(MemberCreateDto member) {
+		return adminRepository.insertMember(member);
 	}
 
 }

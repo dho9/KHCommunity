@@ -7,6 +7,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
+import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 public interface AdminService {
@@ -41,7 +42,9 @@ public interface AdminService {
 
 	List<AdminVacationApproveDto> vacationApproveListThree();
 
-	Employee insertEmployee(EmployeeCreateDto employee);
+	int insertEmployee(EmployeeCreateDto employee);
+
+	int insertMember(MemberCreateDto member);
 
 
 }
