@@ -52,3 +52,6 @@ mybatis:
   type-aliases-package: com.kh.app, org.springframework.security.core.authority
   type-handlers-package: com.kh.app.common.typehandler
   mapper-locations: classpath*:mapper/**/*-mapper.xml
+  
+
+ 
