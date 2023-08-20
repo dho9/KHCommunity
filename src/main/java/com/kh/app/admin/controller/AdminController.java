@@ -29,6 +29,7 @@ import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
@@ -170,9 +171,24 @@ public class AdminController {
 	
 	// 직원 목록 조회 - 이태현
 	@GetMapping("/employeeList.do")
-	public void employeeList(Model model){
-		List<Member> members = adminService.findAllEmployee();
-		model.addAttribute("members", members);
+	public void employeeList(Model model,
+				            @RequestParam(value = "searchType", required = false) String searchType,
+				            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                            @RequestParam(value = "job_Code", required = false) String[] _job_Codes){
+		List<String> job_Codes = null;
+
+	    if (_job_Codes != null) {
+	    	job_Codes = Arrays.asList(_job_Codes);
+	    }
+	    
+		Map<String, Object> filters = new HashMap<>();
+	    filters.put("searchType", searchType);
+	    filters.put("searchKeyword", searchKeyword);
+	    filters.put("job_Codes", job_Codes);
+		
+	    log.debug("job_Codes = {}", job_Codes);
+		List<AdminEmployeeListDto> employees = adminService.findAllEmployee(filters);
+		model.addAttribute("employees", employees);
 	}
 	
 	// 직원 Id로 검색 - 이태현
@@ -180,7 +196,6 @@ public class AdminController {
 	@ResponseBody
 	public Member findById(@RequestParam String id) {
 	    Member member = adminService.findById(id);
-	    log.debug("member = {}", member);
 	    return member;
 	}
 	

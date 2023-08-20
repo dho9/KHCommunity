@@ -11,6 +11,7 @@ import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
@@ -27,9 +28,10 @@ public class AdminServiceImpl implements AdminService {
 	private AdminRepository adminRepository;
 	
 	@Override
-	public List<Member> findAllEmployee() {
-		return adminRepository.findAllEmployee();
+	public List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters) {
+		return adminRepository.findAllEmployee(filters);
 	}
+	
 	public int todayNewStudentCount() {	
 		return adminRepository.todayNewStudentCount();
 	}
