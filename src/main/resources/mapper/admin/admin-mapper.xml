@@ -33,4 +33,23 @@
     </where>
     
   </select>
+  
+  <select id="findAllEmployee" resultType="AdminEmployeeListDto">
+  	SELECT 
+  		member.*, employee.*
+	FROM member
+	JOIN 
+		employee ON member.member_id = employee.employee_id
+  <where>
+        <if test="job_Codes != null and !job_Codes.isEmpty()">
+            AND JOB_CODE IN
+            <foreach collection="job_Codes" item="job_Code" open="(" separator="," close=")">
+                #{job_Code}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+  </where>
+  </select>
 </mapper>

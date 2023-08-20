@@ -3,14 +3,19 @@ package com.kh.app.admin.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.EmployeeCreateDto;
+import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -80,12 +85,17 @@ public interface AdminRepository {
 			+ "    v.vacation_approve_check = '2'")
 	List<AdminVacationApproveDto> vacationApproveListThree();
 
-	@Select("select * from member where member_role = 'e'")
-	List<Member> findAllEmployee();
+	List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters);
 
-	@Select("select * from member where member_id = #{id}")
+	@Select("SELECT m.* FROM member m INNER JOIN authority a ON m.member_id = a.member_id WHERE a.auth = 'ADMIN' AND m.member_id = #{id}")
 	Member findById(String id);
 
+	@Insert("insert into employee values (#{id}, #{dept}, #{employeeEnrollDate}")
+	int insertEmployee(EmployeeCreateDto employee);
+
+	@Insert("insert into member values (#{memberId}, #{memberPwd}, #{memberName}, #{memberPhone}, #{email}, #{birthday})")
+	int insertMember(MemberCreateDto member);
+	
 	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)\r\n"
 			+ "where  report_check = 'n' and (rownum between 1 and 6)")
 	List<AdminReportListDto> reportListSix();
