@@ -102,8 +102,8 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public List<AdminStudentListDto> findAllStudents(Map<String, Object> filters) {
-		return adminRepository.findAllStudents(filters);
+	public List<AdminStudentListDto> findAllStudents(Map<String, Object> filters, Map<String, Object> params) {
+		return adminRepository.findAllStudents(filters, params);
 	}
 	
 	@Override

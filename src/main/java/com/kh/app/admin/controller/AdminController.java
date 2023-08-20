@@ -145,7 +145,8 @@ public class AdminController {
 	public void adminStudentList(Model model,
 	                             @RequestParam(value = "searchType", required = false) String searchType,
 	                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-	                             @RequestParam(value = "student_type", required = false) String[] _studentTypes) {
+	                             @RequestParam(value = "student_type", required = false) String[] _studentTypes, 
+								 @RequestParam(defaultValue = "1") int page) {
 
 	    List<String> studentTypes = null;
 
@@ -153,12 +154,20 @@ public class AdminController {
 	        studentTypes = Arrays.asList(_studentTypes);
 	    }
 
+	    // 검색 필터
 	    Map<String, Object> filters = new HashMap<>();
 	    filters.put("searchType", searchType);
 	    filters.put("searchKeyword", searchKeyword);
 	    filters.put("studentTypes", studentTypes);
 
-	    List<AdminStudentListDto> students = adminService.findAllStudents(filters);
+	    // 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+	    List<AdminStudentListDto> students = adminService.findAllStudents(filters, params);
 	    model.addAttribute("students", students);
 	}
 	

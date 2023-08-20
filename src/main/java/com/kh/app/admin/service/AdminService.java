@@ -46,7 +46,7 @@ public interface AdminService {
 
 	List<AdminReportListDto> reportListSix();
 
-	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters);
+	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters, Map<String, Object> params);
 
 	int updateAdminStudent(AdminStudentListDto student);
 

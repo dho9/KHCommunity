@@ -1087,3 +1087,27 @@ VALUES ('test8', 'test2', 'test8', '010-1234-5678', 'test2@naver.com', TO_DATE('
 
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test8', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test9', 'test2', 'test9', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test9', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test10', 'test2', 'test10', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test10', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test11', 'test2', 'test11', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test11', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');

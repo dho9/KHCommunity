@@ -92,7 +92,7 @@ public interface AdminRepository {
 	List<AdminReportListDto> reportListSix();
 
 	
-	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters);
+	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters, Map<String, Object> params);
 
 	@Update("update student set student_Type = #{studentType} where student_id = #{studentId}")
 	int updateAdminStudent(AdminStudentListDto student);
