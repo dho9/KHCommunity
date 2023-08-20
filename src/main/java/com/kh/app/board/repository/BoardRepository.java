@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.dto.PostDetails;
 
 @Mapper
@@ -38,4 +39,14 @@ public interface BoardRepository {
 
 	List<BoardListDto> employeeBoardFindAll();
 
+	@Select("select * from post_like where post_id = #{postId} and member_id = #{memberId}")
+	PostLike findPostLikeByMemberId(int postId, String memberId);
+
+	@Delete("delete from post_like where post_id = #{postId} and member_id = #{memberId}")
+	int deletePostLikeByMemberId(int postId, String memberId);
+
+	@Insert("insert into post_like values (#{postId}, #{memberId})")
+	int insertPostLikeByMemberId(int postId, String memberId);
+
+	PostLike findPostLikeCount(int postId);
 }
