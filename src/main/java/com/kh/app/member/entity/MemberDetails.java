@@ -16,8 +16,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class MemberDetails extends Member implements UserDetails, OAuth2User {
 
-	
 	private static final long serialVersionUID = 1L;
+	
 	
 	private List<SimpleGrantedAuthority> authorities;
 	
@@ -28,6 +28,7 @@ public class MemberDetails extends Member implements UserDetails, OAuth2User {
 		return this.attributes;
 	}
 	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.authorities;
@@ -39,39 +40,39 @@ public class MemberDetails extends Member implements UserDetails, OAuth2User {
 	}
 
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getPassword() {
+		return this.getMemberPwd();
 	}
+	
 
 	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getName() {
+		
+		return this.getMemberName();
 	}
 
+	
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
+	
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
+	
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
+
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 
