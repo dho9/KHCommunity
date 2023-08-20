@@ -36,6 +36,28 @@ spring:
             protocols: TLSv1.2 
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 958103830753-j59skcel5q15hda61ulbmnhvv65snpbp.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8080/kh/login/oauth2/code/google
+            scope: profile, email
+          kakao: 
+            client-id: be1e06210f3849fac27f7fe2d97fd649
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            authorization-grant-type: authorization_code
+            client-authentication-method: 'POST'
+            client-name: Kakao
+        provider: 
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-info-authentication-method: POST
+            user-name-attribute: id
 
 # logback
 logging:
@@ -51,4 +73,15 @@ mybatis:
     call-setters-on-nulls: true
   type-aliases-package: com.kh.app, org.springframework.security.core.authority
   type-handlers-package: com.kh.app.common.typehandler
-  mapper-locations: classpath*:mapper/**/*-mapper.xml
+  mapper-locations: classpath*:mapper/**/*-mapper.xml\
+
+
+# oauth
+oauth:
+  kakao:
+    authorize-uri: https://kauth.kakao.com/oauth/authorize/
+    redirect-uri: http://localhost:8080/kh/oauth/kakao/callback.do
+    rest-api-key: be1e06210f3849fac27f7fe2d97fd649
+    token-uri: https://kauth.kakao.com/oauth/token
+    scope: profile_nickname, account_email, profile_image
+    resource-uri-host: https://kapi.kakao.com
