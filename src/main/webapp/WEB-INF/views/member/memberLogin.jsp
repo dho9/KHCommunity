@@ -71,7 +71,7 @@
 			<div class="d-flex flex-column"
 				style="align-items: unset;">
 				<div>
-					<a href="${pageContext.request.contextPath}/oauth/kakao/login.do">
+					<a href="${pageContext.request.contextPath}/oauth2/authorization/kakao">
 					<img id="kakao" alt="kakao" src="${pageContext.request.contextPath}/resources/images/kakaowide.png"></a>
 				</div>
 				<div class="d-flex justify-content-between">

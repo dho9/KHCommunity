@@ -62,6 +62,8 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
                                                 .memberPwd("1234") // 의미없지만 값은 줘야함
                                                 .memberName(name)
                                                 .email(email)
+                                                .memberPhone("-")
+                                                .birthday(null)
                                                 .build();
             int reuslt = memberService.insertMember(memberCreateDto);
             member = (MemberDetails) memberService.loadUserByUsername(memberId);

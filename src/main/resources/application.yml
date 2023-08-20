@@ -40,6 +40,11 @@ spring:
     oauth2:
       client:
         registration:
+          google:
+            client-id: 958103830753-j59skcel5q15hda61ulbmnhvv65snpbp.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8080/kh/login/oauth2/code/google
+            scope: profile, email
           kakao: 
             client-id: be1e06210f3849fac27f7fe2d97fd649
             redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
