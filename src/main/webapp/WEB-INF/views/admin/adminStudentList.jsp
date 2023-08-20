@@ -190,7 +190,7 @@
               // 서버 응답을 처리
               // 예: 성공 메시지를 표시하거나 다른 동작 수행
               
-              alert('수강생 정보가 수정되었습니다.')
+              alert('성공적으로 처리되었습니다.')
               location.href="${pageContext.request.contextPath}/admin/adminStudentList.do";
             }
           });

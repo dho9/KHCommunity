@@ -187,9 +187,14 @@ public class AdminController {
 		return "redirect:/admin/adminStudentList.do";
 	}
 	
-	// 수강생 삭제
+	// 수강생 삭제 - 유성근
 	@PostMapping("/adminStudentDelete.do")
-	public String adminStudentDelete() {
-		return null;
+	public String adminStudentDelete(@Valid AdminStudentListDto student) {
+		int result = adminService.deleteAdminStudent(student);
+		return "redirect:/admin/adminStudentList.do";
 	}
+	
+	// 수강생 승인 목록 조회 - 유성근
+	@GetMapping("/adminStudentApprovementList.do")
+	public void adminStudentApprovementList() {}
 }

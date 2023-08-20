@@ -1039,3 +1039,51 @@ VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n'
 
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test1', 'test1', 'test1', '010-1234-5678', 'test1@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test2', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test3', 'test3', 'test3', '010-1234-5678', 'test3@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test3', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test4', 'test4', 'test4', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test4', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test5', 'test2', 'test5', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test5', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test6', 'test2', 'test6', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test6', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test7', 'test2', 'test7', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test7', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test8', 'test2', 'test8', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test8', '3', 'y', '23/08/18', sysdate, 'p');

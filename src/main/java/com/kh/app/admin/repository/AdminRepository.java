@@ -3,6 +3,7 @@ package com.kh.app.admin.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -95,5 +96,8 @@ public interface AdminRepository {
 
 	@Update("update student set student_Type = #{studentType} where student_id = #{studentId}")
 	int updateAdminStudent(AdminStudentListDto student);
+
+	@Delete("delete from member where member_id = #{studentId}")
+	int deleteAdminStudent(AdminStudentListDto student);
 
 }
