@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.dto.PostDetails;
 import com.kh.app.board.repository.BoardRepository;
 
@@ -63,5 +64,25 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int insertFavoriteByMemberId(int boardId, String memberId) {
 		return boardRepository.insertFavoriteByMemberId(boardId, memberId);
+	}
+	
+	@Override
+	public PostLike findPostLikeByMemberId(int postId, String memberId) {
+		return boardRepository.findPostLikeByMemberId(postId, memberId);
+	}
+	
+	@Override
+	public int deletePostLikeByMemberId(int postId, String memberId) {
+		return boardRepository.deletePostLikeByMemberId(postId, memberId);
+	}
+	
+	@Override
+	public int insertPostLikeByMemberId(int postId, String memberId) {
+		return boardRepository.insertPostLikeByMemberId(postId, memberId);
+	}
+	
+	@Override
+	public PostLike findPostLikeCount(int postId) {
+		return boardRepository.findPostLikeCount(postId);
 	}
 }

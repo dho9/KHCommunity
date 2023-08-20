@@ -36,7 +36,7 @@
 					  	<p class="large">${postDetail.content}</p> <br>
 					  	<ul class="status">
 					  		<%-- 좋아요 버튼 --%>
-					  		<li><button type="button" style="border: none; background: none;"><img src="${pageContext.request.contextPath}/resources/images/like.png"/></button></li>
+					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${postDetail.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
@@ -46,5 +46,72 @@
 			</article>
 		</c:if>
 	</div>
+	<form:form name="tokenFrm"></form:form>
+	<script>
+	// load됐을때 공감(좋아요) 했는지 확인
+	window.onload = () => {
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
+			data : {
+				_postId : document.querySelector('.like').dataset.value
+			},
+			method : "GET",
+            dataType : "json",
+            success(responseData) {
+            	console.log(responseData);
+    			const {available, likeCount} = responseData;
+    			const {postLikeCount} = likeCount;
+    			
+    			const like = document.querySelector('.like');
+    			const vote = document.querySelector('.vote');
+    			if(available) {
+                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+                else {
+                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+            }
+		});
+	};
+	
+	// 공감(좋아요) 누르기
+	document.querySelector('.like').onclick = (e) => {
+		console.log(e.target.dataset.value);
+		
+		const token = document.tokenFrm._csrf.value;
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
+			data : {
+				_postId : e.target.dataset.value
+			},
+			headers: {
+                "X-CSRF-TOKEN": token
+            },
+            method : "POST",
+            dataType : "json",
+            success(responseData) {
+            	console.log(responseData);
+				const {available, likeCount} = responseData;
+				const {postLikeCount} = likeCount;
+    			
+    			const like = document.querySelector('.like');
+    			const vote = document.querySelector('.vote');
+    			if(available) {
+                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+                else {
+                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+            }
+		});
+	};
+	</script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
