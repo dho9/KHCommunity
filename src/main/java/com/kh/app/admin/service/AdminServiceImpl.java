@@ -124,4 +124,19 @@ public class AdminServiceImpl implements AdminService {
 	public int updateAdminStudent(AdminStudentListDto student) {
 		return adminRepository.updateAdminStudent(student);
 	}
+	
+	@Override
+	public int updateAdminEmployee(AdminEmployeeListDto employee) {
+		return adminRepository.updateAdminEmployee(employee);
+	}
+	
+	@Override
+	public int deleteAdminEmployee(AdminEmployeeListDto employee) {
+		return adminRepository.deleteAdminEmployee(employee);
+	}
+	
+	@Override
+	public int deleteAdminMember(AdminEmployeeListDto employee) {
+		return adminRepository.deleteAdminMember(employee);
+	}
 }

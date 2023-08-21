@@ -57,5 +57,11 @@ public interface AdminService {
 
 	int updateAdminStudent(AdminStudentListDto student);
 
+	int updateAdminEmployee(AdminEmployeeListDto employee);
+
+	int deleteAdminEmployee(AdminEmployeeListDto employee);
+
+	int deleteAdminMember(AdminEmployeeListDto employee);
+
 
 }

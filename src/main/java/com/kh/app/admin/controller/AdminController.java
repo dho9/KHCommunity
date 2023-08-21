@@ -191,14 +191,6 @@ public class AdminController {
 		model.addAttribute("employees", employees);
 	}
 	
-	// 직원 Id로 검색 - 이태현
-	@GetMapping("/findById.do")
-	@ResponseBody
-	public Member findById(@RequestParam String id) {
-	    Member member = adminService.findById(id);
-	    return member;
-	}
-	
 	@GetMapping("/insertMember.do")
 	public void insertMember() {}
 	
@@ -248,5 +240,26 @@ public class AdminController {
 	@PostMapping("/adminStudentDelete.do")
 	public String adminStudentDelete() {
 		return null;
+	}
+	
+	// 직원 정보 수정
+	@PostMapping("/adminEmployeeUpdate.do")
+	public String adminEmployeeUpdate(@Valid AdminEmployeeListDto employee) {
+		log.debug("employee = {}", employee);
+		int result = adminService.updateAdminEmployee(employee);
+		
+		return "redirect:/admin/employeeList.do";
+	}
+	
+	// 직원 삭제
+	@PostMapping("/adminEmployeeDelete.do")
+	public String adminEmployeeDelete(@Valid AdminEmployeeListDto employee) {
+		log.debug("employee = {}", employee);
+		
+		// employee테이블에서 삭제
+		int result1 = adminService.deleteAdminEmployee(employee);
+		// member테이블에서 삭제
+		int result2 = adminService.deleteAdminMember(employee);
+		return "redirect:/admin/employeeList.do";
 	}
 }
