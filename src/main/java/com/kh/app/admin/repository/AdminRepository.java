@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.session.RowBounds;
 
 import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
@@ -106,10 +107,18 @@ public interface AdminRepository {
 			+ "where  report_check = 'n' and (rownum between 1 and 6)")
 	List<AdminReportListDto> reportListSix();
 
-	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters);
+	
+	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters, RowBounds rowBounds);
+
 
 	@Update("update student set student_Type = #{studentType} where student_id = #{studentId}")
 	int updateAdminStudent(AdminStudentListDto student);
+
+
+	@Delete("delete from member where member_id = #{studentId}")
+	int deleteAdminStudent(AdminStudentListDto student);
+
+	int totalCountStudents(Map<String, Object> filters);
 
 	@Update("update employee set job_code = #{jobCode} where employee_id = #{employeeId}")
 	int updateAdminEmployee(AdminEmployeeListDto employee);
@@ -124,6 +133,7 @@ public interface AdminRepository {
 
 	@Delete("delete from member where member_id = #{memberId}")
 	int deleteAdminTeacher(String memberId);
+
 
 
 }

@@ -10,7 +10,48 @@
 	margin: 3% auto;
 	width: 40%;
 }
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+    background-color: royalblue;
+    border-color: royalblue;
+    color: white;
+}
+
+.fc .fc-button-primary:disabled,
+.fc .fc-button-primary {
+    background-color: royalblue;
+    border-color: royalblue;
+    color: white;
+}
+
+.fc .fc-button .fc-icon {
+    font-size: 1.5em;
+    vertical-align: middle;
+    background-color: royalblue;
+    border-color: royalblue;
+    color: white;
+}
+
+.fc .fc-button-group > .fc-button {
+  z-index: 1;
+    background-color: royalblue;
+    border-color: royalblue;
+    color: white;
+}
+/* .fc .fc-button-group > .fc-button.fc-button-active,
+.fc .fc-button-group > .fc-button:active,
+.fc .fc-button-group > .fc-button:focus,
+.fc .fc-button-group > .fc-button:hover,
+.fc .fc-button-group > .fc-button.fc-button-disabled {
+    z-index: 1;
+    background-color: royalblue;
+    border-color: royalblue;
+    color: white;
+} */
 </style>
+
+
 <!DOCTYPE html>
 <html lang='en'>
 <meta charset='utf-8' />
@@ -33,24 +74,20 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
-	// new FullCalendar.Calendar(대상 DOM객체, {속성:속성값, 속성2:속성값2..})
 	
     var calendar = new FullCalendar.Calendar(calendarEl, {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        right: 'dayGridMonth'
       },
-      initialDate: '2021-04-12', // 초기 로딩 날짜.
-      navLinks: true, // can click day/week names to navigate views
+      initialDate: new Date(),
+      navLinks: true, 
       selectable: true,
       selectMirror: true,
-      // 이벤트명 : function(){} : 각 날짜에 대한 이벤트를 통해 처리할 내용..
       select: function(arg) {
     	  console.log(arg);
-
         var title = prompt('입력할 일정:');
-    // title 값이 있을때, 화면에 calendar.addEvent() json형식으로 일정을 추가
         if (title) {
           calendar.addEvent({
             title: title,
@@ -64,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
         calendar.unselect()
       },
       eventClick: function(arg) {
-    	  // 있는 일정 클릭시,
     	  console.log("#등록된 일정 클릭#");
     	  console.log(arg.event);
     	  
@@ -73,15 +109,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       },
       editable: true,
-      dayMaxEvents: true, // allow "more" link when too many events
-      events: function(info, successCallback, failureCallback){
-    	  // ajax 처리로 데이터를 로딩 시킨다.
-    	  $.ajax({
-    		 type:"get",
-    		 url:"${path}/calendar.do?method=data",
-    		dataType:"json"  
-    	  });
-      }
+      dayMaxEvents: true, 
+      events: function(info, successCallback, failureCallback) {
+    	  
+    	    $.ajax({
+    	        type: "get",
+    	        url: "${pageContext.request.contextPath}/calendar.do?method=data",
+    	        dataType: "json",
+    	        success: function(responseData) {
+    	            console.log("responseData =", responseData);
+
+    	            var events = [];
+    	            responseData.forEach(function(item) {
+    	                var event = {
+    	                    title: item.title,
+    	                    start: item.start, 
+    	                    end: item.end 
+    	                };
+    	                events.push(event);
+    	            });
+
+    	            successCallback(events); 
+    	        },
+    	        complete: function() {
+    	            console.log("완료됐습니다.");
+    	        }
+    	    });
+    	}
+    
   });
 
     calendar.render();
