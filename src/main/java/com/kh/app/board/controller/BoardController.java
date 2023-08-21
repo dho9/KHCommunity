@@ -128,8 +128,8 @@ public class BoardController {
 	 */
 	@GetMapping("/myBoards.do")
 	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
-//		String memberId = principal.getMemberId();
-		List<BoardSearchDto> boards = boardService.findAllByMemberId("gmlwls");
+		String memberId = principal.getMemberId();
+		List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
 		log.debug("boards = {}", boards);
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -144,10 +144,10 @@ public class BoardController {
 	 */
 	@GetMapping("/favorite.do")
 	public ResponseEntity<?> isFavorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int boardId = Integer.parseInt(_boardId);
 		
-		Favorite favorite = boardService.findFavoriteByMemberId(boardId, "gmlwls");
+		Favorite favorite = boardService.findFavoriteByMemberId(boardId, memberId);
 		log.debug("favorite = {}", favorite);
 		
 		boolean available = true;
@@ -168,10 +168,10 @@ public class BoardController {
 	 */
 	@PostMapping("/favorite.do")
 	public ResponseEntity<?> favorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int boardId = Integer.parseInt(_boardId);
 		
-		Favorite favorite = boardService.findFavoriteByMemberId(boardId, "gmlwls");
+		Favorite favorite = boardService.findFavoriteByMemberId(boardId, memberId);
 		log.debug("favorite = {}", favorite);
 		
 		boolean available = true;
@@ -181,10 +181,10 @@ public class BoardController {
 		
 		int result = 0;
 		if(available) {
-			result = boardService.deleteFavoriteByMemberId(boardId, "gmlwls");
+			result = boardService.deleteFavoriteByMemberId(boardId, memberId);
 		}
 		else {
-			result = boardService.insertFavoriteByMemberId(boardId, "gmlwls");
+			result = boardService.insertFavoriteByMemberId(boardId, memberId);
 		}
 		
 		return ResponseEntity
@@ -212,10 +212,10 @@ public class BoardController {
 	 */
 	@GetMapping("/postLike.do")
 	public ResponseEntity<?> isPostLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int postId = Integer.parseInt(_postId);
 		
-		PostLike postLike = boardService.findPostLikeByMemberId(postId, "alfn");
+		PostLike postLike = boardService.findPostLikeByMemberId(postId, memberId);
 		log.debug("postLike = {}", postLike);
 		
 		boolean available = true;
@@ -239,10 +239,10 @@ public class BoardController {
 	 */
 	@PostMapping("/postLike.do")
 	public ResponseEntity<?> postLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int postId = Integer.parseInt(_postId);
 		
-		PostLike postLike = boardService.findPostLikeByMemberId(postId, "alfn");
+		PostLike postLike = boardService.findPostLikeByMemberId(postId, memberId);
 		log.debug("postLike = {}", postLike);
 		
 		boolean available = true;
@@ -252,10 +252,10 @@ public class BoardController {
 		
 		int result = 0;
 		if(available) {
-			result = boardService.deletePostLikeByMemberId(postId, "alfn");
+			result = boardService.deletePostLikeByMemberId(postId, memberId);
 		}
 		else {
-			result = boardService.insertPostLikeByMemberId(postId, "alfn");
+			result = boardService.insertPostLikeByMemberId(postId, memberId);
 		}
 		
 		PostLike likeCount = boardService.findPostLikeCount(postId);

@@ -296,6 +296,7 @@
             </div>
         </div>
 <script>
+// 즐겨찾기
 document.querySelector('#myBoard').addEventListener('mouseover', () => {
     $.ajax({
         url: "${pageContext.request.contextPath}/board/myBoards.do",
@@ -306,7 +307,7 @@ document.querySelector('#myBoard').addEventListener('mouseover', () => {
 
             let html = "";
             for (const board of responseData.boards) {
-                const { boardName } = board;
+                const {boardName} = board;
                 html += `
                     <a class="accordion">\${boardName}</a>
                 `;
