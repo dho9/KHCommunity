@@ -49,13 +49,9 @@ public class BoardController {
 	public String freeBoardList(Model model) {
 		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll();
         log.debug("freeBoardLists = {}", freeBoardLists);
-        
         model.addAttribute("freeBoardLists", freeBoardLists);
-        
         return "/board/freeBoardList";
-		
-		
-	}
+ 	}
 	
 	@GetMapping("/marketBoardList.do")
 	public void marketBoardList() {
@@ -294,23 +290,23 @@ public class BoardController {
 			log.debug("loginMember = {}", member);
 			List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
 			// 1. 파일저장
-			List<PostAttachment> attachments = new ArrayList<>(); 
-			for(MultipartFile file : files) {
-				if(file != null) {
-					String originalFilename = file.getOriginalFilename();
-					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-					file.transferTo(destFile);	
-					
-					PostAttachment attach = 
-							PostAttachment.builder()
-							.postOriginalFilename(originalFilename)
-							.postRenamedFilename(renamedFilename)
-							.build();
-					attachments.add(attach);
-				}
-				
-			}
+//			List<PostAttachment> attachments = new ArrayList<>(); 
+//			for(MultipartFile file : files) {
+//				if(file != null) {
+//					String originalFilename = file.getOriginalFilename();
+//					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+//					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+//					file.transferTo(destFile);	
+//					
+//					PostAttachment attach = 
+//							PostAttachment.builder()
+//							.postOriginalFilename(originalFilename)
+//							.postRenamedFilename(renamedFilename)
+//							.build();
+//					attachments.add(attach);
+//				}
+//				
+//			}
 		
 			BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
@@ -318,7 +314,7 @@ public class BoardController {
 				.boardId(boardId)
 				.memberId(member.getMemberId())
 				.tags(tags)
-				.attachments(attachments)
+//				.attachments(attachments)
 				.build();
 		log.debug("baord = {}", board);
 		int result = boardService.insertBoard(board);

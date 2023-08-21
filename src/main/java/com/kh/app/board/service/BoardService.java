@@ -8,7 +8,6 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostLike;
-import com.kh.app.board.dto.PostDetails;
 
 public interface BoardService {
 
