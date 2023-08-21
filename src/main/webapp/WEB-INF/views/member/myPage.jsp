@@ -4,6 +4,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+	integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	crossorigin="anonymous"></script>
 <style>
 @font-face {
     font-family: 'HakgyoansimWoojuR';
@@ -24,7 +32,18 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 #dDay {width:30%; height:100%; vertical-align: middle; text-align: center;}
 #memberInfo h1{ font-family: 'HakgyoansimWoojuR'; font-size: 80px; color:white;}
 .container{display: initial; }
-
+/*  추가된 css */
+.certificaion label{ font-size: 50px; color: blue;}
+.certification h1{font-family: 'HakgyoansimWoojuR'; font-size: 50px; font-weight:bold;}
+#certificaitonFrm{width: 90%; font-family: 'HakgyoansimWoojuR'; font-size: 22px; margin:5%;}
+#certificaitonFrm div input{font-family: 'HakgyoansimWoojuR'; font-size: 22px; width:68%; display: inline-block;}
+.frmStyles{font-family: 'HakgyoansimWoojuR'; font-size: 22px; width:45%; display: inline-block;}
+#certificaitonFrm label{font-family: 'HakgyoansimWoojuR'; font-size: 22px; width:18%; display: inline-block;}
+#certificaitonFrm div{margin: 5% 0; padding: 3%}
+.certiBtn {border-radius: 10px; border: 2px solid #4870ef; background-color: white; color: #4870ef; width:100px; height:40px;}
+.fileInput{border: 1px solid black; border-radius: 5px; width: 500px}
+.certiBtn:hover{background-color:4870ef; color: white;} 
+/*  추가된 css */
 </style>
 	<section>
 	<div id="memberInfo">
@@ -48,7 +67,7 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 			</svg>
 			<p>내 정보</p>
 		</div>	
-		<div class="myPageIcon">
+		<div class="myPageIcon" id="certification">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-fill-check" viewBox="0 0 16 16">
   				<path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
   				<path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
@@ -97,11 +116,68 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 
 		</div>
 		</div>
-		<div class="container-md" style="width:655px; height:500px; border: 1px solid black; " >
-			<h2>달력</h2>
+		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >				
+			<div class="certification">
+			<!-- 추가된 html -->
+				<h1>학생인증</h1>
+				<form:form name="certificaitonFrm" action="${pageContext.request.contextPath}/member/certification.do" 
+					enctype = "multipart/form-data" method="post" id="certificaitonFrm">
+					<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
+					<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
+					</br></br>
+					<label class="frmStyles" for="state">처리상황 &nbsp;: &nbsp;</label>
+					<span id="state" class="frmStyles"></span>
+					<div class="input-group" style="padding:0px;">
+		  				<div class="custom-file">
+		    				<input type="file" class="fileInput" name="upFile" id="upFile" multiple>
+		    				<!-- <label class="custom-file-label" for="upFile">파일을 선택하세요</label> -->
+		  				</div>		  				
+					</div>
+					<br/>
+					<input type="submit" class="certiBtn" value="저장" >
+				</form:form>
+			<!-- 추가된 html -->
+			</div>			
 		</div>
-		</div>
-	
+		</div>	
 	</section>
-	
+<script>
+/* 추가된 스크립트 */
+document.querySelector("#certification").onclick=()=>{
+	const value = document.querySelector("#memberId").value;
+	$.ajax({
+		
+		url: "${pageContext.request.contextPath}/member/certificate.do",
+		data :{
+			memberId :value
+		},
+		method : "GET",
+		dataType : "json",
+		success(responseData){
+			console.log(responseData);
+			const {student} = responseData;
+			const {approveCompleteDate, approveRequestDate} = student;
+			console.log(approveCompleteDate, approveRequestDate);
+			const state = document.querySelector("#state");
+			const upFile = document.querySelector("#upFile");
+			if(approveCompleteDate ==null && approveRequestDate==null){
+				state.value ="인증요청 없음";
+				state.innerHTML=state.value;				
+			}
+			if(approveCompleteDate ==null && approveRequestDate!=null){
+				state.value ="인증요청 처리중";
+				state.innerHTML=state.value;
+				$('#upFile').attr('disabled',true);
+			}
+			if(approveCompleteDate !=null && approveRequestDate !=null){
+				state.value ="인증완료";
+				state.innerHTML=state.value;
+				$('#upFile').attr('disabled',true);
+			}
+		}
+		
+	});
+};
+/* 추가된 스크립트 */
+</script>	
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
