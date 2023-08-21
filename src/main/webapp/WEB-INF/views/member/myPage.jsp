@@ -14,15 +14,17 @@
 .myPageIcon {width:36%; display:inline-block; padding:10px 5px 5px 5px; font-family: 'HakgyoansimWoojuR'; font-size: 60px; text-align: center; margin: 5%;}
 .myPageIcon p {font-family: 'HakgyoansimWoojuR'; font-size: 30px; margin: 7% 0;}
 .myPageIcon:hover {border-radius: 10px; background-color: #e3f5fc; cursor: pointer;}
-.container-md{display:inline-block; margin-top:2%; border-radius: 30px;}
+.container-md{display:table-cell; margin-top:2%; border-radius: 30px;}
 section {width: 1200px; text-align: center; margin: 2% auto;}
-#memberInfo{width: 80%;  height:200px; text-align: left; background-color: #4870ef; display:inline-block; border-radius: 30px;}
+#memberInfo{width: 80%;  height:200px; text-align: left; background-color: #4870ef; display:inline-block; border-radius: 30px; margin-bottom: 60px;}
 #memberInfo h2{ font-family: 'HakgyoansimWoojuR'; font-size: 63px; color:white; margin:3%;}
 #memberInfo p{ font-family: 'HakgyoansimWoojuR'; font-size: 30px; color:white; margin:2%;}
 #memberInfo div{display:inline-block;}
 #info-container {width:67%;} 
-#dDay {width:30%; height:100%; vertical-align: middle; text-align: center}
+#dDay {width:30%; height:100%; vertical-align: middle; text-align: center;}
 #memberInfo h1{ font-family: 'HakgyoansimWoojuR'; font-size: 80px; color:white;}
+.container{display: initial; }
+
 </style>
 	<section>
 	<div id="memberInfo">
@@ -36,6 +38,7 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 		<h1>D-25</h1>
 	</div>
 	</div><br/>
+	<div class="container">
 	<div class="container-md" style="border: 5px solid #c5d6dc; width:300px; height:515px; font-size:50px">
 		<div id="icons" class="container-fluid">
 		<div class="myPageIcon">
@@ -94,10 +97,10 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 
 		</div>
 		</div>
-		<div class="container-md" style="width:655px; height:500px;">
+		<div class="container-md" style="width:655px; height:500px; border: 1px solid black; " >
 			<h2>달력</h2>
 		</div>
-		
+		</div>
 	
 	</section>
 	
