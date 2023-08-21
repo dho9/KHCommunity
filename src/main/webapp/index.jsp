@@ -8,6 +8,15 @@
 <style>
 .accordion {
 	display: none;
+    padding: 10px 0 10px 37px;
+    border-bottom: 1px solid #e3e3e3;
+    line-height: 20px;
+    box-sizing: border-box;
+    color: #444444;
+    font-size: 14px;
+    background-repeat: no-repeat;
+    background-size: 12px auto;
+    background-position: 15px center;
 }
 .active {
 	display: block;
@@ -321,8 +330,7 @@ document.querySelector('#myBoard').addEventListener('mouseover', () => {
 
             favorite.innerHTML = html;
 
-            const accordions = document.querySelectorAll('.accordion');
-
+			const accordions = document.querySelectorAll('.accordion');
             for (const accordion of accordions) {
 				accordion.classList.toggle('active');
 				favorite.style.display = "block";
@@ -330,14 +338,15 @@ document.querySelector('#myBoard').addEventListener('mouseover', () => {
         }
     });
 });
+document.querySelector('.card').addEventListener('mouseout', (e) => {
+	console.log(e);
+    const favorite = document.querySelector(".favorite");
+    favorite.style.display = "none";
+});
+
 
 document.getElementById("logoutLink").addEventListener("click", function(event) {
 	memberLogoutFrm.submit();
-  });
-
-document.querySelector('#myBoard').addEventListener('mouseout', () => {
-    const favorite = document.querySelector(".favorite");
-    favorite.style.display = "none";
 });
 </script>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>

@@ -20,5 +20,5 @@ public class Post {
 	private int postLike;
 	private boolean attachCheck;
 	private boolean statusCheck;
-	private String tag;
+	private String[] tag;
 }

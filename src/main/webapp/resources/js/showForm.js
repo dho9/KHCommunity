@@ -53,14 +53,13 @@ function showInputForm() {
 	    		removeButton.addEventListener('click', () => {
 	    			hashTagContainer.removeChild(span);
 	    			hashTags = hashTags.filter((hashTags) => hashTags !== tag);
-	    			console.log('변경된', hashTags);
 	    		});
 	    		
 	    		hashTags.push(tag);
-	    		console.log(hashTags);
 	    		
 	    		span.appendChild(removeButton);
 	    		hashTagContainer.appendChild(span);
+	    		span.setAttribute("name", "hashTag");
 	    	}
 	    }
      }

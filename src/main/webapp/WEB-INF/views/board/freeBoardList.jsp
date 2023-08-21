@@ -48,7 +48,7 @@
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li><img class="like" data-value="${board.postId}" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
@@ -119,6 +119,36 @@
             }
         });
     };
+    
+ 	// load됐을때 공감(좋아요) 했는지 확인
+	window.onload = () => {
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
+			data : {
+				_postId : document.querySelector('.like').dataset.value
+			},
+			method : "GET",
+            dataType : "json",
+            success(responseData) {
+            	console.log(responseData);
+    			const {available, likeCount} = responseData;
+    			const {postLikeCount} = likeCount;
+    			
+    			const like = document.querySelector('.like');
+    			const vote = document.querySelector('.vote');
+    			if(available) {
+                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+                else {
+                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+            }
+		});
+	};
     </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
