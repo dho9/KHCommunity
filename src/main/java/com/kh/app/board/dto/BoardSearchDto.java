@@ -32,4 +32,9 @@ public class BoardSearchDto extends Post {
 	public int getPostLike() {
 		return super.getPostLike();
 	}
+	
+	@Override
+	public int getPostId() {
+		return super.getPostId();
+	}
 }

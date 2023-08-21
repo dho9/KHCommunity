@@ -13,9 +13,10 @@
 	crossorigin="anonymous"></script>
 
 <style>
-.large-text {
-	font-size: 24px; /* 원하는 큰 텍스트 크기로 조정 */
-}
+    .card-body {
+        font-size: 36px;
+        font-weight: bold;
+    }
 
 .centered-button {
 	display: flex;
@@ -43,34 +44,43 @@
 				</div>
 				<div class="card-body">
 					<dl class="row">
-						<dt class="col-sm-3 large-text">분류</dt>
-						<dd class="col-sm-9">${store.storeType}</dd>
-						<dt class="col-sm-3 large-text">식권 가격</dt>
-						<dd class="col-sm-9 large-text">3000</dd>
-						<dt class="col-sm-3">사진</dt>
+						<dt class="col-sm-3" >분류</dt>
+						<dd class="col-sm-9" >${store.storeType}</dd>
+						<dt class="col-sm-3 " >식권 가격</dt>
+						<dd class="col-sm-9 " >3000</dd>
+						<dt class="col-sm-3" >사진</dt>
 						<dd class="col-sm-9">
 							<img
 								src="${pageContext.request.contextPath}/resources/images/store/${store.storeName}.jpg"
 								class="img-fluid rounded" alt="식당사진" style="max-width: 300px;">
 						</dd>
 						<div id="payHidden" style="display: none;">
-							<dt class="col-sm-3 large-text">수량</dt>
-							<dd class="col-sm-9">
-								<input type="number" id="ticketQuantity" value="0" />
-							</dd>
+							<div class="row">
+								<div class="col-sm-3" font-size: 36px; font-weight: bold; >수량</div>
+								<div class="col-sm-9">
+									<input type="number" id="ticketQuantity" value="0"
+										style="width: 150px; font-size: 16px;" />
+								</div>
+							</div>
 						</div>
 
+						<a class="text-center" id="create-kakao-link-btn"
+							href="javascript:;" style="display: none;" />
+						<img
+							src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" />
+						결제 후 카카오톡 링크공유 창이 뜨지 않으면 눌러주세요.
+						</a>
+						<div class="card-footer text-muted text-center ">식권결제는 카카오페이
+							결제를 지원하고 있습니다.</div>
+						<div class="mt-4 centered-button">
+							<button type="button" class="btn btn-primary"
+								onclick="checkAndRequestPay()">식권 구매하기</button>
+						</div>
 					</dl>
 				</div>
 			</div>
 
-			<div class="mt-4 centered-button">
-				<button type="button" class="btn btn-primary"
-					onclick="checkAndRequestPay()">식권 구매하기</button>
 
-			</div>
-			<div class="card-footer text-muted">식권결제는 카카오페이 결제를 지원하고 있습니다.
-			</div>
 		</div>
 
 		<div class="col-md-4">
@@ -92,13 +102,15 @@
 		</div>
 		<script type="text/javascript"
 			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=29e3b1a49b48d90cc80318415174bdca&libraries=services"></script>
-
+		<script type="text/javascript" src="./CryptoJS/rollups/hmac-sha256.js"></script>
+		<script type="text/javascript"
+			src="./CryptoJS/components/enc-base64.js"></script>
 	</div>
 </div>
 </div>
 </div>
 </div>
-	<form:form name="paymentFrm"></form:form>
+<form:form name="paymentFrm"></form:form>
 <script>
 var mapContainer = document.getElementById('map');
 var mapOption = {
@@ -150,6 +162,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                 	}
                 } else {
                     alert('수량을 선택 후 눌러주세요.');
+                    document.getElementById('ticketQuantity').focus();
                 }
             }
         
@@ -209,6 +222,8 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                 }).done(function(data) {
                 	console.log("Payment successful:", data);
                 	alert(data);
+                	 document.getElementById('create-kakao-link-btn').style.display = 'block';
+                	 document.getElementById('create-kakao-link-btn').click();
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     console.error("AJAX Request Failed:", textStatus, errorThrown);
                     alert(errorThrown);
@@ -217,4 +232,36 @@ geocoder.addressSearch('${store.address}', function(result, status) {
             
         </script>
 
+
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script type="text/javascript">
+    Kakao.init('29e3b1a49b48d90cc80318415174bdca')
+    Kakao.Link.createDefaultButton({
+     
+      container: '#create-kakao-link-btn',
+      objectType: 'feed',
+      content: {
+        title: '${store.storeName} 식권',
+        description: '주소 : ${store.address} ',
+        imageUrl:
+        	 '${pageContext.request.contextPath}/resources/images/store/맥주창고.jpg',
+
+        link: {
+          mobileWebUrl: 'https://developers.kakao.com',
+          webUrl: 'https://developers.kakao.com',
+        },
+      },
+     
+      buttons: [
+        {
+          title: '식권사용하기',
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com',
+          }
+        },
+        
+      ],
+    })
+</script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

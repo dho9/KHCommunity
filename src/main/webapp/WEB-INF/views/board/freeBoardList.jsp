@@ -59,9 +59,9 @@
 			</article>
 		</c:if>
 	</div>
-    <form:form name="tokenFrm">
-    </form:form>
+    <form:form name="tokenFrm"></form:form>
     <script>
+    // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
     	console.log(document.querySelector('.bi').dataset.value);
     	$.ajax({
@@ -87,7 +87,7 @@
     		}
     	});
     }
-    
+    // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
     	console.log(e.target.dataset.value);
     	
