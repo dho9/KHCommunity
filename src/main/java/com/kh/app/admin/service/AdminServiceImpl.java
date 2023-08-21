@@ -3,6 +3,7 @@ package com.kh.app.admin.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,7 +103,7 @@ public class AdminServiceImpl implements AdminService {
 	public Member findById(String id) {
 		return adminRepository.findById(id);
 	}
-	
+	  
 	@Override
 	public int insertEmployee(EmployeeCreateDto employee) {
 		return adminRepository.insertEmployee(employee);
@@ -118,8 +119,12 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public List<AdminStudentListDto> findAllStudents(Map<String, Object> filters) {
-		return adminRepository.findAllStudents(filters);
+	public List<AdminStudentListDto> findAllStudents(Map<String, Object> filters, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findAllStudents(filters, rowBounds);
 	}
 	
 	@Override
@@ -128,6 +133,16 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+
+	public int deleteAdminStudent(AdminStudentListDto student) {
+		return adminRepository.deleteAdminStudent(student);
+	}
+	
+	@Override
+	public int totalCountStudents(Map<String, Object> filters) {
+		return adminRepository.totalCountStudents(filters);
+	}
+
 	public int updateAdminEmployee(AdminEmployeeListDto employee) {
 		return adminRepository.updateAdminEmployee(employee);
 	}
@@ -155,5 +170,6 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int deleteAdminTeacher(String memberId) {
 		return adminRepository.deleteAdminTeacher(memberId);
+
 	}
 }

@@ -161,7 +161,8 @@ public class AdminController {
 	public void adminStudentList(Model model,
 	                             @RequestParam(value = "searchType", required = false) String searchType,
 	                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-	                             @RequestParam(value = "student_type", required = false) String[] _studentTypes) {
+	                             @RequestParam(value = "student_type", required = false) String[] _studentTypes, 
+								 @RequestParam(defaultValue = "1") int page) {
 
 	    List<String> studentTypes = null;
 
@@ -169,13 +170,31 @@ public class AdminController {
 	        studentTypes = Arrays.asList(_studentTypes);
 	    }
 
+	    // 검색 필터
 	    Map<String, Object> filters = new HashMap<>();
 	    filters.put("searchType", searchType);
 	    filters.put("searchKeyword", searchKeyword);
 	    filters.put("studentTypes", studentTypes);
 
-	    List<AdminStudentListDto> students = adminService.findAllStudents(filters);
+	    // 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+	    List<AdminStudentListDto> students = adminService.findAllStudents(filters, params);
 	    model.addAttribute("students", students);
+	    
+	    model.addAttribute("currentPage", page);
+	    
+	    // 전체 학생 수를 가져온다.
+	    int totalCount = adminService.totalCountStudents(filters);
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+	  
 	}
 	
 	// 직원 목록 조회 - 이태현
@@ -254,12 +273,18 @@ public class AdminController {
 		return "redirect:/admin/adminStudentList.do";
 	}
 	
-	// 수강생 삭제
+	// 수강생 삭제 - 유성근
 	@PostMapping("/adminStudentDelete.do")
-	public String adminStudentDelete() {
-		return null;
+	public String adminStudentDelete(@Valid AdminStudentListDto student) {
+		int result = adminService.deleteAdminStudent(student);
+		return "redirect:/admin/adminStudentList.do";
 	}
 	
+
+	// 수강생 승인 목록 조회 - 유성근
+	@GetMapping("/adminStudentApprovementList.do")
+	public void adminStudentApprovementList() {}
+
 	// 직원 정보 수정
 	@PostMapping("/adminEmployeeUpdate.do")
 	public String adminEmployeeUpdate(@Valid AdminEmployeeListDto employee) {
@@ -309,4 +334,5 @@ public class AdminController {
 		
 		return "redirect:/admin/teacherList.do";
 	}
+
 }
