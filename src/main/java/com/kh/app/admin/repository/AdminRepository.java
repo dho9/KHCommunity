@@ -112,4 +112,6 @@ public interface AdminRepository {
 	@Delete("delete from member where member_id = #{studentId}")
 	int deleteAdminStudent(AdminStudentListDto student);
 
+	int totalCountStudents(Map<String, Object> filters);
+
 }

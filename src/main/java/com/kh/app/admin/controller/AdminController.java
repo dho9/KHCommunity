@@ -176,6 +176,16 @@ public class AdminController {
 		
 	    List<AdminStudentListDto> students = adminService.findAllStudents(filters, params);
 	    model.addAttribute("students", students);
+	    
+	    model.addAttribute("currentPage", page);
+	    
+	    // 전체 학생 수를 가져온다.
+	    int totalCount = adminService.totalCountStudents(filters);
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+	  
 	}
 	
 	// 직원 목록 조회 - 이태현

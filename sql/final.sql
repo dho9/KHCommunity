@@ -210,7 +210,6 @@ CREATE TABLE post (
    title   varchar2(400),
    post_created_at   date   DEFAULT sysdate,
    comment_check   char(1),
-   post_like   number,
    attach_check   char(1),
    status_check   char(1),
    tag   varchar2(200)
@@ -238,15 +237,23 @@ CREATE TABLE post_comment (
    comment_content   varchar2(1000),
    comment_level   number   ,
    comment_ref   number   ,
-   comment_created_at   date   DEFAULT sysdate,
-   comment_like   number   
+   comment_created_at   date   DEFAULT sysdate
 );
 
 CREATE TABLE favorite (
    board_id   number      NOT NULL,
    member_id   varchar2(20)      NOT NULL
 );
-        
+
+create table post_like (
+    post_id number not null,
+    member_id varchar2(20) not null
+);
+create table comment_like (
+    comment_id number not null,
+    member_id varchar2(20) not null
+);
+   
 CREATE TABLE message_box (
    message_id   number      NOT NULL,
    send_id   varchar2(20)      NOT NULL,
@@ -417,6 +424,14 @@ ALTER TABLE post_comment ADD CONSTRAINT PK_POST_COMMENT PRIMARY KEY (
 
 ALTER TABLE favorite ADD CONSTRAINT PK_FAVORITE PRIMARY KEY (
    board_id,
+   member_id
+);
+ALTER TABLE post_like ADD CONSTRAINT PK_POST_LIKE PRIMARY KEY (
+   post_id,
+   member_id
+);
+ALTER TABLE comment_like ADD CONSTRAINT PK_COMMENT_LIKE PRIMARY KEY (
+   comment_id,
    member_id
 );
 
@@ -606,8 +621,34 @@ ALTER TABLE favorite ADD CONSTRAINT FK_board_TO_favorite_1 FOREIGN KEY (
 REFERENCES board (
    board_id
 );
+ALTER TABLE post_like ADD CONSTRAINT FK_post_TO_post_like_1 FOREIGN KEY (
+   post_id
+)
+REFERENCES post (
+   post_id
+);
+ALTER TABLE comment_like ADD CONSTRAINT FK_post_TO_comment_like_1 FOREIGN KEY (
+   comment_id
+)
+REFERENCES comment (
+   comment_id
+);
 
 ALTER TABLE favorite ADD CONSTRAINT FK_member_TO_favorite_1 FOREIGN KEY (
+   member_id
+)
+REFERENCES member (
+   member_id
+)ON DELETE CASCADE;
+
+ALTER TABLE post_like ADD CONSTRAINT FK_member_TO_post_like_1 FOREIGN KEY (
+   member_id
+)
+REFERENCES member (
+   member_id
+)ON DELETE CASCADE;
+
+ALTER TABLE comment_like ADD CONSTRAINT FK_member_TO_comment_like_1 FOREIGN KEY (
    member_id
 )
 REFERENCES member (
@@ -937,14 +978,14 @@ INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NE
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '깔깔게시판');
 
 -- post
-INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
-VALUES (seq_post_id.NEXTVAL, 1, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
+INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
+VALUES (seq_post_id.NEXTVAL, 1, 'gmlwls', '여긴 자유게시판?', 'n', 'n', 'y');
 
-INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
-VALUES (seq_post_id.NEXTVAL, 1, 'gmlwls', '오점뭐먹지?', 'y',1, 'n', 'y');
+INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
+VALUES (seq_post_id.NEXTVAL, 1, 'gmlwls', '오점뭐먹지?', 'y', 'n', 'y');
 
-INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
-VALUES (seq_post_id.NEXTVAL, 1, 'gmlwls', '삭제테스트?', 'n',30, 'n', 'y');
+INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
+VALUES (seq_post_id.NEXTVAL, 1, 'gmlwls', '삭제테스트?', 'n', 'n', 'y');
 -- post_content
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (1, 1, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
@@ -963,8 +1004,16 @@ INSERT INTO post_comment (comment_id, post_id, board_id, member_id, comment_cont
 VALUES (seq_comment_id.NEXTVAL, 3, 1, 'alsgml', '삭제테스트댓글', 1, NULL);
 
 -- favorite
-INSERT INTO favorite (board_id, member_id) VALUES (1, 'gmlwls');
+INSERT INTO favorite (board_id, member_id) VALUES (1, 'alfn');
 INSERT INTO favorite (board_id, member_id) VALUES (1, 'alsgml');
+
+-- post_like
+INSERT INTO post_like (post_id, member_id) VALUES (1, 'alfn');
+INSERT INTO post_like (post_id, member_id) VALUES (1, 'gmlwls');
+INSERT INTO post_like (post_id, member_id) VALUES (1, 'alsgml');
+
+-- comment_like
+INSERT INTO comment_like (comment_id, member_id) VALUES (1, 'alfn');
 
 -- message_box
 INSERT INTO message_box (message_id, send_id, recieve_id, message_content, read_check)
@@ -1021,6 +1070,8 @@ select * from post;
 select * from post_content;
 select * from post_comment;
 select * from favorite;
+select * from post_like;
+select * from comment_like;
 select * from message_box;
 select * from report;
 select * from chat_room;
@@ -1048,6 +1099,33 @@ VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
 
 INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
 VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+SELECT
+    b.board_name,
+    COUNT(p.post_id) AS post_count
+FROM
+    board b
+LEFT JOIN
+    post p ON b.board_id = p.board_id
+GROUP BY
+    b.board_name
+ORDER BY
+    post_count DESC, board_name;
+    
+select 
+	p.post_id,
+    p.title,
+    p.post_created_at,
+    p.post_like,
+    c.content,
+    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+from
+    post p join post_content c
+    	on
+    p.post_id = c.post_id
+where
+    p.post_id=1;
+    
 
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test2', '3', 'y', '23/08/18', sysdate, 'p');

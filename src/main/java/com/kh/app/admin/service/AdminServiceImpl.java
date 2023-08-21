@@ -134,4 +134,9 @@ public class AdminServiceImpl implements AdminService {
 	public int deleteAdminStudent(AdminStudentListDto student) {
 		return adminRepository.deleteAdminStudent(student);
 	}
+	
+	@Override
+	public int totalCountStudents(Map<String, Object> filters) {
+		return adminRepository.totalCountStudents(filters);
+	}
 }

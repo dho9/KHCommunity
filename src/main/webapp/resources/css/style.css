@@ -783,6 +783,40 @@ aside > div.title > ol.buttons > li > a.image.setting {
     margin-bottom: 5px;
     background-color: #f9f9f9;
 }
+#container > div.wrap.articles > form#createForm {
+    position: relative;
+    margin-bottom: 5px;
+    border: 2px solid #d6d6d6;
+    box-sizing: border-box;
+}
+#container > div.wrap.articles > form#createForm p {
+    padding: 15px;
+    border-bottom: 1px solid #e3e3e3;
+    background-color: #fff;
+}
+#container > div.wrap.articles > form#createForm p input.title{
+	width: 100%;
+    height: 20px;
+    line-height: 20px;
+    border: 0;
+    color: #292929;
+    font-size: 16px;
+    font-weight: bold;
+}
+#container > div.wrap.articles > form#createForm button{
+	width: 59px;
+	height: 59px;
+	border: none;
+}
+
+#container > div.wrap.articles > form#createForm p textarea.smallplaceholder{
+	width: 100%;
+    height: 350px;
+    border: 0;
+    color: #292929;
+    font-size: 14px;
+    resize: none;
+}
 
 #container > div.articles > article > a.article {
     display: block;
@@ -849,8 +883,9 @@ aside > div.title > ol.buttons > li > a.image.setting {
     display: flex;
     margin-right: 1%;
 }
-#container > div.articles > article ul.status img {
-    margin-left: 45%;
+.status img {
+    margin-left: 70%;
+    width: 15px;
 }
 dl, ul, ol, menu, li {
     list-style: none;
@@ -936,7 +971,7 @@ dl, ul, ol, menu, li {
    float: left;
 }
 #container div.card > div.board > a.article > ul.status > li {
-   float: left; margin-right: 5px; padding-left: 0px; height: 14px; line-height: 14px;
+   float: left; margin-right: 15px; padding-left: 0px; height: 14px; line-height: 14px;
    color: #a6a6a6; font-size: 11px; letter-spacing: 0; background-repeat: no-repeat; background-size: 11px 11px; background-position: left center;
 }
 #container div.card > div.board > a.article > ul.status > li.vote {
@@ -946,10 +981,11 @@ dl, ul, ol, menu, li {
    background-image: url('/images/new/container.articles.comment.png');
 }
 #container div.card > div.board > a.article > ul.status > li.vote.active {
-   color: #c62917; background-image: url('../images/占쎈씔筌욑옙筌ｏ옙.png');
+   color: #c62917;
+   margin-right: 0%
 }
 #container div.card > div.board > a.article > ul.status > li.comment.active {
-   color: #0ca5af; background-image: url('../images/占쎈솊疫뀐옙.png');
+   color: #0ca5af;
 }
 #container div.card > div.board > a.article > span.star {
    display: block; margin-bottom: 5px; width: 60px; height: 12px; background: transparent url('/images/app.subject.rating.details.star.off.png') no-repeat; background-size: 60px 12px;

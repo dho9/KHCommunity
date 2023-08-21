@@ -71,26 +71,39 @@
                   </tbody>
               </table>
               <br>
-          </div>
-	     <div class="pagination justify-content-center">
-		    <ul class="pagination">
-		        <li class="page-item ${page == 1 ? 'disabled' : ''}">
-		            <a class="page-link" href="<c:url value='/adminStudentList.do'/>?page=1" aria-label="Previous">
-		                <span aria-hidden="true">&laquo;</span>
-		            </a>
-		        </li>
-		        <c:forEach begin="1" end="${totalPages}" var="pageNum">
-		            <li class="page-item ${page == pageNum ? 'active' : ''}">
-		                <a class="page-link" href="<c:url value='/adminStudentList.do'/>?page=${pageNum}">${pageNum}</a>
-		            </li>
-		        </c:forEach>
-		        <li class="page-item ${page == totalPages ? 'disabled' : ''}">
-		            <a class="page-link" href="<c:url value='/adminStudentList.do'/>?page=${totalPages}" aria-label="Next">
-		                <span aria-hidden="true">&raquo;</span>
-		            </a>
-		        </li>
-		    </ul>
-		</div>
+		    <!-- 페이지 이동 및 페이지 번호 표시 -->
+				<div class="d-flex justify-content-center">
+				    <nav aria-label="Page navigation">
+				        <ul class="pagination">
+				            <c:if test="${currentPage > 1}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentList.do?page=${currentPage - 1}" aria-label="Previous">
+				                        <span aria-hidden="true">&laquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				            
+				            <c:forEach var="pageNum" begin="1" end="${totalPages}">
+				                <c:choose>
+				                    <c:when test="${pageNum eq currentPage}">
+				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
+				                    </c:when>
+				                    <c:otherwise>
+				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentList.do?page=${pageNum}">${pageNum}</a></li>
+				                    </c:otherwise>
+				                </c:choose>
+				            </c:forEach>
+				            
+				            <c:if test="${currentPage < totalPages}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentList.do?page=${currentPage + 1}" aria-label="Next">
+				                        <span aria-hidden="true">&raquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				        </ul>
+				    </nav>
+				</div>
       </div>
       <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="width: 1200px;">

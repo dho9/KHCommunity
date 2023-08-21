@@ -59,5 +59,7 @@ public interface AdminService {
 
 	int deleteAdminStudent(AdminStudentListDto student);
 
+	int totalCountStudents(Map<String, Object> filters);
+
 
 }
