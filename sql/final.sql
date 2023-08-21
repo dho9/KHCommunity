@@ -630,7 +630,7 @@ REFERENCES post (
 ALTER TABLE comment_like ADD CONSTRAINT FK_post_TO_comment_like_1 FOREIGN KEY (
    comment_id
 )
-REFERENCES comment (
+REFERENCES post_comment (
    comment_id
 );
 
@@ -836,7 +836,6 @@ BEGIN
     title,
     post_created_at,
     comment_check,
-    post_like,
     attach_check,
     status_check,
     tag
@@ -847,7 +846,6 @@ BEGIN
     :OLD.title,
     :OLD.post_created_at,
     :OLD.comment_check,
-    :OLD.post_like,
     :OLD.attach_check,
     :OLD.status_check,
     :OLD.tag
@@ -1057,6 +1055,7 @@ delete post_comment where comment_id=2;
 delete member where member_id = 'test'; 
 delete member where member_id = 'test1'; 
 
+select * from post_attachment;
 select * from member;
 select * from student;
 select * from class;
@@ -1110,5 +1109,40 @@ from
     p.post_id = c.post_id
 where
     p.post_id=1;
+    
+    select 
+  		p.post_id,
+	    p.title,
+	    p.post_created_at,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=1;
+        
+select * from post_like;
+select * from post;
+select 
+  		p.post_id,
+        p.board_id,
+	    p.title,
+	    p.post_created_at,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.post_id=1;
+delete post where post_id=15;
+select * from board where board_id = 3;
+   
     
 

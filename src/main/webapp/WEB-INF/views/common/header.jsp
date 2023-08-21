@@ -9,6 +9,9 @@
 <!-- bootstrap icon css -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 
+<%-- 글작성 아이콘 --%>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
 <style>
 .new {
 	text-decoration: none;
