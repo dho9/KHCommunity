@@ -1,6 +1,7 @@
 package com.kh.app.member.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -30,7 +31,7 @@ public class MemberCreateDto {
 	private String memberName;
 	
 	@NotBlank(message = "번호는 필수입니다.")
-//	@NumberFormat(pattern ="010-1234-1234" )
+	@NumberFormat(pattern ="010-1234-1234" )
 	private String memberPhone;
 	
 	
