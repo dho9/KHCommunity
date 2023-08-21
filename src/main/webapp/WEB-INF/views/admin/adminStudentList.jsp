@@ -60,12 +60,13 @@
                           <td>${student.classId}</td>
                           <td>${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}</td>
                           <td>
-                            <button style="border: 0; background-color: transparent;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                              </svg>
-                            </button>
-                          </td>
+				                <button style="border: 0; background-color: transparent;" class="open-modal-button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
+				                    data-student-id="${student.studentId}" data-student-name="${student.memberName}">
+				                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+				                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+				                    </svg>
+				                </button>
+				          </td>
                       </tr>
                   	</c:forEach>
                   </tbody>
@@ -104,6 +105,7 @@
 				        </ul>
 				    </nav>
 				</div>
+			</div>
       </div>
       <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="width: 1200px;">
@@ -146,6 +148,24 @@
             </div>
         </div>
       </div>
+      <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="sendMessageModalLabel">쪽지 보내기</h5>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	                <!-- 모달 내용 -->
+	                <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
+	                <textarea placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-primary">전송</button>
+	            </div>
+	        </div>
+	    </div>
+</div>
     </section>
     
     <script>
@@ -260,6 +280,16 @@
           }
         };
       });
+      
+      /* $(document).ready(function() {
+          $('.open-modal-button').click(function() {
+              var studentId = $(this).data('student-id');
+              var studentName = $(this).data('student-name');
+
+              // 모달 내용을 업데이트하는 코드
+              $('#sendMessageModal .modal-body').html('쪽지를 ' + studentName + '(' + studentId + ') 님에게 보냅니다.');
+          });
+      }); */
     </script>
   </body>
 </html>

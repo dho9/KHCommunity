@@ -152,10 +152,6 @@ body.appwebview nav {
 #menu > li > a {
   color: #444444; font-size: 16px; font-weight: bold;
 }
-#menu > li > a:hover,
-#menu > li.active > a {
-  color: #0a53be;
-}
 #submenu {
   border-bottom: 1px solid #d6d6d6; background-color: #f2f2f2;
 }
@@ -817,7 +813,27 @@ aside > div.title > ol.buttons > li > a.image.setting {
     font-size: 14px;
     resize: none;
 }
-
+#container > div.wrap.articles > form#createForm label{
+	color: #292929;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 1%;
+}
+.hashTag {
+	width: 23%;
+    height: 5%;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+.hashTag-container {
+	height: 6%;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+.hashTag-container span {
+	font-size: 22px;
+    font-weight: bold;
+}
 #container > div.articles > article > a.article {
     display: block;
     padding: 15px;

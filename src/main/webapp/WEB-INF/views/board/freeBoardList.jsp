@@ -12,9 +12,8 @@
     float: right;
     cursor: pointer;
 }
-</style>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+</style>
 
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
@@ -48,7 +47,7 @@
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li><img class="like" data-value="${board.postId}" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
@@ -59,15 +58,16 @@
 			</article>
 		</c:if>
 	</div>
-	<%-- 글작성 폼 --%>
+    <form:form name="tokenFrm"></form:form>
 	<script>
+	<%-- 글작성 폼 --%>
 	function showInputForm() {
 		 
 	    const writeButton = document.getElementById("writeArticleButton");
 	    const articlesContainer = document.querySelector(".articles");
 
 	    const formHtml = `
-	      <form:form class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 495px;">
+	      <form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 63%;">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
@@ -99,8 +99,14 @@
 	- 음란물, 성적 수치심을 유발하는 행위 
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
+	        <div>
+	        	<label for="hashTag">해시태그</label><br>
+	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
+	        	<div class="hashTag-container"></div>
+	        </div>
+	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
         	<span title="해시태그" class="hashtag"><button>#</button></span>
-	        <input class="file" type="file" name="file" multiple="multiple">
+	        <input type="file" name="file" id="file" multiple>
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
 	      </form:form>
@@ -113,18 +119,59 @@
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
+	 	// 해시태그
+   		const hashTag = document.querySelector('.hashTag');
+	    const hashTagContainer = document.querySelector('.hashTag-container');
+	    
+	    hashTag.addEventListener('keydown', (e) => {
+	    	
+	    	if(e.key === 'Enter') {
+	    		e.preventDefault();
+	    		const tag = hashTag.value.trim();
+	    		
+	    		addHashTag(tag);
+	    		hashTag.value = "";
+	    	}
+	    });
+	    
+	    let hashTags = [];
+	    
+	    function addHashTag(tag) {
+	    	tag = tag.replace(/[\s]/g, '').trim();
+	    	console.log(tag);
+	    	if(!hashTags.includes(tag)) {
+	    		const input = document.createElement("input");
+	    		input.innerHTML = " #" + tag + " ";
+	    		
+	    		const removeButton = document.createElement("i");
+	    		removeButton.innerHTML = "x";
+	    		removeButton.addEventListener('click', () => {
+	    			hashTagContainer.removeChild(input);
+	    			hashTags = hashTags.filter((hashTags) => hashTags !== tag);
+	    		});
+	    		
+	    		hashTags.push(tag);
+	    		
+	    		input.appendChild(removeButton);
+	    		hashTagContainer.appendChild(input);
+	    		
+	    		input.setAttribute("name", "_tags");
+	    		input.setAttribute("value", "#" + tag);
+	    		console.log(document.createFrm);
+	    	}
+	    }
 	 }
 		
 	  function hideInputForm() {
 	    const writeButton = document.getElementById("writeArticleButton");
 	    const createForm = document.getElementById("createForm");
-
+	
 	    writeButton.style.display = "block";
 	    createForm.remove();
 	  }
-	</script>
-    <form:form name="tokenFrm"></form:form>
-    <script>
+	  
+	  
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
     	console.log(document.querySelector('.bi').dataset.value);
@@ -183,6 +230,36 @@
             }
         });
     };
+    
+ 	// load됐을때 공감(좋아요) 했는지 확인
+	window.onload = () => {
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
+			data : {
+				_postId : document.querySelector('.like').dataset.value
+			},
+			method : "GET",
+            dataType : "json",
+            success(responseData) {
+            	console.log(responseData);
+    			const {available, likeCount} = responseData;
+    			const {postLikeCount} = likeCount;
+    			
+    			const like = document.querySelector('.like');
+    			const vote = document.querySelector('.vote');
+    			if(available) {
+                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+                else {
+                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+            }
+		});
+	};
     </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

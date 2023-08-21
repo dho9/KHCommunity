@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.app.schedule.repository.CalenDao">
+	<resultMap type="calendar" id="calMap">
+		<result property="start" column="start1"/>
+		<result property="end" column="end1"/>
+	</resultMap>
+	<select id="calenList" resultMap="calMap">
+		SELECT id, title,
+		TO_char(start1, 'YYYY-MM-DD"T"HH24:MI:SS') start1,
+		TO_char(end1, 'YYYY-MM-DD"T"HH24:MI:SS') end1,
+		ALLDAY,
+		TEXTCOLOR,
+		BACKGROUNDCOLOR,
+		BORDERCOLOR,
+		MEMBER_ID 
+		FROM CALENDAR
+	</select>
+</mapper>

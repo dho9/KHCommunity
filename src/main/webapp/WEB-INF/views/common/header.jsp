@@ -4,9 +4,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
 <!-- bootstrap icon css -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
+<%-- 글작성 아이콘 --%>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 
 <style>
 .new {
@@ -66,7 +70,7 @@
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
-                <li><a href="${pageContext.request.contextPath}/schedule/scheduleList.do" style="text-decoration: none;">스케쥴</a></li>
+                <li><a href="${pageContext.request.contextPath}/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
             </ul>
         </div>
     </nav>
@@ -85,6 +89,7 @@
 						href="${pageContext.request.contextPath}/board/todayFoodBoardList.do"
 						class="new" style="text-decoration: none;">오늘 뭐 먹지?</a></li>
 				</ul>
+
 			</div>
 			<div class="divider"></div>
 			<div class="group">
@@ -106,3 +111,4 @@
 			<hr>
 		</div>
 	</div>
+	<div id="jangjun">

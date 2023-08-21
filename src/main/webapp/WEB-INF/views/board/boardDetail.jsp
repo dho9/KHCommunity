@@ -7,7 +7,7 @@
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
-			<a>자유게시판</a>
+			<a>${board.boardName}</a>
 		</h1>
 	</div>
 	<div class="wrap articles">

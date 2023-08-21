@@ -37,4 +37,5 @@ public class BoardSearchDto extends Post {
 	public int getPostId() {
 		return super.getPostId();
 	}
+	
 }

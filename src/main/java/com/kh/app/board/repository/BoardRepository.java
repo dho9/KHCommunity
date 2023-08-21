@@ -11,9 +11,9 @@ import org.apache.ibatis.annotations.SelectKey;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostLike;
-import com.kh.app.board.dto.PostDetails;
 
 @Mapper
 public interface BoardRepository {
@@ -52,7 +52,7 @@ public interface BoardRepository {
 
 	PostLike findPostLikeCount(int postId);
 	
-	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y')")
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler})")
 	@SelectKey(
 			before = false, 
 			keyProperty = "postId", 
@@ -62,4 +62,7 @@ public interface BoardRepository {
 
 	@Insert("insert into post_content (post_id, board_id, content) values(#{postId}, #{boardId}, #{content})")
 	int insertPostContent(BoardCreateDto board);
+
+	@Select("select * from board where board_id = #{boardId}")
+	Board findBoardName(int boardId);
 }

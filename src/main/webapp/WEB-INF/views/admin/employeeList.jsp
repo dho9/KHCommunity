@@ -51,7 +51,7 @@
                   </thead>
                   <tbody>
                   	<c:forEach items="${employees}" var="employee" varStatus="vs">
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${employee.memberId}" data-second-name="${employee.memberName}" data-phone="${employee.memberPhone}" data-birthday="${employee.birthday}" data-subject="${employee.memberEmail}" data-class="${student.classId}" data-email="${employee.memberEmail}" data-lastDay="${employee.employeeEnrollDate}" data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" data-handle="@mdo">
+                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${employee.memberId}" data-second-name="${employee.memberName}" data-phone="${employee.memberPhone}" data-birthday="${employee.birthday}" data-subject="${employee.memberEmail}" data-class="${student.classId}" data-email="${employee.memberEmail}" data-lastDay="${employee.employeeEnrollDate}" data-jobCode="${employee.jobCode eq '행정' ? '행정' : employee.jobCode eq '총무'? '총무' : '운영'}" data-handle="@mdo">
                           <td>${vs.count}</td>
                           <td>${employee.memberId}</td>
                           <td>${employee.memberName}</td>
@@ -94,6 +94,10 @@
                           전화번호 : <input type="text" name="phone" id="modalPhone" readonly> <br>
                           생일 : <input type="date" name="birthday" id="modalBirthday" readonly> <br>
                           입사일 : <input type="date" name="lastDay" id="modalLastDay" readonly><br>
+                          부서 : 
+								<input type="radio" name="job_Code" id="jobCode1" value="행정">행정
+								<input type="radio" name="job_Code" id="jobCode2" value="총무">총무
+								<input type="radio" name="job_Code" id="jobCode3" value="운영">운영
                           <br>
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -125,10 +129,9 @@
             const subject = row.getAttribute("data-subject");
             const className = row.getAttribute("data-class");
             const lastDay = row.getAttribute("data-lastDay");
-            const studentType = row.getAttribute("data-studentType");
+            const job_Code = row.getAttribute("data-jobCode");
             const handle = row.getAttribute("data-handle");
-            const studentTypeValue = row.getAttribute("data-studentType");
-    
+            const job_Code_value = row.getAttribute("data-jobCode");
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
             document.getElementById("modalFirstId").value = firstId;
@@ -138,20 +141,20 @@
             document.getElementById("modalEmail").value = email;
             document.getElementById("modalLastDay").value = lastDay;
             // document.getElementById("modalStudentType").value = studentType;
-            document.getElementById("modalStudentType1").checked = (studentTypeValue === "예비생");
-            document.getElementById("modalStudentType2").checked = (studentTypeValue === "수강생");
-            document.getElementById("modalStudentType3").checked = (studentTypeValue === "수료생");
+            document.getElementById("jobCode1").checked = (job_Code_value === "행정");
+            document.getElementById("jobCode2").checked = (job_Code_value === "총무");
+            document.getElementById("jobCode3").checked = (job_Code_value === "운영");
           });
         });
     
         // 수정 버튼 클릭 이벤트 처리
         $("#btnEdit").on("click", function () {
-          showConfirmation("${pageContext.request.contextPath}/admin/adminStudentUpdate.do");
+          showConfirmation("${pageContext.request.contextPath}/admin/adminEmployeeUpdate.do");
         });
     
         // 강퇴 버튼 클릭 이벤트 처리
         $("#btnBan").on("click", function () {
-          showConfirmation("${pageContext.request.contextPath}/admin/adminStudentDelete.do");
+          showConfirmation("${pageContext.request.contextPath}/admin/adminEmployeeDelete.do");
         });
     
         // 확인 메시지 표시 후 데이터 전송 함수 호출
@@ -164,17 +167,15 @@
         // 서버로 데이터를 전송하는 함수
         function sendDataToServer(url) {
           const modalFrm = document.modalFrm;
-          const studentId = modalFrm.firstId.value;
-          const studentType = modalFrm.studentType.value;
-    	  console.log(studentId);
+          const employeeId = modalFrm.firstId.value;
+          const jobCode = modalFrm.job_Code.value;
           const token = document.modalFrm._csrf.value;
-          console.log(url);
           $.ajax({
             type: "POST",
             url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
             data: {
-            	studentId,
-            	studentType
+            	employeeId,
+            	jobCode
             },
             headers: {
                 "X-CSRF-TOKEN": token
@@ -183,8 +184,8 @@
               // 서버 응답을 처리
               // 예: 성공 메시지를 표시하거나 다른 동작 수행
               
-              alert('수강생 정보가 수정되었습니다.')
-              location.href="${pageContext.request.contextPath}/admin/adminStudentList.do";
+              alert('요청된 작업이 완료되었습니다.')
+              location.href="${pageContext.request.contextPath}/admin/employeeList.do";
             }
           });
         }
