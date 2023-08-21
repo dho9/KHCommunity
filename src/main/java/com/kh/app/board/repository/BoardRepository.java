@@ -52,7 +52,7 @@ public interface BoardRepository {
 
 	PostLike findPostLikeCount(int postId);
 	
-	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y')")
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler})")
 	@SelectKey(
 			before = false, 
 			keyProperty = "postId", 

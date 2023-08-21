@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class BoardListDto{
+public class BoardListDto {
 	private int postId;
 	private String title;
 	private String content;
