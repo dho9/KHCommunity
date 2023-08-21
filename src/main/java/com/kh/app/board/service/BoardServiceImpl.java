@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.dto.PostDetails;
@@ -94,5 +95,10 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int insertPostContent(BoardCreateDto board) {
 		return boardRepository.insertPostContent(board);
+	}
+	
+	@Override
+	public Board findBoardName(int boardId) {
+		return boardRepository.findBoardName(boardId);
 	}
 }

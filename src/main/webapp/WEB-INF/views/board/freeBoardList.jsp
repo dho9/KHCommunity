@@ -14,7 +14,7 @@
 }
 </style>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
 
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
@@ -100,7 +100,7 @@
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
         	<span title="해시태그" class="hashtag"><button>#</button></span>
-	        <input class="file" type="file" name="file" multiple="multiple">
+	        <input type="file" name="file" id="file" multiple>
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
 	      </form:form>
