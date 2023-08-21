@@ -1096,4 +1096,19 @@ GROUP BY
     b.board_name
 ORDER BY
     post_count DESC, board_name;
+    
+select 
+	p.post_id,
+    p.title,
+    p.post_created_at,
+    p.post_like,
+    c.content,
+    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+from
+    post p join post_content c
+    	on
+    p.post_id = c.post_id
+where
+    p.post_id=1;
+    
 
