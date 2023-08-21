@@ -120,6 +120,14 @@ public class MemberServiceImpl implements MemberService {
 			e.printStackTrace();
 		}
 	}
+
+	// 회원정보수정
+	@Override
+	public int updateMember(Member member) {
+		return memberRepository.updateMember(member);
+	}
+
+	
 	
 
 }
