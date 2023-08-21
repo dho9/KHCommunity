@@ -1146,5 +1146,28 @@ select
 delete post where post_id=15;
 select * from board where board_id = 3;
    
-    
+create table calendar(
+	id number primary key,
+	groupId NUMBER,
+	title varchar2(50),
+	writer varchar2(50),
+	content varchar2(1000),
+	start1 date,
+	end1 date,
+	allDay number(1),
+	textColor varchar(50),
+	backgroundColor varchar2(50),
+	borderColor varchar2(50),
+    member_id varchar2(50)
+);
 
+create sequence seq_cal
+	start with 1
+	increment by 1
+	minvalue 1
+	maxvalue 99999;
+    
+INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
+'내용-content',to_date('2023/08/19','YYYY/MM/DD'),
+to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
+select * from calendar;
