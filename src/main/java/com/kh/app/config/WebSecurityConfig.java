@@ -54,8 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 			.antMatchers("/", "/index.jsp").permitAll()
-
-			.antMatchers("/board/*").permitAll()
+			.antMatchers("/board/**").permitAll()
 			.antMatchers("/admin/*").permitAll()
 			.antMatchers("/board/*").permitAll()
 			.antMatchers("/ticket/*").permitAll()
@@ -80,6 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.loginPage("/member/memberLogin.do")
 		.userInfoEndpoint()
 		.userService(oauth2UserService);
+		
 	}
 	
 	

@@ -2,8 +2,10 @@ package com.kh.app.board.service;
 
 import java.util.List;
 
+import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.dto.PostDetails;
@@ -37,5 +39,11 @@ public interface BoardService {
 	int insertPostLikeByMemberId(int postId, String memberId);
 
 	PostLike findPostLikeCount(int postId);
+
+	int insertBoard(BoardCreateDto board);
+
+	int insertPostContent(BoardCreateDto board);
+
+	Board findBoardName(int boardId);
 
 }
