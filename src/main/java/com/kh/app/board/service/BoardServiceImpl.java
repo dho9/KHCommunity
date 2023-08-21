@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
@@ -84,5 +85,14 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public PostLike findPostLikeCount(int postId) {
 		return boardRepository.findPostLikeCount(postId);
+	}
+	@Override
+	public int insertBoard(BoardCreateDto board) {
+		return boardRepository.insertBoard(board);
+	}
+	
+	@Override
+	public int insertPostContent(BoardCreateDto board) {
+		return boardRepository.insertPostContent(board);
 	}
 }

@@ -67,7 +67,7 @@
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
-                <li><a href="${pageContext.request.contextPath}/schedule/scheduleList.do" style="text-decoration: none;">스케쥴</a></li>
+                <li><a href="${pageContext.request.contextPath}/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
             </ul>
         </div>
     </nav>
@@ -86,6 +86,7 @@
 						href="${pageContext.request.contextPath}/board/todayFoodBoardList.do"
 						class="new" style="text-decoration: none;">오늘 뭐 먹지?</a></li>
 				</ul>
+
 			</div>
 			<div class="divider"></div>
 			<div class="group">

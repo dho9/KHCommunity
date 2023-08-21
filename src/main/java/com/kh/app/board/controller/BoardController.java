@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
@@ -265,5 +266,32 @@ public class BoardController {
 				.status(HttpStatus.OK)
 				.body(Map.of("available", available, "likeCount", likeCount));
 	}
+	
+	/**
+	 * 글작성
+	 * @return
+	 */
+	@PostMapping("/createPost.do")
+	public String boardCreate(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@AuthenticationPrincipal MemberDetails member
+			) {
+		log.debug("loginMember = {}", member);
+		BoardCreateDto board = BoardCreateDto.builder()
+				.title(title)
+				.content(text)
+				.boardId(boardId)
+				.memberId(member.getMemberId())
+				.build();
+		log.debug("baord = {}", board);
+		int result = boardService.insertBoard(board);
+		result = boardService.insertPostContent(board);
+		
+		
+		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
+	}
+	
 
 }
