@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.app.admin.repository.AdminRepository">
+  <select id="findAllStudents" resultType="adminStudentListDto">
+    SELECT
+	    s.student_id,
+	    m.member_name,
+	    m.member_phone,
+	    m.birthday,
+	    m.member_email,
+	    c.curriculum_name,
+	    c.class_id,
+	    s.student_type,
+	    c.curriculum_end_at
+	FROM
+    	student s
+	JOIN
+    	member m ON s.student_id = m.member_id
+	JOIN
+    	curriculum c ON s.curriculum_id = c.curriculum_id
+    <where>
+        <if test="studentTypes != null and !studentTypes.isEmpty()">
+            AND student_type IN
+            <foreach collection="studentTypes" item="studentType" open="(" separator="," close=")">
+                #{studentType}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+    </where>
+    
+  </select>
+  
+  <select id="findAllEmployee" resultType="AdminEmployeeListDto">
+  	SELECT 
+  		member.*, employee.*
+	FROM member
+	JOIN 
+		employee ON member.member_id = employee.employee_id
+  <where>
+        <if test="job_Codes != null and !job_Codes.isEmpty()">
+            AND JOB_CODE IN
+            <foreach collection="job_Codes" item="job_Code" open="(" separator="," close=")">
+                #{job_Code}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+  </where>
+  </select>
+</mapper>

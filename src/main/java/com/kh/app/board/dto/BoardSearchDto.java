@@ -1,6 +1,8 @@
-package com.kh.app.board.entity;
+package com.kh.app.board.dto;
 
 import java.time.LocalDateTime;
+
+import com.kh.app.board.entity.Post;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardSearchDetails extends Post {
+public class BoardSearchDto extends Post {
 	private String boardName;
 	private String content;
 	private int commentCount;
@@ -29,5 +31,10 @@ public class BoardSearchDetails extends Post {
 	@Override
 	public int getPostLike() {
 		return super.getPostLike();
+	}
+	
+	@Override
+	public int getPostId() {
+		return super.getPostId();
 	}
 }

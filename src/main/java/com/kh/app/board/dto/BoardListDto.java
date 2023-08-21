@@ -13,4 +13,5 @@ public class BoardListDto{
 	private LocalDateTime postCreatedAt;
 	private int postLike;
 	private int commentCount;
+	private int boardId;
 }

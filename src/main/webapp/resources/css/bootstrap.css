@@ -11220,7 +11220,7 @@ fieldset:disabled .btn {
 
 .leftBar {
   width: 300px;
-  height: 1200px;
+  height: 100%;
   background-color: #0a53be;
   position: fixed;
 }
@@ -11309,6 +11309,6 @@ a {
   transition: .3s ease;
 }
 
-#dataForm{line-height: 2.3;}
+#dataForm{line-height: 2.47;}
 
 #dataForm input{border-style: none;}
