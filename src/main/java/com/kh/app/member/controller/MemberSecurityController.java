@@ -12,9 +12,11 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +35,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.member.dto.MemberCreateDto;
+
+import com.kh.app.member.dto.MemberUpdateDto;
+import com.kh.app.member.entity.Member;
+
+
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
@@ -120,6 +127,44 @@ public class MemberSecurityController {
 
 		return memberService.joinEmail(email);
 	}
+
+	
+	@GetMapping("/memberUpdate.do")
+	public void memberUpdate() {}
+	
+	@PostMapping("/memberUpdate.do")
+	public String memberUpdate(
+			@AuthenticationPrincipal MemberDetails principal,
+			@Valid MemberUpdateDto _member, 
+			BindingResult bindingResult, 
+			RedirectAttributes redirectAttr) {
+		log.debug("_member = {}", _member);
+		Member member = _member.toMember();
+		String memberId = principal.getMemberId();
+		member.setMemberId(memberId);
+		
+		String rawPassword = member.getMemberPwd();
+		String encodedPassword = passwordEncoder.encode(rawPassword);
+		member.setMemberPwd(encodedPassword);
+		
+		// 1. db수정요청
+		int result = memberService.updateMember(member);
+		
+		// 2. security의 authentication 갱신
+		UserDetails memberDetails = memberService.loadUserByUsername(memberId);
+		Authentication newAuthentication = 
+			new UsernamePasswordAuthenticationToken(
+				memberDetails,
+				memberDetails.getPassword(),
+				memberDetails.getAuthorities()
+			);
+		SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+		
+		
+		return "redirect:/member/myPage.do";
+	}
+	
+
 
 	@GetMapping("/certificate.do")
 	@ResponseBody

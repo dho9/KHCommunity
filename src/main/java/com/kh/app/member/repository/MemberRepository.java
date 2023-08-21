@@ -1,5 +1,6 @@
 package com.kh.app.member.repository;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -28,6 +29,12 @@ public interface MemberRepository {
 
 	MemberDetails loadUserByUsername(String username);
 
+
+	@Update("update member set member_pwd=#{memberPwd}, birthday=#{birthday, jdbcType=DATE}, member_phone=#{memberPhone} where member_id=#{memberId}")
+	int updateMember(Member member);
+
+	
+
 	@Select("select * from student where student_id = #{memberId}")
 	Student findStudentById(String memberId);
 
@@ -36,5 +43,6 @@ public interface MemberRepository {
 
 	@Update("update student set approve_request_date = sysdate where student_id = #{memberId}")
 	int updateApproveRequestDate(StudentAttachment attach);
+
 
 }

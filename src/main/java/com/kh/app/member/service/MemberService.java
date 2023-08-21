@@ -15,6 +15,9 @@ public interface MemberService extends UserDetailsService{
 
 	String joinEmail(String email);
 
+
+	int updateMember(Member member);
+
 	Student findStudentById(String memberId);
 
 	int insertStudentAttach(StudentAttachment attach);

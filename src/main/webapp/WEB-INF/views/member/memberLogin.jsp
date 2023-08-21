@@ -64,7 +64,8 @@
 						일치하지 않습니다.</div>
 				</c:if>
 				<input type="text" class="form-control" name="memberId"
-					placeholder="아이디" value="honggd" required> <br /> <input
+					placeholder="아이디" value="honggd" required> <br /> 
+				<input
 					type="password" class="form-control" name="memberPwd"
 					placeholder="비밀번호" value="1234" required>
 			</div>
