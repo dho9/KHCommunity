@@ -114,6 +114,7 @@
   <select id="findById" resultType="boardListDto">
 	select 
   		p.post_id,
+  		p.board_id,
 	    p.title,
 	    p.post_created_at,
 	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,

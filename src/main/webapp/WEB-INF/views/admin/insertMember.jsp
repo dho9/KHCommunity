@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/adminLeftBar.jsp"%>
 <style>
 *{box-sizing: border-box; /*전체에 박스사이징*/ outline: none; /*focus 했을때 테두리 나오게 */}
@@ -29,61 +30,84 @@ a{text-decoration: none;}
 		style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
 		<div class="card-header" id="todayIssueHeader">직원 등록</div>
 		<div class="card-body" id="todayIssueBody">
-			<form 
-				action="<%= request.getContextPath() %>/admin/insertMember.do"
-				name="insertMemberFrm" 
-	    		method="POST">
-				<div class="member">
-					<img class="logo" src="${pageContext.request.contextPath}/resources/images/kh admin logo.png">
-					<div class="field">
-						<b>아이디</b><input type="text" name="id"></span>
-					</div>
-					<div class="field">
-						<b>비밀번호</b> <input class="userpw" type="password" name="pw">
-					</div>
-					<div class="field">
-						<b>이름</b> <input type="text" name="name">
-					</div>
-					<div class="field birth">
-						<b>생년월일</b>
-						<div>
-							<input type="number" placeholder="ex)20000101" name="birthday">
-						</div>
-					</div>
-					<div class="field">
-						<b>본인 확인 이메일</b> <input type="email" name="email">
-					</div>
-					<div class="field tel-number">
-						<b>휴대전화</b>
-						<div>
-							<input type="number" placeholder="전화번호 입력" name="phone">
-						</div>
-					</div>
-			        <div class="field dept">
-			            <b>부서</b>
-			            <div>
-			                <label><input type="radio" name="dept">행정</label>
-			                <label><input type="radio" name="dept">총무</label>
-			                <label><input type="radio" name="dept">운영</label>
-			            </div>
-			        </div>
-					<input type="submit" value="등록하기">
+			<div class="member">
+				<img class="logo" src="${pageContext.request.contextPath}/resources/images/kh admin logo.png">
+				<div class="field">
+					<b>아이디</b><input type="text" name="id"></span>
 				</div>
-			</form>
+				<div class="field">
+					<b>비밀번호</b> <input class="userpw" type="password" name="pw">
+				</div>
+				<div class="field">
+					<b>이름</b> <input type="text" name="name">
+				</div>
+				<div class="field birth">
+				    <b>생년월일</b>
+				    <div>
+				        <input type="text" placeholder="ex)20/02/02" name="birthday">
+				    </div>
+				</div>
+				<div class="field">
+					<b>본인 확인 이메일</b> <input type="email" name="email">
+				</div>
+				<div class="field tel-number">
+					<b>휴대전화</b>
+					<div>
+						<input type="text" placeholder="ex)010-1234-1234" name="phone">
+					</div>
+				</div>
+		        <div class="field dept">
+				    <b>부서</b>
+				    <div>
+				        <label><input type="radio" name="dept" value="행정">행정</label>
+				        <label><input type="radio" name="dept" value="총무">총무</label>
+				        <label><input type="radio" name="dept" value="운영">운영</label>
+				    </div>
+				</div>
+				<input type="submit" value="등록하기">
+			</div>
 		</div>
 	</div>
+	<form:form
+    	action="${pageContext.request.contextPath}/admin/insertMember.do" 
+	    name="insertMemberFrm" 
+	    method="POST">
+    	<input type="hidden" name="id" value = "">
+    	<input type="hidden" name="pw" value = "">
+    	<input type="hidden" name="name" value = "">
+    	<input type="hidden" name="birthday" value = "">
+    	<input type="hidden" name="email" value = "">
+    	<input type="hidden" name="phone" value = "">
+    	<input type="hidden" name="dept" value = "">
+    </form:form>
 </section>
 <footer></footer>
 <script>
     $(function() {
-        var submitButton = $('input[type="submit"]');
-        submitButton.on('click', function(e) {
-        	e.preventDefault(); // 기본 제출 동작을 막음
-            if(confirm('회원을 등록하시겠습니까?')) {
-                $('form[name="insertMemberFrm"]').submit();
-            } else {
-            	return false;
-            }
+        // "등록하기" 버튼 클릭 시
+        $("input[type='submit']").on('click', function(e) {
+            e.preventDefault(); // 기본 동작 중지 (폼 제출 방지)
+
+            // 사용자 입력 값을 가져와서 변수에 저장
+            const id = $("input[name='id']").val();
+            const pw = $("input[name='pw']").val();
+            const name = $("input[name='name']").val();
+            const birthday = $("input[name='birthday']").val();
+            const email = $("input[name='email']").val();
+            const phone = $("input[name='phone']").val();
+            const dept = $("input[name='dept']:checked").val(); // 선택된 부서 값 가져오기
+			console.log(dept);
+            // 가져온 값들을 폼에 설정
+            $("form[name='insertMemberFrm'] input[name='id']").val(id);
+            $("form[name='insertMemberFrm'] input[name='pw']").val(pw);
+            $("form[name='insertMemberFrm'] input[name='name']").val(name);
+            $("form[name='insertMemberFrm'] input[name='birthday']").val(birthday);
+            $("form[name='insertMemberFrm'] input[name='email']").val(email);
+            $("form[name='insertMemberFrm'] input[name='phone']").val(phone);
+            $("form[name='insertMemberFrm'] input[name='dept']").val(dept);
+
+            // 폼 제출
+            $("form[name='insertMemberFrm']").submit();
         });
     });
 </script>
