@@ -1,5 +1,8 @@
 package com.kh.app.board.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +18,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
+import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.member.entity.MemberDetails;
 
 import lombok.extern.slf4j.Slf4j;
@@ -203,7 +210,10 @@ public class BoardController {
 	public void boardDetail(@RequestParam int id, Model model) {
 		BoardListDto postDetail = boardService.findById(id);
 		log.debug("postDetail = {}", postDetail);
+		
+		Board board = boardService.findBoardName(postDetail.getBoardId());
 		model.addAttribute("postDetail", postDetail);
+		model.addAttribute("board",board );
 	}
 	
 	/**
@@ -278,16 +288,37 @@ public class BoardController {
 			@RequestParam String text,
 			@RequestParam int boardId,
 			@RequestParam String[] _tags,
-			@AuthenticationPrincipal MemberDetails member
-			) {
-		log.debug("loginMember = {}", member);
-		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
-		BoardCreateDto board = BoardCreateDto.builder()
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
+		
+			log.debug("loginMember = {}", member);
+			List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+			// 1. 파일저장
+			List<PostAttachment> attachments = new ArrayList<>(); 
+			for(MultipartFile file : files) {
+				if(file != null) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.build();
+					attachments.add(attach);
+				}
+				
+			}
+		
+			BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
 				.content(text)
 				.boardId(boardId)
 				.memberId(member.getMemberId())
 				.tags(tags)
+				.attachments(attachments)
 				.build();
 		log.debug("baord = {}", board);
 		int result = boardService.insertBoard(board);

@@ -3,6 +3,10 @@ package com.kh.app.board.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.kh.app.board.entity.PostAttachment;
+
+//github.com/MinHeeJ/KHCommunity
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +22,7 @@ public class BoardCreateDto {
 	private String memberId;
 	private String title;
 	private String content;
+	private List<PostAttachment> attachments;
 	private LocalDateTime postCreatedAt;
 	private List<String> tags;
 }

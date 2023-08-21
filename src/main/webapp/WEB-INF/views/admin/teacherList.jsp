@@ -9,22 +9,21 @@
       <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
           <div class="card-header flex" id="todayIssueHeader">
 			    <div class="d-flex justify-content-between align-items-center" >
-			        <span class="mb-0" style="font-weight: 900;">직원 목록 &nbsp;&nbsp;&nbsp;</span>
+			        <span class="mb-0" style="font-weight: 900;">강사 목록 &nbsp;&nbsp;&nbsp;</span>
 			        <div id="search-container">
 			            <form action="">
 			                <div class="d-flex align-items-center">
-			                    <div class="flex" style="width:600px;">
-								    <input type="checkbox" name="job_Code" value='행정' id="jobCode1" ${param.job_Code eq '행정' ? 'checked' : ''}/>
-								    <label for="jobCode1">행정</label>&nbsp;&nbsp;
-								    <input type="checkbox" name="job_Code" value='총무' id="jobCode2" ${param.job_Code eq '총무' ? 'checked' : ''}/>
-								    <label for="jobCode2">총무</label>&nbsp;&nbsp;
-								    <input type="checkbox" name="job_Code" value='운영' id="jobCode3" ${param.job_Code eq '운영' ? 'checked' : ''}/>
-								    <label for="jobCode3">운영</label>
+				                <div class="flex" style="width:600px;">
+									    <input type="checkbox" name="subject" value='자바' id="subject1" ${param.subject eq '자바' ? 'checked' : ''}/>
+									    <label for="subject1">자바</label>&nbsp;&nbsp;
+									    <input type="checkbox" name="subject" value='정보보안' id="subject2" ${param.subject eq '정보보안' ? 'checked' : ''}/>
+									    <label for="subject2">정보보안</label>&nbsp;&nbsp;
 								</div>
 			                    <select class="form-select" aria-label="Default select example" name="searchType" required>
 			                        <option value="" disabled selected>검색타입</option>
-			                        <option value="employee_Id" ${param.searchType eq 'employee_Id' ? 'selected' : '' }>직원 ID</option>
-			                        <option value="member_Phone" ${param.searchType eq 'member_Phone' ? 'selected' : '' }>전화번호</option>
+			                        <option value="member_Id" ${param.searchType eq 'employee_Id' ? 'selected' : '' }>강사 ID</option>
+			                        <option value="subject" ${param.searchType eq 'subject' ? 'selected' : '' }>과목</option>
+			                        <option value="member_Name" ${param.searchType eq 'member_Name' ? 'selected' : '' }>이름</option>
 			                    </select>
 			                    <div class="input-group">
 			                    	&nbsp;
@@ -43,21 +42,36 @@
                           <th scope="col">#</th>
                           <th scope="col">ID</th>
                           <th scope="col">이름</th>
-                          <th scope="col">부서</th>
                           <th scope="col">전화 번호</th>
                           <th scope="col">Email</th>
+                          <th scope="col">담당 과목</th>
+                          <th scope="col">개강일</th>
+                          <th scope="col">수료일</th>
                           <th scope="col">쪽지보내기</th>
                       </tr>
                   </thead>
                   <tbody>
-                  	<c:forEach items="${employees}" var="employee" varStatus="vs">
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${employee.memberId}" data-second-name="${employee.memberName}" data-phone="${employee.memberPhone}" data-birthday="${employee.birthday}" data-subject="${employee.memberEmail}" data-class="${student.classId}" data-email="${employee.memberEmail}" data-lastDay="${employee.employeeEnrollDate}" data-jobCode="${employee.jobCode eq '행정' ? '행정' : employee.jobCode eq '총무'? '총무' : '운영'}" data-handle="@mdo">
+                  	<c:forEach items="${teachers}" var="teacher" varStatus="vs">
+                      <tr data-bs-toggle="modal" data-bs-target="#myModal" 
+                      data-row-id="${vs.count}" 
+                      data-first-id="${teacher.memberId}" 
+                      data-second-name="${teacher.memberName}" 
+                      data-phone="${teacher.memberPhone}" 
+                      data-birthday="${teacher.birthday}" 
+                      data-email="${teacher.memberEmail}" 
+                      data-startDay="${teacher.curriculumStartAt}" 
+                      data-endDay="${teacher.curriculumEndAt}" 
+                      data-lastDay="${teacher.teacherEnrollDate}" 
+                      data-subject="${teacher.subject eq '자바' ? '자바' : '정보보안'}" 
+                      data-handle="@mdo">
                           <td>${vs.count}</td>
-                          <td>${employee.memberId}</td>
-                          <td>${employee.memberName}</td>
-                          <td>${employee.jobCode}</td>
-                          <td>${employee.memberPhone}</td>
-                          <td>${employee.memberEmail}</td>
+                          <td>${teacher.memberId}</td>
+                          <td>${teacher.memberName}</td>
+                          <td>${teacher.memberPhone}</td>
+                          <td>${teacher.memberEmail}</td>
+                          <td>${teacher.subject}</td>
+                          <td>${teacher.curriculumStartAt}</td>
+                          <td>${teacher.curriculumEndAt}</td>
                           <td>
                             <button style="border: 0; background-color: transparent;">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
@@ -90,14 +104,13 @@
                           <input type="hidden" name="rowId" id="modalRowId">
                           ID : <input type="text" name="firstId" id="modalFirstId" readonly> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
                           이름 : <input type="text" name="secondName" id="modalSecondName" readonly> <br>
-                          이메일 : <input type="text" name="email" id="modalEmail" readonly> <br>
                           전화번호 : <input type="text" name="phone" id="modalPhone" readonly> <br>
                           생일 : <input type="date" name="birthday" id="modalBirthday" readonly> <br>
+                          이메일 : <input type="text" name="email" id="modalEmail" readonly> <br>
                           입사일 : <input type="date" name="lastDay" id="modalLastDay" readonly><br>
-                          부서 : 
-								<input type="radio" name="job_Code" id="jobCode1" value="행정">행정
-								<input type="radio" name="job_Code" id="jobCode2" value="총무">총무
-								<input type="radio" name="job_Code" id="jobCode3" value="운영">운영
+                          과목 : 
+								<input type="radio" name="subject" id="subject1" value="자바">자바
+								<input type="radio" name=subject id="subject2" value="정보보안">정보보안
                           <br>
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -126,12 +139,9 @@
             const phone = row.getAttribute("data-phone");
             const birthday = row.getAttribute("data-birthday");
             const email = row.getAttribute("data-email");
-            const subject = row.getAttribute("data-subject");
-            const className = row.getAttribute("data-class");
             const lastDay = row.getAttribute("data-lastDay");
-            const job_Code = row.getAttribute("data-jobCode");
+            const subject = row.getAttribute("data-subject");
             const handle = row.getAttribute("data-handle");
-            const job_Code_value = row.getAttribute("data-jobCode");
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
             document.getElementById("modalFirstId").value = firstId;
@@ -140,21 +150,19 @@
             document.getElementById("modalBirthday").value = birthday;
             document.getElementById("modalEmail").value = email;
             document.getElementById("modalLastDay").value = lastDay;
-            // document.getElementById("modalStudentType").value = studentType;
-            document.getElementById("jobCode1").checked = (job_Code_value === "행정");
-            document.getElementById("jobCode2").checked = (job_Code_value === "총무");
-            document.getElementById("jobCode3").checked = (job_Code_value === "운영");
+            document.getElementById("subject1").checked = (subject === "자바");
+            document.getElementById("subject2").checked = (subject === "정보보안");
           });
         });
     
         // 수정 버튼 클릭 이벤트 처리
         $("#btnEdit").on("click", function () {
-          showConfirmation("${pageContext.request.contextPath}/admin/adminEmployeeUpdate.do");
+          showConfirmation("${pageContext.request.contextPath}/admin/adminTeacherUpdate.do");
         });
     
         // 강퇴 버튼 클릭 이벤트 처리
         $("#btnBan").on("click", function () {
-          showConfirmation("${pageContext.request.contextPath}/admin/adminEmployeeDelete.do");
+          showConfirmation("${pageContext.request.contextPath}/admin/adminTeacherDelete.do");
         });
     
         // 확인 메시지 표시 후 데이터 전송 함수 호출
@@ -167,15 +175,16 @@
         // 서버로 데이터를 전송하는 함수
         function sendDataToServer(url) {
           const modalFrm = document.modalFrm;
-          const employeeId = modalFrm.firstId.value;
-          const jobCode = modalFrm.job_Code.value;
+          const memberId = modalFrm.firstId.value;
+          const subject = modalFrm.subject.value;
           const token = document.modalFrm._csrf.value;
+          console.log(subject);
           $.ajax({
             type: "POST",
             url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
             data: {
-            	employeeId,
-            	jobCode
+            	memberId,
+            	subject
             },
             headers: {
                 "X-CSRF-TOKEN": token
@@ -185,12 +194,10 @@
               // 예: 성공 메시지를 표시하거나 다른 동작 수행
               
               alert('요청된 작업이 완료되었습니다.')
-              location.href="${pageContext.request.contextPath}/admin/employeeList.do";
+              location.href="${pageContext.request.contextPath}/admin/teacherList.do";
             }
           });
         }
-        
-        
       });
     </script>
     <footer></footer>

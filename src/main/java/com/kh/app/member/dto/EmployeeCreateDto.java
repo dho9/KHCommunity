@@ -1,5 +1,6 @@
 package com.kh.app.member.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,6 @@ public class EmployeeCreateDto {
 	private String id;
 	private String dept;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private LocalDateTime employeeEnrollDate;
+	private LocalDate employeeEnrollDate;
 
 }
