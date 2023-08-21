@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 
+import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.entity.Favorite;
@@ -49,4 +51,15 @@ public interface BoardRepository {
 	int insertPostLikeByMemberId(int postId, String memberId);
 
 	PostLike findPostLikeCount(int postId);
+	
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler})")
+	@SelectKey(
+			before = false, 
+			keyProperty = "postId", 
+			resultType = int.class,
+			statement = "select seq_post_id.currval from dual")
+	int insertBoard(BoardCreateDto board);
+
+	@Insert("insert into post_content (post_id, board_id, content) values(#{postId}, #{boardId}, #{content})")
+	int insertPostContent(BoardCreateDto board);
 }

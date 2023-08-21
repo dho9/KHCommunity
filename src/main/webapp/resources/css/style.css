@@ -779,7 +779,61 @@ aside > div.title > ol.buttons > li > a.image.setting {
     margin-bottom: 5px;
     background-color: #f9f9f9;
 }
+#container > div.wrap.articles > form#createForm {
+    position: relative;
+    margin-bottom: 5px;
+    border: 2px solid #d6d6d6;
+    box-sizing: border-box;
+}
+#container > div.wrap.articles > form#createForm p {
+    padding: 15px;
+    border-bottom: 1px solid #e3e3e3;
+    background-color: #fff;
+}
+#container > div.wrap.articles > form#createForm p input.title{
+	width: 100%;
+    height: 20px;
+    line-height: 20px;
+    border: 0;
+    color: #292929;
+    font-size: 16px;
+    font-weight: bold;
+}
+#container > div.wrap.articles > form#createForm button{
+	width: 59px;
+	height: 59px;
+	border: none;
+}
 
+#container > div.wrap.articles > form#createForm p textarea.smallplaceholder{
+	width: 100%;
+    height: 350px;
+    border: 0;
+    color: #292929;
+    font-size: 14px;
+    resize: none;
+}
+#container > div.wrap.articles > form#createForm label{
+	color: #292929;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 1%;
+}
+.hashTag {
+	width: 23%;
+    height: 5%;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+.hashTag-container {
+	height: 6%;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+.hashTag-container span {
+	font-size: 22px;
+    font-weight: bold;
+}
 #container > div.articles > article > a.article {
     display: block;
     padding: 15px;

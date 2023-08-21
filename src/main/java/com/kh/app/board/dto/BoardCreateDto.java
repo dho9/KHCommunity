@@ -1,23 +1,23 @@
-package com.kh.app.board.entity;
+package com.kh.app.board.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+public class BoardCreateDto {
 	private int postId;
 	private int boardId;
 	private String memberId;
 	private String title;
+	private String content;
 	private LocalDateTime postCreatedAt;
-	private boolean commentCheck;
-	private int postLike;
-	private boolean attachCheck;
-	private boolean statusCheck;
+	private List<String> tags;
 }
