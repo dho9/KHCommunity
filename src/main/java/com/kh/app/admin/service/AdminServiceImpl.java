@@ -3,14 +3,19 @@ package com.kh.app.admin.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.app.admin.repository.AdminRepository;
+import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.EmployeeCreateDto;
+import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -24,9 +29,10 @@ public class AdminServiceImpl implements AdminService {
 	private AdminRepository adminRepository;
 	
 	@Override
-	public List<Member> findAllEmployee() {
-		return adminRepository.findAllEmployee();
+	public List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters) {
+		return adminRepository.findAllEmployee(filters);
 	}
+	
 	public int todayNewStudentCount() {	
 		return adminRepository.todayNewStudentCount();
 	}
@@ -95,15 +101,28 @@ public class AdminServiceImpl implements AdminService {
 	public Member findById(String id) {
 		return adminRepository.findById(id);
 	}
+	  
+	@Override
+	public int insertEmployee(EmployeeCreateDto employee) {
+		return adminRepository.insertEmployee(employee);
+	}
 	
 	@Override
+	public int insertMember(MemberCreateDto member) {
+		return adminRepository.insertMember(member);
+	}
+
 	public List<AdminReportListDto> reportListSix() {
 		return adminRepository.reportListSix();
 	}
 	
 	@Override
 	public List<AdminStudentListDto> findAllStudents(Map<String, Object> filters, Map<String, Object> params) {
-		return adminRepository.findAllStudents(filters, params);
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findAllStudents(filters, rowBounds);
 	}
 	
 	@Override

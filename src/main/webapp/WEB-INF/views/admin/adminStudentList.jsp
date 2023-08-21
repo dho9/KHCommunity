@@ -72,6 +72,25 @@
               </table>
               <br>
           </div>
+	     <div class="pagination justify-content-center">
+		    <ul class="pagination">
+		        <li class="page-item ${page == 1 ? 'disabled' : ''}">
+		            <a class="page-link" href="<c:url value='/adminStudentList.do'/>?page=1" aria-label="Previous">
+		                <span aria-hidden="true">&laquo;</span>
+		            </a>
+		        </li>
+		        <c:forEach begin="1" end="${totalPages}" var="pageNum">
+		            <li class="page-item ${page == pageNum ? 'active' : ''}">
+		                <a class="page-link" href="<c:url value='/adminStudentList.do'/>?page=${pageNum}">${pageNum}</a>
+		            </li>
+		        </c:forEach>
+		        <li class="page-item ${page == totalPages ? 'disabled' : ''}">
+		            <a class="page-link" href="<c:url value='/adminStudentList.do'/>?page=${totalPages}" aria-label="Next">
+		                <span aria-hidden="true">&raquo;</span>
+		            </a>
+		        </li>
+		    </ul>
+		</div>
       </div>
       <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="width: 1200px;">

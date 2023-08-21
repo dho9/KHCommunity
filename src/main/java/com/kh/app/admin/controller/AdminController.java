@@ -1,6 +1,8 @@
 package com.kh.app.admin.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,14 +20,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.app.admin.service.AdminService;
+import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
+import com.kh.app.member.dto.EmployeeCreateDto;
+import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -173,9 +180,24 @@ public class AdminController {
 	
 	// 직원 목록 조회 - 이태현
 	@GetMapping("/employeeList.do")
-	public void employeeList(Model model){
-		List<Member> members = adminService.findAllEmployee();
-		model.addAttribute("members", members);
+	public void employeeList(Model model,
+				            @RequestParam(value = "searchType", required = false) String searchType,
+				            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                            @RequestParam(value = "job_Code", required = false) String[] _job_Codes){
+		List<String> job_Codes = null;
+
+	    if (_job_Codes != null) {
+	    	job_Codes = Arrays.asList(_job_Codes);
+	    }
+	    
+		Map<String, Object> filters = new HashMap<>();
+	    filters.put("searchType", searchType);
+	    filters.put("searchKeyword", searchKeyword);
+	    filters.put("job_Codes", job_Codes);
+		
+	    log.debug("job_Codes = {}", job_Codes);
+		List<AdminEmployeeListDto> employees = adminService.findAllEmployee(filters);
+		model.addAttribute("employees", employees);
 	}
 	
 	// 직원 Id로 검색 - 이태현
@@ -183,10 +205,45 @@ public class AdminController {
 	@ResponseBody
 	public Member findById(@RequestParam String id) {
 	    Member member = adminService.findById(id);
-	    log.debug("member = {}", member);
 	    return member;
 	}
 	
+	@GetMapping("/insertMember.do")
+	public void insertMember() {}
+	
+	@PostMapping("/insertMember.do")
+    public String insertMember(
+            @RequestParam String id,
+            @RequestParam String pw,
+            @RequestParam String name,
+            @RequestParam LocalDate birthday,
+            @RequestParam String email,
+            @RequestParam String phone,
+            @RequestParam String dept) {
+		LocalDateTime currentTime = LocalDateTime.now();
+		// member 등록
+		MemberCreateDto _member = 
+				MemberCreateDto.builder()
+				.memberId(id)
+				.memberPwd(pw)
+				.memberName(name)
+				.memberPhone(phone)
+				.email(email)
+				.birthday(birthday)
+				.build();
+		// employee 등록
+		EmployeeCreateDto _employee = 
+				EmployeeCreateDto.builder()
+				.id(id)
+				.dept(dept)
+				.employeeEnrollDate(currentTime)
+				.build();
+		log.debug("member = {}", _member);
+//		int result1 = adminService.insertMember(_member);
+//		int result2 = adminService.insertEmployee(_employee);
+		
+        return "redirect:/admin/employeeList.do";
+    }
 	// 수강생 정보 수정 - 유성근
 	@PostMapping("/adminStudentUpdate.do")
 	public String adminStudentUpdate(@Valid AdminStudentListDto student) {
