@@ -13,7 +13,6 @@
 	display: block;
 }
 </style>
-
     <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
             <form class="search">
@@ -31,16 +30,23 @@
             <a href=""><img src="img/로고이미지-removebg-preview.png"
                     style="width: 600px; height: 200px; outline: auto;"></a>
         </div>
+        <sec:authentication property="principal" var="loginMember"/>
+        <form:form name ="memberLogoutFrm" 
+        	action="${pageContext.request.contextPath}/member/memberLogout.do" 
+        	method="POST">
+		</form:form>
         <div class="leftside">
             <div class="card pconly">
                 <form class="logged">
                     <img src="https://cf-fpi.everytime.kr/0.png" class="picture">
-                    <p class="nickname">disney1026</p>
-                    <p class="school">이태현</p>
-                    <p class="school">disney1026</p>
+                    <sec:authorize access="isAuthenticated()">
+                    <p class="nickname">${loginMember.username}</p>
+                    <p class="school">${loginMember.name}</p>
+                    <p class="school">${loginMember.username}</p>
+                    </sec:authorize>
                     <ul class="buttons">
                         <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
-                        <li><a href="/user/logout">로그아웃</a></li>
+                         <li><a href="#" id="logoutLink">로그아웃</a></li>                       
                     </ul>
                     <hr>
                 </form>
@@ -324,6 +330,10 @@ document.querySelector('#myBoard').addEventListener('mouseover', () => {
         }
     });
 });
+
+document.getElementById("logoutLink").addEventListener("click", function(event) {
+	memberLogoutFrm.submit();
+  });
 
 document.querySelector('#myBoard').addEventListener('mouseout', () => {
     const favorite = document.querySelector(".favorite");
