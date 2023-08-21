@@ -4,28 +4,19 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<style>
-.new{
-text-decoration: none;
-}
-</style>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
 <!-- bootstrap icon css -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
-=======
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
 <style>
 .new {
 	text-decoration: none;
 }
 </style>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-=======
 
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity
 <!DOCTYPE html>
 <html lang="ko">
 <head>
