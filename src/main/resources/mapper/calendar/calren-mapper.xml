@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="CalenDao">
+<mapper namespace="com.kh.app.schedule.repository.CalenDao">
 	<resultMap type="calendar" id="calMap">
 		<result property="start" column="start1"/>
 		<result property="end" column="end1"/>
@@ -14,7 +14,8 @@
 		ALLDAY,
 		TEXTCOLOR,
 		BACKGROUNDCOLOR,
-		BORDERCOLOR 
+		BORDERCOLOR,
+		MEMBER_ID 
 		FROM CALENDAR
 	</select>
 </mapper>
