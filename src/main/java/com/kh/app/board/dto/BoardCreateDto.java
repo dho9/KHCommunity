@@ -16,6 +16,6 @@ public class BoardCreateDto {
 	private String memberId;
 	private String title;
 	private String content;
-	private PostAttachment attachment;
+	private List<PostAttachment> attachments;
 	private LocalDateTime postCreatedAt;
 }

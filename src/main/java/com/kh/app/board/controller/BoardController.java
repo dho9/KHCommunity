@@ -288,31 +288,33 @@ public class BoardController {
 			@RequestParam String text,
 			@RequestParam int boardId,
 			@AuthenticationPrincipal MemberDetails member,
-			@RequestParam(value = "file", required = false) MultipartFile file)
+			@RequestParam(value = "file", required = false) List<MultipartFile> files)
 					throws IllegalStateException, IOException{
 		// 1. 파일저장
-			PostAttachment attach = new PostAttachment(); 
-			if(file != null) {
-				String originalFilename = file.getOriginalFilename();
-				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-				file.transferTo(destFile);	
+			List<PostAttachment> attachments = new ArrayList<>(); 
+			for(MultipartFile file : files) {
+				if(file != null) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.build();
+					attachments.add(attach);
+				}
 				
-				attach = 
-						PostAttachment.builder()
-						.postOriginalFilename(originalFilename)
-						.postRenamedFilename(renamedFilename)
-						.build();
 			}
-			
-		
 		
 		BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
 				.content(text)
 				.boardId(boardId)
 				.memberId(member.getMemberId())
-				//.attachment(attach)
+				.attachments(attachments)
 				.build();
 		log.debug("baord = {}", board);
 		int result = boardService.insertBoard(board);
