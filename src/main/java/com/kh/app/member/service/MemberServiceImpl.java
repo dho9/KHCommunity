@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.Student;
+import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.repository.MemberRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -120,6 +122,29 @@ public class MemberServiceImpl implements MemberService {
 			e.printStackTrace();
 		}
 	}
+
+
+	// 회원정보수정
+	@Override
+	public int updateMember(Member member) {
+		return memberRepository.updateMember(member);
+	}
+
+	
+
+	@Override
+	public Student findStudentById(String memberId) {
+		
+		return memberRepository.findStudentById(memberId);
+	}
+
+	@Override
+	public int insertStudentAttach(StudentAttachment attach) {
+		int result = memberRepository.insertStudentAttach(attach);
+		result = memberRepository.updateApproveRequestDate(attach);
+		return result;
+	}
+
 	
 
 }
