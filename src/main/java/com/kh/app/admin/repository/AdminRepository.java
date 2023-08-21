@@ -9,8 +9,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.Teacher;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -91,17 +93,19 @@ public interface AdminRepository {
 	@Select("SELECT m.* FROM member m INNER JOIN authority a ON m.member_id = a.member_id WHERE a.auth = 'ADMIN' AND m.member_id = #{id}")
 	Member findById(String id);
 
-	@Insert("insert into employee values (#{id}, #{dept}, #{employeeEnrollDate}")
+	@Insert("insert into employee values (#{id}, #{dept}, sysdate)")
 	int insertEmployee(EmployeeCreateDto employee);
 
 	@Insert("insert into member values (#{memberId}, #{memberPwd}, #{memberName}, #{memberPhone}, #{email}, #{birthday})")
 	int insertMember(MemberCreateDto member);
 	
+	@Insert("insert into authority values (#{memberId}, #{auth})")
+	int insertAuth(Authority auth);
+	
 	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)\r\n"
 			+ "where  report_check = 'n' and (rownum between 1 and 6)")
 	List<AdminReportListDto> reportListSix();
 
-	
 	List<AdminStudentListDto> findAllStudents(Map<String, Object> filters);
 
 	@Update("update student set student_Type = #{studentType} where student_id = #{studentId}")
@@ -115,5 +119,11 @@ public interface AdminRepository {
 
 	@Delete("delete from member where member_id = #{employeeId}")
 	int deleteAdminMember(AdminEmployeeListDto employee);
+
+	List<Teacher> findAllTeacher(Map<String, Object> filters);
+
+	@Delete("delete from member where member_id = #{memberId}")
+	int deleteAdminTeacher(String memberId);
+
 
 }

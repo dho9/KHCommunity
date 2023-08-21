@@ -5,8 +5,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.Teacher;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -62,6 +64,12 @@ public interface AdminService {
 	int deleteAdminEmployee(AdminEmployeeListDto employee);
 
 	int deleteAdminMember(AdminEmployeeListDto employee);
+
+	int insertAuth(Authority auth);
+
+	List<Teacher> findAllTeacher(Map<String, Object> filters);
+
+	int deleteAdminTeacher(String memberId);
 
 
 }

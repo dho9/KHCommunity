@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.app.admin.repository.AdminRepository;
+import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.Teacher;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -138,5 +140,20 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int deleteAdminMember(AdminEmployeeListDto employee) {
 		return adminRepository.deleteAdminMember(employee);
+	}
+	
+	@Override
+	public int insertAuth(Authority auth) {
+		return adminRepository.insertAuth(auth);
+	}
+	
+	@Override
+	public List<Teacher> findAllTeacher(Map<String, Object> filters) {
+		return adminRepository.findAllTeacher(filters);
+	}
+	
+	@Override
+	public int deleteAdminTeacher(String memberId) {
+		return adminRepository.deleteAdminTeacher(memberId);
 	}
 }

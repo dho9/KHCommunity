@@ -147,7 +147,7 @@ CREATE TABLE curriculum (
    curriculum_id   number      NOT NULL,
    class_id   varchar2(20)      NOT NULL,
    teacher_id   varchar2(20)      NOT NULL,
-   subject   varchar2(10),
+   subject   varchar2(30),
    curriculum_name   varchar(300),
    curriculum_start_at   date,
    curriculum_end_at   date
@@ -353,8 +353,7 @@ CREATE TABLE delete_comment (
    comment_content   varchar2(1000)      ,
    comment_level   number      ,
    comment_ref   number      ,
-   comment_created_at   date      ,
-   comment_like   number      
+   comment_created_at   date      
 );
 
 ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
@@ -487,8 +486,8 @@ ALTER TABLE curriculum ADD CONSTRAINT FK_teacher_TO_curriculum_1 FOREIGN KEY (
 )
 REFERENCES teacher (
    teacher_id
-);
-
+)on delete cascade;
+ALTER TABLE curriculum DROP CONSTRAINT FK_teacher_TO_curriculum_1;
 ALTER TABLE teacher ADD CONSTRAINT FK_member_TO_teacher_1 FOREIGN KEY (
    teacher_id
 )
@@ -529,14 +528,14 @@ ALTER TABLE student ADD CONSTRAINT FK_curriculum_TO_student_1 FOREIGN KEY (
 )
 REFERENCES curriculum (
    curriculum_id
-);
+)on delete cascade;
 
 ALTER TABLE vacation ADD CONSTRAINT FK_teacher_TO_vacation_1 FOREIGN KEY (
    teacher_id
 )
 REFERENCES teacher (
    teacher_id
-);
+)on delete cascade;
 
 ALTER TABLE vacation ADD CONSTRAINT FK_employee_TO_vacation_1 FOREIGN KEY (
    employee_id
@@ -836,7 +835,6 @@ BEGIN
     title,
     post_created_at,
     comment_check,
-    post_like,
     attach_check,
     status_check,
     tag
@@ -847,7 +845,6 @@ BEGIN
     :OLD.title,
     :OLD.post_created_at,
     :OLD.comment_check,
-    :OLD.post_like,
     :OLD.attach_check,
     :OLD.status_check,
     :OLD.tag
@@ -875,7 +872,7 @@ AFTER delete ON post_comment
 FOR EACH ROW
 BEGIN
   insert into delete_comment 
-  values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at, :OLD.comment_like);
+  values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at);
   
 END;
 /
@@ -931,6 +928,7 @@ VALUES ('ehdgus', '20/01/01');
 INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'352','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
 INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'351','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
 INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'353','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
+INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'353','ehdgus','정보보안','정보보안전문가','22/12/31',sysdate);
 
 -- student
 INSERT INTO student (student_id, curriculum_id, approve_check, approve_request_date, approve_complete_date,  student_type)
@@ -949,7 +947,6 @@ VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
 INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('godwjd', '행정', '2020/02/02');
 INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('chdan', '총무', '2020/02/02');
 INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('dnsdud', '운영', '2020/02/02');
-INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('test', '운영', '2020/02/02');
 
 -- scheduler
 INSERT INTO scheduler (schedule_id, member_id, todo, schedule_created_at, schedule_completed_at  )
@@ -1049,13 +1046,16 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 -- order
 
 
---삭제 게시글 
-delete post where post_id =3;
---삭제 댓글
-delete post_comment where comment_id=2;
---삭제회원 
-delete member where member_id = 'test'; 
-delete member where member_id = 'test1'; 
+----삭제 게시글 
+--delete post where post_id =3;
+----삭제 댓글
+--delete post_comment where comment_id=2;
+----삭제회원 
+--delete member where member_id = 'disney1026'; 
+--delete member where member_id = 'test1'; 
+
+delete teacher where teacher_id = 'ehdgus';
+delete from member where member_id = 'test';
 
 select * from member;
 select * from student;
