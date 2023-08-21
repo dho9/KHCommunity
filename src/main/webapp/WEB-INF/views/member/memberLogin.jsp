@@ -54,6 +54,7 @@
 
 	<div class="loginContainer">
 		<h1 id="loginTitle">Login</h1>	
+		
 		<form:form
 			action="${pageContext.request.contextPath}/member/memberLogin.do"
 			method="POST">
