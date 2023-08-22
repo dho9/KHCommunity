@@ -207,6 +207,7 @@ CREATE TABLE board (
    board_name   varchar2(30),
    board_category   varchar2(30)
 );
+ALTER TABLE board ADD board_link varchar2(50);
 
 CREATE TABLE post (
    post_id   number      NOT NULL,
@@ -993,6 +994,8 @@ VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', '23/09/06', '23/09/06', 'ehdgus',  'g
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '자유게시판');
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '히히게시판');
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '깔깔게시판');
+INSERT INTO board (board_id, board_category, board_name, board_link) VALUES (seq_board_id.NEXTVAL, '소통', '직원게시판', 'empolyeeBoardList');
+
 
 -- post
 INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
@@ -1106,8 +1109,6 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
-
-    
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
