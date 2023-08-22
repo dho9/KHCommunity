@@ -34,7 +34,9 @@
   
   <select id="findAllByMemberId" resultType="boardSearchDto">
     select
-	    b.board_name
+	    b.board_name,
+	    b.board_id,
+	    b.board_link
 	from
 	    favorite f left join board b
 	        on f.board_id = b.board_id
@@ -44,6 +46,7 @@
   <resultMap type="boardSearchDto" id="myBoardsMap">
   	<id column="board_id" property="boardId"/>
   	<result column="board_name" property="boardName"/>
+  	<result column="board_link" property="boardLink"/>
   </resultMap>
   	
   <select id="freeBoardFindAll" resultType="boardListDto">
