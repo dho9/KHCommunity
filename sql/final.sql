@@ -1089,7 +1089,7 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 --delete member where member_id = 'test1'; 
 
 delete teacher where teacher_id = 'ehdgus';
-delete from member where member_id = 'test';
+delete from member where member_id = 'admin';
 
 select * from post_attachment;
 select * from member;
@@ -1121,7 +1121,6 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
-
 
 
 

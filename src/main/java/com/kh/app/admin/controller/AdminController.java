@@ -1,10 +1,13 @@
 package com.kh.app.admin.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +43,8 @@ import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.entity.PostAttachment;
+import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
@@ -419,15 +424,44 @@ public class AdminController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@AuthenticationPrincipal MemberDetails member,
-			@RequestParam(value = "file", required = false) List<MultipartFile> files) {
-		log.debug("memberId = {}", member.getMemberId());
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+		
+		// 1. 파일저장
+		int result = 0;
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		for(MultipartFile file : files) {
+			if(!file.isEmpty()) {
+				String originalFilename = file.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				file.transferTo(destFile);	
+				
+				PostAttachment attach = 
+						PostAttachment.builder()
+						.postOriginalFilename(originalFilename)
+						.postRenamedFilename(renamedFilename)
+						.boardId(boardId)
+						.build();
+				attachments.add(attach);
+			}
+		}
+		String memberId = "admin";
 		BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
 				.content(text)
 				.boardId(boardId)
-				.memberId(member.getMemberId())
+				.memberId(memberId)
 				.build();
+		log.debug("attach = {}", attachments);
+		log.debug("board = {}", board);
+		
+//		
+//		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+//			result = adminService.insertBoardNofiles(board);
+//		}else {
+//			result = adminService.insertBoard(board);
+//		}
+//		result = adminService.insertPostContent(board);
 		
 		return "redirect:/admin/writeNotice.do";
 	}
