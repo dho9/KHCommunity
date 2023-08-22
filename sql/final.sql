@@ -110,6 +110,11 @@ create sequence seq_store_id;
 create sequence seq_ticket_id;
 create sequence seq_chat_message_no;
 create sequence seq_curriculum_id;
+create sequence seq_cal
+	start with 1
+	increment by 1
+	minvalue 1
+	maxvalue 99999;
 --===============================================
 -- 테이블 생성
 --===============================================
@@ -354,6 +359,21 @@ CREATE TABLE delete_comment (
    comment_level   number      ,
    comment_ref   number      ,
    comment_created_at   date      
+);
+
+create table calendar(
+	id number primary key,
+	groupId NUMBER,
+	title varchar2(50),
+	writer varchar2(50),
+	content varchar2(1000),
+	start1 date,
+	end1 date,
+	allDay number(1),
+	textColor varchar(50),
+	backgroundColor varchar2(50),
+	borderColor varchar2(50),
+    member_id varchar2(50)
 );
 
 ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
@@ -1086,6 +1106,9 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
+
+    
+
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
@@ -1100,81 +1123,6 @@ VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
 
 INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
 VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-SELECT
-    b.board_name,
-    COUNT(p.post_id) AS post_count
-FROM
-    board b
-LEFT JOIN
-    post p ON b.board_id = p.board_id
-GROUP BY
-    b.board_name
-ORDER BY
-    post_count DESC, board_name;
-    
-select 
-	p.post_id,
-    p.title,
-    p.post_created_at,
-    p.post_like,
-    c.content,
-    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
-from
-    post p join post_content c
-    	on
-    p.post_id = c.post_id
-where
-    p.post_id=1;
-    
-    select 
-  		p.post_id,
-	    p.title,
-	    p.post_created_at,
-	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
-	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
-	    p.board_id
-	from
-	    post p join post_content c
-	    	on
-	    p.post_id = c.post_id
-	where
-	    p.board_id=1;
-        
-select * from post_like;
-select * from post;
-select 
-  		p.post_id,
-        p.board_id,
-	    p.title,
-	    p.post_created_at,
-	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
-	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
-	from
-	    post p join post_content c
-	    	on
-	    p.post_id = c.post_id
-	where
-	    p.post_id=1;
-delete post where post_id=15;
-select * from board where board_id = 3;
-   
-create table calendar(
-	id number primary key,
-	groupId NUMBER,
-	title varchar2(50),
-	writer varchar2(50),
-	content varchar2(1000),
-	start1 date,
-	end1 date,
-	allDay number(1),
-	textColor varchar(50),
-	backgroundColor varchar2(50),
-	borderColor varchar2(50),
-    member_id varchar2(50)
-);
 
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test2', '3', 'y', '23/08/18', sysdate, 'p');
@@ -1239,15 +1187,12 @@ VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
 
-create sequence seq_cal
-	start with 1
-	increment by 1
-	minvalue 1
-	maxvalue 99999;
-    
 INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
+
+    
+
 select * from calendar;
 
 
