@@ -9,6 +9,7 @@ import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 
 public interface BoardService {
@@ -50,5 +51,9 @@ public interface BoardService {
 	List<PopularBoardDto> findByPopularPost();
 
 	int createComment(CreateCommentDto comment, String memberId);
+	int insertBoardNofiles(BoardCreateDto board);
+
+	PostAttachment findAttachById(int id);
+
 
 }

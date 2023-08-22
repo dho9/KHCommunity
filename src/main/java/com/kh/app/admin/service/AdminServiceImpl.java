@@ -15,11 +15,13 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -32,10 +34,6 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	private AdminRepository adminRepository;
 	
-	@Override
-	public List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters) {
-		return adminRepository.findAllEmployee(filters);
-	}
 	
 	public int todayNewStudentCount() {	
 		return adminRepository.todayNewStudentCount();
@@ -130,6 +128,15 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters, Map<String, Object> params) {
+		int limit = (int)params.get("limit");
+		int page = (int)params.get("page");
+		int offset = (page-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findAllEmployee(filters, rowBounds);
+	}
+	
+	@Override
 	public int updateAdminStudent(AdminStudentListDto student) {
 		return adminRepository.updateAdminStudent(student);
 	}
@@ -145,6 +152,11 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.totalCountStudents(filters);
 	}
 
+	@Override
+	public int totalCountEmployees(Map<String, Object> filters) {
+		return adminRepository.totalCountEmployees(filters);
+	}
+	
 	public int updateAdminEmployee(AdminEmployeeListDto employee) {
 		return adminRepository.updateAdminEmployee(employee);
 	}
@@ -172,7 +184,16 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int deleteAdminTeacher(String memberId) {
 		return adminRepository.deleteAdminTeacher(memberId);
-
+	}
+	
+	@Override
+	public int deleteAdminAuthority(String memberId) {
+		return adminRepository.deleteAdminAuthority(memberId);
+	}
+	
+	@Override
+	public int insertTeacher(TeacherCreateDto teacher) {
+		return adminRepository.insertTeacher(teacher);
 	}
 	
 	@Override
@@ -184,4 +205,44 @@ public class AdminServiceImpl implements AdminService {
 	public List<Curriculum> findAllCurriculum() {
 		return adminRepository.findAllCurriculum();
 	}
+	
+	@Override
+	public List<AdminStudentApproveDto> adminStudentApprovementList(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.adminStudentApprovementList(rowBounds);
+	}
+	
+	@Override
+	public int totalCountNonApprovementStudents() {
+		return adminRepository.totalCountNonApprovementStudents();
+	}
+	
+	@Override
+	public int approvementStudent(AdminStudentListDto student) {
+		return adminRepository.approvementStudent(student);
+	}
+	
+	@Override
+	public int adminStudentApprovementNo(AdminStudentListDto student) {
+		return adminRepository.adminStudentApprovementNo(student);
+	}
+	
+	@Override
+	public List<CurriculumListDto> adminCourseList(Map<String, Object> filters, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return adminRepository.adminCourseList(filters, rowBounds);
+	}
+	
+	@Override
+	public int totalCountCurriculum(Map<String, Object> filters) {
+		return adminRepository.totalCountCurriculum(filters);
+	}
+	
 }

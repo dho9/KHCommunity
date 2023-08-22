@@ -12,17 +12,19 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
 public interface AdminService {
 
-	List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters);
+	List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters, Map<String, Object> params);
 	
 	int todayNewStudentCount();
 
@@ -78,9 +80,27 @@ public interface AdminService {
 
 	int deleteAdminTeacher(String memberId);
 
+	int totalCountEmployees(Map<String, Object> filters);
+
+	int deleteAdminAuthority(String memberId);
+
+	int insertTeacher(TeacherCreateDto teacher);
 	int sendMessageToStudent(MessageBox message);
 
 	List<Curriculum> findAllCurriculum();
+
+	List<AdminStudentApproveDto> adminStudentApprovementList(Map<String, Object> params);
+
+	int totalCountNonApprovementStudents();
+
+	int approvementStudent(AdminStudentListDto student);
+
+	int adminStudentApprovementNo(AdminStudentListDto student);
+
+	List<CurriculumListDto> adminCourseList(Map<String, Object> filters, Map<String, Object> params);
+
+	int totalCountCurriculum(Map<String, Object> filters);
+
 
 
 }

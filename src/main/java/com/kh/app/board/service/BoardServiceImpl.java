@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
@@ -12,6 +13,7 @@ import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.repository.BoardRepository;
 
@@ -88,9 +90,28 @@ public class BoardServiceImpl implements BoardService {
 	public PostLike findPostLikeCount(int postId) {
 		return boardRepository.findPostLikeCount(postId);
 	}
+	
+	@Override
+	public int insertBoardNofiles(BoardCreateDto board) {
+		return boardRepository.insertBoardNofiles(board);
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int insertBoard(BoardCreateDto board) {
-		return boardRepository.insertBoard(board);
+		int result = 0;
+		
+		result = boardRepository.insertBoard(board);
+		
+		List<PostAttachment> attachments = board.getAttachments();
+		if(attachments != null && !attachments.isEmpty()) {
+			for(PostAttachment attach : attachments) {
+				attach.setPostId(board.getPostId());
+				result = boardRepository.insertPostAttach(attach);
+			}
+		}
+		
+		return result;
 	}
 	
 	@Override
@@ -112,5 +133,11 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.createComment(comment,memberId);
 	}
+	
+	@Override
+	public PostAttachment findAttachById(int id) {
+		return boardRepository.findAttachById(id);
+	}
+	
 }
 

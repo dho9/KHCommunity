@@ -76,39 +76,47 @@
 		</c:if>
 		<c:if test="${not empty postDetail}">
 			<article>
-				<a class="article"> <img class="picture large"
-					src="${pageContext.request.contextPath}/resources/images/usericon.png" />
-					<div class="profile">
-						<h3 class="large" style="font-size: 15px;">익명</h3>
-						<time class="large">
-							<fmt:parseDate value="${postDetail.postCreatedAt}"
-								pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt" />
-							<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm" />
-						</time>
-					</div>
-					<ul class="status">
-						<li class="messagesend">쪽지</li>
-						<li class="abuse">신고</li>
-					</ul>
-					<hr>
-					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h1>
-						<br>
-						<p class="large">${postDetail.content}</p>
-						<br>
-						<c:forEach items="${postDetail.tag}" var="tag">
-							<span class="tag">${tag}</span>
-						</c:forEach>
-						<ul class="status">
-							<%-- 좋아요 버튼 --%>
-							<li><img class="like" data-value="${postDetail.postId}"
-								style="cursor: pointer;"
-								src="${pageContext.request.contextPath}/resources/images/like.png" /></li>
-							<li class="vote" style="margin-top: 5px;">${postDetail.postLike}</li>
-							<li><img
-								src="${pageContext.request.contextPath}/resources/images/comment.png" /></li>
-							<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li>
-						</ul>
-						<hr></a>
+					<a class="article" >
+				  		<img class="picture large" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
+				  		<div class="profile">
+				  			<c:if test="${postDetail.anonymousCheck eq 'y'}">
+					  			<h3 class="large">익명</h3>
+					  		</c:if>
+					  		<c:if test="${postDetail.anonymousCheck ne 'y'}">
+						  		<h3 class="large">${postDetail.memberId}</h3>
+					  		</c:if>
+						  	<time class="large">
+							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+							  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
+						  	</time>
+				  		</div>
+				  		<ul class="status">
+				  			<li class="messagesend">쪽지</li>
+				  			<li class="abuse">신고</li>
+				  		</ul>
+					  	<hr>
+					  	<h1 class="large" style="font-size : 20px;">${postDetail.title}</h2> <br>
+					  	<c:if test="${postAttach != null }">
+						  	<img 
+						  		src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
+						  		style="width: 747px;">
+						  	<p class="large">${postDetail.content}</p> <br>
+					  	</c:if>
+					  	<c:if test="${postAttach == null }">
+						  	<p class="large">${postDetail.content}</p> <br>
+					  	</c:if>
+					  	<c:forEach items="${postDetail.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
+					  	<ul class="status">
+					  		<%-- 좋아요 버튼 --%>
+					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li class="vote" style="margin-top: 5px;">${postDetail.postLike}</li>
+					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
+					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
+					  	</ul>
+					  	<hr>
+					</a>
 			</article>
 		</c:if>
 		<div class="comments" style="display: block">

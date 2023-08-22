@@ -1,9 +1,12 @@
 package com.kh.app.board.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +30,10 @@ import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
+import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.member.entity.MemberDetails;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/board")
 @Transactional
 public class BoardController {
+	
 	
 	@Autowired
 	private BoardService boardService;
@@ -209,9 +215,11 @@ public class BoardController {
 		
 		Board board = boardService.findBoardName(postDetail.getBoardId());
 		log.debug("boardddddddddddd={}",postDetail);
+		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
 		
+		model.addAttribute("postAttach",postAttach);
 	}
 	
 	
@@ -286,30 +294,34 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@RequestParam String[] _tags,
+			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
 		
 			log.debug("loginMember = {}", member);
 			List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+			
 			// 1. 파일저장
-//			List<PostAttachment> attachments = new ArrayList<>(); 
-//			for(MultipartFile file : files) {
-//				if(file != null) {
-//					String originalFilename = file.getOriginalFilename();
-//					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-//					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-//					file.transferTo(destFile);	
-//					
-//					PostAttachment attach = 
-//							PostAttachment.builder()
-//							.postOriginalFilename(originalFilename)
-//							.postRenamedFilename(renamedFilename)
-//							.build();
-//					attachments.add(attach);
-//				}
-//				
-//			}
+			int result = 0;
+			List<PostAttachment> attachments = new ArrayList<>(); 
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.build();
+					
+					attachments.add(attach);
+				}
+				
+			}
 		
 			BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
@@ -317,14 +329,20 @@ public class BoardController {
 				.boardId(boardId)
 				.memberId(member.getMemberId())
 				.tags(tags)
-//				.attachments(attachments)
+				.attachments(attachments)
 				.build();
 		log.debug("baord = {}", board);
-		int result = boardService.insertBoard(board);
+		
+		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+			result = boardService.insertBoardNofiles(board);
+		}else {
+			result = boardService.insertBoard(board);
+		}
 		result = boardService.insertPostContent(board);
 		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 	}
+
 	
 	@GetMapping("/popularPost.do")
 	@ResponseBody

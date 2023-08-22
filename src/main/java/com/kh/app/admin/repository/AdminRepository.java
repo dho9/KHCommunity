@@ -17,11 +17,13 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -32,7 +34,7 @@ public interface AdminRepository {
 	@Select("select count(*) from student where substr(to_char(student_enroll_date), 1, 9) = to_date(sysdate, 'yy/MM/dd')")
 	int todayNewStudentCount();
 
-	@Select("select count(*) from student where approve_check = 'n'")
+	@Select("select count(*) from student where approve_check = 'i'")
 	int approvementStudentCount();
 
 	@Select("select count(*) from vacation where vacation_approve_check = '2'")
@@ -91,7 +93,7 @@ public interface AdminRepository {
 			+ "    v.vacation_approve_check = '2'")
 	List<AdminVacationApproveDto> vacationApproveListThree();
 
-	List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters);
+	List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters, RowBounds rowBounds);
 
 	@Select("SELECT m.* FROM member m INNER JOIN authority a ON m.member_id = a.member_id WHERE a.auth = 'ADMIN' AND m.member_id = #{id}")
 	Member findById(String id);
@@ -136,12 +138,33 @@ public interface AdminRepository {
 	@Delete("delete from member where member_id = #{memberId}")
 	int deleteAdminTeacher(String memberId);
 
+	int totalCountEmployees(Map<String, Object> filters);
+
+	@Delete("delete from authority where member_id = #{memberId}")
+	int deleteAdminAuthority(String memberId);
+
+	@Insert("insert into teacher values (#{teacherId}, sysdate)")
+	int insertTeacher(TeacherCreateDto teacher);
 	@Insert("insert into message_box values (seq_message_id.NEXTVAL, #{sendId}, #{receiveId}, #{messageContent}, default, default, 'n')")
 	int sendMessageToStudent(MessageBox message);
 
 	@Select("select * from curriculum")
 	List<Curriculum> findAllCurriculum();
 
+	@Select("SELECT s.student_id, m.member_name, s.student_type, s.approve_check, s.approve_request_date FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
+	List<AdminStudentApproveDto> adminStudentApprovementList(RowBounds rowBounds);
 
+	@Select("SELECT count(*) FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
+	int totalCountNonApprovementStudents();
+
+	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', approve_complete_date = sysdate where student_id = #{studentId}")
+	int approvementStudent(AdminStudentListDto student);
+
+	@Update("update student set approve_check = 'n' where student_id = #{studentId} ")
+	int adminStudentApprovementNo(AdminStudentListDto student);
+
+	List<CurriculumListDto> adminCourseList(Map<String, Object> filters, RowBounds rowBounds);
+
+	int totalCountCurriculum(Map<String, Object> filters);
 
 }
