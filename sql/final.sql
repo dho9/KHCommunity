@@ -220,6 +220,10 @@ CREATE TABLE post (
    tag   varchar2(200)
 );
 
+alter table post 
+add anonymous_check char(1);
+
+
 CREATE TABLE post_content (
    post_id   number      NOT NULL,
    board_id   number      NOT NULL,
@@ -1086,9 +1090,11 @@ select * from teacher;
 select * from employee;
 select * from scheduler;
 select * from vacation;
-select * from board;
-select * from post;
-select * from post_content;
+select * from board order by 1;
+insert into board values (seq_board_id.nextval, '직원게시판', '소통', 'employeeBoardList');
+select * from post order by 1;
+update post set anonymous_check = 'n' where post_id = 12;
+select * from post_content order by 1;
 select * from post_comment;
 select * from favorite;
 select * from post_like;
