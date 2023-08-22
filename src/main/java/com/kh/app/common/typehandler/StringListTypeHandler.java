@@ -27,7 +27,7 @@ public class StringListTypeHandler extends BaseTypeHandler<List<String>> {
 		}
 		ps.setString(i, value);
 	}
-
+	
 	@Override
 	public List<String> getNullableResult(ResultSet rs, String columnName) throws SQLException {
 		String value = rs.getString(columnName);
