@@ -89,6 +89,6 @@ public interface BoardRepository {
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
-
+	List<BoardListDto> sharingInformationBoardFindAll();
 
 }

@@ -138,6 +138,11 @@ public class BoardServiceImpl implements BoardService {
 	public PostAttachment findAttachById(int id) {
 		return boardRepository.findAttachById(id);
 	}
+
+	@Override
+	public List<BoardListDto> sharingInformationBoardFindAll() {
+		return boardRepository.sharingInformationBoardFindAll();
+	}
 	
 }
 
