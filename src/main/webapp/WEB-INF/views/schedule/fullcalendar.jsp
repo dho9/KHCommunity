@@ -3,9 +3,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ include file="/WEB-INF/views/common/header.jsp"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+<%@ include file="/WEB-INF/views/common/header.jsp"%>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+<!-- bootstrap css -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+@font-face {
+    font-family: 'HakgyoansimWoojuR';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
 #calendar {
 	margin: 3% auto;
 	width: 40%;
@@ -49,9 +59,75 @@
     border-color: royalblue;
     color: white;
 } */
+@font-face {
+    font-family: 'MBC1961GulimM';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/MBC1961GulimM.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'NanumSquareNeo-Variable';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+#calendarTitle {
+	 font-family: 'MBC1961GulimM'; font-size: 50px; color: royalblue; margin: 3% 2% 3% 30%; text-shadow: 1px 1px 0 grey;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+  animation: fadeIn 0.3s ease-in-out; /* 애니메이션 효과 추가 */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background-color: white;
+  margin: 40% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 100%; /* 너비를 조정하여 크기를 늘립니다 */
+  position: relative;
+  animation: slideIn 0.3s ease-in-out;
+}
+@keyframes slideIn {
+  from {
+    transform: translateY(-100px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+
+.close {
+  color: #aaaaaa;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+}
+#calTitleDiv {vertical-align: middle;}
+#calTitleDiv h1{display:inline-block;}
+#openModalButton{display:inline-block; width: 150px; font-family: 'NanumSquareNeo-Variable'; font-size: 20px; height: 55px; border-radius: 20px; margin-top: -25;}
 </style>
-
-
 <!DOCTYPE html>
 <html lang='en'>
 <meta charset='utf-8' />
@@ -67,9 +143,57 @@
         calendar.render();
       });
 
-    </script>
-
+</script>
+<div id="calTitleDiv">    
+<h1 id="calendarTitle">Schedule <i class="bi bi-calendar-heart"></i></h1>
+<button type="button" class="btn btn-outline-primary" id="openModalButton">Add Event</button>
+</div>
 <div id='calendar'></div>
+<div class="modal" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalLabel">일정 추가</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModalButton">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<sec:authentication property="principal" var="loginMember"/>
+        <form:form id="eventForm" action="${pageContext.request.contextPath}/calendar/calendar.do?method=data" method="post">
+          <div class="form-group">
+          	<input type="hidden" name="memberId" id="memberId" value="${loginMember.username}">
+            <label for="eventTitle">일정 제목</label>
+            <input type="text" class="form-control" id="eventTitle" name="title">
+          </div>
+          <div class="form-group">
+            <label for="startDate">시작 날짜</label>
+            <input type="date" class="form-control" id="startDate" name="start">
+          </div>
+          <div class="form-group">
+            <label for="endDate">종료 날짜</label>
+            <input type="date" class="form-control" id="endDate" name="end">
+          </div>
+          <div class="form-group">
+            <label for="colorSelect">색상</label>
+            <select class="form-control" id="colorSelect" name="colorSelect">
+  				<option value="red">빨강</option>
+  				<option value="royalblue">파랑</option>
+  				<option value="yellow">노랑</option>
+  				<option value="green">초록</option>
+			</select>
+			<input type="hidden" name="backgroundColor" id="backgroundColor">
+           </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="submit" class="btn btn-primary" id="saveEventButton">저장</button>
+      </div>
+        </form:form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -114,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
     	  
     	    $.ajax({
     	        type: "get",
-    	        url: "${pageContext.request.contextPath}/calendar.do?method=data",
+    	        url: "${pageContext.request.contextPath}/calendar/calendar.do?method=data",
     	        dataType: "json",
     	        success: function(responseData) {
     	            console.log("responseData =", responseData);
@@ -123,8 +247,10 @@ document.addEventListener('DOMContentLoaded', function() {
     	            responseData.forEach(function(item) {
     	                var event = {
     	                    title: item.title,
-    	                    start: item.start, 
-    	                    end: item.end 
+    	                    start: item.start,
+    	                    end: item.end,
+    	                    backgroundColor: item.backgroundColor,
+    	                    borderColor: item.backgroundColor
     	                };
     	                events.push(event);
     	            });
@@ -136,11 +262,85 @@ document.addEventListener('DOMContentLoaded', function() {
     	        }
     	    });
     	}
-    
-  });
+      
 
+    });
+    
+ 	// 모달 관련 코드
+    var openModalButton = document.getElementById('openModalButton');
+    var closeModalButton = document.getElementById('closeModalButton');
+    var eventModal = document.getElementById('eventModal');
+
+    openModalButton.addEventListener('click', function() {
+      eventModal.style.display = 'block';
+    });
+
+    closeModalButton.addEventListener('click', function() {
+      eventModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+      if (event.target == eventModal) {
+        eventModal.style.display = 'none';
+        
+      }
+    });
+    
+    var saveEventButton = document.getElementById('saveEventButton');
+    var eventForm = document.getElementById('eventForm');
+    var colorSelect = document.getElementById('colorSelect');
+
+    saveEventButton.addEventListener('click', function() {
+      /* event.preventDefault();
+      
+      var formData = new FormData(eventForm);
+      var title = formData.get('eventTitle');
+      var startDate = formData.get('startDate');
+      var endDate = formData.get('endDate');
+      var color = formData.get('colorSelect');
+      var backgroundColor = formData.get('backgroundColor');
+      var memberId = formData.get('calId');
+      
+      */
+
+	  /*
+      var eventData = {
+        title: title,
+        start: startDate,
+        end: endDate,
+        backgroundColor: backgroundColor,
+        memberId : memberId
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: "${pageContext.request.contextPath}/calendar/calendar.do?method=data", // 실제 컨트롤러 URL로 변경
+        data: formData, 
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}')},
+        contentType: 'application/json', // 데이터 타입 지정
+        success: function(response) {
+          // 성공적으로 데이터를 전송한 후 처리할 내용
+          console.log('이벤트 데이터 전송 성공:', response);
+          eventModal.style.display = 'none'; // 모달 닫기
+          // 원하는 동작 수행 (ex: 일정을 캘린더에 추가)
+        },
+        error: function(xhr, textStatus, errorThrown) {
+          // 오류 발생 시 처리할 내용
+          console.error('오류 발생:', errorThrown);
+          // 오류 처리에 대한 추가 작업 수행
+        }
+      }); */
+      
+      
+      
+    });
     calendar.render();
   });
 
+	document.getElementById('colorSelect').addEventListener('change', function() {
+	  	document.getElementById('backgroundColor').value = document.getElementById('colorSelect').value;
+    	console.log(document.getElementById('backgroundColor').value);
+	});
     </script>
 </html>

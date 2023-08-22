@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/ticket/*").permitAll()
 			.antMatchers("/member/*").permitAll()
 			.antMatchers("/store/*").permitAll()
+			.antMatchers("/calendar/**").permitAll()
 			.anyRequest().authenticated();
 		
 		http.formLogin() // 
@@ -81,7 +82,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.userService(oauth2UserService);
 		
 	}
-	
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

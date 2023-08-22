@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BoardListDto {
 	private int postId; 
+	private String memberId; 
 	private String title;
 	private String content;
 	private LocalDateTime postCreatedAt;
@@ -20,4 +21,6 @@ public class BoardListDto {
 	private int commentCount;
 	private int boardId;
 	private List<String> tag;
+	private String anonymousCheck; 
 }
+
