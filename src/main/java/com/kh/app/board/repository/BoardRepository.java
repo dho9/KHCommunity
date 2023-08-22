@@ -75,7 +75,7 @@ public interface BoardRepository {
 	@Insert("insert into post_attachment values(seq_post_attach_id.nextval, #{postId}, #{boardId}, #{postOriginalFilename}, #{postRenamedFilename})")
 	int insertPostAttach(PostAttachment attach);
 
-	@Select("select * from board where board_id = #{boardId}")
+	@Select("select board_id, board_name, board_category from board where board_id = #{boardId}")
 	Board findBoardName(int boardId);
 
 	@Select("select * from post_attachment where post_id = #{id}")

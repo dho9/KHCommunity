@@ -28,12 +28,11 @@
 				  		<img class="picture large" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<div class="profile">
 				  			<c:if test="${postDetail.anonymousCheck eq 'y'}">
-					  			<h3 class="medium">익명</h3>
+					  			<h3 class="large">익명</h3>
 					  		</c:if>
 					  		<c:if test="${postDetail.anonymousCheck ne 'y'}">
-						  		<h3 class="medium">${board.memberId}</h3>
+						  		<h3 class="large">${postDetail.memberId}</h3>
 					  		</c:if>
-					  		<h3 class="large" style="font-size : 15px;">익명</h3>
 						  	<time class="large">
 							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
 							  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
