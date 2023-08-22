@@ -25,7 +25,6 @@ input[name=_tags] {
 	margin-right: 20px;
 }
 </style>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -61,6 +60,9 @@ input[name=_tags] {
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
+					  	<c:forEach items="${board.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
 					  	<ul class="status">
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
