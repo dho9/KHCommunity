@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
@@ -144,6 +145,18 @@ public class MemberServiceImpl implements MemberService {
 		result = memberRepository.updateApproveRequestDate(attach);
 		return result;
 	}
+
+	@Override
+	public int deleteMember(String memberId) {
+		return memberRepository.deleteMember(memberId);
+	}
+
+	@Override
+	public AdminStudentListDto findByMemberInfo(String memberId) {
+		return memberRepository.findByMemberInfo(memberId);
+	}
+
+	
 
 	
 

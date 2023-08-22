@@ -21,3 +21,4 @@ public class BoardListDto {
 	private int boardId;
 	private List<String> tag;
 }
+
