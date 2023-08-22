@@ -212,7 +212,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<!--희진 회원탈퇴 시작  -->
 				<div id="delete-container" class="myPageDivs">
 					<%-- principal을 변수 loginMember 저장 --%>					
-					<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm"  style="display:none;" method="post">
+					<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm"   method="post">
 						<tr>
 							<th>아이디 : </th>
 							<td>
@@ -278,6 +278,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 					</form:form>
 				</div>
 			<!-- 희진 회원탈퇴 끝 -->
+			
 			<!-- 추가된 html -->
 			<div class="myPageDivs" id="certificationDiv">		
 				<h1>학생인증</h1>
@@ -321,6 +322,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			}
 			
 		};
+		
 		const deleteMember = () => {
 			if(confirm("정말 탈퇴하시겠습니까?"))
 				document.memberDelFrm.submit();

@@ -2,9 +2,7 @@ package com.kh.app.member.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -34,17 +32,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.app.common.KhCoummunityUtils;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
-
+import com.kh.app.member.dto.MemberLoginDto;
 import com.kh.app.member.dto.MemberUpdateDto;
 import com.kh.app.member.entity.Member;
-
-
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.service.MemberService;
-import com.nimbusds.openid.connect.sdk.assurance.evidences.attachment.Attachment;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -203,5 +199,47 @@ public class MemberSecurityController {
 
 		return "redirect:/member/myPage.do";
 	}
-
+	
+	@PostMapping("/memberDelete.do")
+	public String memberDelete(
+			@AuthenticationPrincipal MemberDetails principal,
+			@Valid MemberLoginDto _member,
+			BindingResult bindingResult, 
+			RedirectAttributes redirectAttr) {
+	
+	
+		String memberId = _member.getMemberId();
+		log.debug("★memberId = {}", memberId);
+		
+		// 1. db수정요청
+		int result = memberService.deleteMember(memberId);
+		
+		log.debug("★★result = {}", result);
+		
+	    if (result > 0) {
+	    	redirectAttr.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다.");
+	        return "redirect:/";
+	    } 
+	        else {
+	        redirectAttr.addFlashAttribute("message", "회원 탈퇴에 실패했습니다. 다시 시도해주세요.");
+	        return "redirect:/member/myPage.do";
+	    }
+	
+//		return "redirect:/";
+	
+	}
+	
+//	@GetMapping("/myPage.do")
+//    public String myPage(@Valid AdminStudentListDto studentList, Model model, @AuthenticationPrincipal MemberDetails principal) {
+//        // 인증된 회원 정보를 사용하여 repository에 저장된 정보를 가져옴
+//		studentList = memberService.findByMemberInfo(principal.getMemberId());
+//        log.debug("★★★★★studentList"+studentList);
+//        // 가져온 정보를 뷰에 전달하기 위해 Model 객체에 저장
+//        model.addAttribute("studentList", studentList);
+//        
+//        return "/myPage"; 
+//    }
 }
+
+	
+

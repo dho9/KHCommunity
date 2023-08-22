@@ -1,13 +1,13 @@
 --=============================================
 -- 계정
 --=============================================
-
+--
 --alter session set "_oracle_script" = true;
 --
 --create user kh
 --identified by kh
 --default tablespace users;
-
+--
 --alter user kh quota unlimited on users;
 --
 --grant connect, resource to kh;
@@ -1056,6 +1056,8 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 
 delete teacher where teacher_id = 'ehdgus';
 delete from member where member_id = 'test';
+
+
 
 select * from post_attachment;
 select * from member;
