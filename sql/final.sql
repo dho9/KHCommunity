@@ -265,6 +265,7 @@ CREATE TABLE message_box (
    recieve_id   varchar2(20)      NOT NULL,
    message_content   varchar2(2000),
    send_at   date   DEFAULT sysdate,
+   anonymous_check char(1),
    read_check   char(1)
 );
 

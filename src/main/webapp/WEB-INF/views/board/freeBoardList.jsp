@@ -81,7 +81,14 @@ input[name=_tags] {
 	    const articlesContainer = document.querySelector(".articles");
 
 	    const formHtml = `
-	      <form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 63%;">
+	      <form:form 
+	      	name="createFrm" 
+	      	class="hidden" 
+	      	action="${pageContext.request.contextPath}/board/createPost.do" 
+	      	id="createForm" 
+	      	method="post" 
+	      	style="height: 63%;"
+      		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
