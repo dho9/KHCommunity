@@ -151,6 +151,29 @@
 <form:form name="loadCommentFrm"></form:form>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+	const token = document.loadCommentFrm._csrf.value;
+	const currentURL = window.location.href;
+	const urlParams = new URLSearchParams(new URL(currentURL).search);
+	const postId = urlParams.get('id');
+	console.log(postId);
+	console.log(token);
+    $.ajax({
+    	url : "${pageContext.request.contextPath}/board/loadComment.do",
+    	headers: {
+            "X-CSRF-TOKEN": token
+        },
+    	data : {
+    		postId : postId
+    	},
+    	method : "POST",
+    	success(data){
+    		console.log("ss");
+    	}
+    });
+
+    // 이후 코드 작성
+});
 
 	let anonyCk = false;
 	document.querySelectorAll('.option li.anonym').forEach((li) => {
@@ -204,6 +227,7 @@
 <script>
 	// load됐을때 공감(좋아요) 했는지 확인
 	window.onload = () => {
+		
 		console.log(document.querySelector('.like').dataset.value);
 		
 		$.ajax({
@@ -231,25 +255,7 @@
             }
 		});
 		
-		const token = document.loadCommentFrm._csrf.value;
-		const currentURL = window.location.href;
-		const urlParams = new URLSearchParams(new URL(currentURL).search);
-		const postId = urlParams.get('id');
-		console.log(postId);
-		console.log(token);
-	    $.ajax({
-	    	url : "${pageContext.request.contextPath}/board/loadComment.do",
-	    	headers: {
-	            "X-CSRF-TOKEN": token
-	        },
-	    	data : {
-	    		postId : postId
-	    	},
-	    	method : "POST",
-	    	success(data){
-	    		console.log("ss");
-	    	}
-	    });
+		
 		
 		
 	};
