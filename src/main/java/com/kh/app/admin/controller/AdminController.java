@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,15 +28,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.app.admin.service.AdminService;
 import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
@@ -410,4 +414,21 @@ public class AdminController {
 	@GetMapping("/writeNotice.do")
 	public void writeNotice() {}
 
+	@PostMapping("/writeNotice.do")
+	public String writeNotice(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) {
+		log.debug("memberId = {}", member.getMemberId());
+		BoardCreateDto board = BoardCreateDto.builder()
+				.title(title)
+				.content(text)
+				.boardId(boardId)
+				.memberId(member.getMemberId())
+				.build();
+		
+		return "redirect:/admin/writeNotice.do";
+	}
 }
