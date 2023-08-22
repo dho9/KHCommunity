@@ -36,6 +36,7 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
@@ -195,6 +196,10 @@ public class AdminController {
 	    // totalPages 계산
 	    int totalPages = (int) Math.ceil((double) totalCount / limit);
 	    model.addAttribute("totalPages", totalPages);
+	    
+	    // 커리큘럼 등록 위한 불러오기
+	    List<Curriculum> curriculums = adminService.findAllCurriculum();
+	    model.addAttribute("curriculums", curriculums);
 	  
 	}
 	

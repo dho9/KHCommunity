@@ -136,6 +136,13 @@
 								<!-- 학생타입 : 수료생 -->
 								<input type="radio" name="studentType" id="modalStudentType3" value="p">수료생
                           <br>
+                          커리큘럼
+                          <br>
+                          <select>
+                          	<c:forEach items="${curriculums}" var="curriculum">
+	                          	<option value="${curriculum.curriculumId}">${curriculum.curriculumName}(${curriculum.classId}, ${curriculum.teacherId}) 수료일: ${curriculum.curriculumEndAt}</option>
+                          	</c:forEach>
+                          </select>
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                           <button class="btn btn-danger" type="button" id="btnBan">강퇴</button> 
@@ -161,11 +168,11 @@
 		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
 		                <input name="receiveId" id="receiveStudent" readonly>
 		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
-		                <button id="btnSend" class="btn btn-primary">전송</button>
 		            </div>
+	            	<div class="modal-footer">
+		                <button id="btnSend" class="btn btn-primary">전송</button>	            
+	            	</div>
 	            </form:form>
-	            <div class="modal-footer">
-	            </div>
 	        </div>
 	    </div>
 </div>
