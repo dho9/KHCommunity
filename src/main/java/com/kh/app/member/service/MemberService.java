@@ -2,6 +2,7 @@ package com.kh.app.member.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
@@ -9,6 +10,7 @@ import com.kh.app.member.entity.StudentAttachment;
 
 
 public interface MemberService extends UserDetailsService{
+	
 	int insertMember(MemberCreateDto member);
 
 	Member findMemberById(String memberId);
@@ -21,6 +23,10 @@ public interface MemberService extends UserDetailsService{
 	Student findStudentById(String memberId);
 
 	int insertStudentAttach(StudentAttachment attach);
+
+	int deleteMember(String memberId);
+
+	AdminStudentListDto findByMemberInfo(String memberId);
 
 
 
