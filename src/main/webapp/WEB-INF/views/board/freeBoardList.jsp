@@ -5,7 +5,16 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-
+<style>
+.anonymous{
+	float: right;
+	background-color: white;
+	margin-right: 13px;
+}
+.anonymousImg{
+	width: 59px;
+}
+</style>
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -60,6 +69,7 @@
     <form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
+  
 	function showInputForm() {
 		 
 	    const writeButton = document.getElementById("writeArticleButton");
@@ -75,6 +85,7 @@
 	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
+	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="n">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -113,9 +124,13 @@
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+        	<button type="button" class="anonymous" onclick="anonymousCheck()">
+        		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/익명체크.png">
+        	</button>
 	      </form:form>
 	    `;
-
+	    
+	   
 	    articlesContainer.insertAdjacentHTML("afterbegin", formHtml);
 	    const createForm = document.getElementById("createForm");
 	    const titleInput = document.getElementById("title");
@@ -178,13 +193,25 @@
 	    }
 	 }
 		
-	  function hideInputForm() {
-	    const writeButton = document.getElementById("writeArticleButton");
-	    const createForm = document.getElementById("createForm");
+	// 폼 숨기기
+	function hideInputForm() {
+	  const writeButton = document.getElementById("writeArticleButton");
+	  const createForm = document.getElementById("createForm");
 	
-	    writeButton.style.display = "block";
-	    createForm.remove();
-	  }
+	  writeButton.style.display = "block";
+	  createForm.remove();
+	}
+	
+	// 익명체크
+	function anonymousCheck() {
+		const writeButton = document.getElementById("writeArticleButton");
+		  const createForm = document.getElementById("createForm");
+		
+		  writeButton.style.display = "block";
+		  createForm.remove();
+	}
+  
+	
 	  
 	  
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
@@ -279,3 +306,6 @@
     </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+
+
+
