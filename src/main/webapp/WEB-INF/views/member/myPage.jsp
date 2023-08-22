@@ -36,17 +36,18 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 
 /* 정보수정 폼 */
 #update-container {display: flex; justify-content: center; align-items: center; min-height: 80vh; font-family: 'HakgyoansimWoojuR'; }
-form {width: 500px; padding: 32px; background-color: #fff; border-radius: 8px; text-align: left;}
+#delete-container form {width: 500px; padding: 78px; background-color: #fff; border-radius: 8px; text-align: left;}
+#update-container form {width: 500px; background-color: #fff; border-radius: 8px; text-align: left;}
 form tr {margin-bottom: 16px;}
 form th {padding-right: 16px;}
 input[type="text"], input[type="password"], input[type="date"], input[type="tel"], input[type="email"] {font-size: 16px;padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;}
 input[type="submit"], input[type="reset"] {font-size: 16px;padding: 8px 16px; margin-top: 16px; border: none; border-radius: 4px; background-color: #28a745; color: #fff; cursor: pointer;}
 input[type="submit"]:hover, input[type="reset"]:hover { background-color: #218838;}
-div#update-container{width:400px; margin:0 auto; text-align:center;}
+div#update-container{width: 483px; margin:0 auto; text-align:center;}
 div#update-container input, div#update-container select {margin-bottom:10px;}
 
 /*  추가된 css */
-/* #certificationDiv{display:none;} */
+#certificationDiv{display:none;} 
 #delete-container{display:none;}
 #update-container{display:none;}
 #certificationDiv label{ font-size: 50px; color: blue; width:90%}
@@ -63,6 +64,10 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 
 .myPageDivs{width: 90%}
 
+/* 내정보 css시작 */
+#myInfo-container h1{font-family: 'HakgyoansimWoojuR'; font-size: 50px; font-weight:bold;}
+#myInfo-container p
+/* 내정보 css끝 */
 </style>
 	<section>
 	<div id="memberInfo">
@@ -77,9 +82,10 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<h1>D-25</h1>
 		</div>
 	</div>
+	
 	<br/>
 	<div class="container">
-	<div class="container-md" style="border: 5px solid #c5d6dc; width:300px; height:515px; font-size:50px">
+	<div class="container-md" style="border: 5px solid #c5d6dc; width: 470px; height:515px; font-size:50px">
 		<div id="icons" class="container-fluid">
 		<div class="myPageIcon" id="myPageIcon1">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -140,9 +146,20 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		</div>
 		</div>	
 		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >
+		<!--희진 내정보 시작  -->
 		<div id="myInfo-container" class="myPageDivs"  name="myInfo">
-		아이디 : ${loginMember.username}
+		<h1> 내 정보 </h1>
+		<p>${studentInfo.curriculumName }반</p>
+		<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
+		<p>종강일 : ${studentInfo.curriculumEndAt }</p>
+		<p>이름 : ${loginMember.name}</p>
+		<p>아이디 : ${loginMember.username}</p>
+		<p>생일 : ${ loginMember.birthday}</p>
+		<p>전화번호 : ${ loginMember.memberPhone}</p>
+		<p>이메일 : ${ loginMember.memberEmail}</p>
 		</div>
+		<!--희진 내정보 끝 -->
+		
 		<!--희진 회원정보수정(비밀번호, 생일, 전화번호) 시작  -->
 			<div id="update-container" class="myPageDivs">
 				<%-- principal을 변수 loginMember 저장 --%>
@@ -276,13 +293,14 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 						</tr>
 						<br/>
 						<td>
-	    					<input type="submit" class="deleteBtn" value="탈퇴"/>
+	    					
+	    					<input type="button" class="btn btn-outline-success" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
 	    				</td>
 					</form:form>
 				</div>
 			<!-- 희진 회원탈퇴 끝 -->
 			<!-- 추가된 html -->
-			<div class="myPageDivs" id="certificationDiv">		
+			<div class="myPageDivs" id="certificationDiv" >		
 				<h1>학생인증</h1>
 				<form:form name="certificaitonFrm" action="${pageContext.request.contextPath}/member/certification.do" 
 					enctype = "multipart/form-data" method="post" id="certificaitonFrm">
@@ -334,9 +352,12 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		};
 		
 		const deleteMember = () => {
-			if(confirm("정말 탈퇴하시겠습니까?"))
-				document.memberDelFrm.submit();
-		}
+			  const result = confirm('정말 탈퇴하시겠습니까?');
+			 
+			  if (result === true) {
+			    document.memberDeleteFrm.submit();
+			  }
+			};
 		
 		const myPageIcon1 = document.querySelector("#myPageIcon1"); // 내정보 아이콘
 		const myPageIcon3 = document.querySelector("#myPageIcon3"); // 회원정보 수정 아이콘
@@ -347,7 +368,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		
 		
 		myPageIcon1.addEventListener("click", function() {
-			  /* hideDiv(); */
+			 hideDiv();
 			  document.querySelector("#myInfo-container").style.display = "block";
 		
 			});

@@ -46,6 +46,12 @@
     --%>
     <link href="/favicon.ico" rel="shortcut icon">
 
+<c:if test="${not empty message }">
+	<script>
+		alert('${message}'); 
+	</script>
+</c:if>
+
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
     <body>
