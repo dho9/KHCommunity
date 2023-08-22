@@ -29,9 +29,11 @@
 <meta charset="utf-8">
 <meta name="referrer" content="origin">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<%-- 
 <link type="text/css" href="/css/common.css" rel="stylesheet">
 <link type="text/css" href="/css/common.partial.css" rel="stylesheet">
-<link type="text/css" href="/css/container.community.css"
+<link type="text/css" href="/css/container.community.css" 
+--%>
 	rel="stylesheet">
 <link href="/favicon.ico" rel="shortcut icon">
 	<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/style.css" />

@@ -40,6 +40,9 @@
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
+					  	<c:forEach items="${board.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
 					  	<ul class="status">
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
