@@ -18,6 +18,7 @@ import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -30,10 +31,6 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	private AdminRepository adminRepository;
 	
-	@Override
-	public List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters) {
-		return adminRepository.findAllEmployee(filters);
-	}
 	
 	public int todayNewStudentCount() {	
 		return adminRepository.todayNewStudentCount();
@@ -128,6 +125,15 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters, Map<String, Object> params) {
+		int limit = (int)params.get("limit");
+		int page = (int)params.get("page");
+		int offset = (page-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findAllEmployee(filters, rowBounds);
+	}
+	
+	@Override
 	public int updateAdminStudent(AdminStudentListDto student) {
 		return adminRepository.updateAdminStudent(student);
 	}
@@ -143,6 +149,11 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.totalCountStudents(filters);
 	}
 
+	@Override
+	public int totalCountEmployees(Map<String, Object> filters) {
+		return adminRepository.totalCountEmployees(filters);
+	}
+	
 	public int updateAdminEmployee(AdminEmployeeListDto employee) {
 		return adminRepository.updateAdminEmployee(employee);
 	}
@@ -170,6 +181,15 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int deleteAdminTeacher(String memberId) {
 		return adminRepository.deleteAdminTeacher(memberId);
-
+	}
+	
+	@Override
+	public int deleteAdminAuthority(String memberId) {
+		return adminRepository.deleteAdminAuthority(memberId);
+	}
+	
+	@Override
+	public int insertTeacher(TeacherCreateDto teacher) {
+		return adminRepository.insertTeacher(teacher);
 	}
 }

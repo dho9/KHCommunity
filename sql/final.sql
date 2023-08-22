@@ -1249,3 +1249,17 @@ INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 select * from calendar;
+
+
+SELECT 
+	    m.member_id, 
+	    m.member_pwd, 
+	    m.member_name, 
+	    m.member_phone, 
+	    m.member_email, 
+	    m.birthday,
+	    t.teacher_enroll_date
+	FROM 
+	    member m
+	INNER JOIN 
+	    teacher t ON m.member_id = t.teacher_id;
