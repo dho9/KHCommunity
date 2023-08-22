@@ -5,27 +5,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<style>
-.bi-star, .bi-star-fill {
-	font-size: 30px;
-    color: #f8fd20;
-    float: right;
-    cursor: pointer;
-}
-input[name=_tags] {
-    font-size: 14px;
-    color: #333;
-    font-weight: bold;
-    width: 100px;
-    text-align: center;
-    height: 27px;
-    border: none;
-}
-.tag-container {
-	margin-right: 20px;
-}
-</style>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
