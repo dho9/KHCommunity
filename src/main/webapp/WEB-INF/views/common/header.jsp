@@ -62,8 +62,8 @@
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
-            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" style="text-decoration: none;">
-            		<span>관리자페이지</span>
+            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:50px;">
+            		관리자페이지
             	</a>
                <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="로그인" class="icon message">로그인</a>
                <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="회원가입" class="icon my">회원가입</a>
