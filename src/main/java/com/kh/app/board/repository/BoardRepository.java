@@ -5,12 +5,15 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
@@ -78,6 +81,11 @@ public interface BoardRepository {
 	@Select("select board_id, board_name, board_category from board where board_id = #{boardId}")
 	Board findBoardName(int boardId);
 
+	List<PopularBoardDto> findByPopularPost();
+	
+	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level) " +
+	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1)")
+	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 

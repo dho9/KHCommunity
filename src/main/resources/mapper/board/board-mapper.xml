@@ -180,10 +180,46 @@
   <resultMap type="postLike" id="findPostLikeCount">
   	<result column="post_like_count" property="postLikeCount"/>
   </resultMap>
+  
+  <select id="findByPopularPost" resultType="PopularBoardDto">
+SELECT
+    p.post_id,
+    p.title,
+    pc.content,
+    COUNT(pl.post_id) AS post_like,
+    COUNT(pco.comment_id) AS comment_count,
+    b.board_name
+FROM
+    post p
+JOIN
+    post_content pc ON p.post_id = pc.post_id
+LEFT JOIN
+    post_like pl ON p.post_id = pl.post_id
+LEFT JOIN
+    post_comment pco ON p.post_id = pco.post_id
+JOIN 
+    board  b ON p.board_id = b.board_id 
+where
+  p.post_created_at BETWEEN (SYSDATE - 7) AND SYSDATE
+GROUP BY
+   p.post_id, p.title, pc.content, b.board_name
+ORDER BY
+    post_like DESC
+FETCH FIRST 5 ROWS ONLY
+  </select>
+    <resultMap type="PopularBoardDto" id="PopularBoardDtoMap">
+  	<id column="post_id" property="postId"/>
+  	<result column="title" property="title"/>
+  	<result column="content" property="content"/>
+  	<result column="post_like" property="postLike"/>
+  	<result column="comment_count" property="commentCount"/>
+  	<result column="board_name" property="boardName"/>
+  	
+  </resultMap>
+
   <resultMap type="board" id="findBoardName">
   	<id column="board_id" property="boardId"/>
   	<result column="board_name" property="boardName"/>
   	<result column="board_category" property="boardCategory"/>
   </resultMap>
-  
 </mapper>
