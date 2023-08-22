@@ -20,12 +20,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
@@ -218,11 +222,14 @@ public class BoardController {
 		log.debug("postDetail = {}", postDetail);
 		
 		Board board = boardService.findBoardName(postDetail.getBoardId());
+		log.debug("boardddddddddddd={}",postDetail);
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
+		
 		model.addAttribute("postAttach",postAttach);
 	}
+	
 	
 	/**
 	 * 해당 게시물에 공감(좋아요) 했는지 안했는지
@@ -344,6 +351,35 @@ public class BoardController {
 	}
 
 	
+	@GetMapping("/popularPost.do")
+	@ResponseBody
+	public List<PopularBoardDto> popularPost() {
+		List<PopularBoardDto> post = boardService.findByPopularPost();
+		log.debug("post = {}",post);
+//	    model.addAttribute("post", post);
+        return post;
+	}
 
+	@PostMapping("/createComment.do")
+	public ResponseEntity<?> createCommnet(
+			CreateCommentDto comment,@AuthenticationPrincipal MemberDetails member
+			){
+		log.debug("commentttttttttttt={}", comment);
+		if(member !=null) {
+			
+			int result = boardService.createComment(comment,member.getMemberId());
+			return null;
+		}else {
+			return null;
+		}
+		
+		
+	}
+	@PostMapping("/loadComment.do")
+	public List<Comment> commentList(@RequestParam int postId){
+		log.debug("idddddddddddd = {}",postId);
+		return null;
+		
+	}
 }
 

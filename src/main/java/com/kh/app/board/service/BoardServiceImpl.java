@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
@@ -120,6 +122,16 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public Board findBoardName(int boardId) {
 		return boardRepository.findBoardName(boardId);
+	}
+	@Override
+	public List<PopularBoardDto> findByPopularPost() {
+		return boardRepository.findByPopularPost();
+	}
+	
+	@Override
+	public int createComment(CreateCommentDto comment, String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.createComment(comment,memberId);
 	}
 	
 	@Override
