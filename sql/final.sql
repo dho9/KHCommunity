@@ -1073,6 +1073,7 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 -- order
 
 
+
 ----삭제 게시글 
 --delete post where post_id =3;
 ----삭제 댓글
@@ -1112,7 +1113,6 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
-
 
 
 
