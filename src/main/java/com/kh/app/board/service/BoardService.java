@@ -48,5 +48,7 @@ public interface BoardService {
 
 	int insertBoardNofiles(BoardCreateDto board);
 
+	PostAttachment findAttachById(int id);
+
 
 }

@@ -121,6 +121,11 @@ public class BoardServiceImpl implements BoardService {
 	public Board findBoardName(int boardId) {
 		return boardRepository.findBoardName(boardId);
 	}
+	
+	@Override
+	public PostAttachment findAttachById(int id) {
+		return boardRepository.findAttachById(id);
+	}
 
 
 	

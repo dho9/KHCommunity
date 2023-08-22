@@ -27,6 +27,12 @@
 					<a class="article" >
 				  		<img class="picture large" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<div class="profile">
+				  			<c:if test="${postDetail.anonymousCheck eq 'y'}">
+					  			<h3 class="medium">익명</h3>
+					  		</c:if>
+					  		<c:if test="${postDetail.anonymousCheck ne 'y'}">
+						  		<h3 class="medium">${board.memberId}</h3>
+					  		</c:if>
 					  		<h3 class="large" style="font-size : 15px;">익명</h3>
 						  	<time class="large">
 							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
@@ -39,7 +45,15 @@
 				  		</ul>
 					  	<hr>
 					  	<h1 class="large" style="font-size : 20px;">${postDetail.title}</h2> <br>
-					  	<p class="large">${postDetail.content}</p> <br>
+					  	<c:if test="${postAttach != null }">
+						  	<img 
+						  		src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
+						  		style="width: 747px;">
+						  	<p class="large">${postDetail.content}</p> <br>
+					  	</c:if>
+					  	<c:if test="${postAttach == null }">
+						  	<p class="large">${postDetail.content}</p> <br>
+					  	</c:if>
 					  	<c:forEach items="${postDetail.tag}" var="tag">
 					  		<span class="tag">${tag}</span>
 					  	</c:forEach>
@@ -53,6 +67,15 @@
 					  	<hr>
 					</a>
 			</article>
+			<div class="comments" style="display: block;">
+		  		<form class="writecomment">
+		  			<input type="text" name="text" maxlength="300" autocomplete="off" placeholder="댓글을 입력하세요." class="text">
+		  			<ul class="option">
+		  				<li title="익명" class="anonym"></li>
+		  				<li title="완료" class="submit"></li>
+		  			</ul>
+	  			</form>
+  			</div>
 		</c:if>
 	</div>
 	<!-- 해시태그를 클릭했을 때의 폼 -->

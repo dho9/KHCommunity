@@ -49,7 +49,12 @@ input[name=_tags] {
 				<c:forEach items="${freeBoardLists}" var="board">
 					<a class="article" href="${pageContext.request.contextPath}/board/boardDetail.do?id=${board.postId}">
 				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
-				  		<h3 class="medium">익명</h3>
+				  		<c:if test="${board.anonymousCheck eq 'y'}">
+					  		<h3 class="medium">익명</h3>
+				  		</c:if>
+				  		<c:if test="${board.anonymousCheck ne 'y'}">
+					  		<h3 class="medium">${board.memberId}</h3>
+				  		</c:if>
 					  	<time class="medium">
 						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
 						  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>

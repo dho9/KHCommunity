@@ -54,6 +54,11 @@ public interface BoardRepository {
 	PostLike findPostLikeCount(int postId);
 	
 	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler})")
+	@SelectKey(
+			before = false, 
+			keyProperty = "postId", 
+			resultType = int.class,
+			statement = "select seq_post_id.currval from dual")
 	int insertBoardNofiles(BoardCreateDto board);
 	
 	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'y', 'y', #{tags, typeHandler=stringListTypeHandler})")
@@ -72,6 +77,9 @@ public interface BoardRepository {
 
 	@Select("select * from board where board_id = #{boardId}")
 	Board findBoardName(int boardId);
+
+	@Select("select * from post_attachment where post_id = #{id}")
+	PostAttachment findAttachById(int id);
 
 
 
