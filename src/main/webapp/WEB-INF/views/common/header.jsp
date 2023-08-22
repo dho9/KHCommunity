@@ -76,7 +76,7 @@
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
-                <li><a href="${pageContext.request.contextPath}/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
+                <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
             </ul>
         </div>
     </nav>
