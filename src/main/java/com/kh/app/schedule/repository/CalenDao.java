@@ -2,11 +2,13 @@ package com.kh.app.schedule.repository;
 
 import java.util.ArrayList;
 
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.app.schedule.entity.Calendar;
 
-@Repository
+@Mapper
 public interface CalenDao {
+	
 	public ArrayList<Calendar> calenList();
+	
 }

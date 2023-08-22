@@ -828,6 +828,7 @@ aside > div.title > ol.buttons > li > a.image.setting {
 	height: 6%;
     margin-top: 1%;
     margin-left: 1%;
+    display: flex;
 }
 .hashTag-container span {
 	font-size: 22px;
