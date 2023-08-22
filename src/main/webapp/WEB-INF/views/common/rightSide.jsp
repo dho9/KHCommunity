@@ -9,7 +9,7 @@
 	 <div class="card">
         <div class="board" id="popularPostsContainer">
             <h3>
-                <a>실시간 인기 글</a>
+                <a>주간 인기글</a>
             </h3>
         </div>
     </div>
