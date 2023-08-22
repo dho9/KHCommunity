@@ -11220,9 +11220,10 @@ fieldset:disabled .btn {
 
 .leftBar {
   width: 300px;
-  height: 100%;
+  height: 100vh;
   background-color: #0a53be;
   position: fixed;
+  overflow-y: auto;
 }
 
 .card {
@@ -11230,7 +11231,7 @@ fieldset:disabled .btn {
 }
 
 body {
-  overflow-x: hidden; /* 가로 스크롤 막음 */
+  height: 100vh;
 }
 
 a {
