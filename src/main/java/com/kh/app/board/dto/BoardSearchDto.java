@@ -17,6 +17,12 @@ public class BoardSearchDto extends Post {
 	private String boardName;
 	private String content;
 	private int commentCount;
+	private String boardLink;
+	
+	@Override
+	public int getBoardId() {
+		return super.getBoardId();
+	}
 	
 	@Override
 	public String getMemberId() {
