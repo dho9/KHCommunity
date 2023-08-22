@@ -22,8 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
@@ -206,9 +208,12 @@ public class BoardController {
 		log.debug("postDetail = {}", postDetail);
 		
 		Board board = boardService.findBoardName(postDetail.getBoardId());
+		log.debug("boardddddddddddd={}",postDetail);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
+		
 	}
+	
 	
 	/**
 	 * 해당 게시물에 공감(좋아요) 했는지 안했는지
@@ -330,5 +335,26 @@ public class BoardController {
         return post;
 	}
 
+	@PostMapping("/createComment.do")
+	public ResponseEntity<?> createCommnet(
+			CreateCommentDto comment,@AuthenticationPrincipal MemberDetails member
+			){
+		log.debug("commentttttttttttt={}", comment);
+		if(member !=null) {
+			
+			int result = boardService.createComment(comment,member.getMemberId());
+			return null;
+		}else {
+			return null;
+		}
+		
+		
+	}
+	@PostMapping("/loadComment.do")
+	public List<Comment> commentList(@RequestParam int postId){
+		log.debug("idddddddddddd = {}",postId);
+		return null;
+		
+	}
 }
 

@@ -8,6 +8,7 @@
 .tag {
 	cursor: pointer;
 }
+
 #commnetContainer>div.articles>article form.writecomment input.text {
 	margin: 0;
 	padding: 10px 85px 10px 10px;
@@ -48,17 +49,18 @@
 
 #commnetContainer>div.articles>article form.writecomment ul.option li.submit
 	{
-	float: right; background-color : #c62917;
+	float: right;
+	background-color: #c62917;
 	background-image:
 		url('${pageContext.request.contextPath}/resources/images/댓글제출.png');
 	background-color: #c62917;
 }
 
-#commnetContainer  {
-    display: block;
-    padding: 2px;
-    border: solid 0.7px lightgray;
-        background-color: #f2eded75;
+#commnetContainer {
+	display: block;
+	padding: 2px;
+	border: solid 0.7px lightgray;
+	background-color: #f2eded75;
 }
 </style>
 
@@ -89,7 +91,7 @@
 						<li class="abuse">신고</li>
 					</ul>
 					<hr>
-					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h2>
+					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h1>
 						<br>
 						<p class="large">${postDetail.content}</p>
 						<br>
@@ -110,50 +112,88 @@
 			</article>
 		</c:if>
 		<div class="comments" style="display: block">
-		<div id="commnetContainer">
-    <div class="articles">
-        <article>
-            <form class="writecomment">
-                <div style="display: flex; align-items: center;">
-                    <input type="text" name="text" maxlength="300"
-                        autocomplete="off" placeholder="댓글을 입력하세요." class="text"
-                        data-listener-added_4fb6911b="true">
-                    <ul class="option">
-                        <li title="익명" class="anonym"></li>
-                        <li title="완료" class="submit"></li>
-                    </ul>
-                </div>
-            </form>
-        </article>
-    </div>
-</div>
+			<div id="commnetContainer">
+				<div class="articles">
+					<article>
+						<form:form name="commentFrm" class="writecomment">
+							<div style="display: flex; align-items: center;">
+								<input type="text" name="commentText" id="commentText" maxlength="300"
+									autocomplete="off" placeholder="댓글을 입력하세요." class="text"
+									data-listener-added_4fb6911b="true">
+								<ul class="option">
+									<li title="익명" class="anonym"></li>
+									<li title="완료" class="submit"></li>
+								</ul>
+							</div>
+						</form:form>
+					</article>
+				</div>
+			</div>
 
 		</div>
 
 	</div>
 
-	<!-- 해시태그를 클릭했을 때의 폼 -->
-	<form name="tagFrm"
-		action="${pageContext.request.contextPath}/board/boardSearch.do">
-		<input type="hidden" name="keyword" class="keyword" />
-	</form>
-	<form:form name="tokenFrm"></form:form>
-	<script>
+<!-- 해시태그를 클릭했을 때의 폼 -->
+<form name="tagFrm"
+	action="${pageContext.request.contextPath}/board/boardSearch.do">
+	<input type="hidden" name="keyword" class="keyword" />
+</form>
+<form:form name="tokenFrm"></form:form>
+<form:form name="loadCommentFrm"></form:form>
+
+<script>
+
+	let anonyCk = false;
 	document.querySelectorAll('.option li.anonym').forEach((li) => {
+		
 	    li.addEventListener('click', () => {
+	    
 	        // 클릭한 li 요소에 active 클래스 추가 또는 제거
 	        li.classList.toggle('active');
 
 	        // 배경 이미지 변경
 	        if (li.classList.contains('active')) {
 	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/익명체크.png')`;
+	            anonyCk= true;
 	        } else {
 	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/익명.png')`;
+	            anonyCk= false;
 	        }
+	        
+	     
 	    });
+	
+	});
+	document.querySelectorAll('.option li.submit').forEach((li) => {
+		li.addEventListener('click', (e)=>{
+		const currentURL = window.location.href;
+		const urlParams = new URLSearchParams(new URL(currentURL).search);
+		const postId = urlParams.get('id');
+			    	console.log("id 파라미터 값:", postId);	
+		console.log(anonyCk);
+		console.log(${board.boardId});
+		const token = document.commentFrm._csrf.value;
+		    $.ajax({
+	        	url : "${pageContext.request.contextPath}/board/createComment.do",
+	        	headers: {
+	                "X-CSRF-TOKEN": token
+	            },
+	        	data : {
+	        		postId : postId,
+	        		boardId : ${board.boardId},
+	        		commentContent : document.querySelector("#commentText").value,
+	        		anonymous: anonyCk
+	        	},
+	        	method : "POST",
+	        	success(data){
+	        		console.log("ss");
+	        	}
+	        })
+		})
 	});
 	</script>
-	<script>
+<script>
 	// load됐을때 공감(좋아요) 했는지 확인
 	window.onload = () => {
 		console.log(document.querySelector('.like').dataset.value);
@@ -182,6 +222,28 @@
                 }
             }
 		});
+		
+		const token = document.loadCommentFrm._csrf.value;
+		const currentURL = window.location.href;
+		const urlParams = new URLSearchParams(new URL(currentURL).search);
+		const postId = urlParams.get('id');
+		console.log(postId);
+		console.log(token);
+	    $.ajax({
+	    	url : "${pageContext.request.contextPath}/board/loadComment.do",
+	    	headers: {
+	            "X-CSRF-TOKEN": token
+	        },
+	    	data : {
+	    		postId : postId
+	    	},
+	    	method : "POST",
+	    	success(data){
+	    		console.log("ss");
+	    	}
+	    });
+		
+		
 	};
 	
 	// 공감(좋아요) 누르기
@@ -229,5 +291,5 @@
 	    });
 	});
 	</script>
-	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
-	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
+<%@ include file="/WEB-INF/views/common/footer.jsp"%>
