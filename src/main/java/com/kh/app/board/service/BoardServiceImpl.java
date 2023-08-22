@@ -127,7 +127,10 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findAttachById(id);
 	}
 
-
+	@Override
+	public List<BoardListDto> sharingInformationBoardFindAll() {
+		return boardRepository.sharingInformationBoardFindAll();
+	}
 	
 }
 

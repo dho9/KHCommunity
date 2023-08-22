@@ -52,7 +52,9 @@ public class BoardController {
 	public String freeBoardList(Model model) {
 		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll();
         log.debug("freeBoardLists = {}", freeBoardLists);
+        
         model.addAttribute("freeBoardLists", freeBoardLists);
+        
         return "/board/freeBoardList";
  	}
 	
@@ -67,8 +69,13 @@ public class BoardController {
 	}
 	
 	@GetMapping("/sharingInformationBoardList.do")
-	public void sharingInformationBoardList() {
-		
+	public String sharingInformationBoardList(Model model) {
+		List<BoardListDto> sharingInformationBoardList = boardService.sharingInformationBoardFindAll();
+        log.debug("sharingInformationBoardList = {}", sharingInformationBoardList);
+        
+        model.addAttribute("sharingInformationBoardList", sharingInformationBoardList);
+        
+        return "/board/sharingInformationBoardList";
 	}
 	
 	@GetMapping("/askCodeBoardList.do")
@@ -316,7 +323,6 @@ public class BoardController {
 				}
 				
 			}
-		
 			BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
 				.content(text)

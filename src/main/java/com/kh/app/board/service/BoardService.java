@@ -50,5 +50,6 @@ public interface BoardService {
 
 	PostAttachment findAttachById(int id);
 
+	List<BoardListDto> sharingInformationBoardFindAll();
 
 }
