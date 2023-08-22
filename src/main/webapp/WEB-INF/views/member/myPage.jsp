@@ -70,8 +70,8 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		<sec:authentication property="principal" var="loginMember"/>
 		<div id="info-container">
 			<h2>${loginMember.name}</h2>
-			<p>스마트 뭐시기 자바 융합 뭐라뭐라 반</p>
-			<p>김동현 강사님 Class 352</p>
+			<p>${studentInfo.curriculumName }반</p>
+			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
 		</div>
 		<div id= "dDay">
 			<h1>D-25</h1>
@@ -81,7 +81,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	<div class="container">
 	<div class="container-md" style="border: 5px solid #c5d6dc; width:300px; height:515px; font-size:50px">
 		<div id="icons" class="container-fluid">
-		<div class="myPageIcon">
+		<div class="myPageIcon" id="myPageIcon1">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
   				<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
   				<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
@@ -140,6 +140,9 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		</div>
 		</div>	
 		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >
+		<div id="myInfo-container" class="myPageDivs"  name="myInfo">
+		아이디 : ${loginMember.username}
+		</div>
 		<!--희진 회원정보수정(비밀번호, 생일, 전화번호) 시작  -->
 			<div id="update-container" class="myPageDivs">
 				<%-- principal을 변수 loginMember 저장 --%>
@@ -273,7 +276,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 						</tr>
 						<br/>
 						<td>
-	    					<input type="button" onclick="deleteMember();" value="탈퇴"/>
+	    					<input type="submit" class="deleteBtn" value="탈퇴"/>
 	    				</td>
 					</form:form>
 				</div>
@@ -335,11 +338,21 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 				document.memberDelFrm.submit();
 		}
 		
+		const myPageIcon1 = document.querySelector("#myPageIcon1"); // 내정보 아이콘
 		const myPageIcon3 = document.querySelector("#myPageIcon3"); // 회원정보 수정 아이콘
 		const myPageIcon4 = document.querySelector("#myPageIcon4"); // 회원탈퇴 아이콘
+		const myInfoCntainer = document.querySelector("#myInfo-container"); // 내정보
 		const memberUpdateFrm = document.querySelector("#memberUpdateFrm"); // 회원정보 수정 폼
 		const memberDeleteFrm = document.querySelector("#memberDeleteFrm"); // 회원탈퇴 폼
+		
+		
+		myPageIcon1.addEventListener("click", function() {
+			  /* hideDiv(); */
+			  document.querySelector("#myInfo-container").style.display = "block";
+		
+			});
 
+		
 		myPageIcon3.addEventListener("click", function() {
 		  hideDiv();
 		  document.querySelector("#update-container").style.display = "block";
@@ -351,6 +364,12 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			document.querySelector("#delete-container").style.display = "block"; 
 			
 		});
+		
+		document.memberDeleteFrm.onsubmit = (e) => {
+			alert("정말탈퇴하시겠습니까?")
+			
+		};
+	
 
 document.querySelector("#certification").onclick=()=>{
 	hideDiv();

@@ -87,6 +87,7 @@ public class MemberSecurityController {
 
 	@GetMapping("/memberLogin.do")
 	public void memberLogin() {
+		
 	}
 
 	@GetMapping("/memberDetail.do")
@@ -225,20 +226,9 @@ public class MemberSecurityController {
 	        return "redirect:/member/myPage.do";
 	    }
 	
-//		return "redirect:/";
-	
 	}
 	
-//	@GetMapping("/myPage.do")
-//    public String myPage(@Valid AdminStudentListDto studentList, Model model, @AuthenticationPrincipal MemberDetails principal) {
-//        // 인증된 회원 정보를 사용하여 repository에 저장된 정보를 가져옴
-//		studentList = memberService.findByMemberInfo(principal.getMemberId());
-//        log.debug("★★★★★studentList"+studentList);
-//        // 가져온 정보를 뷰에 전달하기 위해 Model 객체에 저장
-//        model.addAttribute("studentList", studentList);
-//        
-//        return "/myPage"; 
-//    }
+
 }
 
 	

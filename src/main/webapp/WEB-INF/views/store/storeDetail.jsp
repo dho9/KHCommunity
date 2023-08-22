@@ -13,20 +13,34 @@
 	crossorigin="anonymous"></script>
 
 <style>
-    .card-body {
-        font-size: 36px;
-        font-weight: bold;
-    }
+@font-face {
+	font-family: 'HakgyoansimWoojuR';
+	src:
+		url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2')
+		format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.card-body {
+	font-size: 26px;
+	font-weight: bold;
+}
 
 .centered-button {
+	font-family: 'HakgyoansimWoojuR';
 	display: flex;
 	justify-content: center;
 }
 
 .center-map-btn {
+	font-family: 'HakgyoansimWoojuR';
 	display: flex;
 	justify-content: center;
 	margin-top: 10px; /* 상단 여백 조정 */
+}
+div.container{
+font-family: 'HakgyoansimWoojuR';
 }
 </style>
 <!-- jQuery -->
@@ -35,7 +49,7 @@
 <!-- iamport.payment.js -->
 <script type="text/javascript"
 	src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
-<div class="container mt-5">
+<div class="container mt-5y" style="margin-top: 20px;">
 	<div class="row">
 		<div class="col-md-8">
 			<div class="card">
@@ -44,11 +58,11 @@
 				</div>
 				<div class="card-body">
 					<dl class="row">
-						<dt class="col-sm-3" >분류</dt>
-						<dd class="col-sm-9" >${store.storeType}</dd>
-						<dt class="col-sm-3 " >식권 가격</dt>
-						<dd class="col-sm-9 " >3000</dd>
-						<dt class="col-sm-3" >사진</dt>
+						<dt class="col-sm-3">분류</dt>
+						<dd class="col-sm-9">${store.storeType}</dd>
+						<dt class="col-sm-3 ">식권 가격</dt>
+						<dd class="col-sm-9 ">3000</dd>
+						<dt class="col-sm-3">사진</dt>
 						<dd class="col-sm-9">
 							<img
 								src="${pageContext.request.contextPath}/resources/images/store/${store.storeName}.jpg"
@@ -56,10 +70,10 @@
 						</dd>
 						<div id="payHidden" style="display: none;">
 							<div class="row">
-								<div class="col-sm-3" font-size: 36px; font-weight: bold; >수량</div>
+								<div class="col-sm-3" font-size: 36px; font-weight:bold; >수량</div>
 								<div class="col-sm-9">
 									<input type="number" id="ticketQuantity" value="0"
-										style="width: 150px; font-size: 16px;" />
+										style="width: 150px; font-size: 20px;" />
 								</div>
 							</div>
 						</div>
@@ -83,9 +97,9 @@
 
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-4" >
 			<div class="card">
-				<div class="card-body">
+				<div class="card-body" style="font-size: 20px;">
 					<h2 class="large-text">위치</h2>
 					<ul class="list-group">
 						<li class="list-group-item">${store.address}</li>
