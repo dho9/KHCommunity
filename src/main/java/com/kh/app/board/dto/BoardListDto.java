@@ -23,3 +23,4 @@ public class BoardListDto {
 	private List<String> tag;
 	private String anonymousCheck; 
 }
+

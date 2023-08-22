@@ -46,6 +46,12 @@
     --%>
     <link href="/favicon.ico" rel="shortcut icon">
 
+<c:if test="${not empty message }">
+	<script>
+		alert('${message}'); 
+	</script>
+</c:if>
+
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
     <body>
@@ -56,8 +62,8 @@
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
-            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" style="text-decoration: none;">
-            		<span>관리자페이지</span>
+            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:50px;">
+            		관리자페이지
             	</a>
                <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="로그인" class="icon message">로그인</a>
                <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="회원가입" class="icon my">회원가입</a>
@@ -70,7 +76,7 @@
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
-                <li><a href="${pageContext.request.contextPath}/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
+                <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
             </ul>
         </div>
     </nav>

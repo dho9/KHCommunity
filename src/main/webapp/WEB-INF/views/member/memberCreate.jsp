@@ -81,7 +81,7 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 .form-group {margin-bottom: 1rem; /* 각 input 사이에 간격을 주기 위하여 margin을 설정합니다. */ width:100%}
 .form-group input{width: 53.7%; display:inline-block; margin-right:1%;}
 .form-group button{width: 20%; display:inline-block;}
-.form-group label{width: 23.5%; display:inline-block;}
+.form-group label{width: 23%; display:inline-block;}
 #userEmail1 {width: 28%; display:inline-block;}
 .form-group select{width: 24%; display:inline-block; margin-right:1%;}
 #verificationResult {text-align: center; width: 100%;}
