@@ -1,8 +1,6 @@
 package com.kh.app.board.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -18,17 +16,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
-import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
-import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.member.entity.MemberDetails;
 
 import lombok.extern.slf4j.Slf4j;
@@ -323,5 +321,13 @@ public class BoardController {
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 	}
 	
+	@GetMapping("/popularPost.do")
+	@ResponseBody
+	public List<PopularBoardDto> popularPost() {
+		List<PopularBoardDto> post = boardService.findByPopularPost();
+		log.debug("post = {}",post);
+//	    model.addAttribute("post", post);
+        return post;
+	}
 
 }

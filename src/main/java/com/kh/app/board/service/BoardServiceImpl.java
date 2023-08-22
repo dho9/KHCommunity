@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostLike;
@@ -99,5 +100,9 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public Board findBoardName(int boardId) {
 		return boardRepository.findBoardName(boardId);
+	}
+	@Override
+	public List<PopularBoardDto> findByPopularPost() {
+		return boardRepository.findByPopularPost();
 	}
 }
