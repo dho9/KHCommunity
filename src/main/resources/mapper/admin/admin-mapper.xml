@@ -113,4 +113,53 @@
         </if>
   	</where>
   </select>
+  
+  <select id="totalCountCurriculum" resultType="int">
+    SELECT
+	    count(*)
+	FROM
+    	curriculum c
+	JOIN
+    	member m ON c.teacher_id = m.member_id
+    <where>
+        <if test="subjects != null and !subjects.isEmpty()">
+            AND subject IN
+            <foreach collection="subjects" item="subject" open="(" separator="," close=")">
+                #{subject}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+    </where>
+    
+  </select>
+  
+  <select id="adminCourseList" resultType="CurriculumListDto">
+    SELECT
+	    c.subject,
+	    c.curriculum_name,
+	    c.class_id,
+	    m.member_name,
+	    c.teacher_id,
+	    c.curriculum_start_at,
+	    c.curriculum_end_at
+	FROM
+    	curriculum c
+	JOIN
+    	member m ON c.teacher_id = m.member_id
+    <where>
+        <if test="subjects != null and !subjects.isEmpty()">
+            AND subject IN
+            <foreach collection="subjects" item="subject" open="(" separator="," close=")">
+                #{subject}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+    </where>
+    
+  </select>
+  
 </mapper>

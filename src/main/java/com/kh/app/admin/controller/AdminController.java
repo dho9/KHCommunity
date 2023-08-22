@@ -42,6 +42,7 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.common.HelloSpringUtils;
@@ -207,9 +208,6 @@ public class AdminController {
 	    int totalPages = (int) Math.ceil((double) totalCount / limit);
 	    model.addAttribute("totalPages", totalPages);
 	    
-	    // 커리큘럼 등록 위한 불러오기
-	    List<Curriculum> curriculums = adminService.findAllCurriculum();
-	    model.addAttribute("curriculums", curriculums);
 	  
 	}
 	
@@ -231,6 +229,7 @@ public class AdminController {
 	    filters.put("searchKeyword", searchKeyword);
 	    filters.put("job_Codes", job_Codes);
 		
+
 	    // 페이징
 	    int limit = 10;
 		Map<String, Object> params = Map.of(
@@ -283,7 +282,6 @@ public class AdminController {
 				.id(id)
 				.dept(dept)
 				.build();
-		log.debug("phone = {}", phone);
 		// auth : ADMIN 추가
 		Authority auth = new Authority(id, "ADMIN");
 		// member테이블 insert
@@ -340,10 +338,10 @@ public class AdminController {
 	// 수강생 정보 수정 - 유성근
 	@PostMapping("/adminStudentUpdate.do")
 	public String adminStudentUpdate(@Valid AdminStudentListDto student) {
-		log.debug("student = {}", student);
-		int result = adminService.updateAdminStudent(student);
-		
-		return "redirect:/admin/adminStudentList.do";
+
+	    int result = adminService.updateAdminStudent(student);
+
+	    return "redirect:/admin/adminStudentList.do";
 	}
 	
 	// 수강생 삭제 - 유성근
@@ -357,19 +355,64 @@ public class AdminController {
 	@PostMapping("/adminSendMessage.do")
 	public String adminStudentSendMessage(@Valid MessageBox message) {
 		message.setSendId("chdan");
-		log.debug("message = {}", message);
 		int result = adminService.sendMessageToStudent(message);
 		return "redirect:/admin/adminStudentList.do";
 	}
 
 	// 수강생 승인 목록 조회 - 유성근
 	@GetMapping("/adminStudentApprovementList.do")
-	public void adminStudentApprovementList() {}
+	public void adminStudentApprovementList(Model model, @RequestParam(defaultValue = "1") int page) {
+		
+		// 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		model.addAttribute("currentPage", page);
+		
+		List<AdminStudentApproveDto> students = adminService.adminStudentApprovementList(params);
+		model.addAttribute("students", students);
+		
+		// 전체 학생 수를 가져온다.
+	    int totalCount = adminService.totalCountNonApprovementStudents();
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+	    
+	    // 커리큘럼 등록 위한 불러오기
+	    List<Curriculum> curriculums = adminService.findAllCurriculum();
+	    model.addAttribute("curriculums", curriculums);
+	}
+	
+	// 수강생 승인(업데이트)
+	@PostMapping("/adminStudentApprovementOk.do")
+	public String adminStudentApprovementOk(@Valid AdminStudentListDto student, @RequestParam(value = "khCurriculum", required = false) Integer curriculumId) {
+		
+		// curriculumId가 null이 아닌 경우에만 student 객체에 설정
+	    if (curriculumId != null) {
+	        student.setCurriculumId(curriculumId);
+	    }
+		
+	    int result = adminService.approvementStudent(student);
+	    
+		return "redirect:/admin/adminStudentApprovementList.do";
+	}
+	
+	// 수강생 반려(업데이트)
+	@PostMapping("adminStudentApprovementNo.do")
+	public String adminStudentApprovementNo(@Valid AdminStudentListDto student) {
+		
+		int result = adminService.adminStudentApprovementNo(student);
+		
+		return "redirect:/admin/adminStudentApprovementList.do";
+	}
 
 	// 직원 정보 수정
 	@PostMapping("/adminEmployeeUpdate.do")
 	public String adminEmployeeUpdate(@Valid AdminEmployeeListDto employee) {
-		log.debug("employee = {}", employee);
 		int result = adminService.updateAdminEmployee(employee);
 		
 		return "redirect:/admin/employeeList.do";
@@ -378,7 +421,6 @@ public class AdminController {
 	// 직원 삭제
 	@PostMapping("/adminEmployeeDelete.do")
 	public String adminEmployeeDelete(@Valid AdminEmployeeListDto employee) {
-		log.debug("employee = {}", employee);
 		
 		int result = adminService.deleteAdminMember(employee);
 		
@@ -401,9 +443,7 @@ public class AdminController {
 		filters.put("searchKeyword", searchKeyword);
 		filters.put("subjects", subjects);
 		
-		log.debug("subjects = {}", subjects);
 		List<Teacher> teachers = adminService.findAllTeacher(filters);
-		log.debug("teachers = {}", teachers);
 		model.addAttribute("teachers", teachers);
 	}
 	
@@ -416,6 +456,47 @@ public class AdminController {
 		return "redirect:/admin/teacherList.do";
 	}
 	
+	// 과정등록/조회
+	@GetMapping("/adminCourseList.do")
+	public void adminCourseList(Model model, @RequestParam(defaultValue = "1") int page,
+							@RequestParam(value = "searchType", required = false) String searchType,
+				            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+				            @RequestParam(value = "subjects", required = false) String[] _subjects
+								) {
+		
+		List<String> subjects = null;
+		
+		if (_subjects != null) {
+			subjects = Arrays.asList(_subjects);
+		}
+		
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("searchType", searchType);
+		filters.put("searchKeyword", searchKeyword);
+		filters.put("subjects", subjects);
+		
+		// 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		model.addAttribute("currentPage", page);
+		
+		// 전체 학생 수를 가져온다.
+	    int totalCount = adminService.totalCountCurriculum(filters);
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+	    
+		
+		List<CurriculumListDto> curriculumList = adminService.adminCourseList(filters, params);
+		log.debug("curriculumList={}", curriculumList);
+		model.addAttribute("curriculumList", curriculumList);
+	}
+
 	@GetMapping("/writeNotice.do")
 	public void writeNotice() {}
 

@@ -12,6 +12,7 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
@@ -87,6 +88,19 @@ public interface AdminService {
 	int sendMessageToStudent(MessageBox message);
 
 	List<Curriculum> findAllCurriculum();
+
+	List<AdminStudentApproveDto> adminStudentApprovementList(Map<String, Object> params);
+
+	int totalCountNonApprovementStudents();
+
+	int approvementStudent(AdminStudentListDto student);
+
+	int adminStudentApprovementNo(AdminStudentListDto student);
+
+	List<CurriculumListDto> adminCourseList(Map<String, Object> filters, Map<String, Object> params);
+
+	int totalCountCurriculum(Map<String, Object> filters);
+
 
 
 }

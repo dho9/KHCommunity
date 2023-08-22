@@ -17,6 +17,7 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
@@ -33,7 +34,7 @@ public interface AdminRepository {
 	@Select("select count(*) from student where substr(to_char(student_enroll_date), 1, 9) = to_date(sysdate, 'yy/MM/dd')")
 	int todayNewStudentCount();
 
-	@Select("select count(*) from student where approve_check = 'n'")
+	@Select("select count(*) from student where approve_check = 'i'")
 	int approvementStudentCount();
 
 	@Select("select count(*) from vacation where vacation_approve_check = '2'")
@@ -150,6 +151,20 @@ public interface AdminRepository {
 	@Select("select * from curriculum")
 	List<Curriculum> findAllCurriculum();
 
+	@Select("SELECT s.student_id, m.member_name, s.student_type, s.approve_check, s.approve_request_date FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
+	List<AdminStudentApproveDto> adminStudentApprovementList(RowBounds rowBounds);
 
+	@Select("SELECT count(*) FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
+	int totalCountNonApprovementStudents();
+
+	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', approve_complete_date = sysdate where student_id = #{studentId}")
+	int approvementStudent(AdminStudentListDto student);
+
+	@Update("update student set approve_check = 'n' where student_id = #{studentId} ")
+	int adminStudentApprovementNo(AdminStudentListDto student);
+
+	List<CurriculumListDto> adminCourseList(Map<String, Object> filters, RowBounds rowBounds);
+
+	int totalCountCurriculum(Map<String, Object> filters);
 
 }

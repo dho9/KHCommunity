@@ -14,6 +14,7 @@ public class AdminStudentListDto {
 	private String memberPhone;
 	private LocalDate birthday;
 	private String memberEmail;
+	private int curriculumId;
 	public String curriculumName;
 	public String classId;
 	public StudentType studentType;

@@ -808,8 +808,9 @@ REFERENCES ticket (
 --==============================================
 --alter table member add constraint CK_member_role check (member_role in ('e', 't', 's'));
 -- e -> 직원, t는 강사, s 는 학생 (예비, 수강, 수료 모두 s)
-alter table student add constraint CK_student_approve_check check (approve_check in ('y', 'n'));
--- y는 인증ok, n은 인증x
+alter table student drop constraint CK_student_approve_check;
+alter table student add constraint CK_student_approve_check check (approve_check in ('y', 'n', 'i'));
+-- y는 인증ok, n은 인증x, i는 인증 신청 상태
 alter table student add constraint CK_student_student_type check (student_type in ('c', 's', 'p'));
 -- c는예비, s 는 학생 p는 수료
 alter table vacation add constraint CK_vacation_vacation_approve_check check (vacation_approve_check in ('0', '1', '2', '3'));
@@ -1094,6 +1095,7 @@ delete from member where member_id = 'admin';
 select * from post_attachment;
 select * from member;
 select * from student;
+select * from student_attachment;
 select * from class;
 select * from curriculum;
 select * from teacher;
@@ -1359,4 +1361,10 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
     
 
+<<<<<<< HEAD
 select * from calendar;
+
+update student set approve_request_date = sysdate where student_id = 'xogus';
+=======
+select * from calendar;
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git

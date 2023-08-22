@@ -15,6 +15,7 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
@@ -204,4 +205,44 @@ public class AdminServiceImpl implements AdminService {
 	public List<Curriculum> findAllCurriculum() {
 		return adminRepository.findAllCurriculum();
 	}
+	
+	@Override
+	public List<AdminStudentApproveDto> adminStudentApprovementList(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.adminStudentApprovementList(rowBounds);
+	}
+	
+	@Override
+	public int totalCountNonApprovementStudents() {
+		return adminRepository.totalCountNonApprovementStudents();
+	}
+	
+	@Override
+	public int approvementStudent(AdminStudentListDto student) {
+		return adminRepository.approvementStudent(student);
+	}
+	
+	@Override
+	public int adminStudentApprovementNo(AdminStudentListDto student) {
+		return adminRepository.adminStudentApprovementNo(student);
+	}
+	
+	@Override
+	public List<CurriculumListDto> adminCourseList(Map<String, Object> filters, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return adminRepository.adminCourseList(filters, rowBounds);
+	}
+	
+	@Override
+	public int totalCountCurriculum(Map<String, Object> filters) {
+		return adminRepository.totalCountCurriculum(filters);
+	}
+	
 }
