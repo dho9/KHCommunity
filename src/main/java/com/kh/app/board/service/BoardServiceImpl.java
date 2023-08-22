@@ -101,3 +101,4 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findBoardName(boardId);
 	}
 }
+

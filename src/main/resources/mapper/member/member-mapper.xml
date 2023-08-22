@@ -83,5 +83,30 @@
       </collection>
   </resultMap>
   
+  <select id="findByMemberInfo" resultMap="findByMemberInfoMap">
+  select c.curriculum_name, mt.member_name, c.class_id, c.curriculum_end_at
+  from member m left outer join student s
+    on m.member_id = s.student_id
+                left outer join curriculum c
+    on s.curriculum_id = c.curriculum_id
+                left outer join member mt
+    on c.teacher_id = mt.member_id
+ where m.member_id = #{memberId}
+</select>
+
+ <resultMap id="findByMemberInfoMap" type="AdminStudentListDto">
+      <id column="member_id" property="memberId"/>
+      <result column="curriculum_name" property="curriculumName"/>
+      <result column="member_name" property="memberName"/>
+      <result column="class_id" property="classId"/>
+      <result column="curriculum_end_at" property="curriculumEndAt"/>
+    <!--   <collection property="authorities"
+                  ofType="simpleGrantedAuthority">
+          <constructor>
+              javaType 필수
+              <arg column="auth" javaType="string"/>
+          </constructor>
+      </collection> -->
+  </resultMap>
   
 </mapper>

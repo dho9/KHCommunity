@@ -159,5 +159,5 @@
   <resultMap type="postLike" id="findPostLikeCount">
   	<result column="post_like_count" property="postLikeCount"/>
   </resultMap>
-  
+ 
 </mapper>
