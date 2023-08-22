@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
@@ -19,7 +20,7 @@
     font-weight: normal;
     font-style: normal;
 }
-.myPageIcon {width:36%; display:inline-block; padding:10px 5px 5px 5px; font-family: 'HakgyoansimWoojuR'; font-size: 60px; text-align: center; margin: 5%;}
+.myPageIcon {width:34%; display:inline-block; padding:10px 0 0 0; font-family: 'HakgyoansimWoojuR'; font-size: 60px; text-align: center; margin: 5%;}
 .myPageIcon p {font-family: 'HakgyoansimWoojuR'; font-size: 30px; margin: 7% 0;}
 .myPageIcon:hover {border-radius: 10px; background-color: #e3f5fc; cursor: pointer;}
 .container-md{display:table-cell; margin-top:2%; border-radius: 30px;}
@@ -79,7 +80,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	</div>
 	<br/>
 	<div class="container">
-	<div class="container-md" style="border: 5px solid #c5d6dc; width:300px; height:515px; font-size:50px">
+	<div class="container-md" style="border: 5px solid #c5d6dc; width:300px; font-size:50px">
 		<div id="icons" class="container-fluid">
 		<div class="myPageIcon">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
