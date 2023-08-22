@@ -1361,10 +1361,9 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
     
 
-<<<<<<< HEAD
+
 select * from calendar;
 
 update student set approve_request_date = sysdate where student_id = 'xogus';
-=======
+
 select * from calendar;
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
