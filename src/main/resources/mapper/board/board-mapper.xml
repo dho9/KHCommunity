@@ -34,7 +34,9 @@
   
   <select id="findAllByMemberId" resultType="boardSearchDto">
     select
-	    b.board_name
+	    b.board_name,
+	    b.board_id,
+	    b.board_link
 	from
 	    favorite f left join board b
 	        on f.board_id = b.board_id
@@ -44,104 +46,127 @@
   <resultMap type="boardSearchDto" id="myBoardsMap">
   	<id column="board_id" property="boardId"/>
   	<result column="board_name" property="boardName"/>
+  	<result column="board_link" property="boardLink"/>
   </resultMap>
   	
   <select id="freeBoardFindAll" resultType="boardListDto">
   	select 
   		p.post_id,
+  		p.member_id,
 	    p.title,
 	    p.post_created_at,
 	    p.tag,
 	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
 	    c.content,
 	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
-	    p.board_id
+	    p.board_id,
+	    p.anonymous_check
 	from
 	    post p join post_content c
 	    	on
 	    p.post_id = c.post_id
 	where
 	    p.board_id=1
+	order by
+		1 desc
   </select>
   
   <select id="preStudentBoardFindAll" resultType="boardListDto">
   	select 
   		p.post_id,
+  		p.member_id,
 	    p.title,
 	    p.post_created_at,
 	    p.tag,
 	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
 	    c.content,
 	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
-	    p.board_id
+	    p.board_id,
+	    p.anonymous_check
 	from
 	    post p join post_content c
 	    	on
 	    p.post_id = c.post_id
 	where
-	    p.board_id=2
+	    p.board_id=8
+	order by
+		1 desc
   </select>
   
    <select id="graduateBoardFindAll" resultType="boardListDto">
   	select 
   		p.post_id,
+  		p.member_id,
 	    p.title,
 	    p.post_created_at,
 	    p.tag,
 	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
 	    c.content,
 	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
-	    p.board_id
+	    p.board_id,
+	    p.anonymous_check
 	from
 	    post p join post_content c
 	    	on
 	    p.post_id = c.post_id
 	where
-	    p.board_id=3
+	    p.board_id=7
+	order by
+		1 desc
   </select>
   
   <select id="employeeBoardFindAll" resultType="boardListDto">
   	select 
   		p.post_id,
+  		p.member_id,
 	    p.title,
 	    p.post_created_at,
 	    p.tag,
 	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
 	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
 	from
 	    post p join post_content c
 	    	on
 	    p.post_id = c.post_id
 	where
-	    p.board_id=4
+	    p.board_id=9
+	order by
+		1 desc
   </select>
   
   <select id="findById" resultType="boardListDto">
 	select 
   		p.post_id,
-  		p.board_id,
+  		p.member_id,
 	    p.title,
 	    p.post_created_at,
 	    p.tag,
 	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
 	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+  		p.board_id,
+  		p.anonymous_check
 	from
 	    post p join post_content c
 	    	on
 	    p.post_id = c.post_id
 	where
 	    p.post_id=#{id}
+	   
 	</select>
   <resultMap type="boardListDto" id="boardListDtoMap">
   	<id column="post_id" property="postId"/>
+  	<result column="member_id" property="memberId"/>
   	<result column="title" property="title"/>
   	<result column="post_created_at" property="postCreatedAt"/>
   	<result column="tag" property="tag" typeHandler="stringListTypeHandler"/>
   	<result column="post_like" property="postLike"/>
   	<result column="comment_count" property="commentCount"/>
   	<result column="board_id" property="boardId"/>
+  	<result column="anonymous_check" property="anonymousCheck"/>
   </resultMap>
   
   <select id="findPostLikeCount" resultType="postLike">
@@ -154,6 +179,11 @@
   </select>
   <resultMap type="postLike" id="findPostLikeCount">
   	<result column="post_like_count" property="postLikeCount"/>
+  </resultMap>
+  <resultMap type="board" id="findBoardName">
+  	<id column="board_id" property="boardId"/>
+  	<result column="board_name" property="boardName"/>
+  	<result column="board_category" property="boardCategory"/>
   </resultMap>
   
 </mapper>

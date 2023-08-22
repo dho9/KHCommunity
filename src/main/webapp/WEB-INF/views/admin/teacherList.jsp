@@ -13,16 +13,9 @@
 			        <div id="search-container">
 			            <form action="">
 			                <div class="d-flex align-items-center">
-				                <div class="flex" style="width:600px;">
-									    <input type="checkbox" name="subject" value='자바' id="subject1" ${param.subject eq '자바' ? 'checked' : ''}/>
-									    <label for="subject1">자바</label>&nbsp;&nbsp;
-									    <input type="checkbox" name="subject" value='정보보안' id="subject2" ${param.subject eq '정보보안' ? 'checked' : ''}/>
-									    <label for="subject2">정보보안</label>&nbsp;&nbsp;
-								</div>
 			                    <select class="form-select" aria-label="Default select example" name="searchType" required>
 			                        <option value="" disabled selected>검색타입</option>
 			                        <option value="member_Id" ${param.searchType eq 'employee_Id' ? 'selected' : '' }>강사 ID</option>
-			                        <option value="subject" ${param.searchType eq 'subject' ? 'selected' : '' }>과목</option>
 			                        <option value="member_Name" ${param.searchType eq 'member_Name' ? 'selected' : '' }>이름</option>
 			                    </select>
 			                    <div class="input-group">
@@ -44,9 +37,6 @@
                           <th scope="col">이름</th>
                           <th scope="col">전화 번호</th>
                           <th scope="col">Email</th>
-                          <th scope="col">담당 과목</th>
-                          <th scope="col">개강일</th>
-                          <th scope="col">수료일</th>
                           <th scope="col">쪽지보내기</th>
                       </tr>
                   </thead>
@@ -69,9 +59,6 @@
                           <td>${teacher.memberName}</td>
                           <td>${teacher.memberPhone}</td>
                           <td>${teacher.memberEmail}</td>
-                          <td>${teacher.subject}</td>
-                          <td>${teacher.curriculumStartAt}</td>
-                          <td>${teacher.curriculumEndAt}</td>
                           <td>
                             <button style="border: 0; background-color: transparent;">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
@@ -108,9 +95,7 @@
                           생일 : <input type="date" name="birthday" id="modalBirthday" readonly> <br>
                           이메일 : <input type="text" name="email" id="modalEmail" readonly> <br>
                           입사일 : <input type="date" name="lastDay" id="modalLastDay" readonly><br>
-                          과목 : 
-								<input type="radio" name="subject" id="subject1" value="자바">자바
-								<input type="radio" name=subject id="subject2" value="정보보안">정보보안
+                          
                           <br>
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;

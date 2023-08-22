@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
@@ -43,6 +44,12 @@ public interface MemberRepository {
 
 	@Update("update student set approve_request_date = sysdate where student_id = #{memberId}")
 	int updateApproveRequestDate(StudentAttachment attach);
+	
+	@Delete("delete from member where member_id=#{memberId}")
+	int deleteMember(String memberId);
+
+//	@Select("select c.curriculum_name , mt.member_name, c.class_id from member m left outer join student s on m.member_id = s.student_id left outer join curriculum c on s.curriculum_id = c.curriculum_id left outer join member mt on c.teacher_id = mt.member_id where m.member_id = #{memberId}")
+	AdminStudentListDto findByMemberInfo(String memberId);
 
 
 }

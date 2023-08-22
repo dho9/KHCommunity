@@ -211,6 +211,7 @@ CREATE TABLE board (
    board_name   varchar2(30),
    board_category   varchar2(30)
 );
+ALTER TABLE board ADD board_link varchar2(50);
 
 CREATE TABLE post (
    post_id   number      NOT NULL,
@@ -223,6 +224,10 @@ CREATE TABLE post (
    status_check   char(1),
    tag   varchar2(200)
 );
+
+alter table post 
+add anonymous_check char(1);
+
 
 CREATE TABLE post_content (
    post_id   number      NOT NULL,
@@ -901,7 +906,6 @@ FOR EACH ROW
 BEGIN
   insert into delete_comment 
   values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at);
-  
 END;
 /
 --==============================================
@@ -1001,6 +1005,8 @@ VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', '23/09/06', '23/09/06', 'ehdgus',  'g
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '자유게시판');
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '히히게시판');
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '깔깔게시판');
+INSERT INTO board (board_id, board_category, board_name, board_link) VALUES (seq_board_id.NEXTVAL, '소통', '직원게시판', 'empolyeeBoardList');
+
 
 -- post
 INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
@@ -1074,6 +1080,7 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 -- order
 
 
+
 ----삭제 게시글 
 --delete post where post_id =3;
 ----삭제 댓글
@@ -1083,7 +1090,7 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 --delete member where member_id = 'test1'; 
 
 delete teacher where teacher_id = 'ehdgus';
-delete from member where member_id = 'test';
+delete from member where member_id = 'admin';
 
 select * from post_attachment;
 select * from member;
@@ -1095,9 +1102,11 @@ select * from teacher;
 select * from employee;
 select * from scheduler;
 select * from vacation;
-select * from board;
-select * from post;
-select * from post_content;
+select * from board order by 1;
+insert into board values (seq_board_id.nextval, '직원게시판', '소통', 'employeeBoardList');
+select * from post order by 1;
+update post set anonymous_check = 'n' where post_id = 12;
+select * from post_content order by 1;
 select * from post_comment;
 select * from favorite;
 select * from post_like;
@@ -1117,6 +1126,234 @@ select * from authority;
 
 
 
+INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
+VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
+
+INSERT INTO post_content (post_id, board_id, content)
+VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test1', 'test1', 'test1', '010-1234-5678', 'test1@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+SELECT
+    b.board_name,
+    COUNT(p.post_id) AS post_count
+FROM
+    board b
+LEFT JOIN
+    post p ON b.board_id = p.board_id
+GROUP BY
+    b.board_name
+ORDER BY
+    post_count DESC, board_name;
+    
+select 
+	p.post_id,
+    p.title,
+    p.post_created_at,
+    p.post_like,
+    c.content,
+    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+from
+    post p join post_content c
+    	on
+    p.post_id = c.post_id
+where
+    p.post_id=1;
+    
+    select 
+  		p.post_id,
+	    p.title,
+	    p.post_created_at,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=1;
+        
+select * from post_like;
+select * from post;
+select 
+  		p.post_id,
+        p.board_id,
+	    p.title,
+	    p.post_created_at,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.post_id=1;
+delete post where post_id=15;
+select * from board where board_id = 3;
+select * from post;
+   
+create table calendar(
+	id number primary key,
+	groupId NUMBER,
+	title varchar2(50),
+	writer varchar2(50),
+	content varchar2(1000),
+	start1 date,
+	end1 date,
+	allDay number(1),
+	textColor varchar(50),
+	backgroundColor varchar2(50),
+	borderColor varchar2(50),
+    member_id varchar2(50)
+);
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test2', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test3', 'test3', 'test3', '010-1234-5678', 'test3@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test3', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test4', 'test4', 'test4', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test4', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test5', 'test2', 'test5', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test5', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test6', 'test2', 'test6', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test6', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test7', 'test2', 'test7', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test7', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test8', 'test2', 'test8', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test8', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test9', 'test2', 'test9', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test9', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test10', 'test2', 'test10', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test10', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test11', 'test2', 'test11', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test11', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO post_content (post_id, board_id, content)
+VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test1', 'test1', 'test1', '010-1234-5678', 'test1@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test2', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test3', 'test3', 'test3', '010-1234-5678', 'test3@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test3', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test4', 'test4', 'test4', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test4', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test5', 'test2', 'test5', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test5', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test6', 'test2', 'test6', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test6', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test7', 'test2', 'test7', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test7', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test8', 'test2', 'test8', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test8', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test9', 'test2', 'test9', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test9', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test10', 'test2', 'test10', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test10', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test11', 'test2', 'test11', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test11', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
 
 INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),
@@ -1124,6 +1361,10 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
     
 
+<<<<<<< HEAD
 select * from calendar;
 
 update student set approve_request_date = sysdate where student_id = 'xogus';
+=======
+select * from calendar;
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git

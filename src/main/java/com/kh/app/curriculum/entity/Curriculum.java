@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class Curriculum {
 
-	private int curriculumId;
+	private String curriculumId;
 	private String classId;
 	private String teacherId;
 	private String subject;

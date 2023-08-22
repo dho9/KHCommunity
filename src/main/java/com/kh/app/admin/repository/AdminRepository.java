@@ -23,6 +23,7 @@ import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -92,7 +93,7 @@ public interface AdminRepository {
 			+ "    v.vacation_approve_check = '2'")
 	List<AdminVacationApproveDto> vacationApproveListThree();
 
-	List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters);
+	List<AdminEmployeeListDto> findAllEmployee(Map<String, Object> filters, RowBounds rowBounds);
 
 	@Select("SELECT m.* FROM member m INNER JOIN authority a ON m.member_id = a.member_id WHERE a.auth = 'ADMIN' AND m.member_id = #{id}")
 	Member findById(String id);
@@ -137,6 +138,13 @@ public interface AdminRepository {
 	@Delete("delete from member where member_id = #{memberId}")
 	int deleteAdminTeacher(String memberId);
 
+	int totalCountEmployees(Map<String, Object> filters);
+
+	@Delete("delete from authority where member_id = #{memberId}")
+	int deleteAdminAuthority(String memberId);
+
+	@Insert("insert into teacher values (#{teacherId}, sysdate)")
+	int insertTeacher(TeacherCreateDto teacher);
 	@Insert("insert into message_box values (seq_message_id.NEXTVAL, #{sendId}, #{receiveId}, #{messageContent}, default, default, 'n')")
 	int sendMessageToStudent(MessageBox message);
 

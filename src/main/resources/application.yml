@@ -22,7 +22,7 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 50MB
-      location: C:/Workspaces/final_workspace/finalProject/src/main/webapp/resources/images/upload
+      location: C:/Workspaces/khcommunity/KHCommunity/src/main/webapp/resources/images/upload
   mail:
     host: smtp.gmail.com
     port: 587
