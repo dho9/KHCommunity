@@ -872,8 +872,8 @@ CREATE OR REPLACE TRIGGER DELETE_COMMENT_TRIGGER
 AFTER delete ON post_comment
 FOR EACH ROW
 BEGIN
-  insert into delete_comment 
-  values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at, :OLD.comment_like);
+  insert into delete_comment (comment_id, post_id, board_id, member_id, comment_content, comment_level, comment_ref, comment_created_at)
+  values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at);
   
 END;
 /
@@ -1143,6 +1143,7 @@ select
 	    p.post_id=1;
 delete post where post_id=15;
 select * from board where board_id = 3;
+select * from post;
    
     
 
