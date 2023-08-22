@@ -68,7 +68,7 @@
 			      <div class="mx-auto">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;미승인 내역</div>
 			    </div>
 			    <div>
-			      <button type="button" class="btn btn-warning btn-sm mr-2" onclick="location.href='${pageContext.request.contextPath}/admin/studentApprovement.do'">수강생 승인</button>
+			      <button type="button" class="btn btn-warning btn-sm mr-2" onclick="location.href='${pageContext.request.contextPath}/admin/adminStudentApprovementList.do'">수강생 승인</button>
 			      <button type="button" class="btn btn-success btn-sm" onclick="location.href='${pageContext.request.contextPath}/admin/vacationApprovementList.do'">휴가 승인</button>
 			    </div>
 			  </div>

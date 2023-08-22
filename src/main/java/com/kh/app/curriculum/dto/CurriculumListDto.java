@@ -1,17 +1,16 @@
-package com.kh.app.curriculum.entity;
+package com.kh.app.curriculum.dto;
 
 import java.time.LocalDate;
 
 import lombok.Data;
 
 @Data
-public class Curriculum {
+public class CurriculumListDto {
 
-	private int curriculumId;
-	private String classId;
-	private String teacherId;
 	private String subject;
 	private String curriculumName;
+	private String classId;
+	private String memberName;
 	private LocalDate curriculumStartAt;
 	private LocalDate curriculumEndAt;
 	

@@ -147,7 +147,7 @@
   				<path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z"/>
 			</svg>
           </span>
-          <a href="${pageContext.request.contextPath}/admin/chatList.do">과정 등록/조회</a>
+          <a href="${pageContext.request.contextPath}/admin/adminCourseList.do">과정 등록/조회</a>
         </div>
         <div class="reportManagement">
           <span style="color:white;">
@@ -156,7 +156,7 @@
               <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
             </svg>
           </span>
-          <a href="${pageContext.request.contextPath}/admin/chatList.do">채팅 조회</a>
+          <a href="${pageContext.request.contextPath}/admin/adminChatList.do">채팅 조회</a>
         </div>
         <div class="reportManagement">
           <span style="color:white;">

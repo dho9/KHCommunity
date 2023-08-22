@@ -52,8 +52,8 @@
                   </thead>
                   <tbody>
                   	<c:forEach items="${students}" var="student" varStatus="vs">
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" data-phone="${student.memberPhone}" data-birthday="${student.birthday}" data-subject="${student.curriculumName}" data-class="${student.classId}" data-email="${student.memberEmail}" data-lastDay="${student.curriculumEndAt}" data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" data-handle="@mdo">
-                          <td>${vs.count}</td>
+                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" data-phone="${student.memberPhone}" data-birthday="${student.birthday}" data-subject="${student.curriculumName}" data-class="${student.classId}" data-email="${student.memberEmail}" data-lastDay="${student.curriculumEndAt}" data-curriculum-id="${student.curriculumId}" data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" data-handle="@mdo">
+                          <td>${(currentPage-1) * 10 + vs.index + 1}</td>
                           <td>${student.studentId}</td>
                           <td>${student.memberName}</td>
                           <td>${student.curriculumName}</td>
@@ -108,18 +108,14 @@
 			</div>
       </div>
       <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl" style="width: 1200px;">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">상세 정보</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <div class="row">
-                    <div class="col-md-6">
-                        <iframe class="border rounded-4" src="${pageContext.request.contextPath}/resources/pdf/쓰리고근로계약서.pdf" style="width: 100%; height: 500px;"></iframe>
-                    </div>
-                    <div class="col-md-6">
+                    <div style="width:600px; margin:auto;">
                    	  <div class="border rounded-4" style="padding:30px;">
                       <form:form id="dataForm" method="POST" name="modalFrm" action="${pageContext.request.contextPath}/admin/adminStudentUpdate.do" style="font-size: 20px;">
                           <input type="hidden" name="rowId" id="modalRowId">
@@ -136,20 +132,13 @@
 								<!-- 학생타입 : 수료생 -->
 								<input type="radio" name="studentType" id="modalStudentType3" value="p">수료생
                           <br>
-                          커리큘럼
-                          <br>
-                          <select>
-                          	<c:forEach items="${curriculums}" var="curriculum">
-	                          	<option value="${curriculum.curriculumId}">${curriculum.curriculumName}(${curriculum.classId}, ${curriculum.teacherId}) 수료일: ${curriculum.curriculumEndAt}</option>
-                          	</c:forEach>
-                          </select>
+                          <input type="hidden" id="modalCurriculumId">
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                           <button class="btn btn-danger" type="button" id="btnBan">강퇴</button> 
                       </form:form>
                    	  </div>
                     </div>
-                  </div>
                 </div>
                 <!-- 모달의 나머지 부분은 동일하게 유지 -->
             </div>
@@ -198,6 +187,7 @@
             const studentType = row.getAttribute("data-studentType");
             const handle = row.getAttribute("data-handle");
             const studentTypeValue = row.getAttribute("data-studentType");
+            const studentCurriculumId = row.getAttribute("data-curriculum-id");
     
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
@@ -211,6 +201,7 @@
             document.getElementById("modalStudentType1").checked = (studentTypeValue === "예비생");
             document.getElementById("modalStudentType2").checked = (studentTypeValue === "수강생");
             document.getElementById("modalStudentType3").checked = (studentTypeValue === "수료생");
+            document.getElementById("modalCurriculumId").value = studentCurriculumId;
           });
         });
       
@@ -248,7 +239,7 @@
             	studentId,
             	studentType,
             	receiveId,
-            	messageContent
+            	messageContent,
             },
             headers: {
                 "X-CSRF-TOKEN": token
