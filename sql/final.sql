@@ -16,34 +16,37 @@
 --=============================================
 -- 테이블 삭제
 --=============================================
---DROP TABLE member CASCADE CONSTRAINTS;
---DROP TABLE class CASCADE CONSTRAINTS;
---DROP TABLE teacher CASCADE CONSTRAINTS;
---DROP TABLE employee CASCADE CONSTRAINTS;
---DROP TABLE board CASCADE CONSTRAINTS;
---DROP TABLE post_content CASCADE CONSTRAINTS;
---DROP TABLE post_attachment CASCADE CONSTRAINTS;
---DROP TABLE favorite CASCADE CONSTRAINTS;
---DROP TABLE report CASCADE CONSTRAINTS;
---DROP TABLE talker CASCADE CONSTRAINTS;
---DROP TABLE store CASCADE CONSTRAINTS;
---DROP TABLE ticket CASCADE CONSTRAINTS;
---DROP TABLE ticket_order CASCADE CONSTRAINTS;
---DROP TABLE student_attachment CASCADE CONSTRAINTS;
---DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
---DROP TABLE student CASCADE CONSTRAINTS;
---DROP TABLE scheduler CASCADE CONSTRAINTS;
---DROP TABLE vacation CASCADE CONSTRAINTS;
---DROP TABLE post CASCADE CONSTRAINTS;
---DROP TABLE post_comment CASCADE CONSTRAINTS;
---DROP TABLE message_box CASCADE CONSTRAINTS;
---DROP TABLE chat_room CASCADE CONSTRAINTS;
---DROP TABLE chat_message CASCADE CONSTRAINTS;
---DROP TABLE authority CASCADE CONSTRAINTS;
---DROP TABLE curriculum CASCADE CONSTRAINTS;
---DROP TABLE quit_member CASCADE CONSTRAINTS;
---DROP TABLE delete_post CASCADE CONSTRAINTS;
---DROP TABLE delete_comment CASCADE CONSTRAINTS;
+DROP TABLE member CASCADE CONSTRAINTS;
+DROP TABLE class CASCADE CONSTRAINTS;
+DROP TABLE teacher CASCADE CONSTRAINTS;
+DROP TABLE employee CASCADE CONSTRAINTS;
+DROP TABLE board CASCADE CONSTRAINTS;
+DROP TABLE post_content CASCADE CONSTRAINTS;
+DROP TABLE post_attachment CASCADE CONSTRAINTS;
+DROP TABLE favorite CASCADE CONSTRAINTS;
+DROP TABLE report CASCADE CONSTRAINTS;
+DROP TABLE talker CASCADE CONSTRAINTS;
+DROP TABLE store CASCADE CONSTRAINTS;
+DROP TABLE ticket CASCADE CONSTRAINTS;
+DROP TABLE ticket_order CASCADE CONSTRAINTS;
+DROP TABLE student_attachment CASCADE CONSTRAINTS;
+DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
+DROP TABLE student CASCADE CONSTRAINTS;
+DROP TABLE scheduler CASCADE CONSTRAINTS;
+DROP TABLE vacation CASCADE CONSTRAINTS;
+DROP TABLE post CASCADE CONSTRAINTS;
+DROP TABLE post_comment CASCADE CONSTRAINTS;
+DROP TABLE  post_like CASCADE CONSTRAINTS;
+DROP TABLE  comment_like CASCADE CONSTRAINTS;
+DROP TABLE message_box CASCADE CONSTRAINTS;
+DROP TABLE chat_room CASCADE CONSTRAINTS;
+DROP TABLE chat_message CASCADE CONSTRAINTS;
+DROP TABLE authority CASCADE CONSTRAINTS;
+DROP TABLE curriculum CASCADE CONSTRAINTS;
+DROP TABLE calendar CASCADE CONSTRAINTS;
+DROP TABLE quit_member CASCADE CONSTRAINTS;
+DROP TABLE delete_post CASCADE CONSTRAINTS;
+DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --=============================================
 -- 테이블 전체 삭제
 --=============================================
@@ -76,22 +79,23 @@
 --===============================================
 -- 시퀀스 삭제
 --===============================================
---drop sequence seq_student_attach_id;
---drop sequence seq_schedule_id;
---drop sequence seq_vacation_id;
---drop sequence seq_vacation_attach_id;
---drop sequence seq_board_id;
---drop sequence seq_post_id;
---drop sequence seq_post_attach_id;
---drop sequence seq_comment_id;
---drop sequence seq_message_id;
---drop sequence seq_report_id;
---drop sequence seq_chat_id;
---drop sequence seq_store_id;
---drop sequence seq_ticket_id;
---drop sequence seq_order_id;
---drop sequence seq_chat_message_no;
---drop sequence seq_curriculum_id;
+drop sequence seq_student_attach_id;
+drop sequence seq_schedule_id;
+drop sequence seq_vacation_id;
+drop sequence seq_vacation_attach_id;
+drop sequence seq_board_id;
+drop sequence seq_post_id;
+drop sequence seq_post_attach_id;
+drop sequence seq_comment_id;
+drop sequence seq_message_id;
+drop sequence seq_report_id;
+drop sequence seq_chat_id;
+drop sequence seq_store_id;
+drop sequence seq_ticket_id;
+drop sequence seq_order_id;
+drop sequence seq_chat_message_no;
+drop sequence seq_curriculum_id;
+drop sequence seq_cal;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -262,9 +266,10 @@ create table comment_like (
 CREATE TABLE message_box (
    message_id   number      NOT NULL,
    send_id   varchar2(20)      NOT NULL,
-   recieve_id   varchar2(20)      NOT NULL,
+   receive_id   varchar2(20)      NOT NULL,
    message_content   varchar2(2000),
    send_at   date   DEFAULT sysdate,
+   anonymous_check char(1) default 'n',
    read_check   char(1)
 );
 
@@ -682,7 +687,7 @@ REFERENCES member (
 )ON DELETE CASCADE;
 
 ALTER TABLE message_box ADD CONSTRAINT FK_member_TO_message_box_2 FOREIGN KEY (
-   recieve_id
+   receive_id
 )
 REFERENCES member (
    member_id
@@ -812,6 +817,8 @@ alter table post add constraint CK_post_status_check check (status_check in ('y'
 -- 임시저장 상태 유무
 alter table message_box add constraint CK_messagebox_read_check check (read_check in ('y', 'n'));
 -- 쪽지읽었는지 ?
+alter table message_box add constraint CK_messagebox_anonymous_check check (anonymous_check in ('y', 'n'));
+-- 익명으로 보낼건지 ?
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
 -- 신고처리됐는지?
 
@@ -1033,10 +1040,10 @@ INSERT INTO post_like (post_id, member_id) VALUES (1, 'alsgml');
 INSERT INTO comment_like (comment_id, member_id) VALUES (1, 'alfn');
 
 -- message_box
-INSERT INTO message_box (message_id, send_id, recieve_id, message_content, read_check)
-VALUES (seq_message_id.NEXTVAL, 'alfn', 'gmlwls', '언니 오늘 점심 뭐먹어?', 'n');
-INSERT INTO message_box (message_id, send_id, recieve_id, message_content, read_check)
-VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공부어떻게 해야함 ??', 'y');
+INSERT INTO message_box (message_id, send_id, receive_id, message_content,  anonymous_check, read_check)
+VALUES (seq_message_id.NEXTVAL, 'alfn', 'gmlwls', '언니 오늘 점심 뭐먹어?', default, 'n');
+INSERT INTO message_box (message_id, send_id, receive_id, message_content,  anonymous_check, read_check)
+VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공부어떻게 해야함 ??', default, 'y');
 
 -- report
 INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type, report_send_date, report_check)
@@ -1107,85 +1114,7 @@ select * from delete_comment;
 select * from authority;
 
 
-    
 
-INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
-VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
-
-INSERT INTO post_content (post_id, board_id, content)
-VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test1', 'test1', 'test1', '010-1234-5678', 'test1@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test2', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test3', 'test3', 'test3', '010-1234-5678', 'test3@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test3', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test4', 'test4', 'test4', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test4', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test5', 'test2', 'test5', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test5', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test6', 'test2', 'test6', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test6', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test7', 'test2', 'test7', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test7', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test8', 'test2', 'test8', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test8', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test9', 'test2', 'test9', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test9', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test10', 'test2', 'test10', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test10', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test11', 'test2', 'test11', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test11', '3', 'y', '23/08/18', sysdate, 'p');
-
-INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
-VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
-VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
 
 INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),
