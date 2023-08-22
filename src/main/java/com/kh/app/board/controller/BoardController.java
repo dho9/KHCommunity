@@ -3,6 +3,7 @@ package com.kh.app.board.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,8 @@ import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
-import com.kh.app.member.entity.MemberDetails;
-import com.nimbusds.openid.connect.sdk.assurance.evidences.attachment.Attachment;
 import com.kh.app.common.HelloSpringUtils;
+import com.kh.app.member.entity.MemberDetails;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,13 +49,9 @@ public class BoardController {
 	public String freeBoardList(Model model) {
 		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll();
         log.debug("freeBoardLists = {}", freeBoardLists);
-        
         model.addAttribute("freeBoardLists", freeBoardLists);
-        
         return "/board/freeBoardList";
-		
-		
-	}
+ 	}
 	
 	@GetMapping("/marketBoardList.do")
 	public void marketBoardList() {
@@ -137,8 +133,8 @@ public class BoardController {
 	 */
 	@GetMapping("/myBoards.do")
 	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
-//		String memberId = principal.getMemberId();
-		List<BoardSearchDto> boards = boardService.findAllByMemberId("gmlwls");
+		String memberId = principal.getMemberId();
+		List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
 		log.debug("boards = {}", boards);
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -153,10 +149,10 @@ public class BoardController {
 	 */
 	@GetMapping("/favorite.do")
 	public ResponseEntity<?> isFavorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int boardId = Integer.parseInt(_boardId);
 		
-		Favorite favorite = boardService.findFavoriteByMemberId(boardId, "gmlwls");
+		Favorite favorite = boardService.findFavoriteByMemberId(boardId, memberId);
 		log.debug("favorite = {}", favorite);
 		
 		boolean available = true;
@@ -177,10 +173,10 @@ public class BoardController {
 	 */
 	@PostMapping("/favorite.do")
 	public ResponseEntity<?> favorite(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _boardId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int boardId = Integer.parseInt(_boardId);
 		
-		Favorite favorite = boardService.findFavoriteByMemberId(boardId, "gmlwls");
+		Favorite favorite = boardService.findFavoriteByMemberId(boardId, memberId);
 		log.debug("favorite = {}", favorite);
 		
 		boolean available = true;
@@ -190,10 +186,10 @@ public class BoardController {
 		
 		int result = 0;
 		if(available) {
-			result = boardService.deleteFavoriteByMemberId(boardId, "gmlwls");
+			result = boardService.deleteFavoriteByMemberId(boardId, memberId);
 		}
 		else {
-			result = boardService.insertFavoriteByMemberId(boardId, "gmlwls");
+			result = boardService.insertFavoriteByMemberId(boardId, memberId);
 		}
 		
 		return ResponseEntity
@@ -224,10 +220,10 @@ public class BoardController {
 	 */
 	@GetMapping("/postLike.do")
 	public ResponseEntity<?> isPostLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int postId = Integer.parseInt(_postId);
 		
-		PostLike postLike = boardService.findPostLikeByMemberId(postId, "alfn");
+		PostLike postLike = boardService.findPostLikeByMemberId(postId, memberId);
 		log.debug("postLike = {}", postLike);
 		
 		boolean available = true;
@@ -251,10 +247,10 @@ public class BoardController {
 	 */
 	@PostMapping("/postLike.do")
 	public ResponseEntity<?> postLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
-//		String memberId = principal.getMemberId();
+		String memberId = principal.getMemberId();
 		int postId = Integer.parseInt(_postId);
 		
-		PostLike postLike = boardService.findPostLikeByMemberId(postId, "alfn");
+		PostLike postLike = boardService.findPostLikeByMemberId(postId, memberId);
 		log.debug("postLike = {}", postLike);
 		
 		boolean available = true;
@@ -264,10 +260,10 @@ public class BoardController {
 		
 		int result = 0;
 		if(available) {
-			result = boardService.deletePostLikeByMemberId(postId, "alfn");
+			result = boardService.deletePostLikeByMemberId(postId, memberId);
 		}
 		else {
-			result = boardService.insertPostLikeByMemberId(postId, "alfn");
+			result = boardService.insertPostLikeByMemberId(postId, memberId);
 		}
 		
 		PostLike likeCount = boardService.findPostLikeCount(postId);
@@ -287,39 +283,42 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
+			@RequestParam String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
-			@RequestParam(value = "file", required = false) List<MultipartFile> files)
-					throws IllegalStateException, IOException{
-		// 1. 파일저장
-			List<PostAttachment> attachments = new ArrayList<>(); 
-			for(MultipartFile file : files) {
-				if(file != null) {
-					String originalFilename = file.getOriginalFilename();
-					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-					file.transferTo(destFile);	
-					
-					PostAttachment attach = 
-							PostAttachment.builder()
-							.postOriginalFilename(originalFilename)
-							.postRenamedFilename(renamedFilename)
-							.build();
-					attachments.add(attach);
-				}
-				
-			}
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
 		
-		BoardCreateDto board = BoardCreateDto.builder()
+			log.debug("loginMember = {}", member);
+			List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+			// 1. 파일저장
+//			List<PostAttachment> attachments = new ArrayList<>(); 
+//			for(MultipartFile file : files) {
+//				if(file != null) {
+//					String originalFilename = file.getOriginalFilename();
+//					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+//					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+//					file.transferTo(destFile);	
+//					
+//					PostAttachment attach = 
+//							PostAttachment.builder()
+//							.postOriginalFilename(originalFilename)
+//							.postRenamedFilename(renamedFilename)
+//							.build();
+//					attachments.add(attach);
+//				}
+//				
+//			}
+		
+			BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
 				.content(text)
 				.boardId(boardId)
 				.memberId(member.getMemberId())
-				.attachments(attachments)
+				.tags(tags)
+//				.attachments(attachments)
 				.build();
 		log.debug("baord = {}", board);
 		int result = boardService.insertBoard(board);
 		result = boardService.insertPostContent(board);
-		
 		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 	}

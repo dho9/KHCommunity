@@ -4,6 +4,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<style>
+.tag {
+	cursor: pointer;
+}
+</style>
+
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -34,6 +40,9 @@
 					  	<hr>
 					  	<h1 class="large" style="font-size : 20px;">${postDetail.title}</h2> <br>
 					  	<p class="large">${postDetail.content}</p> <br>
+					  	<c:forEach items="${postDetail.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
 					  	<ul class="status">
 					  		<%-- 좋아요 버튼 --%>
 					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
@@ -46,6 +55,10 @@
 			</article>
 		</c:if>
 	</div>
+	<!-- 해시태그를 클릭했을 때의 폼 -->
+	<form name="tagFrm" action="${pageContext.request.contextPath}/board/boardSearch.do">
+	    <input type="hidden" name="keyword" class="keyword" />
+	</form>
 	<form:form name="tokenFrm"></form:form>
 	<script>
 	// load됐을때 공감(좋아요) 했는지 확인
@@ -112,6 +125,16 @@
             }
 		});
 	};
+	
+	// 해시태그 검색
+	document.querySelectorAll('.tag').forEach((tag) => {
+	    tag.addEventListener('click', (e) => {
+	        const keyword = e.target.innerHTML.replace(/#/g, '');
+			document.querySelector('.keyword').value = keyword;
+			
+			document.tagFrm.submit();
+	    });
+	});
 	</script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

@@ -32,7 +32,7 @@
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
-					  	<p>${board.boardName}</p>
+					  	<span class="boardName">${board.boardName}</span>
 					  	<ul class="status">
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote">${board.postLike}</li>

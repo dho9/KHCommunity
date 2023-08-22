@@ -12,9 +12,19 @@
     float: right;
     cursor: pointer;
 }
+input[name=_tags] {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    width: 100px;
+    text-align: center;
+    height: 27px;
+    border: none;
+}
+.tag-container {
+	margin-right: 20px;
+}
 </style>
-
-
 
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
@@ -47,8 +57,11 @@
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
+					  	<c:forEach items="${board.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li><img class="like" data-value="${board.postId}" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
@@ -59,15 +72,16 @@
 			</article>
 		</c:if>
 	</div>
-	<%-- 글작성 폼 --%>
+    <form:form name="tokenFrm"></form:form>
 	<script>
+	<%-- 글작성 폼 --%>
 	function showInputForm() {
 		 
 	    const writeButton = document.getElementById("writeArticleButton");
 	    const articlesContainer = document.querySelector(".articles");
 
 	    const formHtml = `
-	      <form:form class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 495px;">
+	      <form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 63%;">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
@@ -99,8 +113,12 @@
 	- 음란물, 성적 수치심을 유발하는 행위 
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
-        	<span title="해시태그" class="hashtag"><button>#</button></span>
-	        <input type="file" name="file" id="file" multiple>
+	        <div>
+	        	<label for="hashTag">해시태그</label><br>
+	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
+	        	<div class="hashTag-container"></div>
+	        </div>
+	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
 	      </form:form>
@@ -113,18 +131,70 @@
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
+	 	// 해시태그
+   		const hashTag = document.querySelector('.hashTag');
+	    const hashTagContainer = document.querySelector('.hashTag-container');
+	    
+	    let hashTags = [];
+	    
+	    hashTag.addEventListener('keydown', (e) => {
+	    	if(e.key === 'Enter') {
+	    		e.preventDefault();
+	    		const tag = hashTag.value.trim();
+	    		
+	    		if (tag.length > 5) {
+	    			alert('다섯글자까지만 가능합니다');
+	    			return; 
+	    		}
+	    		if(hashTags.length >= 7) {
+	    			alert('해시태그는 최대 7개까지 가능합니다.');
+	    			return;
+	    		}
+	    		addHashTag(tag);
+	    		hashTag.value = "";
+	    	}
+	    });
+	    
+	    function addHashTag(tag) {
+	        tag = tag.replace(/[\s]/g, '').trim();
+	        console.log(tag);
+	        if (!hashTags.includes(tag)) {
+	            const tagContainer = document.createElement("div");
+	            tagContainer.className = "tag-container";
+
+	            const tagElement = document.createElement("input");
+	            tagElement.value = " #" + tag + " ";
+	            tagElement.setAttribute("readonly", true);
+	            tagContainer.appendChild(tagElement);
+
+	            const removeButton = document.createElement("i");
+	            removeButton.style.cursor = "pointer";
+	            removeButton.innerHTML = "x";
+	            removeButton.addEventListener('click', () => {
+	                hashTagContainer.removeChild(tagContainer);
+	                hashTags = hashTags.filter((hashTags) => hashTags !== tag);
+	            });
+	            tagContainer.appendChild(removeButton);
+
+	            hashTags.push(tag);
+	            hashTagContainer.appendChild(tagContainer);
+
+	            tagElement.setAttribute("name", "_tags");
+	            tagElement.setAttribute("value", "#" + tag);
+	        }
+	    }
 	 }
 		
 	  function hideInputForm() {
 	    const writeButton = document.getElementById("writeArticleButton");
 	    const createForm = document.getElementById("createForm");
-
+	
 	    writeButton.style.display = "block";
 	    createForm.remove();
 	  }
-	</script>
-    <form:form name="tokenFrm"></form:form>
-    <script>
+	  
+	  
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
     	console.log(document.querySelector('.bi').dataset.value);
@@ -183,6 +253,36 @@
             }
         });
     };
+    
+ 	// load됐을때 공감(좋아요) 했는지 확인
+	window.onload = () => {
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
+			data : {
+				_postId : document.querySelector('.like').dataset.value
+			},
+			method : "GET",
+            dataType : "json",
+            success(responseData) {
+            	console.log(responseData);
+    			const {available, likeCount} = responseData;
+    			const {postLikeCount} = likeCount;
+    			
+    			const like = document.querySelector('.like');
+    			const vote = document.querySelector('.vote');
+    			if(available) {
+                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+                else {
+                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+            }
+		});
+	};
     </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

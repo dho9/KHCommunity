@@ -3,6 +3,8 @@ package com.kh.app.admin.controller;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.app.admin.service.AdminService;
+import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.Teacher;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -45,6 +51,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Slf4j
 @RequestMapping("/admin")
 public class AdminController {
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private AdminService adminService;
@@ -152,7 +161,8 @@ public class AdminController {
 	public void adminStudentList(Model model,
 	                             @RequestParam(value = "searchType", required = false) String searchType,
 	                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-	                             @RequestParam(value = "student_type", required = false) String[] _studentTypes) {
+	                             @RequestParam(value = "student_type", required = false) String[] _studentTypes, 
+								 @RequestParam(defaultValue = "1") int page) {
 
 	    List<String> studentTypes = null;
 
@@ -160,13 +170,31 @@ public class AdminController {
 	        studentTypes = Arrays.asList(_studentTypes);
 	    }
 
+	    // 검색 필터
 	    Map<String, Object> filters = new HashMap<>();
 	    filters.put("searchType", searchType);
 	    filters.put("searchKeyword", searchKeyword);
 	    filters.put("studentTypes", studentTypes);
 
-	    List<AdminStudentListDto> students = adminService.findAllStudents(filters);
+	    // 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+	    List<AdminStudentListDto> students = adminService.findAllStudents(filters, params);
 	    model.addAttribute("students", students);
+	    
+	    model.addAttribute("currentPage", page);
+	    
+	    // 전체 학생 수를 가져온다.
+	    int totalCount = adminService.totalCountStudents(filters);
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+	  
 	}
 	
 	// 직원 목록 조회 - 이태현
@@ -191,50 +219,51 @@ public class AdminController {
 		model.addAttribute("employees", employees);
 	}
 	
-	// 직원 Id로 검색 - 이태현
-	@GetMapping("/findById.do")
-	@ResponseBody
-	public Member findById(@RequestParam String id) {
-	    Member member = adminService.findById(id);
-	    return member;
-	}
-	
 	@GetMapping("/insertMember.do")
 	public void insertMember() {}
 	
-	@PostMapping("/insertMember.do")
+	@RequestMapping("insertMember.do")
     public String insertMember(
-            @RequestParam String id,
-            @RequestParam String pw,
-            @RequestParam String name,
-            @RequestParam LocalDate birthday,
-            @RequestParam String email,
-            @RequestParam String phone,
-            @RequestParam String dept) {
-		LocalDateTime currentTime = LocalDateTime.now();
+        @RequestParam String id,
+        @RequestParam String pw,
+        @RequestParam String name,
+        @RequestParam String birthday, // 생년월일을 String으로 받음
+        @RequestParam String email,
+        @RequestParam String phone,
+        @RequestParam String dept) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+        LocalDate localDateBirthday = LocalDate.parse(birthday, formatter); // LocalDate 형식으로 변환
+        
+        String encodedPassword = passwordEncoder.encode(pw);
 		// member 등록
 		MemberCreateDto _member = 
 				MemberCreateDto.builder()
 				.memberId(id)
-				.memberPwd(pw)
+				.memberPwd(encodedPassword)
 				.memberName(name)
 				.memberPhone(phone)
 				.email(email)
-				.birthday(birthday)
+				.birthday(localDateBirthday)
 				.build();
 		// employee 등록
 		EmployeeCreateDto _employee = 
 				EmployeeCreateDto.builder()
 				.id(id)
 				.dept(dept)
-				.employeeEnrollDate(currentTime)
 				.build();
-		log.debug("member = {}", _member);
-//		int result1 = adminService.insertMember(_member);
-//		int result2 = adminService.insertEmployee(_employee);
-		
+		log.debug("phone = {}", phone);
+		// auth : ADMIN 추가
+		Authority auth = new Authority(id, "ADMIN");
+		// member테이블 insert
+		int result1 = adminService.insertMember(_member);
+		// employee테이블 insert
+		int result2 = adminService.insertEmployee(_employee);
+		// authority테이블 insert
+		int result3 = adminService.insertAuth(auth);
         return "redirect:/admin/employeeList.do";
     }
+	
 	// 수강생 정보 수정 - 유성근
 	@PostMapping("/adminStudentUpdate.do")
 	public String adminStudentUpdate(@Valid AdminStudentListDto student) {
@@ -244,9 +273,66 @@ public class AdminController {
 		return "redirect:/admin/adminStudentList.do";
 	}
 	
-	// 수강생 삭제
+	// 수강생 삭제 - 유성근
 	@PostMapping("/adminStudentDelete.do")
-	public String adminStudentDelete() {
-		return null;
+	public String adminStudentDelete(@Valid AdminStudentListDto student) {
+		int result = adminService.deleteAdminStudent(student);
+		return "redirect:/admin/adminStudentList.do";
 	}
+	
+
+	// 수강생 승인 목록 조회 - 유성근
+	@GetMapping("/adminStudentApprovementList.do")
+	public void adminStudentApprovementList() {}
+
+	// 직원 정보 수정
+	@PostMapping("/adminEmployeeUpdate.do")
+	public String adminEmployeeUpdate(@Valid AdminEmployeeListDto employee) {
+		log.debug("employee = {}", employee);
+		int result = adminService.updateAdminEmployee(employee);
+		
+		return "redirect:/admin/employeeList.do";
+	}
+	
+	// 직원 삭제
+	@PostMapping("/adminEmployeeDelete.do")
+	public String adminEmployeeDelete(@Valid AdminEmployeeListDto employee) {
+		log.debug("employee = {}", employee);
+		
+		int result = adminService.deleteAdminMember(employee);
+		
+		return "redirect:/admin/employeeList.do";
+	}
+	
+	@GetMapping("/teacherList.do")
+	public void teacherList(Model model,
+	            @RequestParam(value = "searchType", required = false) String searchType,
+	            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+	            @RequestParam(value = "subject", required = false) String[] _subjects){
+		List<String> subjects = null;
+		
+		if (_subjects != null) {
+			subjects = Arrays.asList(_subjects);
+		}
+		
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("searchType", searchType);
+		filters.put("searchKeyword", searchKeyword);
+		filters.put("subjects", subjects);
+		
+		log.debug("subjects = {}", subjects);
+		List<Teacher> teachers = adminService.findAllTeacher(filters);
+		log.debug("teachers = {}", teachers);
+		model.addAttribute("teachers", teachers);
+	}
+	
+	@PostMapping("/adminTeacherDelete.do")
+	public String adminTeacherDelete(@Valid Teacher teacher) {
+		String memberId = teacher.getMemberId();
+		// member테이블에서 삭제
+		int result = adminService.deleteAdminTeacher(memberId);
+		
+		return "redirect:/admin/teacherList.do";
+	}
+
 }

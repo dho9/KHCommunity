@@ -147,7 +147,7 @@ CREATE TABLE curriculum (
    curriculum_id   number      NOT NULL,
    class_id   varchar2(20)      NOT NULL,
    teacher_id   varchar2(20)      NOT NULL,
-   subject   varchar2(10),
+   subject   varchar2(30),
    curriculum_name   varchar(300),
    curriculum_start_at   date,
    curriculum_end_at   date
@@ -353,8 +353,7 @@ CREATE TABLE delete_comment (
    comment_content   varchar2(1000)      ,
    comment_level   number      ,
    comment_ref   number      ,
-   comment_created_at   date      ,
-   comment_like   number      
+   comment_created_at   date      
 );
 
 ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
@@ -487,8 +486,8 @@ ALTER TABLE curriculum ADD CONSTRAINT FK_teacher_TO_curriculum_1 FOREIGN KEY (
 )
 REFERENCES teacher (
    teacher_id
-);
-
+)on delete cascade;
+ALTER TABLE curriculum DROP CONSTRAINT FK_teacher_TO_curriculum_1;
 ALTER TABLE teacher ADD CONSTRAINT FK_member_TO_teacher_1 FOREIGN KEY (
    teacher_id
 )
@@ -529,14 +528,14 @@ ALTER TABLE student ADD CONSTRAINT FK_curriculum_TO_student_1 FOREIGN KEY (
 )
 REFERENCES curriculum (
    curriculum_id
-);
+)on delete cascade;
 
 ALTER TABLE vacation ADD CONSTRAINT FK_teacher_TO_vacation_1 FOREIGN KEY (
    teacher_id
 )
 REFERENCES teacher (
    teacher_id
-);
+)on delete cascade;
 
 ALTER TABLE vacation ADD CONSTRAINT FK_employee_TO_vacation_1 FOREIGN KEY (
    employee_id
@@ -872,9 +871,8 @@ CREATE OR REPLACE TRIGGER DELETE_COMMENT_TRIGGER
 AFTER delete ON post_comment
 FOR EACH ROW
 BEGIN
-  insert into delete_comment (comment_id, post_id, board_id, member_id, comment_content, comment_level, comment_ref, comment_created_at)
+  insert into delete_comment 
   values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at);
-  
 END;
 /
 --==============================================
@@ -929,6 +927,7 @@ VALUES ('ehdgus', '20/01/01');
 INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'352','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
 INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'351','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
 INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'353','ehdgus','자바','JAVA_융합','22/12/31',sysdate);
+INSERT INTO curriculum  (curriculum_id, class_id, teacher_id, subject, curriculum_name,curriculum_start_at,curriculum_end_at) VALUES (seq_curriculum_id.nextval,'353','ehdgus','정보보안','정보보안전문가','22/12/31',sysdate);
 
 -- student
 INSERT INTO student (student_id, curriculum_id, approve_check, approve_request_date, approve_complete_date,  student_type)
@@ -947,7 +946,6 @@ VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
 INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('godwjd', '행정', '2020/02/02');
 INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('chdan', '총무', '2020/02/02');
 INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('dnsdud', '운영', '2020/02/02');
-INSERT INTO employee (employee_id, job_code,employee_enroll_date) VALUES ('test', '운영', '2020/02/02');
 
 -- scheduler
 INSERT INTO scheduler (schedule_id, member_id, todo, schedule_created_at, schedule_completed_at  )
@@ -1047,13 +1045,16 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 -- order
 
 
---삭제 게시글 
-delete post where post_id =3;
---삭제 댓글
-delete post_comment where comment_id=2;
---삭제회원 
-delete member where member_id = 'test'; 
-delete member where member_id = 'test1'; 
+----삭제 게시글 
+--delete post where post_id =3;
+----삭제 댓글
+--delete post_comment where comment_id=2;
+----삭제회원 
+--delete member where member_id = 'disney1026'; 
+--delete member where member_id = 'test1'; 
+
+delete teacher where teacher_id = 'ehdgus';
+delete from member where member_id = 'test';
 
 select * from post_attachment;
 select * from member;
@@ -1083,6 +1084,21 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
+
+INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
+VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
+
+INSERT INTO post_content (post_id, board_id, content)
+VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test1', 'test1', 'test1', '010-1234-5678', 'test1@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test1', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
 SELECT
     b.board_name,
@@ -1145,5 +1161,91 @@ delete post where post_id=15;
 select * from board where board_id = 3;
 select * from post;
    
-    
+create table calendar(
+	id number primary key,
+	groupId NUMBER,
+	title varchar2(50),
+	writer varchar2(50),
+	content varchar2(1000),
+	start1 date,
+	end1 date,
+	allDay number(1),
+	textColor varchar(50),
+	backgroundColor varchar2(50),
+	borderColor varchar2(50),
+    member_id varchar2(50)
+);
 
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test2', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test3', 'test3', 'test3', '010-1234-5678', 'test3@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test3', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test4', 'test4', 'test4', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test4', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test5', 'test2', 'test5', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test5', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test6', 'test2', 'test6', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test6', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test7', 'test2', 'test7', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test7', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test8', 'test2', 'test8', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test8', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test9', 'test2', 'test9', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test9', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test10', 'test2', 'test10', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test10', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test11', 'test2', 'test11', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test11', '3', 'y', '23/08/18', sysdate, 'p');
+
+INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
+VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
+VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
+
+create sequence seq_cal
+	start with 1
+	increment by 1
+	minvalue 1
+	maxvalue 99999;
+    
+INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
+'내용-content',to_date('2023/08/19','YYYY/MM/DD'),
+to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
+select * from calendar;

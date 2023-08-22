@@ -19,5 +19,5 @@ public class Calendar {
 	private String textColor;
 	private String backgroundColor;
 	private String borderColor;
-
+	private String memberId;
 }
