@@ -1079,6 +1079,7 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 -- order
 
 
+
 ----삭제 게시글 
 --delete post where post_id =3;
 ----삭제 댓글
@@ -1088,7 +1089,7 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 --delete member where member_id = 'test1'; 
 
 delete teacher where teacher_id = 'ehdgus';
-delete from member where member_id = 'test';
+delete from member where member_id = 'admin';
 
 select * from post_attachment;
 select * from member;
@@ -1351,7 +1352,6 @@ VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE
 
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
-
 
 INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),

@@ -1,10 +1,13 @@
 package com.kh.app.admin.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +21,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,20 +31,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.app.admin.service.AdminService;
 import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.entity.PostAttachment;
+import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -208,7 +218,8 @@ public class AdminController {
 	public void employeeList(Model model,
 				            @RequestParam(value = "searchType", required = false) String searchType,
 				            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                            @RequestParam(value = "job_Code", required = false) String[] _job_Codes){
+                            @RequestParam(value = "job_Code", required = false) String[] _job_Codes,
+                            @RequestParam(defaultValue = "1") int page){
 		List<String> job_Codes = null;
 
 	    if (_job_Codes != null) {
@@ -220,9 +231,23 @@ public class AdminController {
 	    filters.put("searchKeyword", searchKeyword);
 	    filters.put("job_Codes", job_Codes);
 		
-	    log.debug("job_Codes = {}", job_Codes);
-		List<AdminEmployeeListDto> employees = adminService.findAllEmployee(filters);
+	    // 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		List<AdminEmployeeListDto> employees = adminService.findAllEmployee(filters, params);
 		model.addAttribute("employees", employees);
+		model.addAttribute("currentPage", page);
+		
+		// 전체 학생 수를 가져온다.
+	    int totalCount = adminService.totalCountEmployees(filters);
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
 	}
 	
 	@GetMapping("/insertMember.do")
@@ -270,6 +295,48 @@ public class AdminController {
         return "redirect:/admin/employeeList.do";
     }
 	
+	@GetMapping("/insertTeacher.do")
+	public void insertTeacher() {}
+	
+	@RequestMapping("insertTeacher.do")
+	public String insertTeacher(
+			@RequestParam String id,
+	        @RequestParam String pw,
+	        @RequestParam String name,
+	        @RequestParam String birthday, // 생년월일을 String으로 받음
+	        @RequestParam String email,
+	        @RequestParam String phone,
+	        @RequestParam String subject) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+        LocalDate localDateBirthday = LocalDate.parse(birthday, formatter); // LocalDate 형식으로 변환
+        
+        String encodedPassword = passwordEncoder.encode(pw);
+		// member 등록
+		MemberCreateDto _member = 
+				MemberCreateDto.builder()
+				.memberId(id)
+				.memberPwd(encodedPassword)
+				.memberName(name)
+				.memberPhone(phone)
+				.email(email)
+				.birthday(localDateBirthday)
+				.build();
+		// teacher 등록
+		TeacherCreateDto _teacher = 
+				TeacherCreateDto.builder()
+				.teacherId(id)
+				.build();
+		// auth : ADMIN 추가
+		Authority auth = new Authority(id, "TEACHER");
+		// member테이블 insert
+		int result1 = adminService.insertMember(_member);
+		// teacher테이블 insert
+		int result2 = adminService.insertTeacher(_teacher);
+		// authority테이블 insert
+		int result3 = adminService.insertAuth(auth);
+        return "redirect:/admin/teacherList.do";
+	}
 	// 수강생 정보 수정 - 유성근
 	@PostMapping("/adminStudentUpdate.do")
 	public String adminStudentUpdate(@Valid AdminStudentListDto student) {
@@ -344,9 +411,58 @@ public class AdminController {
 	public String adminTeacherDelete(@Valid Teacher teacher) {
 		String memberId = teacher.getMemberId();
 		// member테이블에서 삭제
-		int result = adminService.deleteAdminTeacher(memberId);
-		
+		int result1 = adminService.deleteAdminTeacher(memberId);
+		int result2 = adminService.deleteAdminAuthority(memberId);
 		return "redirect:/admin/teacherList.do";
 	}
+	
+	@GetMapping("/writeNotice.do")
+	public void writeNotice() {}
 
+	@PostMapping("/writeNotice.do")
+	public String writeNotice(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+		
+		// 1. 파일저장
+		int result = 0;
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		for(MultipartFile file : files) {
+			if(!file.isEmpty()) {
+				String originalFilename = file.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				file.transferTo(destFile);	
+				
+				PostAttachment attach = 
+						PostAttachment.builder()
+						.postOriginalFilename(originalFilename)
+						.postRenamedFilename(renamedFilename)
+						.boardId(boardId)
+						.build();
+				attachments.add(attach);
+			}
+		}
+		String memberId = "admin";
+		BoardCreateDto board = BoardCreateDto.builder()
+				.title(title)
+				.content(text)
+				.boardId(boardId)
+				.memberId(memberId)
+				.build();
+		log.debug("attach = {}", attachments);
+		log.debug("board = {}", board);
+		
+//		
+//		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+//			result = adminService.insertBoardNofiles(board);
+//		}else {
+//			result = adminService.insertBoard(board);
+//		}
+//		result = adminService.insertPostContent(board);
+		
+		return "redirect:/admin/writeNotice.do";
+	}
 }
