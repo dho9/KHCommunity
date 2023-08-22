@@ -72,7 +72,25 @@
             AND ${searchType} like '%' || #{searchKeyword} || '%'
         </if>
     </where>
-    
+  </select>
+  
+  <select id="totalCountEmployees" resultType="int">
+  	SELECT 
+  		count(*)
+	FROM member
+	JOIN 
+		employee ON member.member_id = employee.employee_id
+  <where>
+        <if test="job_Codes != null and !job_Codes.isEmpty()">
+            AND JOB_CODE IN
+            <foreach collection="job_Codes" item="job_Code" open="(" separator="," close=")">
+                #{job_Code}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+  </where>
   </select>
   
   <select id="findAllTeacher" resultType="Teacher">
@@ -83,21 +101,27 @@
 	    m.member_phone, 
 	    m.member_email, 
 	    m.birthday,
-	    c.curriculum_id,
-	    c.class_id,
-	    c.teacher_id,
-	    c.subject,
-	    c.curriculum_name,
-	    c.curriculum_start_at,
-	    c.curriculum_end_at,
 	    t.teacher_enroll_date
 	FROM 
 	    member m
 	INNER JOIN 
-	    curriculum c ON m.member_id = c.teacher_id
-	INNER JOIN 
-	    teacher t ON c.teacher_id = t.teacher_id
+	    teacher t ON m.member_id = t.teacher_id
 	<where>
+        
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+  	</where>
+  </select>
+  
+  <select id="totalCountCurriculum" resultType="int">
+    SELECT
+	    count(*)
+	FROM
+    	curriculum c
+	JOIN
+    	member m ON c.teacher_id = m.member_id
+    <where>
         <if test="subjects != null and !subjects.isEmpty()">
             AND subject IN
             <foreach collection="subjects" item="subject" open="(" separator="," close=")">
@@ -107,6 +131,35 @@
         <if test="searchType != null and searchKeyword != null">
             AND ${searchType} like '%' || #{searchKeyword} || '%'
         </if>
-  	</where>
+    </where>
+    
   </select>
+  
+  <select id="adminCourseList" resultType="CurriculumListDto">
+    SELECT
+	    c.subject,
+	    c.curriculum_name,
+	    c.class_id,
+	    m.member_name,
+	    c.teacher_id,
+	    c.curriculum_start_at,
+	    c.curriculum_end_at
+	FROM
+    	curriculum c
+	JOIN
+    	member m ON c.teacher_id = m.member_id
+    <where>
+        <if test="subjects != null and !subjects.isEmpty()">
+            AND subject IN
+            <foreach collection="subjects" item="subject" open="(" separator="," close=")">
+                #{subject}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+    </where>
+    
+  </select>
+  
 </mapper>

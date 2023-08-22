@@ -808,8 +808,9 @@ REFERENCES ticket (
 --==============================================
 --alter table member add constraint CK_member_role check (member_role in ('e', 't', 's'));
 -- e -> 직원, t는 강사, s 는 학생 (예비, 수강, 수료 모두 s)
-alter table student add constraint CK_student_approve_check check (approve_check in ('y', 'n'));
--- y는 인증ok, n은 인증x
+alter table student drop constraint CK_student_approve_check;
+alter table student add constraint CK_student_approve_check check (approve_check in ('y', 'n', 'i'));
+-- y는 인증ok, n은 인증x, i는 인증 신청 상태
 alter table student add constraint CK_student_student_type check (student_type in ('c', 's', 'p'));
 -- c는예비, s 는 학생 p는 수료
 alter table vacation add constraint CK_vacation_vacation_approve_check check (vacation_approve_check in ('0', '1', '2', '3'));
@@ -1079,6 +1080,7 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 -- order
 
 
+
 ----삭제 게시글 
 --delete post where post_id =3;
 ----삭제 댓글
@@ -1088,11 +1090,12 @@ INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2
 --delete member where member_id = 'test1'; 
 
 delete teacher where teacher_id = 'ehdgus';
-delete from member where member_id = 'test';
+delete from member where member_id = 'admin';
 
 select * from post_attachment;
 select * from member;
 select * from student;
+select * from student_attachment;
 select * from class;
 select * from curriculum;
 select * from teacher;
@@ -1352,11 +1355,16 @@ VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
 
-
 INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
     
 
+<<<<<<< HEAD
 select * from calendar;
+
+update student set approve_request_date = sysdate where student_id = 'xogus';
+=======
+select * from calendar;
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
