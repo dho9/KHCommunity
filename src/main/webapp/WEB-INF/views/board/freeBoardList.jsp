@@ -29,8 +29,13 @@
 				<c:forEach items="${freeBoardLists}" var="board">
 					<a class="article" href="${pageContext.request.contextPath}/board/boardDetail.do?id=${board.postId}">
 				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
-				  		<h3 class="medium">익명</h3>
-				  		<time class="medium">
+				  		<c:if test="${board.anonymousCheck eq 'y'}">
+					  		<h3 class="medium">익명</h3>
+				  		</c:if>
+				  		<c:if test="${board.anonymousCheck ne 'y'}">
+					  		<h3 class="medium">${board.memberId}</h3>
+				  		</c:if>
+					  	<time class="medium">
 						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
 						  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
 					  	</time>
@@ -61,7 +66,14 @@
 	    const articlesContainer = document.querySelector(".articles");
 
 	    const formHtml = `
-	      <form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 64%;">
+	      <form:form 
+	      	name="createFrm" 
+	      	class="hidden" 
+	      	action="${pageContext.request.contextPath}/board/createPost.do" 
+	      	id="createForm" 
+	      	method="post" 
+	      	style="height: 63%;"
+      		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
