@@ -35,7 +35,7 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 
 
 /* 정보수정 폼 */
-#update-container {display: flex; justify-content: center; align-items: center; min-height: 80vh; font-family: 'HakgyoansimWoojuR'; }
+#update-container {display: flex; justify-content: center; align-items: center; min-height: 57vh; font-family: 'HakgyoansimWoojuR'; }
 #delete-container form {width: 500px; padding: 78px; background-color: #fff; border-radius: 8px; text-align: left;}
 #update-container form {width: 500px; background-color: #fff; border-radius: 8px; text-align: left;}
 form tr {margin-bottom: 16px;}
@@ -49,7 +49,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 /*  추가된 css */
 #certificationDiv{display:none;} 
 #delete-container{display:none;}
-#update-container{display:none;}
+/* #update-container{display:none;} */
 #certificationDiv label{ font-size: 50px; color: blue; width:90%}
 #certificationDiv h1{font-family: 'HakgyoansimWoojuR'; font-size: 50px; font-weight:bold;}
 #certificaitonFrm{width: 90%; font-family: 'HakgyoansimWoojuR'; font-size: 22px; margin:5%;}
@@ -161,7 +161,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		<!--희진 내정보 끝 -->
 		
 		<!--희진 회원정보수정(비밀번호, 생일, 전화번호) 시작  -->
-			<div id="update-container" class="myPageDivs">
+			<div id="update-container" class="myPageDivs" style= "display:none;">
 				<%-- principal을 변수 loginMember 저장 --%>
 				<form:form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post" id="memberUpdateFrm">
 					<tr>
