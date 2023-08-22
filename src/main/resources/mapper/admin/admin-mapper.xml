@@ -51,6 +51,28 @@
             AND ${searchType} like '%' || #{searchKeyword} || '%'
         </if>
   </where>
+  
+  </select>
+  
+  <select id="totalCountStudents" resultType="int">
+    SELECT
+	    count(*)
+	FROM
+    	student s
+	JOIN
+    	member m ON s.student_id = m.member_id
+    <where>
+        <if test="studentTypes != null and !studentTypes.isEmpty()">
+            AND student_type IN
+            <foreach collection="studentTypes" item="studentType" open="(" separator="," close=")">
+                #{studentType}
+            </foreach>
+        </if>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+    </where>
+    
   </select>
   
   <select id="findAllTeacher" resultType="Teacher">

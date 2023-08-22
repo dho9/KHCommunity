@@ -10,7 +10,8 @@ import com.kh.app.schedule.repository.CalenDao;
 
 @Service
 public class CalenService {
-	@Autowired(required = false)
+	
+	@Autowired
 	private CalenDao dao;
 	
 	public ArrayList<Calendar> calenList(){

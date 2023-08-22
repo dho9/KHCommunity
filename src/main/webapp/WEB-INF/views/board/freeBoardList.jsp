@@ -12,7 +12,18 @@
     float: right;
     cursor: pointer;
 }
-
+input[name=_tags] {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    width: 100px;
+    text-align: center;
+    height: 27px;
+    border: none;
+}
+.tag-container {
+	margin-right: 20px;
+}
 </style>
 
 	<div id="container" class="community" style="margin-top: 25px;">
@@ -46,6 +57,9 @@
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
+					  	<c:forEach items="${board.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
 					  	<ul class="status">
 					  		<li><img class="like" data-value="${board.postId}" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
@@ -105,8 +119,6 @@
 	        	<div class="hashTag-container"></div>
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-        	<span title="해시태그" class="hashtag"><button>#</button></span>
-	        <input type="file" name="file" id="file" multiple>
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
 	      </form:form>
@@ -124,42 +136,53 @@
    		const hashTag = document.querySelector('.hashTag');
 	    const hashTagContainer = document.querySelector('.hashTag-container');
 	    
+	    let hashTags = [];
+	    
 	    hashTag.addEventListener('keydown', (e) => {
-	    	
 	    	if(e.key === 'Enter') {
 	    		e.preventDefault();
 	    		const tag = hashTag.value.trim();
 	    		
+	    		if (tag.length > 5) {
+	    			alert('다섯글자까지만 가능합니다');
+	    			return; 
+	    		}
+	    		if(hashTags.length >= 7) {
+	    			alert('해시태그는 최대 7개까지 가능합니다.');
+	    			return;
+	    		}
 	    		addHashTag(tag);
 	    		hashTag.value = "";
 	    	}
 	    });
 	    
-	    let hashTags = [];
-	    
 	    function addHashTag(tag) {
-	    	tag = tag.replace(/[\s]/g, '').trim();
-	    	console.log(tag);
-	    	if(!hashTags.includes(tag)) {
-	    		const input = document.createElement("input");
-	    		input.innerHTML = " #" + tag + " ";
-	    		
-	    		const removeButton = document.createElement("i");
-	    		removeButton.innerHTML = "x";
-	    		removeButton.addEventListener('click', () => {
-	    			hashTagContainer.removeChild(input);
-	    			hashTags = hashTags.filter((hashTags) => hashTags !== tag);
-	    		});
-	    		
-	    		hashTags.push(tag);
-	    		
-	    		input.appendChild(removeButton);
-	    		hashTagContainer.appendChild(input);
-	    		
-	    		input.setAttribute("name", "_tags");
-	    		input.setAttribute("value", "#" + tag);
-	    		console.log(document.createFrm);
-	    	}
+	        tag = tag.replace(/[\s]/g, '').trim();
+	        console.log(tag);
+	        if (!hashTags.includes(tag)) {
+	            const tagContainer = document.createElement("div");
+	            tagContainer.className = "tag-container";
+
+	            const tagElement = document.createElement("input");
+	            tagElement.value = " #" + tag + " ";
+	            tagElement.setAttribute("readonly", true);
+	            tagContainer.appendChild(tagElement);
+
+	            const removeButton = document.createElement("i");
+	            removeButton.style.cursor = "pointer";
+	            removeButton.innerHTML = "x";
+	            removeButton.addEventListener('click', () => {
+	                hashTagContainer.removeChild(tagContainer);
+	                hashTags = hashTags.filter((hashTags) => hashTags !== tag);
+	            });
+	            tagContainer.appendChild(removeButton);
+
+	            hashTags.push(tag);
+	            hashTagContainer.appendChild(tagContainer);
+
+	            tagElement.setAttribute("name", "_tags");
+	            tagElement.setAttribute("value", "#" + tag);
+	        }
 	    }
 	 }
 		

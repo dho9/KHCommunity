@@ -58,8 +58,10 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 #certificaitonFrm div{margin: 5% 0; padding: 3%}
 .certiBtn {border-radius: 10px; border: 2px solid #4870ef; background-color: white; color: #4870ef; width:100px; height:40px;}
 .fileInput{border: 1px solid black; border-radius: 5px; width: 500px}
-.certiBtn:hover{background-color:4870ef; color: white;} 
+.certiBtn:hover{background-color: #4870ef; color: white;} 
 /*  추가된 css */
+
+.myPageDivs{width: 90%}
 
 </style>
 	<section>
@@ -136,14 +138,12 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		</div>
 
 		</div>
-		</div>
-
-	
+		</div>	
 		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >
 		<!--희진 회원정보수정(비밀번호, 생일, 전화번호) 시작  -->
 			<div id="update-container" class="myPageDivs">
 				<%-- principal을 변수 loginMember 저장 --%>
-				<form:form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post" id="memberUpdateFrm" style="display:none;">
+				<form:form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post" id="memberUpdateFrm">
 					<tr>
 						<th>아이디 : </th>
 						<td>
@@ -212,7 +212,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<!--희진 회원탈퇴 시작  -->
 				<div id="delete-container" class="myPageDivs">
 					<%-- principal을 변수 loginMember 저장 --%>					
-					<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm"   method="post">
+					<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm" method="post">
 						<tr>
 							<th>아이디 : </th>
 							<td>
@@ -278,7 +278,6 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 					</form:form>
 				</div>
 			<!-- 희진 회원탈퇴 끝 -->
-			
 			<!-- 추가된 html -->
 			<div class="myPageDivs" id="certificationDiv">		
 				<h1>학생인증</h1>
@@ -307,10 +306,18 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	</section>
 
 	<script>
-	
+		
+		const hideDiv =() =>{
+			const myPageDivs = document.querySelectorAll(".myPageDivs");
+			
+			for(let i = 0; i < myPageDivs.length ; i++){
+				myPageDivs[i].style.display = "none";
+			}
+			
+		};
+		
 		document.memberUpdateFrm.onsubmit = (e) => {
 		
-			
 			const password = document.querySelector("#memberPwd");
 			const passwordConfirmation = document.querySelector("#passwordConfirmation");
 			
@@ -334,19 +341,20 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		const memberDeleteFrm = document.querySelector("#memberDeleteFrm"); // 회원탈퇴 폼
 
 		myPageIcon3.addEventListener("click", function() {
-		  memberUpdateFrm.style.display = "block"; // 회원정보 수정 폼 보이기
-		  memberDeleteFrm.style.display = "none"; // 회원탈퇴 폼 숨기기 
+		  hideDiv();
+		  document.querySelector("#update-container").style.display = "block";
 	
 		});
 
 		myPageIcon4.addEventListener("click", function() {
-		 memberDeleteFrm.style.display = "block"; // 회원탈퇴 폼 보이기
-		  memberUpdateFrm.style.display = "none"; // 회원정보 수정 폼 숨기기 
+			hideDiv();
+			document.querySelector("#delete-container").style.display = "block"; 
 			
 		});
-	
-/* 추가된 스크립트 */
+
 document.querySelector("#certification").onclick=()=>{
+	hideDiv();
+	document.querySelector("#certificationDiv").style.display = "block"; 
 	const value = document.querySelector("#memberId").value;
 	$.ajax({
 		
@@ -357,10 +365,8 @@ document.querySelector("#certification").onclick=()=>{
 		method : "GET",
 		dataType : "json",
 		success(responseData){
-			console.log(responseData);
 			const {student} = responseData;
 			const {approveCompleteDate, approveRequestDate} = student;
-			console.log(approveCompleteDate, approveRequestDate);
 			const state = document.querySelector("#state");
 			const upFile = document.querySelector("#upFile");
 			if(approveCompleteDate ==null && approveRequestDate==null){
@@ -381,7 +387,7 @@ document.querySelector("#certification").onclick=()=>{
 		
 	});
 };
-/* 추가된 스크립트 */
+
 </script>	
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

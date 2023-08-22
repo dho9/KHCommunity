@@ -83,6 +83,12 @@
                   </div>
                   <div class="userManagement">
                     &nbsp;&nbsp;&nbsp;
+                    <span style="color:white;" width="16" height="16">
+                      - 📋                    </span>
+                    <a href="${pageContext.request.contextPath}/admin/adminStudentApprovementList.do">수강생 승인</a>
+                  </div>
+                  <div class="userManagement">
+                    &nbsp;&nbsp;&nbsp;
                     <span style="color:white;">
                       - 🗓
                     </span>
