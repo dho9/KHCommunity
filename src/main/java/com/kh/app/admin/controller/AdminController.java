@@ -33,6 +33,7 @@ import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Teacher;
+import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -280,6 +281,14 @@ public class AdminController {
 		return "redirect:/admin/adminStudentList.do";
 	}
 	
+	// 수강생에게 쪽지 보내기 - 유성근
+	@PostMapping("/adminSendMessage.do")
+	public String adminStudentSendMessage(@Valid MessageBox message) {
+		message.setSendId("chdan");
+		log.debug("message = {}", message);
+		int result = adminService.sendMessageToStudent(message);
+		return "redirect:/admin/adminStudentList.do";
+	}
 
 	// 수강생 승인 목록 조회 - 유성근
 	@GetMapping("/adminStudentApprovementList.do")

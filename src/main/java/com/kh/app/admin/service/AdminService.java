@@ -9,6 +9,7 @@ import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Teacher;
+import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -75,6 +76,8 @@ public interface AdminService {
 	List<Teacher> findAllTeacher(Map<String, Object> filters);
 
 	int deleteAdminTeacher(String memberId);
+
+	int sendMessageToStudent(MessageBox message);
 
 
 }

@@ -60,7 +60,7 @@
                           <td>${student.classId}</td>
                           <td>${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}</td>
                           <td>
-				                <button style="border: 0; background-color: transparent;" class="open-modal-button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
+				                <button id="messageButton" type="button" style="border: 0; background-color: transparent;" class="open-modal-button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
 				                    data-student-id="${student.studentId}" data-student-name="${student.memberName}">
 				                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
 				                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
@@ -155,13 +155,16 @@
 	                <h5 class="modal-title" id="sendMessageModalLabel">쪽지 보내기</h5>
 	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
-	            <div class="modal-body">
-	                <!-- 모달 내용 -->
-	                <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
-	                <textarea placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
-	            </div>
+	            <form:form method="POST" action="${pageContext.request.contextPath}/admin/adminSendMessage.do">
+	            	<div class="modal-body">
+		            <!-- 모달 내용 -->
+		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
+		                <input name="receiveId" id="receiveStudent" readonly>
+		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
+		                <button id="btnSend" class="btn btn-primary">전송</button>
+		            </div>
+	            </form:form>
 	            <div class="modal-footer">
-	                <button type="button" class="btn btn-primary">전송</button>
 	            </div>
 	        </div>
 	    </div>
@@ -169,7 +172,8 @@
     </section>
     
     <script>
-    
+      
+      // 테이블 row 클릭시 모달 창에 나오는 데이터 처리
       document.addEventListener("DOMContentLoaded", function () {
         const tableRows = document.querySelectorAll("tr[data-bs-toggle='modal']");
     
@@ -202,7 +206,7 @@
             document.getElementById("modalStudentType3").checked = (studentTypeValue === "수료생");
           });
         });
-    
+      
         // 수정 버튼 클릭 이벤트 처리
         $("#btnEdit").on("click", function () {
           showConfirmation("${pageContext.request.contextPath}/admin/adminStudentUpdate.do");
@@ -212,7 +216,7 @@
         $("#btnBan").on("click", function () {
           showConfirmation("${pageContext.request.contextPath}/admin/adminStudentDelete.do");
         });
-    
+        
         // 확인 메시지 표시 후 데이터 전송 함수 호출
         function showConfirmation(url) {
           if (confirm("정말로 진행하시겠습니까?")) {
@@ -225,6 +229,8 @@
           const modalFrm = document.modalFrm;
           const studentId = modalFrm.firstId.value;
           const studentType = modalFrm.studentType.value;
+          const receiveId = document.getElementById("receiveStudent").value;
+          const messageContent = document.getElementById("messageContent").value;
     	  console.log(studentId);
           const token = document.modalFrm._csrf.value;
           console.log(url);
@@ -233,7 +239,9 @@
             url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
             data: {
             	studentId,
-            	studentType
+            	studentType,
+            	receiveId,
+            	messageContent
             },
             headers: {
                 "X-CSRF-TOKEN": token
@@ -248,8 +256,20 @@
           });
         }
         
+        const sendButton = document.querySelectorAll("#messageButton");
+        
+        sendButton.forEach((e) => {
+           e.addEventListener("click", function () {
+                const receiveId = e.getAttribute("data-student-id");
+                
+                document.getElementById("receiveStudent").value = receiveId;                  
+           })
+        });
         
       });
+      
+     
+   
     </script>
     <footer></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
