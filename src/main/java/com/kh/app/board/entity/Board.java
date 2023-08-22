@@ -13,4 +13,5 @@ public class Board {
 	private int boardId;
 	private String boardName;
 	private String boardCategory;
+	private String boardLink;
 }
