@@ -12,8 +12,10 @@ import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Teacher;
+import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
@@ -171,5 +173,15 @@ public class AdminServiceImpl implements AdminService {
 	public int deleteAdminTeacher(String memberId) {
 		return adminRepository.deleteAdminTeacher(memberId);
 
+	}
+	
+	@Override
+	public int sendMessageToStudent(MessageBox message) {
+		return adminRepository.sendMessageToStudent(message);
+	}
+	
+	@Override
+	public List<Curriculum> findAllCurriculum() {
+		return adminRepository.findAllCurriculum();
 	}
 }

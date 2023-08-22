@@ -16,34 +16,37 @@
 --=============================================
 -- 테이블 삭제
 --=============================================
---DROP TABLE member CASCADE CONSTRAINTS;
---DROP TABLE class CASCADE CONSTRAINTS;
---DROP TABLE teacher CASCADE CONSTRAINTS;
---DROP TABLE employee CASCADE CONSTRAINTS;
---DROP TABLE board CASCADE CONSTRAINTS;
---DROP TABLE post_content CASCADE CONSTRAINTS;
---DROP TABLE post_attachment CASCADE CONSTRAINTS;
---DROP TABLE favorite CASCADE CONSTRAINTS;
---DROP TABLE report CASCADE CONSTRAINTS;
---DROP TABLE talker CASCADE CONSTRAINTS;
---DROP TABLE store CASCADE CONSTRAINTS;
---DROP TABLE ticket CASCADE CONSTRAINTS;
---DROP TABLE ticket_order CASCADE CONSTRAINTS;
---DROP TABLE student_attachment CASCADE CONSTRAINTS;
---DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
---DROP TABLE student CASCADE CONSTRAINTS;
---DROP TABLE scheduler CASCADE CONSTRAINTS;
---DROP TABLE vacation CASCADE CONSTRAINTS;
---DROP TABLE post CASCADE CONSTRAINTS;
---DROP TABLE post_comment CASCADE CONSTRAINTS;
---DROP TABLE message_box CASCADE CONSTRAINTS;
---DROP TABLE chat_room CASCADE CONSTRAINTS;
---DROP TABLE chat_message CASCADE CONSTRAINTS;
---DROP TABLE authority CASCADE CONSTRAINTS;
---DROP TABLE curriculum CASCADE CONSTRAINTS;
---DROP TABLE quit_member CASCADE CONSTRAINTS;
---DROP TABLE delete_post CASCADE CONSTRAINTS;
---DROP TABLE delete_comment CASCADE CONSTRAINTS;
+DROP TABLE member CASCADE CONSTRAINTS;
+DROP TABLE class CASCADE CONSTRAINTS;
+DROP TABLE teacher CASCADE CONSTRAINTS;
+DROP TABLE employee CASCADE CONSTRAINTS;
+DROP TABLE board CASCADE CONSTRAINTS;
+DROP TABLE post_content CASCADE CONSTRAINTS;
+DROP TABLE post_attachment CASCADE CONSTRAINTS;
+DROP TABLE favorite CASCADE CONSTRAINTS;
+DROP TABLE report CASCADE CONSTRAINTS;
+DROP TABLE talker CASCADE CONSTRAINTS;
+DROP TABLE store CASCADE CONSTRAINTS;
+DROP TABLE ticket CASCADE CONSTRAINTS;
+DROP TABLE ticket_order CASCADE CONSTRAINTS;
+DROP TABLE student_attachment CASCADE CONSTRAINTS;
+DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
+DROP TABLE student CASCADE CONSTRAINTS;
+DROP TABLE scheduler CASCADE CONSTRAINTS;
+DROP TABLE vacation CASCADE CONSTRAINTS;
+DROP TABLE post CASCADE CONSTRAINTS;
+DROP TABLE post_comment CASCADE CONSTRAINTS;
+DROP TABLE  post_like CASCADE CONSTRAINTS;
+DROP TABLE  comment_like CASCADE CONSTRAINTS;
+DROP TABLE message_box CASCADE CONSTRAINTS;
+DROP TABLE chat_room CASCADE CONSTRAINTS;
+DROP TABLE chat_message CASCADE CONSTRAINTS;
+DROP TABLE authority CASCADE CONSTRAINTS;
+DROP TABLE curriculum CASCADE CONSTRAINTS;
+DROP TABLE calendar CASCADE CONSTRAINTS;
+DROP TABLE quit_member CASCADE CONSTRAINTS;
+DROP TABLE delete_post CASCADE CONSTRAINTS;
+DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --=============================================
 -- 테이블 전체 삭제
 --=============================================
@@ -76,22 +79,23 @@
 --===============================================
 -- 시퀀스 삭제
 --===============================================
---drop sequence seq_student_attach_id;
---drop sequence seq_schedule_id;
---drop sequence seq_vacation_id;
---drop sequence seq_vacation_attach_id;
---drop sequence seq_board_id;
---drop sequence seq_post_id;
---drop sequence seq_post_attach_id;
---drop sequence seq_comment_id;
---drop sequence seq_message_id;
---drop sequence seq_report_id;
---drop sequence seq_chat_id;
---drop sequence seq_store_id;
---drop sequence seq_ticket_id;
---drop sequence seq_order_id;
---drop sequence seq_chat_message_no;
---drop sequence seq_curriculum_id;
+drop sequence seq_student_attach_id;
+drop sequence seq_schedule_id;
+drop sequence seq_vacation_id;
+drop sequence seq_vacation_attach_id;
+drop sequence seq_board_id;
+drop sequence seq_post_id;
+drop sequence seq_post_attach_id;
+drop sequence seq_comment_id;
+drop sequence seq_message_id;
+drop sequence seq_report_id;
+drop sequence seq_chat_id;
+drop sequence seq_store_id;
+drop sequence seq_ticket_id;
+drop sequence seq_order_id;
+drop sequence seq_chat_message_no;
+drop sequence seq_curriculum_id;
+drop sequence seq_cal;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -207,6 +211,7 @@ CREATE TABLE board (
    board_name   varchar2(30),
    board_category   varchar2(30)
 );
+ALTER TABLE board ADD board_link varchar2(50);
 
 CREATE TABLE post (
    post_id   number      NOT NULL,
@@ -262,9 +267,10 @@ create table comment_like (
 CREATE TABLE message_box (
    message_id   number      NOT NULL,
    send_id   varchar2(20)      NOT NULL,
-   recieve_id   varchar2(20)      NOT NULL,
+   receive_id   varchar2(20)      NOT NULL,
    message_content   varchar2(2000),
    send_at   date   DEFAULT sysdate,
+   anonymous_check char(1) default 'n',
    read_check   char(1)
 );
 
@@ -682,7 +688,7 @@ REFERENCES member (
 )ON DELETE CASCADE;
 
 ALTER TABLE message_box ADD CONSTRAINT FK_member_TO_message_box_2 FOREIGN KEY (
-   recieve_id
+   receive_id
 )
 REFERENCES member (
    member_id
@@ -812,6 +818,8 @@ alter table post add constraint CK_post_status_check check (status_check in ('y'
 -- 임시저장 상태 유무
 alter table message_box add constraint CK_messagebox_read_check check (read_check in ('y', 'n'));
 -- 쪽지읽었는지 ?
+alter table message_box add constraint CK_messagebox_anonymous_check check (anonymous_check in ('y', 'n'));
+-- 익명으로 보낼건지 ?
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
 -- 신고처리됐는지?
 
@@ -993,6 +1001,8 @@ VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', '23/09/06', '23/09/06', 'ehdgus',  'g
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '자유게시판');
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '히히게시판');
 INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '깔깔게시판');
+INSERT INTO board (board_id, board_category, board_name, board_link) VALUES (seq_board_id.NEXTVAL, '소통', '직원게시판', 'empolyeeBoardList');
+
 
 -- post
 INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
@@ -1033,10 +1043,10 @@ INSERT INTO post_like (post_id, member_id) VALUES (1, 'alsgml');
 INSERT INTO comment_like (comment_id, member_id) VALUES (1, 'alfn');
 
 -- message_box
-INSERT INTO message_box (message_id, send_id, recieve_id, message_content, read_check)
-VALUES (seq_message_id.NEXTVAL, 'alfn', 'gmlwls', '언니 오늘 점심 뭐먹어?', 'n');
-INSERT INTO message_box (message_id, send_id, recieve_id, message_content, read_check)
-VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공부어떻게 해야함 ??', 'y');
+INSERT INTO message_box (message_id, send_id, receive_id, message_content,  anonymous_check, read_check)
+VALUES (seq_message_id.NEXTVAL, 'alfn', 'gmlwls', '언니 오늘 점심 뭐먹어?', default, 'n');
+INSERT INTO message_box (message_id, send_id, receive_id, message_content,  anonymous_check, read_check)
+VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공부어떻게 해야함 ??', default, 'y');
 
 -- report
 INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type, report_send_date, report_check)
@@ -1107,8 +1117,7 @@ select * from delete_comment;
 select * from authority;
 
 
-    
-
+<<<<<<< HEAD
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
@@ -1186,6 +1195,9 @@ VALUES ('test12', 'test2', 'test12', '010-1234-5678', 'test2@naver.com', TO_DATE
 
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test12', '3', 'y', '23/08/18', sysdate, 'p');
+=======
+
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity
 
 INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),

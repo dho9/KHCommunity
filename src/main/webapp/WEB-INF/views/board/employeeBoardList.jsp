@@ -4,10 +4,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
 			<a>직원게시판</a>
+			<i class="bi bi-star" data-value="${employeeBoardList[0].boardId}"></i>
 		</h1>
 	</div>
 	<div class="wrap articles">
@@ -45,6 +47,7 @@
 			</article>
 		</c:if>
 	</div>
+	<form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
 	function showInputForm() {
@@ -53,8 +56,8 @@
 	    const articlesContainer = document.querySelector(".articles");
 
 	    const formHtml = `
-	      <form:form class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 495px;">
-	      	<input type = "hidden" name="boardId" id="boardId" value="4">
+	      <form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="post" style="height: 64%;">
+	      	<input type = "hidden" name="boardId" id="boardId" value="9">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -85,8 +88,12 @@
 	- 음란물, 성적 수치심을 유발하는 행위 
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
-        	<span title="해시태그" class="hashtag"><button>#</button></span>
-	        <input class="file" type="file" name="file" multiple="multiple">
+	        <div>
+	        	<label for="hashTag">해시태그</label><br>
+	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
+	        	<div class="hashTag-container"></div>
+	        </div>
+	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
 	      </form:form>
@@ -99,15 +106,159 @@
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
+	 	// 해시태그
+   		const hashTag = document.querySelector('.hashTag');
+	    const hashTagContainer = document.querySelector('.hashTag-container');
+	    
+	    let hashTags = [];
+	    
+	    hashTag.addEventListener('keydown', (e) => {
+	    	if(e.key === 'Enter') {
+	    		e.preventDefault();
+	    		const tag = hashTag.value.trim();
+	    		
+	    		if (tag.length > 5) {
+	    			alert('다섯글자까지만 가능합니다');
+	    			return; 
+	    		}
+	    		if(hashTags.length >= 7) {
+	    			alert('해시태그는 최대 7개까지 가능합니다.');
+	    			return;
+	    		}
+	    		addHashTag(tag);
+	    		hashTag.value = "";
+	    	}
+	    });
+	    
+	    function addHashTag(tag) {
+	        tag = tag.replace(/[\s]/g, '').trim();
+	        console.log(tag);
+	        if (!hashTags.includes(tag)) {
+	            const tagContainer = document.createElement("div");
+	            tagContainer.className = "tag-container";
+
+	            const tagElement = document.createElement("input");
+	            tagElement.value = " #" + tag + " ";
+	            tagElement.setAttribute("readonly", true);
+	            tagContainer.appendChild(tagElement);
+
+	            const removeButton = document.createElement("i");
+	            removeButton.style.cursor = "pointer";
+	            removeButton.innerHTML = "x";
+	            removeButton.addEventListener('click', () => {
+	                hashTagContainer.removeChild(tagContainer);
+	                hashTags = hashTags.filter((hashTags) => hashTags !== tag);
+	            });
+	            tagContainer.appendChild(removeButton);
+
+	            hashTags.push(tag);
+	            hashTagContainer.appendChild(tagContainer);
+
+	            tagElement.setAttribute("name", "_tags");
+	            tagElement.setAttribute("value", "#" + tag);
+	        }
+	    }
 	 }
 		
 	  function hideInputForm() {
 	    const writeButton = document.getElementById("writeArticleButton");
 	    const createForm = document.getElementById("createForm");
-
+	
 	    writeButton.style.display = "block";
 	    createForm.remove();
 	  }
-	</script>
+	  
+	  
+    // load됐을때 내가 즐겨찾기한 게시판인지 확인
+    window.onload = () => {
+    	console.log(document.querySelector('.bi').dataset.value);
+    	$.ajax({
+    		url : "${pageContext.request.contextPath}/board/favorite.do",
+    		data : {
+                _boardId : document.querySelector('.bi').dataset.value
+            },
+    		method : "GET",
+    		dataType : "json",
+    		success(responseData) {
+    			const {available} = responseData;
+    			
+    			const star = document.querySelector('.bi');
+    			if(available) {
+                	star.classList.remove('bi-star');
+                	star.classList.add('bi-star-fill');
+                }
+                else {
+                	star.classList.add('bi-star');
+                	star.classList.remove('bi-star-fill');
+                }
+    		}
+    	});
+    	
+    	// load됐을때 공감(좋아요) 했는지 확인
+    	document.querySelectorAll('.like').forEach((e) => {
+	    	console.log(e.dataset.value);
+	   		$.ajax({
+	   			url : "${pageContext.request.contextPath}/board/postLike.do",
+	   			data : {
+	   				_postId : e.dataset.value
+	   			},
+	   			method : "GET",
+	               dataType : "json",
+	               success(responseData) {
+	       			const {available, likeCount} = responseData;
+	       			const {postLikeCount} = likeCount;
+	       			
+	       			const like = document.querySelectorAll('.like');
+	       			const vote = document.querySelectorAll('.vote');
+	       			for(let i=0; i<like.length; i++) {
+	       				if(like[i].dataset.value == e.dataset.value) {
+			       			if(available) {
+			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+			                   	vote[i].innerHTML = `\${postLikeCount}`;
+			                   }
+			                   else {
+			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/like.png";
+			                   	vote[i].innerHTML = `\${postLikeCount}`;
+			                   }
+	       				}
+	       			}
+	               }
+	   		});
+    	});
+    }
+    // 즐겨찾기 누르기
+    document.querySelector('.bi').onclick = (e) => {
+    	console.log(e.target.dataset.value);
+    	
+    	const token = document.tokenFrm._csrf.value;
+    	
+        $.ajax({
+            url : "${pageContext.request.contextPath}/board/favorite.do",
+            data : {
+                _boardId : e.target.dataset.value
+            },
+            headers: {
+                "X-CSRF-TOKEN": token
+            },
+            method : "POST",
+            dataType : "json",
+            success(responseData) {
+                console.log(responseData);
+                const {available} = responseData;
+                
+                const star = document.querySelector('.bi');
+                if(available) {
+                	star.classList.add('bi-star');
+                	star.classList.remove('bi-star-fill');
+                }
+                else {
+                	star.classList.remove('bi-star');
+                	star.classList.add('bi-star-fill');
+                }
+            }
+        });
+    };
+    </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

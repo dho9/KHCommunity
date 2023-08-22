@@ -106,3 +106,4 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findByPopularPost();
 	}
 }
+
