@@ -3,7 +3,19 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
+<style>
+@font-face {
+	font-family: 'HakgyoansimWoojuR';
+	src:
+		url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2')
+		format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+*{
+font-family: 'HakgyoansimWoojuR';
+}
+</style>
 <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
   <ul class="list-group" style="max-width: 800px;"> <!-- 리스트로 감싸기 -->
     <c:forEach items="${stores}" var="store">
@@ -16,9 +28,9 @@
               </div>
               <div class="col-md-8">
                 <div class="card-body">
-                  <h5 class="card-title" style="font-size: 26px;">${store.storeName}</h5>
-                  <p class="card-text" style="font-size: 16px;">${store.storeType}</p>
-                  <p class="card-text" style="font-size: 10px;"><small class="text-body-secondary">${store.address}</small></p>
+                  <h5 class="card-title" style="font-size: 30px;">${store.storeName}</h5>
+                  <p class="card-text" style="font-size: 26px;">${store.storeType}</p>
+                  <p class="card-text" style="font-size: 15px;"><small class="text-body-secondary">${store.address}</small></p>
                 </div>
               </div>
             </div>
