@@ -70,7 +70,7 @@
             const container = $("#popularPostsContainer");
             for (let i = 0; i < data.length; i++) {
                 const post = data[i];
-                const postHTML = `<a href="${pageContext.request.contextPath}/board/boardDetail.do?id=${post.postId}" class="article">
+                const postHTML = `<a href="${pageContext.request.contextPath}/board/boardDetail.do?id=\${post.postId}" class="article">
                     <p class="title">\${post.title}</p>
                     <p class="small">\${post.content}</p>
                     <h4>\${post.boardName}</h4>

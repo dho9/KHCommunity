@@ -1326,7 +1326,6 @@ select m.member_name, m.member_phone, m.member_email, m.birthday, s.curriculum_i
 select * from post_comment where post_id =8;
 select * from comment_like;
 
+select * from member;
+select * from post_like;
 
-select pc.* 
-from commnet_like pc
-where post_id =  and member_id in('eogh');
