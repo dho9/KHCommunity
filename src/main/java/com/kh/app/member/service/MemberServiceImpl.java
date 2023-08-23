@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
@@ -164,8 +165,9 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findByTicketInfo(memberId);
 	}
 
-	
-
-	
+	@Override
+	public Curriculum findByDdayInfo(int curriculumId) {
+		return memberRepository.findByDdayInfo(curriculumId);
+	}
 
 }

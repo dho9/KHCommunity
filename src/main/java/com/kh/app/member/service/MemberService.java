@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
@@ -34,6 +35,8 @@ public interface MemberService extends UserDetailsService{
 	AdminStudentListDto findByMemberInfo(String memberId);
 
 	List<TicketBuyDto> findByTicketInfo(String memberId);
+
+	Curriculum findByDdayInfo(int curriculumId);
 
 	
 

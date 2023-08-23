@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
@@ -59,7 +60,7 @@ public interface MemberRepository {
 	@Select("select * from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
 	List<TicketBuyDto> findByTicketInfo(String memberId);
 
+	@Select("select * from curriculum where curriculum_id= #{curriculumId}")
+	Curriculum findByDdayInfo(int curriculumId);
 	
-
-
 }

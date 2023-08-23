@@ -95,7 +95,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			
 		</div>
 		<div id= "dDay">
-			<h1>D-25</h1>
+			<h1>D - ${Ddays}</h1>
 		</div>
 	</div>
 	
@@ -174,6 +174,9 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<p>전화번호 : ${ loginMember.memberPhone}</p>
 			<p>이메일  : ${ loginMember.memberEmail}</p>
 			<p>종강일  : ${studentInfo.curriculumEndAt }</p>
+			
+			<%-- <p>Dday  :${Ddays}</p> --%>
+			
 		</div> 
 		<!--희진 내정보 끝 -->
 		
@@ -491,6 +494,8 @@ document.querySelector("#certification").onclick=()=>{
 		
 	});
 };
+
+
 
 </script>	
 
