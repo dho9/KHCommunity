@@ -84,7 +84,7 @@
   </resultMap>
   
   <select id="findByMemberInfo" resultMap="findByMemberInfoMap">
-  select c.curriculum_name, mt.member_name, c.class_id, c.curriculum_end_at
+  select c.curriculum_name, mt.member_name, c.class_id, c.curriculum_end_at , s.curriculum_id
   from member m left outer join student s
     on m.member_id = s.student_id
                 left outer join curriculum c
@@ -100,6 +100,7 @@
       <result column="member_name" property="memberName"/>
       <result column="class_id" property="classId"/>
       <result column="curriculum_end_at" property="curriculumEndAt"/>
+      <result column="curriculum_id" property="curriculumId"/>
     <!--   <collection property="authorities"
                   ofType="simpleGrantedAuthority">
           <constructor>
