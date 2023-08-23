@@ -1316,6 +1316,3 @@ select * from post_comment where post_id =8;
 select * from comment_like;
 
 
-select pc.* 
-from commnet_like pc
-where post_id =  and member_id in('eogh');

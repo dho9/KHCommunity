@@ -220,6 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadCommentLike(){
+	console.log(document.querySelector('.like').dataset.value);
+	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/board/commentLike.do",
 		data : {
@@ -228,17 +230,20 @@ function loadCommentLike(){
 		method : "GET",
         dataType : "json",
         success(responseData) {
-        	console.log(responseData);
-			const {available, likeCount} = responseData;
-			const {postLikeCount} = likeCount;
+        	//console.log(responseData);
+        	  
+        	  const { commentLike } = responseData;
+        	  //console.log(commentLike);
+        	  
+        	  const commentIds = commentLike.map(item => item.commentId);
+        	  // console.log(commentIds); // [7, 8, 23]
+        	  commentIds.forEach(commentId => {
+        	        const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
+        	        if (commentIds .includes(commentId)) {
+        	            like.src = `${pageContext.request.contextPath}/resources/images/fullLike.png`;
+        	        }
+        	    });
 			
-			const like = document.querySelector('.commentLike');
-			if(available) {
-            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-            }
-            else {
-            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-            }
         }
 	});
 	
@@ -261,20 +266,21 @@ function loadComment(){
     	},
     	method : "POST",
     	success(data){
-    		//loadCommentLike();
+    		loadCommentLike();
     		renderComments(data);
     		
     	}
     });
 }
 function renderComments(comments) {
+	console.log(comments);
     const commentList = document.querySelector('#commentList'); // Select the comment list container
-    // Clear existing comments
+  
     commentList.innerHTML = '';
 
     // Loop through each comment and create a DOM element for it
     comments.forEach(comment => {
-        const commentElement = document.createElement('article');
+    	const commentElement = document.createElement('article');
         commentElement.className = 'parent';
         commentElement.innerHTML = `
             
@@ -295,8 +301,8 @@ function renderComments(comments) {
             <ul class="sstatus commentvotestatus">
             <li class="vote commentvote" >
                 <time class="medium">\${comment.commentCreatedAt}</time>
-                <img class="commentLike" src="${pageContext.request.contextPath}/resources/images/like.png">
-                <span class="likeCount">0</span>
+                <img class="commentLike" data-commentid="\${comment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
+                <span class="likeCount" data-commentid="\${comment.commentId}">\${comment.likeCount}</span>
             </li>
            
         </ul>
@@ -314,7 +320,7 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
     if (clickedElement.classList.contains('commentvote')) {
         // data-commentid 속성을 가져와서 사용
         const commentId = clickedElement.getAttribute('data-commentid');
-        
+        console.log(commentId);
     	$.ajax({
 			url : "${pageContext.request.contextPath}/board/commentLike.do",
 			data : {
@@ -328,14 +334,17 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
             success(responseData) {
             	console.log(responseData);
 				const {available, likeCount} = responseData;
-				const {postLikeCount} = likeCount;
+				const {commentLikeCount} = likeCount;
     			
-				const like = document.querySelector('.commentLike');
+            	 const commentlikeCount = document.querySelector(`.likeCount[data-commentid="\${commentId}"]`);
+            	 const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
 				if(available) {
-	            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	            	commentlikeCount.innerHTML = `\${commentLikeCount}`;
 	            }
 	            else {
-	            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	            	commentlikeCount.innerHTML = `\${commentLikeCount}`;
 	            }
             }
 		});

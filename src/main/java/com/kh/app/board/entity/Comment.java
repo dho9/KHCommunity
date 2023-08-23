@@ -20,4 +20,5 @@ public class Comment {
 	private int commentLevel;
 	private Date commentCreatedAt;
 	private boolean anonymousCheck;
+	private int likeCount;
 }

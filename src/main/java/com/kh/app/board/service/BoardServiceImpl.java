@@ -176,5 +176,10 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.findCommentLikeCount(commentId);
 	}
+	@Override
+	public List<CommentLike> CommentLikeCheckById(int postId, String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.CommentLikeCheckById(postId,memberId);
+	}
 }
 

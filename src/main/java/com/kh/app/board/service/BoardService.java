@@ -71,5 +71,7 @@ public interface BoardService {
 
 	CommentLike findCommentLikeCount(int commentId);
 
+	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+
 
 }

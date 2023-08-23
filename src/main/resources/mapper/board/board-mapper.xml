@@ -225,36 +225,27 @@
   </resultMap>
   
   <select id="findByPopularPost" resultType="PopularBoardDto">
-SELECT
-    p.post_id,
-    p.title,
-    pc.content,
-    COUNT(pl.post_id) AS post_like,
-    COUNT(pco.comment_id) AS comment_count,
-    b.board_name
+SELECT 
+p.post_id,  
+p.title, 
+(select pc.content from post_content pc where pc.post_id = p.post_id) content, 
+(SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.post_id) AS like_count,
+(SELECT COUNT(*) FROM post_comment pc WHERE pc.post_id = p.post_id) AS comment_count,
+(select b.board_name from board b where p.board_id = b.board_id) board_name
+
 FROM
     post p
-JOIN
-    post_content pc ON p.post_id = pc.post_id
-LEFT JOIN
-    post_like pl ON p.post_id = pl.post_id
-LEFT JOIN
-    post_comment pco ON p.post_id = pco.post_id
-JOIN 
-    board  b ON p.board_id = b.board_id 
-where
-  p.post_created_at BETWEEN (SYSDATE - 7) AND SYSDATE
-GROUP BY
-   p.post_id, p.title, pc.content, b.board_name
+WHERE
+     p.post_created_at BETWEEN (SYSDATE - 7) AND SYSDATE
 ORDER BY
-    post_like DESC
+    like_count DESC
 FETCH FIRST 5 ROWS ONLY
   </select>
     <resultMap type="PopularBoardDto" id="PopularBoardDtoMap">
   	<id column="post_id" property="postId"/>
   	<result column="title" property="title"/>
   	<result column="content" property="content"/>
-  	<result column="post_like" property="postLike"/>
+  	<result column="like_count" property="likeCount"/>
   	<result column="comment_count" property="commentCount"/>
   	<result column="board_name" property="boardName"/>
   	
@@ -265,4 +256,18 @@ FETCH FIRST 5 ROWS ONLY
   	<result column="board_name" property="boardName"/>
   	<result column="board_category" property="boardCategory"/>
   </resultMap>
+  
+    <select id="findCommentLikeCount" resultType="commentLike">
+  	select
+	    count(*) comment_like_count
+	from
+	    comment_like
+	where
+	    comment_id = #{commentId}
+  </select>
+  <resultMap type="commentLike" id="findCommentLikeCount">
+  	<result column="comment_like_count" property="commentLikeCount"/>
+  </resultMap>
+  
+  
 </mapper>
