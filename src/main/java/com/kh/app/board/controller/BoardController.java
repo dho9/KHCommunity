@@ -327,7 +327,7 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@RequestParam boolean anonymousCheck,
+			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
@@ -420,15 +420,26 @@ public class BoardController {
 			@Valid AdminStudentListDto studentInfo,
 			Model model
 	) {
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll();
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-        ////log.debug("myClassBoardList = {}", myClassBoardList);
        // //log.debug("studentInfo = {}", studentInfo);
          
  		model.addAttribute("studentInfo", studentInfo);
-        model.addAttribute("myClassBoardList", myClassBoardList);
         
         return "/board/myClassBoardList";
+	}
+	
+	@PostMapping("/myClassBoardList.do")
+	@ResponseBody
+	public List<BoardListDto> myClassBoardList(@RequestParam String tag) {
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag);
+		return myClassBoardList;
+	}
+	
+	@GetMapping("/myClassBoardFindAll.do")
+	@ResponseBody
+	public List<BoardListDto> myClassBoardFindAll() {
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll();
+		return myClassBoardList;
 	}
 	
 	

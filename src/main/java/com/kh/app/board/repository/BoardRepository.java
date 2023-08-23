@@ -115,6 +115,7 @@ public interface BoardRepository {
 	int insertCommentLikeByMemberId(int commentId, String memberId);
 	
 	CommentLike findCommentLikeCount(int commentId);
-	
+
+	List<BoardListDto> myClassBoardFindByTag(String tag);
 
 }
