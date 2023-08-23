@@ -121,13 +121,14 @@
 		</c:if>
 		<div class="comments" style="display: block">
 			<div id="commnetContainer">
+			 <div id="commentList"></div>
 				<div class="articles">
 					<article>
 						<form:form name="commentFrm" class="writecomment">
 							<div style="display: flex; align-items: center;">
-								<input type="text" name="commentText" id="commentText" maxlength="300"
-									autocomplete="off" placeholder="댓글을 입력하세요." class="text"
-									data-listener-added_4fb6911b="true">
+								<input type="text" name="commentText" id="commentText"
+									maxlength="300" autocomplete="off" placeholder="댓글을 입력하세요."
+									class="text" data-listener-added_4fb6911b="true">
 								<ul class="option">
 									<li title="익명" class="anonym"></li>
 									<li title="완료" class="submit"></li>
@@ -142,15 +143,15 @@
 
 	</div>
 
-<!-- 해시태그를 클릭했을 때의 폼 -->
-<form name="tagFrm"
-	action="${pageContext.request.contextPath}/board/boardSearch.do">
-	<input type="hidden" name="keyword" class="keyword" />
-</form>
-<form:form name="tokenFrm"></form:form>
-<form:form name="loadCommentFrm"></form:form>
+	<!-- 해시태그를 클릭했을 때의 폼 -->
+	<form name="tagFrm"
+		action="${pageContext.request.contextPath}/board/boardSearch.do">
+		<input type="hidden" name="keyword" class="keyword" />
+	</form>
+	<form:form name="tokenFrm"></form:form>
+	<form:form name="loadCommentFrm"></form:form>
 
-<script>
+	<script>
 document.addEventListener('DOMContentLoaded', () => {
 	const token = document.loadCommentFrm._csrf.value;
 	const currentURL = window.location.href;
@@ -168,12 +169,47 @@ document.addEventListener('DOMContentLoaded', () => {
     	},
     	method : "POST",
     	success(data){
-    		console.log("ss");
+    		renderComments(data);
     	}
     });
 
-    // 이후 코드 작성
+    function renderComments(comments) {
+        const commentList = document.querySelector('#commentList'); // Select the comment list container
+
+        // Clear existing comments
+        commentList.innerHTML = '';
+
+        // Loop through each comment and create a DOM element for it
+        comments.forEach(comment => {
+            const commentElement = document.createElement('article');
+            commentElement.className = 'parent';
+            commentElement.innerHTML = `
+                <img src="https://cf-fpi.everytime.kr/0.png" class="picture medium">
+                <h3 class="medium">\${comment.anonymousCheck ? 'false' : comment.memberId}</h3>
+                <ul class="status">
+                    <li class="childcomment">대댓글</li>
+                    <li class="commentvote">공감</li>
+                    <li class="messagesend">쪽지</li>
+                    <li class="abuse">신고</li>
+                </ul>
+                <hr>
+                <p class="large">${comment.commentContent}</p>
+                <time class="medium">${comment.commentCreatedAt}</time>
+                <ul class="status commentvotestatus">
+                    <li class="vote commentvote" style="display: none;">0</li>
+                </ul>
+            `;
+
+            // Append the comment element to the comment list container
+            commentList.appendChild(commentElement);
+        });
+    }
 });
+    
+
+
+
+
 
 	let anonyCk = false;
 	document.querySelectorAll('.option li.anonym').forEach((li) => {
@@ -214,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        		postId : postId,
 	        		boardId : ${board.boardId},
 	        		commentContent : document.querySelector("#commentText").value,
-	        		anonymous: anonyCk
+	        		anonymousCheck: anonyCk
 	        	},
 	        	method : "POST",
 	        	success(data){
@@ -224,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		})
 	});
 	</script>
-<script>
+	<script>
 	// load됐을때 공감(좋아요) 했는지 확인
 	window.onload = () => {
 		
@@ -305,5 +341,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	    });
 	});
 	</script>
-<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
-<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
+	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
