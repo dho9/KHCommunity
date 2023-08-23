@@ -83,6 +83,7 @@
 	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="7">
+	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -121,6 +122,9 @@
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+        	<button type="button" class="anonymous" onclick="anonymousCheck()">
+	    		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
+	    	</button>
 	      </form:form>
 	    `;
 
@@ -131,6 +135,24 @@
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
+	 	// 익명체크
+		let anonymousButton = document.querySelector(".anonymous");  
+		let anonymousImg = document.querySelector(".anonymousImg");
+		let anonymousCheck = document.querySelector("#anonymousCheck");
+		
+		anonymousButton.onclick = (()=>{
+		    if (anonymousImg.src.endsWith('/anonymous.png')) {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
+		    	anonymousCheck.value = "true";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		        
+		    } else {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
+		    	anonymousCheck.value = "false";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		    }
+		});
 	    
 	 	// 해시태그
    		const hashTag = document.querySelector('.hashTag');

@@ -25,4 +25,5 @@ public class BoardCreateDto {
 	private List<PostAttachment> attachments;
 	private LocalDateTime postCreatedAt;
 	private List<String> tags;
+	private boolean anonymousCheck;
 }

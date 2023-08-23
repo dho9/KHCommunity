@@ -181,10 +181,11 @@
           <span>
             🍜
           </span>
-          <a href="${pageContext.request.contextPath}/admin/restaurantList.do">식권 관리</a>
+          <a href="${pageContext.request.contextPath}/admin/adminStoreList.do">식당 관리</a>
         </div>
       </div>
     </section>
+    
       <section style="width: 1630px">
         <nav class="navbar bg-light" style="margin-left: 330px">
           <div class="container-fluid">

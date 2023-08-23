@@ -23,4 +23,9 @@ public class CalenServiceImpl {
 		
 		return calendao.insertEvent(calendarInsertDto);
 	}
+
+	public int deleteEvent(int eventId) {
+		
+		return calendao.deleteEvent(eventId);
+	}
 }

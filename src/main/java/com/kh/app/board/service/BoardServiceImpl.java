@@ -40,6 +40,16 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public List<BoardListDto> marketBoardFindAll() {
+		return boardRepository.marketBoardFindAll();
+	}
+	
+	@Override
+	public List<BoardListDto> askCodeBoardFindAll() {
+		return boardRepository.askCodeBoardFindAll();
+	}
+	
+	@Override
 	public List<BoardListDto> preStudentBoardFindAll() {
 		return boardRepository.preStudentBoardFindAll();
 	}
@@ -61,6 +71,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardListDto> employeeBoardFindAll() {
 		return boardRepository.employeeBoardFindAll();
+	}
+	
+	@Override
+	public List<BoardListDto> noticeBoardFindAll() {
+		return boardRepository.noticeBoardFindAll();
 	}
 
 	@Override
@@ -145,6 +160,8 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardListDto> sharingInformationBoardFindAll() {
 		return boardRepository.sharingInformationBoardFindAll();
 	}
+	
+	
 
 	@Override
 	public List<BoardListDto> myClassBoardFindAll() {

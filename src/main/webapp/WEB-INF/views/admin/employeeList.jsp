@@ -52,14 +52,15 @@
                   <tbody>
                   	<c:forEach items="${employees}" var="employee" varStatus="vs">
                       <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${employee.memberId}" data-second-name="${employee.memberName}" data-phone="${employee.memberPhone}" data-birthday="${employee.birthday}" data-subject="${employee.memberEmail}" data-class="${student.classId}" data-email="${employee.memberEmail}" data-lastDay="${employee.employeeEnrollDate}" data-jobCode="${employee.jobCode eq '행정' ? '행정' : employee.jobCode eq '총무'? '총무' : '운영'}" data-handle="@mdo">
-                          <td>${vs.count}</td>
+                          <td>${(currentPage-1) * 10 + vs.index + 1}</td>
                           <td>${employee.memberId}</td>
                           <td>${employee.memberName}</td>
                           <td>${employee.jobCode}</td>
                           <td>${employee.memberPhone}</td>
                           <td>${employee.memberEmail}</td>
                           <td>
-                            <button style="border: 0; background-color: transparent;">
+                            <button id="messageButton" type="button" style="border: 0; background-color: transparent;" class="open-modal-button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
+				                    data-employee-id="${employee.memberId}" data-employee-name="${employee.memberName}">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
                               </svg>
@@ -144,6 +145,27 @@
             </div>
         </div>
       </div>
+      <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="sendMessageModalLabel">쪽지 보내기</h5>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <form:form method="POST" action="${pageContext.request.contextPath}/admin/adminSendMessage.do">
+	            	<div class="modal-body">
+		            <!-- 모달 내용 -->
+		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
+		                <input name="receiveId" id="receiveEmployee" readonly>
+		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
+		            </div>
+	            	<div class="modal-footer">
+		                <button id="btnSend" class="btn btn-primary">전송</button>	            
+	            	</div>
+	            </form:form>
+	        </div>
+	    </div>
+	</div>
     </section>
     
     <script>
@@ -223,6 +245,15 @@
           });
         }
         
+		const sendButton = document.querySelectorAll("#messageButton");
+        
+        sendButton.forEach((e) => {
+           e.addEventListener("click", function () {
+                const receiveId = e.getAttribute("data-employee-id");
+                
+                document.getElementById("receiveEmployee").value = receiveId;                  
+           })
+        });
         
       });
     </script>
