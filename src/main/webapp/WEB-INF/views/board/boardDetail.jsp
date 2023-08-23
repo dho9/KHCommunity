@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        		postId : postId,
 	        		boardId : ${board.boardId},
 	        		commentContent : document.querySelector("#commentText").value,
-	        		anonymous: anonyCk
+	        		anonymousCheck: anonyCk
 	        	},
 	        	method : "POST",
 	        	success(data){
