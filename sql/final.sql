@@ -1318,6 +1318,11 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
 select * from calendar;
 
+update student set approve_request_date = sysdate where student_id = 'xogus';
+
+select * from calendar;
+
+select m.member_name, m.member_phone, m.member_email, m.birthday, s.curriculum_id, c.class_id from member m join student s on m.member_id = s.student_id join curriculum c on s.curriculum_id = c.curriculum_id where c.class_id = '352';
 
 select * from post_comment where post_id =8;
 select * from comment_like;

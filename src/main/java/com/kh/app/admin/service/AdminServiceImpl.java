@@ -16,10 +16,13 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.curriculum.dto.CurriculumListDto;
+import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.khclass.entity.KhClass;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
@@ -260,6 +263,25 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public List<AdminCurriculumDetailDto> findStudentsByClassId(String classId, int curriculumId) {
+		return adminRepository.findStudentsByClassId(classId, curriculumId);
+	}
+	
+	@Override
+	public List<Teacher> findAllTeachers() {
+		return adminRepository.findAllTeachers();
+	}
+	
+	@Override
+	public List<KhClass> findAllClass() {
+		return adminRepository.findAllClass();
+	}
+	
+	@Override
+	public int addCurriculum(CurriculumRegDto curriculum) {
+		return adminRepository.addCurriculum(curriculum);
+	}
+
 	public int insertBoard(BoardCreateDto board) {
 		int result = 0;
 		
