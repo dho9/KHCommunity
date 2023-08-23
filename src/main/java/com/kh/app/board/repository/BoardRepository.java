@@ -83,9 +83,10 @@ public interface BoardRepository {
 
 	List<PopularBoardDto> findByPopularPost();
 	
-	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level) " +
-	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1)")
+	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level, anonymous_check) " +
+	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1, #{comment.anonymousCheck})")
 	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
+	
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
