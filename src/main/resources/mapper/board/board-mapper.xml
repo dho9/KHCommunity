@@ -203,9 +203,6 @@
 		1 desc
   </select>
   
-  
-  
-  
   <select id="employeeBoardFindAll" resultType="boardListDto">
   	select 
   		p.post_id,
@@ -245,7 +242,7 @@
 	    	on
 	    p.post_id = c.post_id
 	where
-	    p.board_id=4
+	    p.board_id=11
 	order by
 		1 desc
   </select>
@@ -268,6 +265,28 @@
 	    p.post_id = c.post_id
 	where
 	    p.post_id=#{id}
+	</select>
+	
+	<select id="myClassBoardFindByTag" resultType="boardListDto">
+		select 
+	  		p.post_id,
+	  		p.member_id,
+		    p.title,
+		    p.post_created_at,
+		    p.tag,
+		    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+		    c.content,
+		    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+		    p.board_id,
+		    p.anonymous_check
+		from
+		    post p join post_content c
+		    	on
+		    p.post_id = c.post_id
+		where
+		    p.board_id=11 and tag = #{tag}
+		order by
+			1 desc
 	</select>
   <resultMap type="boardListDto" id="boardListDtoMap">
   	<id column="post_id" property="postId"/>

@@ -115,9 +115,10 @@ public interface BoardRepository {
 	int insertCommentLikeByMemberId(int commentId, String memberId);
 	
 	CommentLike findCommentLikeCount(int commentId);
+
+	List<BoardListDto> myClassBoardFindByTag(String tag);
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
 	
-
 }
