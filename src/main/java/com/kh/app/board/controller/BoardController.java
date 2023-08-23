@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,9 @@ import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.common.HelloSpringUtils;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.entity.MemberDetails;
+import com.kh.app.member.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,9 +51,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class BoardController {
 	
-	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private MemberService memberService;
+	
 	@GetMapping("/freeBoardList.do")
 	public String freeBoardList(Model model) {
 		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll();
@@ -368,18 +373,40 @@ public class BoardController {
 		if(member !=null) {
 			
 			int result = boardService.createComment(comment,member.getMemberId());
-			return null;
+			return ResponseEntity
+					.status(HttpStatus.OK).body(null);
 		}else {
-			return null;
+			return ResponseEntity
+					.status(HttpStatus.OK).body("댓글작성이 실패했습니다.");
 		}
 		
 		
 	}
 	@PostMapping("/loadComment.do")
+	@ResponseBody
 	public List<Comment> commentList(@RequestParam int postId){
 		log.debug("idddddddddddd = {}",postId);
-		return null;
+		List<Comment> comments = boardService.findByCommentByPostId(postId);
+		log.debug("commentsssssssssssss={}",comments);
+		return comments;
 		
+	}
+	
+	@GetMapping("/myClassBoardList.do")
+	public String myClassBoardList(
+			@AuthenticationPrincipal MemberDetails principal,
+			@Valid AdminStudentListDto studentInfo,
+			Model model
+	) {
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll();
+		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+        log.debug("myClassBoardList = {}", myClassBoardList);
+        log.debug("studentInfo = {}", studentInfo);
+         
+ 		model.addAttribute("studentInfo", studentInfo);
+        model.addAttribute("myClassBoardList", myClassBoardList);
+        
+        return "/board/myClassBoardList";
 	}
 }
 

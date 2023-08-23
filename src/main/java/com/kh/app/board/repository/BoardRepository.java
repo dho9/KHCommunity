@@ -15,6 +15,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
@@ -90,5 +91,10 @@ public interface BoardRepository {
 	PostAttachment findAttachById(int id);
 
 	List<BoardListDto> sharingInformationBoardFindAll();
+
+	List<BoardListDto> myClassBoardFindAll();
+	
+	@Select(" select * from post_comment where post_id = #{postId}")
+	List<Comment> findByCommentByPostId(int postId);
 
 }
