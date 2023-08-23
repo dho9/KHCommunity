@@ -1,5 +1,9 @@
 package com.kh.app.member.service;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.kh.app.member.dto.AdminStudentListDto;
@@ -7,6 +11,7 @@ import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
+import com.kh.app.ticket.dto.TicketBuyDto;
 
 
 public interface MemberService extends UserDetailsService{
@@ -27,6 +32,10 @@ public interface MemberService extends UserDetailsService{
 	int deleteMember(String memberId);
 
 	AdminStudentListDto findByMemberInfo(String memberId);
+
+	List<TicketBuyDto> findByTicketInfo(String memberId);
+
+	
 
 
 

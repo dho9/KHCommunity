@@ -1,9 +1,11 @@
 package com.kh.app.member.service;
 
+import java.util.List;
 import java.util.Random;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -19,6 +21,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.repository.MemberRepository;
+import com.kh.app.ticket.dto.TicketBuyDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -154,6 +157,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public AdminStudentListDto findByMemberInfo(String memberId) {
 		return memberRepository.findByMemberInfo(memberId);
+	}
+
+	@Override
+	public List<TicketBuyDto> findByTicketInfo(String memberId) {
+		return memberRepository.findByTicketInfo(memberId);
 	}
 
 	

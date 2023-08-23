@@ -51,7 +51,7 @@
                     <sec:authorize access="isAuthenticated()">
                     <p class="nickname">${loginMember.username}</p>
                     <p class="school">${loginMember.name}</p>
-                    <p class="school">${loginMember.username}</p>
+                    <p class="school">${ loginMember.memberEmail}</p>
                     </sec:authorize>
                     <ul class="buttons">
                         <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
