@@ -56,7 +56,7 @@ public interface MemberRepository {
 //	@Select("select c.curriculum_name , mt.member_name, c.class_id from member m left outer join student s on m.member_id = s.student_id left outer join curriculum c on s.curriculum_id = c.curriculum_id left outer join member mt on c.teacher_id = mt.member_id where m.member_id = #{memberId}")
 	AdminStudentListDto findByMemberInfo(String memberId);
 
-	@Select("select * from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = 'alfn'")
+	@Select("select * from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
 	List<TicketBuyDto> findByTicketInfo(String memberId);
 
 	

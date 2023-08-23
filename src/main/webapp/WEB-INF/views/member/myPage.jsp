@@ -14,7 +14,7 @@
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 	crossorigin="anonymous"></script>
 	<!-- bootstrap css -->
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> -->
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">  -->
 <style>
 @font-face {
     font-family: 'HakgyoansimWoojuR';
@@ -353,6 +353,8 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 				</table>
 			</div>
 			<!-- 희진 식권구매 끝 -->
+			<!-- 채팅목록 시작 -->
+			<!-- 채팅목록 끝 -->
 			
 			<!-- 추가된 html -->
 			<div class="myPageDivs" id="certificationDiv" >		
