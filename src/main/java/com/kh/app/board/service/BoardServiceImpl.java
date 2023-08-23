@@ -12,6 +12,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
@@ -144,5 +145,15 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.sharingInformationBoardFindAll();
 	}
 	
+	@Override
+	public List<BoardListDto> myClassBoardFindAll() {
+		return boardRepository.myClassBoardFindAll();
+	}
+	
+	@Override
+	public List<Comment> findByCommentByPostId(int postId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findByCommentByPostId(postId);
+	}
 }
 

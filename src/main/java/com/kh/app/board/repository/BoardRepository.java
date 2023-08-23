@@ -15,6 +15,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
@@ -83,12 +84,18 @@ public interface BoardRepository {
 
 	List<PopularBoardDto> findByPopularPost();
 	
-	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level) " +
-	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1)")
+	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level, anonymous_check) " +
+	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1, #{comment.anonymousCheck})")
 	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
+	
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
 	List<BoardListDto> sharingInformationBoardFindAll();
+
+	List<BoardListDto> myClassBoardFindAll();
+	
+	@Select(" select * from post_comment where post_id = #{postId}")
+	List<Comment> findByCommentByPostId(int postId);
 
 }

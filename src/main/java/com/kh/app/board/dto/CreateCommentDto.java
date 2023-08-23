@@ -14,5 +14,5 @@ public class CreateCommentDto {
 	private int postId;
 	private int boardId;
 	private String commentContent;
-	private boolean anonymous;
+	private boolean anonymousCheck;
 }
