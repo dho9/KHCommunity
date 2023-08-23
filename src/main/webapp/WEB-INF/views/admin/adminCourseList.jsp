@@ -7,18 +7,82 @@
 <%@ include file="/WEB-INF/views/common/adminLeftBar.jsp" %>
 
 <section>
-      <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
-          <div class="card-header flex" id="todayIssueHeader">
-			    <div class="d-flex justify-content-between align-items-center" >
-			        <span class="mb-0" style="font-weight: 900;">과정 목록 &nbsp;&nbsp;&nbsp;</span>
-			        <div id="search-container">
-			            <form action="">
+	<!-- 과정 등록 -->
+	<div style="margin: 30px 0 0 330px;" class="flex">
+		<button style="width:100px;" class="addCourse btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#addCourse">
+			과정 등록
+		</button>
+	</div>
+	<!-- 과정 등록 모달 -->
+	<div class="modal fade" id="addCourse" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+	    	<div class="modal-content">
+	        	<div class="modal-header">
+	        	<h1 class="modal-title fs-5" id="exampleModalLabel">과정 등록</h1>
+	        	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      	</div>
+	      	<form:form name="addCourseFrm">
+		    	<div class="modal-body">
+					<div class="mb-3">
+				  		<p>과목 선택</p>
+					  	<select class="form-select" name="subject" aria-label="Default select example">
+							<option selected>과목</option>
+						  	<option value="자바">자바</option>
+						  	<option value="정보보안">정보보안</option>
+						</select>
+					</div>
+				  	<div class="mb-3">
+					    <label for="exampleInputEmail1" class="form-label">과정명</label>
+					    <input type="email" class="form-control" id="curriculumName" aria-describedby="emailHelp">
+				    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+				  	</div>
+				  	<div class="mb-3">
+				  		<p>반 선택</p>
+					  	<select class="form-select" name="classId" aria-label="Default select example">
+							<option selected>반</option>
+						  	<c:forEach items="${khClasses}" var="khClass">
+						  		<option value="${khClass.classId}">${khClass.classId}</option>
+						  	</c:forEach>
+						</select>
+				  	</div>
+				  	<div class="mb-3">
+					    <p>강사 선택</p>
+					  	<select class="form-select" name="teacherId" aria-label="Default select example">
+							<option selected>강사</option>
+						  	<c:forEach items="${teachers}" var="teacher">
+						  		<option value="${teacher.memberId}">${teacher.memberName}(${teacher.memberId})</option>
+						  	</c:forEach>
+						</select>
+				  	</div>
+				  	<div class="mb-3">
+				  		<p>시작일</p>
+				    	<input type="date" id="startDate">
+				  	</div>
+				  	<div class="mb-3">
+					  	<p>수료일</p>
+					    <input type="date" id="endDate">
+					</div>
+		       </div>
+		       <div class="modal-footer">
+		       		<button type="button" class="courseReg btn btn-primary">등록</button>
+		      </div>
+		  </form:form>
+	    </div>
+	  </div>
+	</div>
+	<!-- 과정 목록 검색 -->
+    <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
+    	<div class="card-header flex" id="todayIssueHeader">
+			<div class="d-flex justify-content-between align-items-center" >
+				<span class="mb-0" style="font-weight: 900;">과정 목록 &nbsp;&nbsp;&nbsp;</span>
+			    	<div id="search-container">
+			        	<form action="">
 			                <div class="d-flex align-items-center">
-			                    <div class="flex" style="width:600px;">
+			                    <div class="flex" style="width:450px;">
 								    <input type="checkbox" name="subjects" value='자바' id="student_type0" ${param.subjects eq '자바' ? 'checked' : ''}/>
 								    <label for="student_type0">자바</label>&nbsp;&nbsp;
 								    <input type="checkbox" name="subjects" value='정보보안' id="student_type1" ${param.subjects eq '정보보안' ? 'checked' : ''}/>
-								    <label for="student_type1">정보보안</label>&nbsp;&nbsp;
+								    <label for="student_type1">정보보안</label>&nbsp;
 								</div>
 			                    <select class="form-select" aria-label="Default select example" name="searchType" required>
 			                        <option value="" disabled selected>검색타입</option>
@@ -31,47 +95,59 @@
 			                        <input type="search" class="form-control" name="searchKeyword" aria-describedby="button-addon2" value="${param.searchKeyword}">
 			                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
 			                    </div>
+			                    
 			                </div>
 			            </form>
 			        </div>
 			    </div>
 			</div>
-          <div class="card-body" id="todayIssueBody">
-              <table class="table table-hover text-center">
-                  <thead>
-                      <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">과목</th>
-                          <th scope="col">과정명</th>
-                          <th scope="col">반</th>
-                          <th scope="col">강사</th>
-                          <th scope="col">시작일</th>
-                          <th scope="col">수료일</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-	                  <c:if test="${curriculumList != null}">
-	                  	<c:forEach items="${curriculumList}" var="curriculum" varStatus="vs">
-	                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" data-handle="@mdo">
-	                          <td>${(currentPage-1) * 10 + vs.index + 1}</td>
-	                          <td>${curriculum.subject}</td>
-	                          <td>${curriculum.curriculumName}</td>
-	                          <td>${curriculum.classId}</td>
-	                          <td>${curriculum.memberName}</td>
-	                          <td>${curriculum.curriculumStartAt}</td>
-	                          <td>${curriculum.curriculumEndAt}</td>
-	                      </tr>
-	                  	</c:forEach>
-	                  </c:if>
-	                  <c:if test="${curriculumList == null }">
-	                  	<tr>
-	                  		<td colspan="5">조회된 과정이 없습니다.</td>
-	                  	</tr>
-	                  </c:if>
-                  </tbody>
-              </table>
-              <br>
-		    <!-- 페이지 이동 및 페이지 번호 표시 -->
+			<!-- 과정 목록 -->
+            <div class="card-body" id="todayIssueBody">
+            	<table class="table table-hover text-center">
+                	<thead>
+                    	<tr>
+                        	<th scope="col">#</th>
+                          	<th scope="col">과목</th>
+                        	<th scope="col">과정명</th>
+                          	<th scope="col">반</th>
+                          	<th scope="col">강사</th>
+                          	<th scope="col">시작일</th>
+                          	<th scope="col">수료일</th>
+                          	<th scope="col">수정</th>
+                      	</tr>
+                  	</thead>
+                  	<tbody>
+	              		<c:if test="${curriculumList != null}">
+		                  	<c:forEach items="${curriculumList}" var="curriculum" varStatus="vs">
+		                    	<tr data-bs-toggle="modal" data-bs-target="#myModal" data-teachername="${curriculum.memberName}" data-classid="${curriculum.classId}" data-curriculumid="${curriculum.curriculumId}" data-handle="@mdo">
+		                        	<td>${(currentPage-1) * 10 + vs.index + 1}</td>
+		                          	<td>${curriculum.subject}</td>
+		                          	<td>${curriculum.curriculumName}</td>
+		                          	<td>${curriculum.classId}</td>
+		                          	<td>${curriculum.memberName}</td>
+		                          	<td>${curriculum.curriculumStartAt}</td>
+		                          	<td>${curriculum.curriculumEndAt}</td>
+		                          	<td>
+		                          		<button id="updateButton" type="button" style="border: 0; background-color: transparent;" class="open-modal-button" 
+		                          				data-bs-toggle="modal" data-bs-target="#updateCurriculumModal" 
+		                          				data-button-subject="${curriculum.subject}" data-button-curriculumName="${curriculum.curriculumName}"
+		                          				data-button-classId="${curriculum.classId}" data-button-teacherName="${curriculum.memberName}"
+		                          				data-button-startDate="${curriculum.curriculumStartAt}" data-button-endDate="${curriculum.curriculumEndAt}">
+		                          			✏️
+		                          		</button>
+		                        	</td>
+		                    	</tr>
+		                	</c:forEach>
+	                	</c:if>
+	                	<c:if test="${curriculumList == null }">
+		                  	<tr>
+		                  		<td colspan="5">조회된 과정이 없습니다.</td>
+		        	       	</tr>
+	                	</c:if>
+               	 	</tbody>
+            	</table>
+            	<br>
+		    	<!-- 페이지 이동 및 페이지 번호 표시 -->
 				<div class="d-flex justify-content-center">
 				    <nav aria-label="Page navigation">
 				        <ul class="pagination">
@@ -106,47 +182,95 @@
 				</div>
 			</div>
       </div>
+      <!-- 학생 정보 모달 -->
       <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl" style="width: 1200px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">상세 정보</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <div class="col-md-6">
-                        <iframe class="border rounded-4" src="${pageContext.request.contextPath}/resources/pdf/쓰리고근로계약서.pdf" style="width: 100%; height: 500px;"></iframe>
-                    </div>
-                    <div class="col-md-6">
-                   	  <div class="border rounded-4" style="padding:30px;">
-                      <form:form id="dataForm" method="POST" name="modalFrm" action="${pageContext.request.contextPath}/admin/adminStudentUpdate.do" style="font-size: 20px;">
-                          <input type="hidden" name="rowId" id="modalRowId">
-                          ID : <input type="text" name="firstId" id="modalFirstId" readonly> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-                          이름 : <input type="text" name="secondName" id="modalSecondName" readonly> <br>
-                          <input type="hidden" id="modalCurriculumId">
-                          커리큘럼
-                          <br>
-                          <select name="khCurriculum" id="khCurriculum">
-						      <c:forEach items="${curriculums}" var="curriculum">
-						          <option value="${curriculum.curriculumId}" ${khCurriculum eq curriculum.curriculumId ? 'selected' : '' }>
-						              ${curriculum.curriculumId} : ${curriculum.curriculumName}(${curriculum.classId}, ${curriculum.teacherId}) 수료일: ${curriculum.curriculumEndAt}
-						          </option>
-						      </c:forEach>
-						  </select>
-                          <hr>
-                          <button class="btn btn-primary" type="button" id="btnOk">승인</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
-                          <button class="btn btn-danger" type="button" id="btnNo">반려</button> 
-                      </form:form>
-                   	  </div>
-                    </div>
+      	  <div class="modal-dialog modal-lg modal-dialog-centered">
+          	  <div class="modal-content">
+              	  <div class="modal-header">
+                  	  <h5 class="modal-title" id="exampleModalLabel">상세 정보</h5>
+                      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                </div>
-                <!-- 모달의 나머지 부분은 동일하게 유지 -->
-            </div>
-        </div>
+                  <div class="modal-body">
+                      <div style="width:600px; margin:auto;">
+                   		  <div class="border rounded-4" style="padding:30px;">
+                      		  <p id="teacherName">강사: </p>
+                      		  <table class="table text-center">
+		                      	  <thead>
+		                      		  <tr>
+		                      			  <th>#</th>
+		                      			  <th>이름</th>
+		                      			  <th>연락처</th>
+		                      			  <th>이메일</th>
+		                      		  </tr>
+		                      	  </thead>
+                      			  <tbody id="studentInfoTable">
+                      		
+                      			  </tbody>
+                      		  </table>
+                   	  	  </div>
+                      </div>
+                  </div>
+                  <!-- 모달의 나머지 부분은 동일하게 유지 -->
+              </div>
+          </div>
       </div>
-      
+      <!-- 과정 수정 모달 -->
+      <div class="modal fade" id="updateCurriculumModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  	  <div class="modal-dialog">
+		      <div class="modal-content">
+		          <div class="modal-header">
+		              <h1 class="modal-title fs-5" id="exampleModalLabel">과정 수정</h1>
+		        	      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      	  </div>
+		      		  <form:form name="addCourseFrm">
+		    			  <div class="modal-body">
+							  <div class="mb-3">
+				  				  <p>과목 선택</p>
+					  			  <select class="form-select" name="subject" aria-label="Default select example">
+									  <option selected>과목</option>
+						  			  <option value="자바">자바</option>
+						  			  <option value="정보보안">정보보안</option>
+								  </select>
+							  </div>
+				  			  <div class="mb-3">
+					    		  <label for="exampleInputEmail1" class="form-label">과정명</label>
+					    		  <input type="email" class="form-control" id="curriculumName" aria-describedby="emailHelp">
+				    		  <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+				  			  </div>
+				  			  <div class="mb-3">
+				  				  <p>반 선택</p>
+					  			  <select class="form-select" name="classId" aria-label="Default select example">
+									  <option selected>반</option>
+						  			  <c:forEach items="${khClasses}" var="khClass">
+						  				  <option value="${khClass.classId}">${khClass.classId}</option>
+						  			  </c:forEach>
+								  </select>
+				  			  </div>
+				  			  <div class="mb-3">
+					    		  <p>강사 선택</p>
+					  			  <select class="form-select" name="teacherId" aria-label="Default select example">
+									  <option selected>강사</option>
+						  			  <c:forEach items="${teachers}" var="teacher">
+						  				  <option value="${teacher.memberId}">${teacher.memberName}(${teacher.memberId})</option>
+						  			  </c:forEach>
+								  </select>
+				  			  </div>
+				  			  <div class="mb-3">
+				  				  <p>시작일</p>
+				    			  <input type="date" id="startDate">
+				  			  </div>
+				  			  <div class="mb-3">
+					  			  <p>수료일</p>
+					    		  <input type="date" id="endDate">
+							  </div>
+		       					  </div>
+		      	 			  <div class="modal-footer">
+		       					  <button type="button" class="courseReg btn btn-primary">수정</button>
+		      				  </div>
+		  				  </form:form>
+		    		  </div>
+		  		  </div>
+			  </div>
     </section>
 
 
@@ -179,5 +303,153 @@
           }
         };
       });
+      
+      $(document).ready(function() {
+    	    $('.table tbody tr').click(function() {
+    	        const classId = $(this).data('classid');
+    	        console.log(classId);
+    	        const curriculumId = $(this).data('curriculumid');
+    	        console.log(curriculumId);
+    	        const teacherName = $(this).data('teachername');
+    	        document.querySelector("#teacherName").innerHTML = '강사 : ' + teacherName;
+    	        
+    	        // AJAX 요청
+    	        $.ajax({
+    	            type: 'GET',
+    	            url: "${pageContext.request.contextPath}/admin/adminCourseList.do",
+    	            data: {
+    	            	classId,
+    	            	curriculumId
+    	            },
+    	            dataType:"json",
+    	            success:  function(data){
+    	                // data에는 서버로부터 받아온 데이터가 들어있습니다.
+    	                // 이를 이용하여 모달 창에 내용을 채우는 작업을 수행할 수 있습니다.
+    	                // 예: 모달 띄우기 및 데이터 채우기 함수 호출
+    	                console.log("success");
+    	            	console.log(data);
+    	                openModalWithData(data)
+    	            },
+    	            error : function(error){
+    	            	console.log("error");
+    	            	console.log(error);
+    	            }
+    	            
+    	        });
+    	    });
+      
+    	    
+    	    function openModalWithData(data) {
+    	        // 모달 띄우고 데이터를 채우는 작업을 수행하는 함수 구현
+    	        // 예: 모달 내용에 데이터 채우기
+    	    	// 모달을 열기 위한 JavaScript 코드
+                
+                // 모달 내용을 채우는 JavaScript 코드
+                var studentInfoTable = $('#studentInfoTable');
+                studentInfoTable.empty();  // 기존 내용 제거
+                
+                let i = 1;
+                data.forEach(function(student) {
+                    var row = $('<tr>');
+                    var numCell = $('<td>').text(i++);
+                    var nameCell = $('<td>').text(student.memberName);
+                    var phoneCell = $('<td>').text(student.memberPhone);
+                    var emailCell = $('<td>').text(student.memberEmail);
+                    row.append(numCell);
+                    row.append(nameCell);
+                    row.append(phoneCell);
+                    row.append(emailCell);
+                    studentInfoTable.append(row);
+                });
+                
+             	// 만약 데이터가 없을 경우 메시지를 표시
+                if (data.length === 0) {
+                    var row = $('<tr>');
+                    var noDataCell = $('<td colspan="4">').text('해당 과정의 학생이 없습니다.');
+                    row.append(noDataCell);
+                    studentInfoTable.append(row);
+                }
+    	    }
+    	});
+      
+      $(document).ready(function() {
+    	    $('.courseReg').click(function() {
+    	        // Form 데이터 수집
+    	        const addCourseFrm = document.addCourseFrm;
+    	        const subject = $('select[name=subject]').val();
+    	        const curriculumName = $('#curriculumName').val();
+    	        const classId = $('select[name=classId]').val();
+    	        const teacherId = $('select[name=teacherId]').val();
+    	        const startDateAsString = $('#startDate').val(); // 날짜 문자열로 저장
+    	        const endDateAsString = $('#endDate').val(); // 날짜 문자열로 저장
+    	        
+    	        const token = document.addCourseFrm._csrf.value;
+    	        
+    	        if (confirm("등록 하시겠습니까?")) {
+    	        	
+	    	        // AJAX를 사용하여 서버에 데이터 전송
+	    	        $.ajax({
+	    	            type: 'POST', // 전송 방식 (POST)
+	    	            url: "${pageContext.request.contextPath}/admin/adminAddCourse.do", // 실제 서버 엔드포인트 URL
+	    	            data: {
+	    	            	subject,
+	    	            	curriculumName,
+	    	            	classId,
+	    	            	teacherId,
+	    	            	startDateAsString,
+	    	            	endDateAsString
+	    	            }, // 전송할 데이터
+	    	            headers: {
+	    	                "X-CSRF-TOKEN": token
+	    	            },
+	    	            success: function(response) {
+	    	                // 성공적으로 응답을 받았을 때 실행되는 부분
+	    	                alert('새 과정이 등록되었습니다.'); // 서버의 응답 내용을 출력 (개발자 도구에서 확인 가능)
+	    	                location.href="${pageContext.request.contextPath}/admin/adminCourseList.do";
+	    	            },
+	    	            error: function(error) {
+	    	                // 오류 발생 시 실행되는 부분
+	    	                console.error("error"); // 오류 내용을 출력
+	    	            }
+	    	        });
+    	        }
+    	    });
+    	});
+      
+      $(document).ready(function() {
+    	    // 모달이 열릴 때마다 실행되는 이벤트 리스너
+    	    $('#updateCurriculumModal').on('show.bs.modal', function (event) {
+    	        var button = $(event.relatedTarget); // 클릭한 버튼
+    	        var subject = button.data('button-subject'); // 과목 정보 가져오기
+    	        var curriculumName = button.data('button-curriculumName'); // 과정명 정보 가져오기
+    	        var classId = button.data('button-classId'); // 반 정보 가져오기
+    	        var teacherName = button.data('button-teacherName'); // 강사 정보 가져오기
+    	        var startDate = button.data('button-startDate'); // 시작일 정보 가져오기
+    	        var endDate = button.data('button-endDate'); // 수료일 정보 가져오기
+    	        
+    	        console.log('subject='+subject);
+    	        console.log('curriculumName='+curriculumName);
+    	        console.log('classId='+classId);
+    	        console.log('teacherName='+teacherName);
+    	        console.log('startDate='+startDate);
+    	        console.log('endDate='+endDate);
+    	        
+    	        // 모달 내부의 필드에 가져온 정보 입력하기
+    	        var modal = $(this);
+    	        modal.find('select[name="subject"]').val(subject);
+    	        modal.find('#curriculumName').val(curriculumName);
+    	        modal.find('select[name="classId"]').val(classId);
+    	        modal.find('select[name="teacherId"]').val(teacherName);
+    	        modal.find('#startDate').val(startDate);
+    	        modal.find('#endDate').val(endDate);
+    	    });
+    	    
+    	    /* // 수정 버튼 클릭 시에 실행되는 이벤트 리스너
+    	    $('.courseReg').click(function() {
+    	        // 수정된 정보 수집 및 AJAX 요청 등 처리
+    	        // ...
+    	    }); */
+    	});
+      
       
 </script>

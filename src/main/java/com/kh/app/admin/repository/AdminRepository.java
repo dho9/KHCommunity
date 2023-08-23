@@ -17,8 +17,11 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
+import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.khclass.entity.KhClass;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
@@ -166,5 +169,17 @@ public interface AdminRepository {
 	List<CurriculumListDto> adminCourseList(Map<String, Object> filters, RowBounds rowBounds);
 
 	int totalCountCurriculum(Map<String, Object> filters);
+
+	@Select("select * from member m join student s on m.member_id = s.student_id join curriculum c on s.curriculum_id = c.curriculum_id where c.class_id = #{classId} and c.curriculum_id = #{curriculumId}")
+	List<AdminCurriculumDetailDto> findStudentsByClassId(String classId, int curriculumId);
+
+	@Select("select member_id, member_name from member m join teacher t on m.member_id = t.teacher_id")
+	List<Teacher> findAllTeachers();
+
+	@Select("select * from class")
+	List<KhClass> findAllClass();
+
+	@Insert("insert into curriculum (curriculum_id, class_id, teacher_id, subject, curriculum_name, curriculum_start_at, curriculum_end_at) values (seq_curriculum_id.nextval, #{classId}, #{teacherId}, #{subject}, #{curriculumName}, #{startDate}, #{endDate})")
+	int addCurriculum(CurriculumRegDto curriculum);
 
 }

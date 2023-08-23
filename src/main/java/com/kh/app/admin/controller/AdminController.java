@@ -42,11 +42,14 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
+import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.khclass.entity.KhClass;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
@@ -354,7 +357,7 @@ public class AdminController {
 	// 수강생에게 쪽지 보내기 - 유성근
 	@PostMapping("/adminSendMessage.do")
 	public String adminStudentSendMessage(@Valid MessageBox message) {
-		message.setSendId("chdan");
+		message.setSendId("admin");
 		int result = adminService.sendMessageToStudent(message);
 		return "redirect:/admin/adminStudentList.do";
 	}
@@ -456,46 +459,62 @@ public class AdminController {
 		return "redirect:/admin/teacherList.do";
 	}
 	
-	// 과정등록/조회
+	// 과정 조회
 	@GetMapping("/adminCourseList.do")
-	public void adminCourseList(Model model, @RequestParam(defaultValue = "1") int page,
-							@RequestParam(value = "searchType", required = false) String searchType,
-				            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-				            @RequestParam(value = "subjects", required = false) String[] _subjects
-								) {
-		
-		List<String> subjects = null;
-		
-		if (_subjects != null) {
-			subjects = Arrays.asList(_subjects);
-		}
-		
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("searchType", searchType);
-		filters.put("searchKeyword", searchKeyword);
-		filters.put("subjects", subjects);
-		
-		// 페이징
-	    int limit = 10;
-		Map<String, Object> params = Map.of(
-				"page", page,
-				"limit", limit
-		);
-		
-		model.addAttribute("currentPage", page);
-		
-		// 전체 학생 수를 가져온다.
-	    int totalCount = adminService.totalCountCurriculum(filters);
+    @ResponseBody
+    public Object adminCourseList(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "subjects", required = false) String[] _subjects,
+            @RequestParam(value = "classId", required = false) String classId,
+            @RequestParam(value = "curriculumId", required = false) Integer curriculumId,
+            Model model
+    ) {
+        List<String> subjects = null;
 
-	    // totalPages 계산
-	    int totalPages = (int) Math.ceil((double) totalCount / limit);
-	    model.addAttribute("totalPages", totalPages);
-	    
-		
-		List<CurriculumListDto> curriculumList = adminService.adminCourseList(filters, params);
-		log.debug("curriculumList={}", curriculumList);
-		model.addAttribute("curriculumList", curriculumList);
-	}
+        if (_subjects != null) {
+            subjects = Arrays.asList(_subjects);
+        }
+
+        Map<String, Object> filters = new HashMap<>();
+        filters.put("searchType", searchType);
+        filters.put("searchKeyword", searchKeyword);
+        filters.put("subjects", subjects);
+
+        int limit = 10;
+        Map<String, Object> params = Map.of(
+                "page", page,
+                "limit", limit
+        );
+
+        int totalCount = adminService.totalCountCurriculum(filters);
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+
+        List<CurriculumListDto> curriculumList = adminService.adminCourseList(filters, params);
+        
+        log.debug("curriculumId = {}", curriculumId);
+        
+        if (classId != null && curriculumId != 0) {
+            List<AdminCurriculumDetailDto> classStudents = adminService.findStudentsByClassId(classId, curriculumId);
+            return classStudents;
+        }
+
+        // 강사 불러오기
+        List<Teacher> teachers = adminService.findAllTeachers();
+        
+        // 반 불러오기
+        List<KhClass> khClasses = adminService.findAllClass();
+        
+        
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("curriculumList", curriculumList);
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("khClasses", khClasses);
+        
+        return model;
+    }
 
 	@GetMapping("/writeNotice.do")
 	public void writeNotice() {}
@@ -533,8 +552,6 @@ public class AdminController {
 				.boardId(boardId)
 				.memberId(memberId)
 				.build();
-		log.debug("attach = {}", attachments);
-		log.debug("board = {}", board);
 		
 //		
 //		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
@@ -545,5 +562,17 @@ public class AdminController {
 //		result = adminService.insertPostContent(board);
 		
 		return "redirect:/admin/writeNotice.do";
+	}
+	
+	// 과정 등록
+	@PostMapping("/adminAddCourse.do")
+	public String adminAddCourse(@Valid CurriculumRegDto curriculum) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        curriculum.setStartDate(LocalDate.parse(curriculum.getStartDateAsString(), formatter));
+        curriculum.setEndDate(LocalDate.parse(curriculum.getEndDateAsString(), formatter));
+        
+        int result = adminService.addCurriculum(curriculum);
+        
+		return "redirect:/admin/adminCourseList.do";
 	}
 }
