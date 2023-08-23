@@ -9,6 +9,7 @@ import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
+import com.kh.app.board.entity.CommentLike;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
@@ -61,5 +62,14 @@ public interface BoardService {
 	List<BoardListDto> myClassBoardFindAll();
 
 	List<Comment> findByCommentByPostId(int postId);
+
+	CommentLike findCommentLikeByMemberId(int postId, String memberId);
+
+	int deleteCommentLikeByMemberId(int commentId, String memberId);
+
+	int insertCommentLikeByMemberId(int commentId, String memberId);
+
+	CommentLike findCommentLikeCount(int commentId);
+
 
 }
