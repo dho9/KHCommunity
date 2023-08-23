@@ -1,9 +1,11 @@
 package com.kh.app.member.service;
 
+import java.util.List;
 import java.util.Random;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -13,12 +15,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.repository.MemberRepository;
+import com.kh.app.ticket.dto.TicketBuyDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -156,8 +160,14 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findByMemberInfo(memberId);
 	}
 
-	
+	@Override
+	public List<TicketBuyDto> findByTicketInfo(String memberId) {
+		return memberRepository.findByTicketInfo(memberId);
+	}
 
-	
+	@Override
+	public Curriculum findByDdayInfo(int curriculumId) {
+		return memberRepository.findByDdayInfo(curriculumId);
+	}
 
 }

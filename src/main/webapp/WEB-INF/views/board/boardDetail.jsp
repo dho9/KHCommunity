@@ -5,8 +5,58 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
+	.sstatus img {
+    width: 13px;
+}
+  ul.sstatus li.vote span.likeCount {
+    color: #c62917;
+ 	marging-left:0;
+ 	font-size: 11px;
+}
+
+h3.medium {
+	font-size: 15px;
+}
+
+time.medium {
+	font-size: 11px;
+	margin-left: 9px;
+	padding-top: 2px;
+}
+
+ul.commentMenu li {
+	float: right;
+	margin-left: 8px;
+	padding: 0 2px;
+	height: 20px;
+	line-height: 20px;
+	color: #a6a6a6;
+	font-size: 12px;
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-size: 11px 11px;
+	cursor: pointer;
+}
+
 .tag {
 	cursor: pointer;
+}
+
+.picturesmall {
+	margin: 5px 5px 5px 5px;
+	width: 20px;
+	height: 20px;
+	border-radius: 4px;
+}
+
+#container hr.comment-separator {
+	clear: both;
+	width: 100%;
+	height: 0;
+	border: 0;
+	border: 0;
+	border-top: 1px solid lightgray;
+	margin: 5px 0;
 }
 
 #commnetContainer>div.articles>article form.writecomment input.text {
@@ -121,7 +171,7 @@
 		</c:if>
 		<div class="comments" style="display: block">
 			<div id="commnetContainer">
-			 <div id="commentList"></div>
+				<div id="commentList"></div>
 				<div class="articles">
 					<article>
 						<form:form name="commentFrm" class="writecomment">
@@ -150,15 +200,51 @@
 	</form>
 	<form:form name="tokenFrm"></form:form>
 	<form:form name="loadCommentFrm"></form:form>
-
+	<form:form name="commentLikeFrm"></form:form>
 	<script>
 document.addEventListener('DOMContentLoaded', () => {
+	
+	loadComment();
+	document.querySelector('.writecomment').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();}
+        
+	});
+	
+});
+
+function loadCommentLike(){
+	$.ajax({
+		url : "${pageContext.request.contextPath}/board/commentLike.do",
+		data : {
+			_postId : document.querySelector('.like').dataset.value
+		},
+		method : "GET",
+        dataType : "json",
+        success(responseData) {
+        	console.log(responseData);
+			const {available, likeCount} = responseData;
+			const {postLikeCount} = likeCount;
+			
+			const like = document.querySelector('.commentLike');
+			if(available) {
+            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+            }
+            else {
+            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+            }
+        }
+	});
+	
+}
+
+
+function loadComment(){
 	const token = document.loadCommentFrm._csrf.value;
 	const currentURL = window.location.href;
 	const urlParams = new URLSearchParams(new URL(currentURL).search);
 	const postId = urlParams.get('id');
-	console.log(postId);
-	console.log(token);
+	
     $.ajax({
     	url : "${pageContext.request.contextPath}/board/loadComment.do",
     	headers: {
@@ -169,46 +255,89 @@ document.addEventListener('DOMContentLoaded', () => {
     	},
     	method : "POST",
     	success(data){
+    		//loadCommentLike();
     		renderComments(data);
+    		
     	}
     });
+}
+function renderComments(comments) {
+    const commentList = document.querySelector('#commentList'); // Select the comment list container
+    // Clear existing comments
+    commentList.innerHTML = '';
 
-    function renderComments(comments) {
-        const commentList = document.querySelector('#commentList'); // Select the comment list container
+    // Loop through each comment and create a DOM element for it
+    comments.forEach(comment => {
+        const commentElement = document.createElement('article');
+        commentElement.className = 'parent';
+        commentElement.innerHTML = `
+            
+        	<h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center;">
+                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
+                <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
+            </div>
+            <ul class="commentMenu">
+                <li class="childcomment">대댓글</li>
+                <li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
+                <li class="messagesend">쪽지</li>
+                <li class="abuse">신고</li>
+            </ul>
+        </h3>
+            <hr>
+            <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>
+            <ul class="sstatus commentvotestatus">
+            <li class="vote commentvote" >
+                <time class="medium">\${comment.commentCreatedAt}</time>
+                <img class="commentLike" src="${pageContext.request.contextPath}/resources/images/like.png">
+                <span class="likeCount">0</span>
+            </li>
+           
+        </ul>
+            <hr class="comment-separator"/>
+        `;
 
-        // Clear existing comments
-        commentList.innerHTML = '';
-
-        // Loop through each comment and create a DOM element for it
-        comments.forEach(comment => {
-            const commentElement = document.createElement('article');
-            commentElement.className = 'parent';
-            commentElement.innerHTML = `
-                <img src="https://cf-fpi.everytime.kr/0.png" class="picture medium">
-                <h3 class="medium">\${comment.anonymousCheck ? 'false' : comment.memberId}</h3>
-                <ul class="status">
-                    <li class="childcomment">대댓글</li>
-                    <li class="commentvote">공감</li>
-                    <li class="messagesend">쪽지</li>
-                    <li class="abuse">신고</li>
-                </ul>
-                <hr>
-                <p class="large">${comment.commentContent}</p>
-                <time class="medium">${comment.commentCreatedAt}</time>
-                <ul class="status commentvotestatus">
-                    <li class="vote commentvote" style="display: none;">0</li>
-                </ul>
-            `;
-
-            // Append the comment element to the comment list container
-            commentList.appendChild(commentElement);
-        });
+        // Append the comment element to the comment list container
+        commentList.appendChild(commentElement);
+    });
+}
+//댓글좋아요 기능 
+document.querySelector('#commentList').addEventListener('click', (event) => {
+    const clickedElement = event.target;
+    const token = document.commentLikeFrm._csrf.value;
+    if (clickedElement.classList.contains('commentvote')) {
+        // data-commentid 속성을 가져와서 사용
+        const commentId = clickedElement.getAttribute('data-commentid');
+        
+    	$.ajax({
+			url : "${pageContext.request.contextPath}/board/commentLike.do",
+			data : {
+				commentId :commentId
+			},
+			headers: {
+                "X-CSRF-TOKEN": token
+            },
+            method : "POST",
+            dataType : "json",
+            success(responseData) {
+            	console.log(responseData);
+				const {available, likeCount} = responseData;
+				const {postLikeCount} = likeCount;
+    			
+				const like = document.querySelector('.commentLike');
+				if(available) {
+	            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	            }
+	            else {
+	            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	            }
+            }
+		});
+        
+        
+        
     }
 });
-    
-
-
-
 
 
 	let anonyCk = false;
@@ -254,7 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	        	},
 	        	method : "POST",
 	        	success(data){
-	        		console.log("ss");
+	        		loadComment();
+	        		document.querySelector("#commentText").value = "";
 	        	}
 	        })
 		})

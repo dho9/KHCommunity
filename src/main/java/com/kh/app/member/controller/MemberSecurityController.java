@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.app.common.KhCoummunityUtils;
-import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.MemberLoginDto;
 import com.kh.app.member.dto.MemberUpdateDto;
@@ -79,7 +80,9 @@ public class MemberSecurityController {
 		String rawPassword = member.getMemberPwd();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		member.setMemberPwd(encodedPassword);
-
+		log.debug("rawPassword = " + rawPassword);
+		log.debug("encodedPassword = " + encodedPassword);
+		
 		int result = memberService.insertMember(member);
 		redirectAttr.addFlashAttribute("msg", "회원가입을 축하드립니다.");
 		return "redirect:/";
@@ -173,33 +176,70 @@ public class MemberSecurityController {
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
 	}
 
+//	@PostMapping("/certification.do")
+//	public String certification(@AuthenticationPrincipal MemberDetails member,
+//			@RequestParam(value = "upFile", required = true) MultipartFile upFiles)
+//			throws IllegalStateException, IOException {
+//
+//		// 1. 파일저장
+//		StudentAttachment attach = null;
+//
+//		if (!upFiles.isEmpty()) {
+//			String originalFilename = upFiles.getOriginalFilename();
+//			String renamedFilename = KhCoummunityUtils.getRenamedFilename(originalFilename); // 20230807_14255555
+//
+//			File destFile = new File(renamedFilename);
+//
+//			upFiles.transferTo(destFile);
+//
+//			attach = StudentAttachment.builder().studentOriginalFilename(originalFilename)
+//					.studentRenamedFilename(renamedFilename).memberId(member.getMemberId()).build();
+//
+//		}
+//		
+//		log.debug("attach = {}", attach);
+//
+//		int result = memberService.insertStudentAttach(attach);
+//
+//		return "redirect:/member/myPage.do";
+//	}
+	
 	@PostMapping("/certification.do")
 	public String certification(@AuthenticationPrincipal MemberDetails member,
-			@RequestParam(value = "upFile", required = true) MultipartFile upFiles)
-			throws IllegalStateException, IOException {
+	                            @RequestParam(value = "upFile", required = true) MultipartFile upFiles,
+	                             HttpServletRequest request)
+	                            throws IllegalStateException, IOException {
 
-		// 1. 파일저장
-		StudentAttachment attach = null;
+	    // 1. 새로운 저장 경로 지정
+	    ServletContext servletContext =  request.getServletContext();
+	    String resourcesPath = "/resources/images/approveUpload/";
+		String approveUploadPath = servletContext.getRealPath(resourcesPath);
 
-		if (!upFiles.isEmpty()) {
-			String originalFilename = upFiles.getOriginalFilename();
-			String renamedFilename = KhCoummunityUtils.getRenamedFilename(originalFilename); // 20230807_14255555
+	    // 2. 파일 저장
+	    StudentAttachment attach = null;
 
-			File destFile = new File(renamedFilename);
+	    if (!upFiles.isEmpty()) {
+	        String originalFilename = upFiles.getOriginalFilename();
+	        String renamedFilename = KhCoummunityUtils.getRenamedFilename(originalFilename);
 
-			upFiles.transferTo(destFile);
+	        File destFile = new File(approveUploadPath + renamedFilename);  // 경로 수정
 
-			attach = StudentAttachment.builder().studentOriginalFilename(originalFilename)
-					.studentRenamedFilename(renamedFilename).memberId(member.getMemberId()).build();
+	        upFiles.transferTo(destFile);
 
-		}
-		
-		log.debug("attach = {}", attach);
+	        attach = StudentAttachment.builder()
+	                .studentOriginalFilename(originalFilename)
+	                .studentRenamedFilename(renamedFilename)
+	                .memberId(member.getMemberId())
+	                .build();
+	    }
 
-		int result = memberService.insertStudentAttach(attach);
+	    log.debug("attach = {}", attach);
 
-		return "redirect:/member/myPage.do";
+	    int result = memberService.insertStudentAttach(attach);
+
+	    return "redirect:/member/myPage.do";
 	}
+	
 	
 	@PostMapping("/memberDelete.do")
 	public String memberDelete(

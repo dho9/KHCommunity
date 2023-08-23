@@ -20,4 +20,5 @@ public class TicketBuyDto {
 	private String storename;
 	private int amount;
 	private int totalPrice;
+	
 }
