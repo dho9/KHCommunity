@@ -16,37 +16,37 @@
 --=============================================
 -- 테이블 삭제
 --=============================================
-DROP TABLE member CASCADE CONSTRAINTS;
-DROP TABLE class CASCADE CONSTRAINTS;
-DROP TABLE teacher CASCADE CONSTRAINTS;
-DROP TABLE employee CASCADE CONSTRAINTS;
-DROP TABLE board CASCADE CONSTRAINTS;
-DROP TABLE post_content CASCADE CONSTRAINTS;
-DROP TABLE post_attachment CASCADE CONSTRAINTS;
-DROP TABLE favorite CASCADE CONSTRAINTS;
-DROP TABLE report CASCADE CONSTRAINTS;
-DROP TABLE talker CASCADE CONSTRAINTS;
-DROP TABLE store CASCADE CONSTRAINTS;
-DROP TABLE ticket CASCADE CONSTRAINTS;
-DROP TABLE ticket_order CASCADE CONSTRAINTS;
-DROP TABLE student_attachment CASCADE CONSTRAINTS;
-DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
-DROP TABLE student CASCADE CONSTRAINTS;
-DROP TABLE scheduler CASCADE CONSTRAINTS;
-DROP TABLE vacation CASCADE CONSTRAINTS;
-DROP TABLE post CASCADE CONSTRAINTS;
-DROP TABLE post_comment CASCADE CONSTRAINTS;
-DROP TABLE  post_like CASCADE CONSTRAINTS;
-DROP TABLE  comment_like CASCADE CONSTRAINTS;
-DROP TABLE message_box CASCADE CONSTRAINTS;
-DROP TABLE chat_room CASCADE CONSTRAINTS;
-DROP TABLE chat_message CASCADE CONSTRAINTS;
-DROP TABLE authority CASCADE CONSTRAINTS;
-DROP TABLE curriculum CASCADE CONSTRAINTS;
-DROP TABLE calendar CASCADE CONSTRAINTS;
-DROP TABLE quit_member CASCADE CONSTRAINTS;
-DROP TABLE delete_post CASCADE CONSTRAINTS;
-DROP TABLE delete_comment CASCADE CONSTRAINTS;
+--DROP TABLE member CASCADE CONSTRAINTS;
+--DROP TABLE class CASCADE CONSTRAINTS;
+--DROP TABLE teacher CASCADE CONSTRAINTS;
+--DROP TABLE employee CASCADE CONSTRAINTS;
+--DROP TABLE board CASCADE CONSTRAINTS;
+--DROP TABLE post_content CASCADE CONSTRAINTS;
+--DROP TABLE post_attachment CASCADE CONSTRAINTS;
+--DROP TABLE favorite CASCADE CONSTRAINTS;
+--DROP TABLE report CASCADE CONSTRAINTS;
+--DROP TABLE talker CASCADE CONSTRAINTS;
+--DROP TABLE store CASCADE CONSTRAINTS;
+--DROP TABLE ticket CASCADE CONSTRAINTS;
+--DROP TABLE ticket_order CASCADE CONSTRAINTS;
+--DROP TABLE student_attachment CASCADE CONSTRAINTS;
+--DROP TABLE vacation_attachment CASCADE CONSTRAINTS;
+--DROP TABLE student CASCADE CONSTRAINTS;
+--DROP TABLE scheduler CASCADE CONSTRAINTS;
+--DROP TABLE vacation CASCADE CONSTRAINTS;
+--DROP TABLE post CASCADE CONSTRAINTS;
+--DROP TABLE post_comment CASCADE CONSTRAINTS;
+--DROP TABLE  post_like CASCADE CONSTRAINTS;
+--DROP TABLE  comment_like CASCADE CONSTRAINTS;
+--DROP TABLE message_box CASCADE CONSTRAINTS;
+--DROP TABLE chat_room CASCADE CONSTRAINTS;
+--DROP TABLE chat_message CASCADE CONSTRAINTS;
+--DROP TABLE authority CASCADE CONSTRAINTS;
+--DROP TABLE curriculum CASCADE CONSTRAINTS;
+--DROP TABLE calendar CASCADE CONSTRAINTS;
+--DROP TABLE quit_member CASCADE CONSTRAINTS;
+--DROP TABLE delete_post CASCADE CONSTRAINTS;
+--DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --=============================================
 -- 테이블 전체 삭제
 --=============================================
@@ -79,23 +79,23 @@ DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --===============================================
 -- 시퀀스 삭제
 --===============================================
-drop sequence seq_student_attach_id;
-drop sequence seq_schedule_id;
-drop sequence seq_vacation_id;
-drop sequence seq_vacation_attach_id;
-drop sequence seq_board_id;
-drop sequence seq_post_id;
-drop sequence seq_post_attach_id;
-drop sequence seq_comment_id;
-drop sequence seq_message_id;
-drop sequence seq_report_id;
-drop sequence seq_chat_id;
-drop sequence seq_store_id;
-drop sequence seq_ticket_id;
-drop sequence seq_order_id;
-drop sequence seq_chat_message_no;
-drop sequence seq_curriculum_id;
-drop sequence seq_cal;
+--drop sequence seq_student_attach_id;
+--drop sequence seq_schedule_id;
+--drop sequence seq_vacation_id;
+--drop sequence seq_vacation_attach_id;
+--drop sequence seq_board_id;
+--drop sequence seq_post_id;
+--drop sequence seq_post_attach_id;
+--drop sequence seq_comment_id;
+--drop sequence seq_message_id;
+--drop sequence seq_report_id;
+--drop sequence seq_chat_id;
+--drop sequence seq_store_id;
+--drop sequence seq_ticket_id;
+--drop sequence seq_order_id;
+--drop sequence seq_chat_message_no;
+--drop sequence seq_curriculum_id;
+--drop sequence seq_cal;
 --===============================================
 -- 시퀀스 생성
 --===============================================
