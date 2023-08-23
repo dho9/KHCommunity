@@ -455,6 +455,4 @@
       $(document).ready(function() {
     	   
     	});
-      
-      
 </script>

@@ -17,3 +17,4 @@ public class CurriculumListDto {
 	private LocalDate curriculumEndAt;
 	
 }
+

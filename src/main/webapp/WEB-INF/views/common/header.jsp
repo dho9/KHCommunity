@@ -20,6 +20,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -29,9 +30,11 @@
 <meta charset="utf-8">
 <meta name="referrer" content="origin">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<%-- 
 <link type="text/css" href="/css/common.css" rel="stylesheet">
 <link type="text/css" href="/css/common.partial.css" rel="stylesheet">
-<link type="text/css" href="/css/container.community.css"
+<link type="text/css" href="/css/container.community.css" 
+--%>
 	rel="stylesheet">
 <link href="/favicon.ico" rel="shortcut icon">
 	<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/style.css" />
@@ -52,6 +55,18 @@
 	</script>
 </c:if>
 
+<%-- codemirror js --%>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/lib/codemirror.js"></script>
+<%-- codemirror sql.js addon --%>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/sql/sql.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/clike/clike.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/javascript/javascript.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/htmlmixed/htmlmixed.js"></script>
+<%-- codemirror css --%>
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/lib/codemirror.css">
+<%-- codemirror theme --%>
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/eclipse.css">
+
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
     <body>
@@ -71,7 +86,7 @@
             </div>
             <ul id="menu">
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/notificationBoardList.do" style="text-decoration: none;">공지사항</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do" style="text-decoration: none;">우리반</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>

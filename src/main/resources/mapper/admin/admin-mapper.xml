@@ -54,6 +54,25 @@
   
   </select>
   
+  <select id="findAllTeacher" resultType="TeacherListDto">
+	  	SELECT 
+	    m.member_id, 
+	    m.member_name, 
+	    m.member_phone, 
+	    m.member_email, 
+	    m.birthday,
+	    t.*
+	FROM 
+	    member m
+	INNER JOIN 
+	    teacher t ON m.member_id = t.teacher_id
+	<where>
+        <if test="searchType != null and searchKeyword != null">
+            AND ${searchType} like '%' || #{searchKeyword} || '%'
+        </if>
+  	</where>
+  </select>
+  
   <select id="totalCountStudents" resultType="int">
     SELECT
 	    count(*)
@@ -93,25 +112,24 @@
   </where>
   </select>
   
-  <select id="findAllTeacher" resultType="Teacher">
-	  	SELECT 
-	    m.member_id, 
-	    m.member_pwd, 
-	    m.member_name, 
-	    m.member_phone, 
-	    m.member_email, 
-	    m.birthday,
-	    t.teacher_enroll_date
+  <select id="totalCountTeachers" resultType="int">
+  	SELECT 
+  		count(*)
 	FROM 
 	    member m
 	INNER JOIN 
 	    teacher t ON m.member_id = t.teacher_id
-	<where>
-        
+  <where>
+        <if test="job_Codes != null and !job_Codes.isEmpty()">
+            AND JOB_CODE IN
+            <foreach collection="job_Codes" item="job_Code" open="(" separator="," close=")">
+                #{job_Code}
+            </foreach>
+        </if>
         <if test="searchType != null and searchKeyword != null">
             AND ${searchType} like '%' || #{searchKeyword} || '%'
         </if>
-  	</where>
+  </where>
   </select>
   
   <select id="totalCountCurriculum" resultType="int">

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,18 +20,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
+import com.kh.app.board.entity.CommentLike;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.common.HelloSpringUtils;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.entity.MemberDetails;
+import com.kh.app.member.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,20 +52,30 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class BoardController {
 	
-	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private MemberService memberService;
+	
 	@GetMapping("/freeBoardList.do")
 	public String freeBoardList(Model model) {
 		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll();
-        log.debug("freeBoardLists = {}", freeBoardLists);
+        //log.debug("freeBoardLists = {}", freeBoardLists);
+        
         model.addAttribute("freeBoardLists", freeBoardLists);
+        
         return "/board/freeBoardList";
  	}
 	
 	@GetMapping("/marketBoardList.do")
-	public void marketBoardList() {
-		
+	public String marketBoardList(Model model) {
+		List<BoardListDto> marketBoardLists = boardService.marketBoardFindAll();
+        log.debug("marketBoardLists = {}", marketBoardLists);
+        
+        model.addAttribute("marketBoardLists", marketBoardLists);
+        
+        return "/board/marketBoardList";
 	}
 	
 	@GetMapping("/todayFoodBoardList.do")
@@ -67,13 +84,23 @@ public class BoardController {
 	}
 	
 	@GetMapping("/sharingInformationBoardList.do")
-	public void sharingInformationBoardList() {
-		
+	public String sharingInformationBoardList(Model model) {
+		List<BoardListDto> sharingInformationBoardList = boardService.sharingInformationBoardFindAll();
+        //log.debug("sharingInformationBoardList = {}", sharingInformationBoardList);
+        
+        model.addAttribute("sharingInformationBoardList", sharingInformationBoardList);
+        
+        return "/board/sharingInformationBoardList";
 	}
 	
 	@GetMapping("/askCodeBoardList.do")
-	public void askCodeBoardList() {
-		
+	public String askCodeBoardList(Model model) {
+		List<BoardListDto> askCodeBoardList = boardService.askCodeBoardFindAll();
+        log.debug("askCodeBoardList = {}", askCodeBoardList);
+        
+        model.addAttribute("askCodeBoardList", askCodeBoardList);
+        
+        return "/board/askCodeBoardList";
 	}
 	
 	@GetMapping("/studyBoardList.do")
@@ -84,7 +111,7 @@ public class BoardController {
 	@GetMapping("/preStudentBoardList.do")
 	public String preStudentBoardList(Model model) {
 		List<BoardListDto> preStudentBoardList = boardService.preStudentBoardFindAll();
-        log.debug("preStudentBoardList = {}", preStudentBoardList);
+        //log.debug("preStudentBoardList = {}", preStudentBoardList);
         
         model.addAttribute("preStudentBoardList", preStudentBoardList);
         
@@ -94,7 +121,7 @@ public class BoardController {
 	@GetMapping("/graduateBoardList.do")
 	public String graduateBoardList(Model model) {
 		List<BoardListDto> graduateBoardList = boardService.graduateBoardFindAll();
-        log.debug("graduateBoardList = {}", graduateBoardList);
+        //log.debug("graduateBoardList = {}", graduateBoardList);
         
         model.addAttribute("graduateBoardList", graduateBoardList);
         
@@ -104,13 +131,21 @@ public class BoardController {
 	@GetMapping("/employeeBoardList.do")
 	public String employeeBoardList(Model model) {
 		List<BoardListDto> employeeBoardList = boardService.employeeBoardFindAll();
-        log.debug("employeeBoardList = {}", employeeBoardList);
+        //log.debug("employeeBoardList = {}", employeeBoardList);
         
         model.addAttribute("employeeBoardList", employeeBoardList);
         
         return "/board/employeeBoardList";
 	}
 	
+	@GetMapping("/noticeBoardList.do")
+	public String noticeBoardList(Model model) {
+		List<BoardListDto> noticeBoardLists = boardService.noticeBoardFindAll();
+		
+		model.addAttribute("noticeBoardLists", noticeBoardLists);
+		
+		return "/board/noticeBoardList";
+	}
 	
 	
 	/**
@@ -122,8 +157,8 @@ public class BoardController {
 	@GetMapping("/boardSearch.do")
     public String boardSearch(@RequestParam String keyword, Model model) {
         List<BoardSearchDto> boards = boardService.findAllByKeyword(keyword);
-        log.debug("boards = {}", boards);
-        log.debug("keyword = {}", keyword);
+        //log.debug("boards = {}", boards);
+        //log.debug("keyword = {}", keyword);
         model.addAttribute("boards", boards);
         model.addAttribute("keyword", keyword);
         return "/board/boardListByKeyword";
@@ -138,7 +173,7 @@ public class BoardController {
 	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
 		String memberId = principal.getMemberId();
 		List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
-		log.debug("boards = {}", boards);
+		//log.debug("boards = {}", boards);
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(Map.of("boards", boards));
@@ -156,12 +191,12 @@ public class BoardController {
 		int boardId = Integer.parseInt(_boardId);
 		
 		Favorite favorite = boardService.findFavoriteByMemberId(boardId, memberId);
-		log.debug("favorite = {}", favorite);
+		//log.debug("favorite = {}", favorite);
 		
 		boolean available = true;
 		if(favorite == null)
 			available = false;
-		log.debug("availalbe = {}", available);
+		//log.debug("availalbe = {}", available);
 		
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -180,12 +215,12 @@ public class BoardController {
 		int boardId = Integer.parseInt(_boardId);
 		
 		Favorite favorite = boardService.findFavoriteByMemberId(boardId, memberId);
-		log.debug("favorite = {}", favorite);
+		//log.debug("favorite = {}", favorite);
 		
 		boolean available = true;
 		if(favorite == null)
 			available = false;
-		log.debug("availalbe = {}", available);
+		//log.debug("availalbe = {}", available);
 		
 		int result = 0;
 		if(available) {
@@ -208,14 +243,18 @@ public class BoardController {
 	@GetMapping("/boardDetail.do")
 	public void boardDetail(@RequestParam int id, Model model) {
 		BoardListDto postDetail = boardService.findById(id);
-		log.debug("postDetail = {}", postDetail);
+		//log.debug("postDetail = {}", postDetail);
 		
 		Board board = boardService.findBoardName(postDetail.getBoardId());
+		log.debug("boardddddddddddd={}",board);
+		//log.debug("boardddddddddddd={}",postDetail);
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
+		
 		model.addAttribute("postAttach",postAttach);
 	}
+	
 	
 	/**
 	 * 해당 게시물에 공감(좋아요) 했는지 안했는지
@@ -229,15 +268,15 @@ public class BoardController {
 		int postId = Integer.parseInt(_postId);
 		
 		PostLike postLike = boardService.findPostLikeByMemberId(postId, memberId);
-		log.debug("postLike = {}", postLike);
+		//log.debug("postLike = {}", postLike);
 		
 		boolean available = true;
 		if(postLike == null)
 			available = false;
-		log.debug("availalbe = {}", available);
+		//log.debug("availalbe = {}", available);
 		
 		PostLike likeCount = boardService.findPostLikeCount(postId);
-		log.debug("likeCount = {}", likeCount);
+		//log.debug("likeCount = {}", likeCount);
 		
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -256,12 +295,12 @@ public class BoardController {
 		int postId = Integer.parseInt(_postId);
 		
 		PostLike postLike = boardService.findPostLikeByMemberId(postId, memberId);
-		log.debug("postLike = {}", postLike);
+		//log.debug("postLike = {}", postLike);
 		
 		boolean available = true;
 		if(postLike == null)
 			available = false;
-		log.debug("availalbe = {}", available);
+		//log.debug("availalbe = {}", available);
 		
 		int result = 0;
 		if(available) {
@@ -272,7 +311,7 @@ public class BoardController {
 		}
 		
 		PostLike likeCount = boardService.findPostLikeCount(postId);
-		log.debug("postLikeCount = {}", likeCount);
+		//log.debug("postLikeCount = {}", likeCount);
 		
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -288,11 +327,12 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@RequestParam String[] _tags,
+			@RequestParam boolean anonymousCheck,
+			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
 		
-			log.debug("loginMember = {}", member);
+			//log.debug("loginMember = {}", member);
 			List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
 			
 			// 1. 파일저장
@@ -316,7 +356,6 @@ public class BoardController {
 				}
 				
 			}
-		
 			BoardCreateDto board = BoardCreateDto.builder()
 				.title(title)
 				.content(text)
@@ -324,8 +363,9 @@ public class BoardController {
 				.memberId(member.getMemberId())
 				.tags(tags)
 				.attachments(attachments)
+				.anonymousCheck(anonymousCheck)
 				.build();
-		log.debug("baord = {}", board);
+		//log.debug("baord = {}", board);
 		
 		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
 			result = boardService.insertBoardNofiles(board);
@@ -338,6 +378,106 @@ public class BoardController {
 	}
 
 	
+	@GetMapping("/popularPost.do")
+	@ResponseBody
+	public List<PopularBoardDto> popularPost() {
+		List<PopularBoardDto> post = boardService.findByPopularPost();
+		//log.debug("post = {}",post);
+//	    model.addAttribute("post", post);
+        return post;
+	}
 
+	@PostMapping("/createComment.do")
+	public ResponseEntity<?> createCommnet(
+			CreateCommentDto comment,@AuthenticationPrincipal MemberDetails member
+			){
+		//log.debug("commentttttttttttt={}", comment);
+		if(member !=null) {
+			
+			int result = boardService.createComment(comment,member.getMemberId());
+			return ResponseEntity
+					.status(HttpStatus.OK).body(null);
+		}else {
+			return ResponseEntity
+					.status(HttpStatus.OK).body("댓글작성이 실패했습니다.");
+		}
+		
+		
+	}
+	@PostMapping("/loadComment.do")
+	@ResponseBody
+	public List<Comment> commentList(@RequestParam int postId){
+		log.debug("idddddddddddd = {}",postId);
+//		//log.debug("idddddddddddd = {}",postId);
+		List<Comment> comments = boardService.findByCommentByPostId(postId);
+		return comments;
+		
+	}
+	
+	@GetMapping("/myClassBoardList.do")
+	public String myClassBoardList(
+			@AuthenticationPrincipal MemberDetails principal,
+			@Valid AdminStudentListDto studentInfo,
+			Model model
+	) {
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll();
+		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+        ////log.debug("myClassBoardList = {}", myClassBoardList);
+       // //log.debug("studentInfo = {}", studentInfo);
+         
+ 		model.addAttribute("studentInfo", studentInfo);
+        model.addAttribute("myClassBoardList", myClassBoardList);
+        
+        return "/board/myClassBoardList";
+	}
+	
+	
+//	@GetMapping("/commentLike.do")
+//	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
+//		String memberId = principal.getMemberId();
+//		int postId = Integer.parseInt(_postId);
+//		
+//		int commentLike = boardService.findCommentLikeByMemberId(postId, memberId);
+//		log.debug("commentLikeeeeeeeeeeee = {}", commentLike);
+//		
+//		boolean available = true;
+//		if(commentLike == 0)
+//			available = false;
+//		//log.debug("availalbe = {}", available);
+//		
+//		
+//		return ResponseEntity
+//				.status(HttpStatus.OK)
+//				.body(Map.of("available", available));
+//	}
+	
+	@PostMapping("/commentLike.do")
+	public ResponseEntity<?> commentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam int commentId) {
+		String memberId = principal.getMemberId();
+		
+		CommentLike commentLike = boardService.findCommentLikeByMemberId(commentId, memberId);
+		log.debug("commentLike = {}", commentLike);
+		
+		boolean available = true;
+		if(commentLike == null)
+			available = false;
+		//log.debug("availalbe = {}", available);
+		
+		int result = 0;
+		if(available) {
+			result = boardService.deleteCommentLikeByMemberId(commentId, memberId);
+		}
+		else {
+			result = boardService.insertCommentLikeByMemberId(commentId, memberId);
+		}
+		
+		CommentLike likeCount = boardService.findCommentLikeCount(commentId);
+		log.debug("likeCount = {}", likeCount);
+		
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("available", available, "likeCount", likeCount));
+	}
+	
 }
 

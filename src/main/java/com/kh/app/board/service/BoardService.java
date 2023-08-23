@@ -5,7 +5,11 @@ import java.util.List;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
+import com.kh.app.board.entity.CommentLike;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
@@ -17,10 +21,18 @@ public interface BoardService {
 	List<BoardSearchDto> findAllByMemberId(String memberId);
 	
 	List<BoardListDto> freeBoardFindAll();
+	
+	List<BoardListDto> marketBoardFindAll();
 
-	List<BoardListDto> preStudentBoardFindAll();
+	List<BoardListDto> sharingInformationBoardFindAll();
+	
+	List<BoardListDto> askCodeBoardFindAll();
 
 	List<BoardListDto> graduateBoardFindAll();
+
+	List<BoardListDto> preStudentBoardFindAll();
+	
+	List<BoardListDto> employeeBoardFindAll();
 
 	Favorite findFavoriteByMemberId(int boardId, String memberId);
 
@@ -29,8 +41,6 @@ public interface BoardService {
 	int insertFavoriteByMemberId(int boardId, String memberId);
 	
 	BoardListDto findById(int id);
-
-	List<BoardListDto> employeeBoardFindAll();
 
 	PostLike findPostLikeByMemberId(int postId, String memberId);
 
@@ -46,9 +56,28 @@ public interface BoardService {
 
 	Board findBoardName(int boardId);
 
+	List<PopularBoardDto> findByPopularPost();
+
+	int createComment(CreateCommentDto comment, String memberId);
+	
 	int insertBoardNofiles(BoardCreateDto board);
 
 	PostAttachment findAttachById(int id);
+
+
+
+	List<BoardListDto> noticeBoardFindAll();
+	List<BoardListDto> myClassBoardFindAll();
+
+	List<Comment> findByCommentByPostId(int postId);
+
+	CommentLike findCommentLikeByMemberId(int postId, String memberId);
+
+	int deleteCommentLikeByMemberId(int commentId, String memberId);
+
+	int insertCommentLikeByMemberId(int commentId, String memberId);
+
+	CommentLike findCommentLikeCount(int commentId);
 
 
 }

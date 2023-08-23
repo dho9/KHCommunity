@@ -3,19 +3,20 @@ package com.kh.app.schedule.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.schedule.dto.CalendarInsertDto;
 import com.kh.app.schedule.entity.Calendar;
-import com.kh.app.schedule.service.CalenService;
+import com.kh.app.schedule.service.CalenServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CalendarController {
 	
 	@Autowired(required = false)
-	private CalenService service;
+	private CalenServiceImpl service;
 
 	@GetMapping(params="method=list")
 	public String list() {
@@ -35,33 +36,37 @@ public class CalendarController {
 	
 	@GetMapping(params = "method=data")
 	@ResponseBody
-	public ArrayList<Calendar> data(Model d) {
-		ArrayList<Calendar> calList = service.calenList();
-		log.debug("이게 뭐야 대체.... = {}", calList);
-		d.addAttribute("list", service.calenList());
+	public ArrayList<Calendar> data(Model model, @AuthenticationPrincipal MemberDetails member) {
+		String memberId= member.getMemberId();
+		ArrayList<Calendar> calList = service.calenList(memberId);
+		model.addAttribute("list", service.calenList(memberId));
 		return calList;
 	}
 	
 	@PostMapping(params = "method=data")
-//	@ResponseBody
-	public String dataSet(@RequestParam String title,
+	public String dataSet(@RequestParam String eventTitle,
 			@RequestParam String start,
 			@RequestParam String end,
 			@RequestParam String backgroundColor,
 			@RequestParam String memberId,
 			Model model) {
 		
-		log.debug("이게 대체....start = {}", start);
-		log.debug("이게 뭐야 대체....title = {}", title);
-		log.debug("이게 뭐야 대체....end = {}", end);
-		log.debug("이게 뭐야 대체....backgroundColor = {}", backgroundColor);
-		log.debug("이게 뭐야 대체....carId = {}", memberId);
 		CalendarInsertDto calendarInsertDto = CalendarInsertDto.builder()
-				.title(title).start(start).end(end).backgroundColor(backgroundColor).memberId(memberId).build();
+				.title(eventTitle).start(start).end(end).backgroundColor(backgroundColor).memberId(memberId).build();
 				
-		ArrayList<Calendar> calList = service.calenList();
-		log.debug("이게 뭐야 대체....22222222 = {}", calendarInsertDto);
-		model.addAttribute("list", service.calenList());
+		int result = service.insertEvent(calendarInsertDto);	
+		model.addAttribute("list", service.calenList(memberId));
 		return "redirect:/calendar/calendar.do?method=list";
+	}
+	
+	@GetMapping(params = "method=delete")
+	@ResponseBody
+	public String Delete(@RequestParam int groupId,
+			Model model) {
+		
+		int eventId = groupId;
+		int result = service.deleteEvent(eventId);
+		
+		return "뭐..........";
 	}
  }

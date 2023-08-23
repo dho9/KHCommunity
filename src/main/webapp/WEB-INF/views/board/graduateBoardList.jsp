@@ -5,25 +5,16 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
-.bi-star, .bi-star-fill {
-	font-size: 30px;
-    color: #f8fd20;
-    float: right;
-    cursor: pointer;
+.anonymous{
+	float: right;
+	background-color: white;
+	margin-right: 13px;
 }
-input[name=_tags] {
-    font-size: 14px;
-    color: #333;
-    font-weight: bold;
-    width: 100px;
-    text-align: center;
-    height: 27px;
-    border: none;
-}
-.tag-container {
-	margin-right: 20px;
+.anonymousImg{
+	width: 59px;
 }
 </style>
+
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -59,8 +50,11 @@ input[name=_tags] {
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
+					  	<c:forEach items="${board.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li><img class="like" data-value="${board.postId}" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
@@ -89,6 +83,7 @@ input[name=_tags] {
 	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="7">
+	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -127,6 +122,9 @@ input[name=_tags] {
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+        	<button type="button" class="anonymous" onclick="anonymousCheck()">
+	    		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
+	    	</button>
 	      </form:form>
 	    `;
 
@@ -137,6 +135,24 @@ input[name=_tags] {
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
+	 	// 익명체크
+		let anonymousButton = document.querySelector(".anonymous");  
+		let anonymousImg = document.querySelector(".anonymousImg");
+		let anonymousCheck = document.querySelector("#anonymousCheck");
+		
+		anonymousButton.onclick = (()=>{
+		    if (anonymousImg.src.endsWith('/anonymous.png')) {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
+		    	anonymousCheck.value = "true";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		        
+		    } else {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
+		    	anonymousCheck.value = "false";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		    }
+		});
 	    
 	 	// 해시태그
    		const hashTag = document.querySelector('.hashTag');
@@ -200,6 +216,14 @@ input[name=_tags] {
 	    createForm.remove();
 	  }
 	  
+	// 익명체크
+	function anonymousCheck() {
+		const writeButton = document.getElementById("writeArticleButton");
+		  const createForm = document.getElementById("createForm");
+		
+		  writeButton.style.display = "block";
+		  createForm.remove();
+	}
 	  
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
@@ -212,7 +236,6 @@ input[name=_tags] {
     		method : "GET",
     		dataType : "json",
     		success(responseData) {
-    			console.log(responseData);
     			const {available} = responseData;
     			
     			const star = document.querySelector('.bi');
@@ -225,6 +248,38 @@ input[name=_tags] {
                 	star.classList.remove('bi-star-fill');
                 }
     		}
+    	});
+    	
+    	// load됐을때 공감(좋아요) 했는지 확인
+    	document.querySelectorAll('.like').forEach((e) => {
+	    	console.log(e.dataset.value);
+	   		$.ajax({
+	   			url : "${pageContext.request.contextPath}/board/postLike.do",
+	   			data : {
+	   				_postId : e.dataset.value
+	   			},
+	   			method : "GET",
+	               dataType : "json",
+	               success(responseData) {
+	       			const {available, likeCount} = responseData;
+	       			const {postLikeCount} = likeCount;
+	       			
+	       			const like = document.querySelectorAll('.like');
+	       			const vote = document.querySelectorAll('.vote');
+	       			for(let i=0; i<like.length; i++) {
+	       				if(like[i].dataset.value == e.dataset.value) {
+			       			if(available) {
+			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+			                   	vote[i].innerHTML = `\${postLikeCount}`;
+			                   }
+			                   else {
+			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/like.png";
+			                   	vote[i].innerHTML = `\${postLikeCount}`;
+			                   }
+	       				}
+	       			}
+	               }
+	   		});
     	});
     }
     // 즐겨찾기 누르기
@@ -259,36 +314,6 @@ input[name=_tags] {
             }
         });
     };
-    
- 	// load됐을때 공감(좋아요) 했는지 확인
-	window.onload = () => {
-		console.log(document.querySelector('.like').dataset.value);
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : document.querySelector('.like').dataset.value
-			},
-			method : "GET",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-    			const {available, likeCount} = responseData;
-    			const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-	};
     </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

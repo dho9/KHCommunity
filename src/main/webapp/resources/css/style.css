@@ -65,7 +65,7 @@ img { border: 0; }
 div,nav,aside,article,figure { display: block; }
 dl,ul,ol,menu,li { list-style:none; }
 img,input,select,textarea { vertical-align: middle; }
-a { color: #666; text-decoration: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+a {  text-decoration: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 em { font-style: normal; font-weight: bold; }
 em.underline { font-style: normal; font-weight: normal; text-decoration: underline; }
 address { font-style: normal; }
@@ -783,6 +783,8 @@ aside > div.title > ol.buttons > li > a.image.setting {
     margin-bottom: 5px;
     border: 2px solid #d6d6d6;
     box-sizing: border-box;
+    padding-bottom: 135px;
+    padding-right: 3px;
 }
 #container > div.wrap.articles > form#createForm p {
     padding: 15px;

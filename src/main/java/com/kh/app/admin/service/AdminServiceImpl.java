@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.app.admin.repository.AdminRepository;
+import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
@@ -16,6 +17,8 @@ import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
+import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
@@ -25,6 +28,7 @@ import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.TeacherCreateDto;
+import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -140,6 +144,15 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public List<TeacherListDto> findAllTeacher(Map<String, Object> filters, Map<String, Object> params) {
+		int limit = (int)params.get("limit");
+		int page = (int)params.get("page");
+		int offset = (page-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findAllTeacher(filters, rowBounds);
+	}
+	
+	@Override
 	public int updateAdminStudent(AdminStudentListDto student) {
 		return adminRepository.updateAdminStudent(student);
 	}
@@ -158,6 +171,11 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int totalCountEmployees(Map<String, Object> filters) {
 		return adminRepository.totalCountEmployees(filters);
+	}
+	
+	@Override
+	public int totalCountTeachers(Map<String, Object> filters) {
+		return adminRepository.totalCountTeachers(filters);
 	}
 	
 	public int updateAdminEmployee(AdminEmployeeListDto employee) {
@@ -179,10 +197,6 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.insertAuth(auth);
 	}
 	
-	@Override
-	public List<Teacher> findAllTeacher(Map<String, Object> filters) {
-		return adminRepository.findAllTeacher(filters);
-	}
 	
 	@Override
 	public int deleteAdminTeacher(String memberId) {
@@ -267,4 +281,34 @@ public class AdminServiceImpl implements AdminService {
 	public int addCurriculum(CurriculumRegDto curriculum) {
 		return adminRepository.addCurriculum(curriculum);
 	}
+
+	public int insertBoard(BoardCreateDto board) {
+		int result = 0;
+		
+		result = adminRepository.insertBoard(board);
+		
+		List<PostAttachment> attachments = board.getAttachments();
+		if(attachments != null && !attachments.isEmpty()) {
+			for(PostAttachment attach : attachments) {
+				attach.setPostId(board.getPostId());
+				result = adminRepository.insertPostAttach(attach);
+			}
+		}
+		
+		return result;
+	}
+	@Override
+	public int insertBoardNofiles(BoardCreateDto board) {
+		return adminRepository.insertBoardNofiles(board);
+	}
+	@Override
+	public int insertPostContent(BoardCreateDto board) {
+		return adminRepository.insertPostContent(board);
+	}
+	
+	@Override
+	public int deleteStore(int storeId) {
+		return adminRepository.deleteStore(storeId);
+	}
+	
 }

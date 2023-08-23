@@ -13,6 +13,7 @@ import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
+import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
@@ -22,6 +23,7 @@ import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.TeacherCreateDto;
+import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -79,7 +81,7 @@ public interface AdminService {
 
 	int insertAuth(Authority auth);
 
-	List<Teacher> findAllTeacher(Map<String, Object> filters);
+	List<TeacherListDto> findAllTeacher(Map<String, Object> filters, Map<String, Object> params);
 
 	int deleteAdminTeacher(String memberId);
 
@@ -104,6 +106,7 @@ public interface AdminService {
 
 	int totalCountCurriculum(Map<String, Object> filters);
 
+
 	List<AdminCurriculumDetailDto> findStudentsByClassId(String classId, int curriculumId);
 
 	List<Teacher> findAllTeachers();
@@ -111,6 +114,17 @@ public interface AdminService {
 	List<KhClass> findAllClass();
 
 	int addCurriculum(CurriculumRegDto curriculum);
+
+	int insertBoardNofiles(BoardCreateDto board);
+
+	int insertBoard(BoardCreateDto board);
+
+	int insertPostContent(BoardCreateDto board);
+
+	int totalCountTeachers(Map<String, Object> filters);
+
+	int deleteStore(int storeId);
+
 
 
 

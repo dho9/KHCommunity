@@ -5,23 +5,13 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
-.bi-star, .bi-star-fill {
-	font-size: 30px;
-    color: #f8fd20;
-    float: right;
-    cursor: pointer;
+.anonymous{
+	float: right;
+	background-color: white;
+	margin-right: 13px;
 }
-input[name=_tags] {
-    font-size: 14px;
-    color: #333;
-    font-weight: bold;
-    width: 100px;
-    text-align: center;
-    height: 27px;
-    border: none;
-}
-.tag-container {
-	margin-right: 20px;
+.anonymousImg{
+	width: 59px;
 }
 </style>
 	<div id="container" class="community" style="margin-top: 25px;">
@@ -59,6 +49,9 @@ input[name=_tags] {
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
+					  	<c:forEach items="${board.tag}" var="tag">
+					  		<span class="tag">${tag}</span>
+					  	</c:forEach>
 					  	<ul class="status">
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
@@ -89,6 +82,7 @@ input[name=_tags] {
 	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="8">
+	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -127,6 +121,9 @@ input[name=_tags] {
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+        	<button type="button" class="anonymous" onclick="anonymousCheck()">
+	    		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
+	    	</button>
 	      </form:form>
 	    `;
 
@@ -137,6 +134,24 @@ input[name=_tags] {
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
+	 	// 익명체크
+		let anonymousButton = document.querySelector(".anonymous");  
+		let anonymousImg = document.querySelector(".anonymousImg");
+		let anonymousCheck = document.querySelector("#anonymousCheck");
+		
+		anonymousButton.onclick = (()=>{
+		    if (anonymousImg.src.endsWith('/anonymous.png')) {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
+		    	anonymousCheck.value = "true";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		        
+		    } else {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
+		    	anonymousCheck.value = "false";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		    }
+		});
 	    
 	 	// 해시태그
    		const hashTag = document.querySelector('.hashTag');
