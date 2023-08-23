@@ -19,10 +19,18 @@ public interface BoardService {
 	List<BoardSearchDto> findAllByMemberId(String memberId);
 	
 	List<BoardListDto> freeBoardFindAll();
+	
+	List<BoardListDto> marketBoardFindAll();
 
-	List<BoardListDto> preStudentBoardFindAll();
+	List<BoardListDto> sharingInformationBoardFindAll();
+	
+	List<BoardListDto> askCodeBoardFindAll();
 
 	List<BoardListDto> graduateBoardFindAll();
+
+	List<BoardListDto> preStudentBoardFindAll();
+	
+	List<BoardListDto> employeeBoardFindAll();
 
 	Favorite findFavoriteByMemberId(int boardId, String memberId);
 
@@ -31,8 +39,6 @@ public interface BoardService {
 	int insertFavoriteByMemberId(int boardId, String memberId);
 	
 	BoardListDto findById(int id);
-
-	List<BoardListDto> employeeBoardFindAll();
 
 	PostLike findPostLikeByMemberId(int postId, String memberId);
 
@@ -51,10 +57,11 @@ public interface BoardService {
 	List<PopularBoardDto> findByPopularPost();
 
 	int createComment(CreateCommentDto comment, String memberId);
+	
 	int insertBoardNofiles(BoardCreateDto board);
 
 	PostAttachment findAttachById(int id);
 
-	List<BoardListDto> sharingInformationBoardFindAll();
+
 
 }

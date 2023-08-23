@@ -79,15 +79,15 @@
 					<a class="article" >
 				  		<img class="picture large" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<div class="profile">
-				  			<c:if test="${postDetail.anonymousCheck eq 'y'}">
-					  			<h3 class="large">익명</h3>
+				  			<c:if test="${postDetail.anonymousCheck eq '1'}">
+					  			<h3 class="large" style="font-size: 13px">익명</h3>
 					  		</c:if>
-					  		<c:if test="${postDetail.anonymousCheck ne 'y'}">
-						  		<h3 class="large">${postDetail.memberId}</h3>
+					  		<c:if test="${postDetail.anonymousCheck ne '1'}">
+						  		<h3 class="large" style="font-size: 13px">${postDetail.memberId}</h3>
 					  		</c:if>
-						  	<time class="large">
+						  	<time class="large" style="font-size: 12px">
 							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
-							  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
+							  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm" />
 						  	</time>
 				  		</div>
 				  		<ul class="status">

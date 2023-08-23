@@ -38,10 +38,10 @@
 				<c:forEach items="${freeBoardLists}" var="board">
 					<a class="article" href="${pageContext.request.contextPath}/board/boardDetail.do?id=${board.postId}">
 				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
-				  		<c:if test="${board.anonymousCheck eq 'y'}">
+				  		<c:if test="${board.anonymousCheck eq '1'}">
 					  		<h3 class="medium">익명</h3>
 				  		</c:if>
-				  		<c:if test="${board.anonymousCheck ne 'y'}">
+				  		<c:if test="${board.anonymousCheck ne '1'}">
 					  		<h3 class="medium">${board.memberId}</h3>
 				  		</c:if>
 					  	<time class="medium">
@@ -85,7 +85,7 @@
 	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
-	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="n">
+	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -124,8 +124,8 @@
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
         	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
-        	<button type="button" class="anonymous" onclick="anonymousCheck()">
-        		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/익명체크.png">
+        	<button type="button" class="anonymous">
+        		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
 	      </form:form>
 	    `;
@@ -138,6 +138,27 @@
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
+	 	// 익명체크
+		let anonymousButton = document.querySelector(".anonymous");  
+		let anonymousImg = document.querySelector(".anonymousImg");
+		let anonymousCheck = document.querySelector("#anonymousCheck");
+		
+		anonymousButton.onclick = (()=>{
+		    if (anonymousImg.src.endsWith('/anonymous.png')) {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
+		    	anonymousCheck.value = "true";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		        
+		    } else {
+		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
+		    	anonymousCheck.value = "false";
+		    	console.log("anonymousCheck", anonymousCheck.value);
+		    }
+		});
+		
+		
+		
 	    
 	 	// 해시태그
    		const hashTag = document.querySelector('.hashTag');
@@ -192,7 +213,9 @@
 	        }
 	    }
 	 }
-		
+	
+	
+	
 	// 폼 숨기기
 	function hideInputForm() {
 	  const writeButton = document.getElementById("writeArticleButton");
@@ -202,15 +225,7 @@
 	  createForm.remove();
 	}
 	
-	// 익명체크
-	function anonymousCheck() {
-		const writeButton = document.getElementById("writeArticleButton");
-		  const createForm = document.getElementById("createForm");
-		
-		  writeButton.style.display = "block";
-		  createForm.remove();
-	}
-  
+	
 	
 	  
 	  
