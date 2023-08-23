@@ -17,5 +17,6 @@
 		BORDERCOLOR,
 		MEMBER_ID 
 		FROM CALENDAR
+		WHERE MEMBER_ID= #{memberId}
 	</select>
 </mapper>

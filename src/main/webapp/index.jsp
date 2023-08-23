@@ -322,9 +322,9 @@ document.querySelector('#myBoard').addEventListener('mouseover', () => {
 
             let html = "";
             for (const board of responseData.boards) {
-                const {boardName} = board;
+                const {boardName, boardId, boardLink} = board;
                 html += `
-                    <a class="accordion">\${boardName}</a>
+                    <a class="accordion" href="${pageContext.request.contextPath}/board/\${boardLink}.do">\${boardName}</a>
                 `;
             }
 

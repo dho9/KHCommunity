@@ -1,5 +1,5 @@
 package com.kh.app.member.entity;
 
 public enum StudentApproveCheck {
-	y, n;
+	y, n, i;
 }

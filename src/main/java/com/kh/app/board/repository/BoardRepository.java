@@ -5,14 +5,18 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 
 @Mapper
@@ -58,11 +62,33 @@ public interface BoardRepository {
 			keyProperty = "postId", 
 			resultType = int.class,
 			statement = "select seq_post_id.currval from dual")
+	int insertBoardNofiles(BoardCreateDto board);
+	
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'y', 'y', #{tags, typeHandler=stringListTypeHandler})")
+	@SelectKey(
+			before = false, 
+			keyProperty = "postId", 
+			resultType = int.class,
+			statement = "select seq_post_id.currval from dual")
 	int insertBoard(BoardCreateDto board);
 
 	@Insert("insert into post_content (post_id, board_id, content) values(#{postId}, #{boardId}, #{content})")
 	int insertPostContent(BoardCreateDto board);
+	
+	@Insert("insert into post_attachment values(seq_post_attach_id.nextval, #{postId}, #{boardId}, #{postOriginalFilename}, #{postRenamedFilename})")
+	int insertPostAttach(PostAttachment attach);
 
-	@Select("select * from board where board_id = #{boardId}")
+	@Select("select board_id, board_name, board_category from board where board_id = #{boardId}")
 	Board findBoardName(int boardId);
+
+	List<PopularBoardDto> findByPopularPost();
+	
+	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level) " +
+	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1)")
+	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
+	@Select("select * from post_attachment where post_id = #{id}")
+	PostAttachment findAttachById(int id);
+
+	List<BoardListDto> sharingInformationBoardFindAll();
+
 }

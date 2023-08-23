@@ -5,8 +5,11 @@ import java.util.List;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Favorite;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 
 public interface BoardService {
@@ -44,5 +47,14 @@ public interface BoardService {
 	int insertPostContent(BoardCreateDto board);
 
 	Board findBoardName(int boardId);
+
+	List<PopularBoardDto> findByPopularPost();
+
+	int createComment(CreateCommentDto comment, String memberId);
+	int insertBoardNofiles(BoardCreateDto board);
+
+	PostAttachment findAttachById(int id);
+
+	List<BoardListDto> sharingInformationBoardFindAll();
 
 }
