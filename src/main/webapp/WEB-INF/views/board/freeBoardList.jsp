@@ -306,6 +306,3 @@
     </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
-
-
-

@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,22 @@ public class StringListTypeHandler extends BaseTypeHandler<List<String>> {
 				value += ",";
 		}
 		ps.setString(i, value);
+		
+	}
+	
+	@Override
+	public void setParameter(PreparedStatement ps, int i, List<String> parameter, JdbcType jdbcType) throws SQLException {
+	    if (parameter == null) {
+	        ps.setNull(i, Types.VARCHAR);
+	    } else {
+	        String value = "";
+	        for (int j = 0; j < parameter.size(); j++) {
+	            value += parameter.get(j);
+	            if (j != parameter.size() - 1)
+	                value += ",";
+	        }
+	        ps.setString(i, value);
+	    }
 	}
 	
 	@Override

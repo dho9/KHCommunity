@@ -79,23 +79,23 @@ DROP TABLE delete_comment CASCADE CONSTRAINTS;
 --===============================================
 -- 시퀀스 삭제
 --===============================================
---drop sequence seq_student_attach_id;
---drop sequence seq_schedule_id;
---drop sequence seq_vacation_id;
---drop sequence seq_vacation_attach_id;
---drop sequence seq_board_id;
---drop sequence seq_post_id;
---drop sequence seq_post_attach_id;
---drop sequence seq_comment_id;
---drop sequence seq_message_id;
---drop sequence seq_report_id;
---drop sequence seq_chat_id;
---drop sequence seq_store_id;
---drop sequence seq_ticket_id;
---drop sequence seq_order_id;
---drop sequence seq_chat_message_no;
---drop sequence seq_curriculum_id;
---drop sequence seq_cal;
+drop sequence seq_student_attach_id;
+drop sequence seq_schedule_id;
+drop sequence seq_vacation_id;
+drop sequence seq_vacation_attach_id;
+drop sequence seq_board_id;
+drop sequence seq_post_id;
+drop sequence seq_post_attach_id;
+drop sequence seq_comment_id;
+drop sequence seq_message_id;
+drop sequence seq_report_id;
+drop sequence seq_chat_id;
+drop sequence seq_store_id;
+drop sequence seq_ticket_id;
+drop sequence seq_order_id;
+drop sequence seq_chat_message_no;
+drop sequence seq_curriculum_id;
+drop sequence seq_cal;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -1309,6 +1309,14 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
     
 
 
+select * from calendar;
 
 
+
+
+
+
+select * from calendar;
+
+select * from post_comment where post_id =8;
 

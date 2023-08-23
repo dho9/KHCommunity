@@ -4,6 +4,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<style>
+.anonymous{
+	float: right;
+	background-color: white;
+	margin-right: 13px;
+}
+.anonymousImg{
+	width: 59px;
+}
+</style>
 
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
@@ -40,9 +50,6 @@
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
 					  	<p class="medium">${board.content}</p> <br>
-					  	<c:forEach items="${board.tag}" var="tag">
-					  		<span class="tag">${tag}</span>
-					  	</c:forEach>
 					  	<ul class="status">
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
@@ -184,6 +191,14 @@
 	    createForm.remove();
 	  }
 	  
+	// 익명체크
+	function anonymousCheck() {
+		const writeButton = document.getElementById("writeArticleButton");
+		  const createForm = document.getElementById("createForm");
+		
+		  writeButton.style.display = "block";
+		  createForm.remove();
+	}
 	  
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
