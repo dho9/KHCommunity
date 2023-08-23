@@ -6,7 +6,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script> --%>
 <style>
 .anonymous{
 	float: right;
@@ -84,12 +83,21 @@
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 57%;"
+	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="5">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
+	      	</p>
+	      	<p>
+	      		<select name="language" id="language">
+					<option value="java">Java</option>	      			
+					<option value="javascript">JavaScript</option>	      			
+					<option value="html">Html</option>	      			
+					<option value="sql">Sql</option>	      			
+	      		</select>
+	      		<button type="button" id="testBtn">버튼</button>
 	      	</p>
 	        <p>
 	        	<textarea id="batch_content" name="batch_content"></textarea>
@@ -119,6 +127,10 @@
 	    
 	    // 에디터 설정 
 	    var textarea = document.getElementById('batch_content');
+	    var language = document.getElementById('language');
+	    let testButton = document.querySelector("#testBtn");
+	    console.log("testButton", testButton);
+	    
 	    
 	    var editor = CodeMirror.fromTextArea(textarea, {
 	        lineNumbers: true,  //왼쪽 라인넘버 표기
@@ -126,6 +138,19 @@
 	        mode: 'text/x-java', //모드는 sql 모드
 	        theme: "eclipse",   //테마는 맘에드는 걸로.
 	        val: textarea.value
+	    });
+	    
+	    language.addEventListener('change', (e) => {
+	        var lang = e.target.value;
+	        if(lang === "javascript" || lang === "html"){
+	        	editor.setOption('mode', `text/\${lang}`);
+	        }else {
+	        	editor.setOption('mode', `text/x-\${lang}`);
+	        }
+	    });
+	    var userInput = editor.getValue();
+	    testButton.onclick = (()=>{
+		    console.log("사용자 입력 내용:", userInput);
 	    });
 	    
 	 	// 익명체크
