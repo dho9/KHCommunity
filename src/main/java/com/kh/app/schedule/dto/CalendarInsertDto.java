@@ -18,4 +18,5 @@ public class CalendarInsertDto {
 	private String end;
 	private String backgroundColor;
 	private String memberId;
+	private int groupid;
 }

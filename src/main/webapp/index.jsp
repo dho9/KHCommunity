@@ -36,7 +36,7 @@
             </div>
         </aside>
         <div class="banners">
-            <a href=""><img src="img/로고이미지-removebg-preview.png"
+            <a href=""><img src=""
                     style="width: 600px; height: 200px; outline: auto;"></a>
         </div>
         <sec:authentication property="principal" var="loginMember"/>
