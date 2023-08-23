@@ -803,6 +803,7 @@ REFERENCES ticket (
    ticket_id
 );
 
+
 --==============================================
 -- check 제약조건
 --==============================================
@@ -1074,7 +1075,8 @@ INSERT INTO store (store_id, store_name, post_number, address, store_type)
 VALUES (seq_store_id.NEXTVAL, '중리', '06236', '서울 강남구 테헤란로20길 15 메이플라워멤버스빌오피스텔', '음식점');
 
 -- ticket
-INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 1, 5900);
+INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 3, 5900);
+INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 4, 5900);
 INSERT INTO ticket (ticket_id, store_id, price) VALUES (seq_ticket_id.NEXTVAL, 2, 3000);
 
 -- order
@@ -1123,7 +1125,6 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
-
 
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
