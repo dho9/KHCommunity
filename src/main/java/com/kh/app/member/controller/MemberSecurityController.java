@@ -80,7 +80,9 @@ public class MemberSecurityController {
 		String rawPassword = member.getMemberPwd();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		member.setMemberPwd(encodedPassword);
-
+		log.debug("rawPassword = " + rawPassword);
+		log.debug("encodedPassword = " + encodedPassword);
+		
 		int result = memberService.insertMember(member);
 		redirectAttr.addFlashAttribute("msg", "회원가입을 축하드립니다.");
 		return "redirect:/";

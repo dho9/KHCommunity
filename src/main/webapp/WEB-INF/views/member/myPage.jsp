@@ -14,6 +14,8 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 	crossorigin="anonymous"></script>
+	<!-- bootstrap css -->
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">  -->
 <style>
 @font-face {
     font-family: 'HakgyoansimWoojuR';
@@ -38,7 +40,7 @@ section {width: 1200px; text-align: center; margin: 2% auto;}
 
 /* 정보수정 폼 */
 #update-container {display: flex; justify-content: center; align-items: center; min-height: 57vh; font-family: 'HakgyoansimWoojuR'; }
-#delete-container form {width: 500px; padding: 78px; background-color: #fff; border-radius: 8px; text-align: left;}
+#delete-container form {font-family: 'HakgyoansimWoojuR'; width: 500px; padding: 78px; background-color: #fff; border-radius: 8px; text-align: left;}
 #update-container form {width: 500px; background-color: #fff; border-radius: 8px; text-align: left;}
 form tr {margin-bottom: 16px;}
 form th {padding-right: 16px;}
@@ -51,7 +53,6 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 /*  추가된 css */
 #certificationDiv{display:none;} 
 #delete-container{display:none;}
-/* #update-container{display:none;} */
 #certificationDiv label{ font-size: 50px; color: blue; width:90%}
 #certificationDiv h1{font-family: 'HakgyoansimWoojuR'; font-size: 50px; font-weight:bold;}
 #certificaitonFrm{width: 90%; font-family: 'HakgyoansimWoojuR'; font-size: 22px; margin:5%;}
@@ -67,9 +68,22 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 .myPageDivs{width: 90%}
 
 /* 내정보 css시작 */
-#myInfo-container h1{font-family: 'HakgyoansimWoojuR'; font-size: 50px; font-weight:bold;}
-#myInfo-container p
+#myInfo-container h1{font-family: 'HakgyoansimWoojuR'; font-size: 57px; font-weight:bold; padding:65px;}
+#myInfo-container p {font-size: 20px; } 
 /* 내정보 css끝 */
+
+/*식권구매 css시작*/
+#ticketInfo-container {text-align: center; }
+#ticketInfo-container h1{padding-left: 95px; font-family: 'HakgyoansimWoojuR'; font-size: 57px; font-weight:bold; padding:65px;}
+#ticketInfo-container table {display: table; margin: auto; font-family: 'HakgyoansimWoojuR'; border-collapse: collapse; width: 111%; margin-bottom: 30px;}
+#ticketInfo-container th, td {border: 1px solid #e3f5fc; text-align: left; padding: 8px;}
+#ticketInfo-container th {background-color: #e3f5fc;}
+#ticketInfo-container tr:nth-child(even) {background-color: #e3f5fc;}
+#ticketInfo-container tbody .text-center {text-align: center;}
+/*식권구매 css끝*/
+
+
+
 </style>
 	<section>
 	<div id="memberInfo">
@@ -79,9 +93,10 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${loginMember.name}</h2>
 			<p>${studentInfo.curriculumName }반</p>
 			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
+			
 		</div>
 		<div id= "dDay">
-			<h1>D-25</h1>
+			<h1>D - ${Ddays}</h1>
 		</div>
 	</div>
 	
@@ -132,7 +147,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<p>쪽지함</p>
 		</div>	
 		
-		<div class="myPageIcon">
+		<div class="myPageIcon" id="myPageIcon7">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
  				<path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
 			</svg>
@@ -151,16 +166,19 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >
 		<!--희진 내정보 시작  -->
 		<div id="myInfo-container" class="myPageDivs"  name="myInfo">
-		<h1> 내 정보 </h1>
-		<p>${studentInfo.curriculumName }반</p>
-		<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
-		<p>종강일 : ${studentInfo.curriculumEndAt }</p>
-		<p>이름 : ${loginMember.name}</p>
-		<p>아이디 : ${loginMember.username}</p>
-		<p>생일 : ${ loginMember.birthday}</p>
-		<p>전화번호 : ${ loginMember.memberPhone}</p>
-		<p>이메일 : ${ loginMember.memberEmail}</p>
-		</div>
+			<h1> 내 정보 </h1>
+			<p>${studentInfo.curriculumName }반</p>
+			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
+			<p>이름   : ${loginMember.name}</p>
+			<p>아이디  : ${loginMember.username}</p>
+			<p>생일   : ${ loginMember.birthday}</p>
+			<p>전화번호 : ${ loginMember.memberPhone}</p>
+			<p>이메일  : ${ loginMember.memberEmail}</p>
+			<p>종강일  : ${studentInfo.curriculumEndAt }</p>
+			
+			<%-- <p>Dday  :${Ddays}</p> --%>
+			
+		</div> 
 		<!--희진 내정보 끝 -->
 		
 		<!--희진 회원정보수정(비밀번호, 생일, 전화번호) 시작  -->
@@ -302,6 +320,46 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 					</form:form>
 				</div>
 			<!-- 희진 회원탈퇴 끝 -->
+			
+			<!-- 희진 식권구매 시작 -->
+			<div id="ticketInfo-container" class="myPageDivs" style ="display:none;">
+				<h1>
+					<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+	 					<path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
+					</svg>
+					식권구매내역
+				</h1>
+				<table>
+					<thead>
+						<th>주문번호</th>
+						<th>가게이름</th>
+						<th>식권매수</th>
+						<th>총가격</th>
+						
+					</thead>
+					<tbody>
+					<c:if test="${empty studentTicketInfo }">
+						<tr>
+							<td colspan="5" class="text-center">조회된 구매식권이 없습니다.</td>
+						</tr>
+					</c:if>
+					 <c:if test="${not empty studentTicketInfo}">
+						<c:forEach items="${studentTicketInfo}" var="studentTicketInfo" varStatus="vs">
+							<tr>
+								<td>${studentTicketInfo.orderId}</td>
+								<td>${studentTicketInfo.storename}</td>
+								<td>${studentTicketInfo.amount}</td>
+								<td>${studentTicketInfo.totalPrice}</td>
+							</tr>
+						</c:forEach>
+					 </c:if>
+					</tbody>
+				</table>
+			</div>
+			<!-- 희진 식권구매 끝 -->
+			<!-- 채팅목록 시작 -->
+			<!-- 채팅목록 끝 -->
+			
 			<!-- 추가된 html -->
 			<div class="myPageDivs" id="certificationDiv" >		
 				<h1>학생인증</h1>
@@ -365,29 +423,36 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		const myPageIcon1 = document.querySelector("#myPageIcon1"); // 내정보 아이콘
 		const myPageIcon3 = document.querySelector("#myPageIcon3"); // 회원정보 수정 아이콘
 		const myPageIcon4 = document.querySelector("#myPageIcon4"); // 회원탈퇴 아이콘
-		const myInfoCntainer = document.querySelector("#myInfo-container"); // 내정보
+		const myPageIcon7 = document.querySelector("#myPageIcon7"); // 식권구매 아이콘
+		
+		/* const myInfoCntainer = document.querySelector("#myInfo-container"); // 내정보
 		const memberUpdateFrm = document.querySelector("#memberUpdateFrm"); // 회원정보 수정 폼
 		const memberDeleteFrm = document.querySelector("#memberDeleteFrm"); // 회원탈퇴 폼
-		
+		const ticketInfo = document.querySelector("#memberDeleteFrm"); // 회원탈퇴 폼
+ */		
 		
 		myPageIcon1.addEventListener("click", function() {
 			 hideDiv();
 			  document.querySelector("#myInfo-container").style.display = "block";
-		
 			});
 
 		
 		myPageIcon3.addEventListener("click", function() {
 		  hideDiv();
 		  document.querySelector("#update-container").style.display = "block";
-	
 		});
 
 		myPageIcon4.addEventListener("click", function() {
 			hideDiv();
 			document.querySelector("#delete-container").style.display = "block"; 
-			
 		});
+		
+		myPageIcon7.addEventListener("click", function() {
+			hideDiv();
+			document.querySelector("#ticketInfo-container").style.display = "block"; 
+		});
+		
+		
 		
 		document.memberDeleteFrm.onsubmit = (e) => {
 			alert("정말탈퇴하시겠습니까?")
@@ -430,6 +495,8 @@ document.querySelector("#certification").onclick=()=>{
 		
 	});
 };
+
+
 
 </script>	
 
