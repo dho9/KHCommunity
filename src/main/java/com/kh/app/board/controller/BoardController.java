@@ -382,7 +382,7 @@ public class BoardController {
 	@ResponseBody
 	public List<PopularBoardDto> popularPost() {
 		List<PopularBoardDto> post = boardService.findByPopularPost();
-		//log.debug("post = {}",post);
+		log.debug("post = {}",post);
 //	    model.addAttribute("post", post);
         return post;
 	}
@@ -443,24 +443,17 @@ public class BoardController {
 	}
 	
 	
-//	@GetMapping("/commentLike.do")
-//	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
-//		String memberId = principal.getMemberId();
-//		int postId = Integer.parseInt(_postId);
-//		
-//		int commentLike = boardService.findCommentLikeByMemberId(postId, memberId);
-//		log.debug("commentLikeeeeeeeeeeee = {}", commentLike);
-//		
-//		boolean available = true;
-//		if(commentLike == 0)
-//			available = false;
-//		//log.debug("availalbe = {}", available);
-//		
-//		
-//		return ResponseEntity
-//				.status(HttpStatus.OK)
-//				.body(Map.of("available", available));
-//	}
+	@GetMapping("/commentLike.do")
+	@ResponseBody
+	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
+	String memberId = principal.getMemberId();
+	int postId = Integer.parseInt(_postId);
+		List<CommentLike> commentLike = boardService.CommentLikeCheckById(postId, memberId);
+		
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("commentLike", commentLike));
+	}
 	
 	@PostMapping("/commentLike.do")
 	public ResponseEntity<?> commentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam int commentId) {
@@ -472,14 +465,15 @@ public class BoardController {
 		boolean available = true;
 		if(commentLike == null)
 			available = false;
-		//log.debug("availalbe = {}", available);
 		
 		int result = 0;
 		if(available) {
 			result = boardService.deleteCommentLikeByMemberId(commentId, memberId);
+			log.debug("availalbe = {}", available);
 		}
 		else {
 			result = boardService.insertCommentLikeByMemberId(commentId, memberId);
+			log.debug("availalbe = {}", available);
 		}
 		
 		CommentLike likeCount = boardService.findCommentLikeCount(commentId);

@@ -198,5 +198,11 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardListDto> myClassBoardFindByTag(String tag) {
 		return boardRepository.myClassBoardFindByTag(tag);
 	}
+	
+	@Override
+	public List<CommentLike> CommentLikeCheckById(int postId, String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.CommentLikeCheckById(postId,memberId);
+	}
 }
 

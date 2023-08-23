@@ -157,6 +157,7 @@
     SELECT
 	    c.subject,
 	    c.curriculum_name,
+	    c.curriculum_id,
 	    c.class_id,
 	    m.member_name,
 	    c.teacher_id,

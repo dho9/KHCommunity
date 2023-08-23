@@ -16,6 +16,7 @@
 	crossorigin="anonymous"></script>
 	<!-- bootstrap css -->
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">  -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.css" />
 <style>
 @font-face {
     font-family: 'HakgyoansimWoojuR';
@@ -93,7 +94,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${loginMember.name}</h2>
 			<p>${studentInfo.curriculumName }반</p>
 			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
-			
+			<a href="${pageContext.request.contextPath}/message/messageSend.do" style="text-decoration: none;">테스트용</a>
 		</div>
 		<div id= "dDay">
 			<h1>D - ${Ddays}</h1>

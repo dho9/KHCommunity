@@ -80,6 +80,7 @@ public interface BoardService {
 	CommentLike findCommentLikeCount(int commentId);
 
 	List<BoardListDto> myClassBoardFindByTag(String tag);
-
+	
+	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
 
 }
