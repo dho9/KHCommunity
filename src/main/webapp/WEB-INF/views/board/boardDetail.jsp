@@ -88,13 +88,13 @@ ul.commentMenu li {
 	{
 	margin-right: 5px;
 	background-image:
-		url('${pageContext.request.contextPath}/resources/images/익명.png');
+		url('${pageContext.request.contextPath}/resources/images/anonymous.png');
 }
 
 #commnetContainer>div.articles>article form.writecomment ul.option li.anonym.active
 	{
 	background-image:
-		url('${pageContext.request.contextPath}/resources/images/익명체크.png');
+		url('${pageContext.request.contextPath}/resources/images/anonymouscheck.png');
 }
 
 #commnetContainer>div.articles>article form.writecomment ul.option li.submit
@@ -359,10 +359,10 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
 
 	        // 배경 이미지 변경
 	        if (li.classList.contains('active')) {
-	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/익명체크.png')`;
+	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymouscheck.png')`;
 	            anonyCk= true;
 	        } else {
-	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/익명.png')`;
+	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymous.png')`;
 	            anonyCk= false;
 	        }
 	        
@@ -394,6 +394,13 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
 	        	success(data){
 	        		loadComment();
 	        		document.querySelector("#commentText").value = "";
+	        	     const anonymLi = document.querySelector('.option li.anonym');
+	        	        if (anonyCk) {
+	        	            anonymLi.classList.remove('active');
+	        	            anonymLi.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymous.png')`;
+	        	            anonyCk = false;
+	        	        }
+	        		
 	        	}
 	        })
 		})
