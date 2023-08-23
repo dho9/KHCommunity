@@ -17,5 +17,7 @@ public class Comment {
 	private int boardId;
 	private String memberId;
 	private String commentContent;
-	 private Date commentCreatedAt;
+	private int commentLevel;
+	private Date commentCreatedAt;
+	private boolean anonymousCheck;
 }

@@ -1367,3 +1367,5 @@ select * from calendar;
 update student set approve_request_date = sysdate where student_id = 'xogus';
 
 select * from calendar;
+
+select * from post_comment where post_id =8;
