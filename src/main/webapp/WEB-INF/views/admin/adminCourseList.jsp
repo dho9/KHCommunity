@@ -56,11 +56,11 @@
 				  	</div>
 				  	<div class="mb-3">
 				  		<p>시작일</p>
-				    	<input type="date" id="startDate">
+				    	<input type="date" class="form-control" id="startDate">
 				  	</div>
 				  	<div class="mb-3">
 					  	<p>수료일</p>
-					    <input type="date" id="endDate">
+					    <input type="date" class="form-control" id="endDate">
 					</div>
 		       </div>
 		       <div class="modal-footer">
@@ -130,9 +130,9 @@
 		                          	<td>
 		                          		<button id="updateButton" type="button" style="border: 0; background-color: transparent;" class="open-modal-button" 
 		                          				data-bs-toggle="modal" data-bs-target="#updateCurriculumModal" 
-		                          				data-button-subject="${curriculum.subject}" data-button-curriculumName="${curriculum.curriculumName}"
-		                          				data-button-classId="${curriculum.classId}" data-button-teacherName="${curriculum.memberName}"
-		                          				data-button-startDate="${curriculum.curriculumStartAt}" data-button-endDate="${curriculum.curriculumEndAt}">
+		                          				data-button-subject="${curriculum.subject}" data-curriculumname="${curriculum.curriculumName}" 
+		                          				data-button-classid="${curriculum.classId}" data-button-teachername="${curriculum.memberName}" data-button-teacherid="${curriculum.teacherId}"
+		                          				data-button-startdate="${curriculum.curriculumStartAt}" data-button-enddate="${curriculum.curriculumEndAt}">
 		                          			✏️
 		                          		</button>
 		                        	</td>
@@ -257,11 +257,11 @@
 				  			  </div>
 				  			  <div class="mb-3">
 				  				  <p>시작일</p>
-				    			  <input type="date" id="startDate">
+				    			  <input type="date" class="form-control" id="startDate">
 				  			  </div>
 				  			  <div class="mb-3">
 					  			  <p>수료일</p>
-					    		  <input type="date" id="endDate">
+					    		  <input type="date" class="form-control" id="endDate">
 							  </div>
 		       					  </div>
 		      	 			  <div class="modal-footer">
@@ -370,9 +370,7 @@
                     studentInfoTable.append(row);
                 }
     	    }
-    	});
-      
-      $(document).ready(function() {
+    	    
     	    $('.courseReg').click(function() {
     	        // Form 데이터 수집
     	        const addCourseFrm = document.addCourseFrm;
@@ -414,32 +412,33 @@
 	    	        });
     	        }
     	    });
-    	});
-      
-      $(document).ready(function() {
+    	    
     	    // 모달이 열릴 때마다 실행되는 이벤트 리스너
     	    $('#updateCurriculumModal').on('show.bs.modal', function (event) {
-    	        var button = $(event.relatedTarget); // 클릭한 버튼
-    	        var subject = button.data('button-subject'); // 과목 정보 가져오기
-    	        var curriculumName = button.data('button-curriculumName'); // 과정명 정보 가져오기
-    	        var classId = button.data('button-classId'); // 반 정보 가져오기
-    	        var teacherName = button.data('button-teacherName'); // 강사 정보 가져오기
-    	        var startDate = button.data('button-startDate'); // 시작일 정보 가져오기
-    	        var endDate = button.data('button-endDate'); // 수료일 정보 가져오기
+    	        const button = $(event.relatedTarget); // 클릭한 버튼
+    	        const subject = button.data('button-subject'); // 과목 정보 가져오기
+    	        const curriculumName = button.data('curriculumname'); // 과정명 정보 가져오기
+    	        const classId = button.data('button-classid'); // 반 정보 가져오기
+    	        const teacherName = button.data('button-teachername'); // 강사 정보 가져오기
+    	        const startDate = button.data('button-startdate'); // 시작일 정보 가져오기
+    	        const endDate = button.data('button-enddate'); // 수료일 정보 가져오기
+    	        const teacherId = button.data('button-teacherid');
     	        
+    	        console.log(button);
     	        console.log('subject='+subject);
     	        console.log('curriculumName='+curriculumName);
     	        console.log('classId='+classId);
     	        console.log('teacherName='+teacherName);
     	        console.log('startDate='+startDate);
     	        console.log('endDate='+endDate);
+    	        console.log('teacherId='+teacherId);
     	        
     	        // 모달 내부의 필드에 가져온 정보 입력하기
-    	        var modal = $(this);
+    	        const modal = $(this);
     	        modal.find('select[name="subject"]').val(subject);
     	        modal.find('#curriculumName').val(curriculumName);
     	        modal.find('select[name="classId"]').val(classId);
-    	        modal.find('select[name="teacherId"]').val(teacherName);
+    	        modal.find('select[name="teacherId"]').val(teacherId);
     	        modal.find('#startDate').val(startDate);
     	        modal.find('#endDate').val(endDate);
     	    });
@@ -449,6 +448,12 @@
     	        // 수정된 정보 수집 및 AJAX 요청 등 처리
     	        // ...
     	    }); */
+    	    
+    	});
+      
+      
+      $(document).ready(function() {
+    	   
     	});
       
       

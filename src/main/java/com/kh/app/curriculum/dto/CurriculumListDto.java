@@ -12,6 +12,7 @@ public class CurriculumListDto {
 	private int curriculumId;
 	private String classId;
 	private String memberName;
+	private String teacherId;
 	private LocalDate curriculumStartAt;
 	private LocalDate curriculumEndAt;
 	
