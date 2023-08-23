@@ -40,6 +40,16 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public List<BoardListDto> marketBoardFindAll() {
+		return boardRepository.marketBoardFindAll();
+	}
+	
+	@Override
+	public List<BoardListDto> askCodeBoardFindAll() {
+		return boardRepository.askCodeBoardFindAll();
+	}
+	
+	@Override
 	public List<BoardListDto> preStudentBoardFindAll() {
 		return boardRepository.preStudentBoardFindAll();
 	}

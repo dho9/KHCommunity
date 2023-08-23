@@ -69,8 +69,13 @@ public class BoardController {
  	}
 	
 	@GetMapping("/marketBoardList.do")
-	public void marketBoardList() {
-		
+	public String marketBoardList(Model model) {
+		List<BoardListDto> marketBoardLists = boardService.marketBoardFindAll();
+        log.debug("marketBoardLists = {}", marketBoardLists);
+        
+        model.addAttribute("marketBoardLists", marketBoardLists);
+        
+        return "/board/marketBoardList";
 	}
 	
 	@GetMapping("/todayFoodBoardList.do")
@@ -89,8 +94,13 @@ public class BoardController {
 	}
 	
 	@GetMapping("/askCodeBoardList.do")
-	public void askCodeBoardList() {
-		
+	public String askCodeBoardList(Model model) {
+		List<BoardListDto> askCodeBoardList = boardService.askCodeBoardFindAll();
+        log.debug("askCodeBoardList = {}", askCodeBoardList);
+        
+        model.addAttribute("askCodeBoardList", askCodeBoardList);
+        
+        return "/board/askCodeBoardList";
 	}
 	
 	@GetMapping("/studyBoardList.do")
@@ -317,6 +327,7 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
+			@RequestParam boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
@@ -352,6 +363,7 @@ public class BoardController {
 				.memberId(member.getMemberId())
 				.tags(tags)
 				.attachments(attachments)
+				.anonymousCheck(anonymousCheck)
 				.build();
 		//log.debug("baord = {}", board);
 		

@@ -55,6 +55,18 @@
 	</script>
 </c:if>
 
+<%-- codemirror js --%>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/lib/codemirror.js"></script>
+<%-- codemirror sql.js addon --%>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/sql/sql.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/clike/clike.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/javascript/javascript.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/mode/htmlmixed/htmlmixed.js"></script>
+<%-- codemirror css --%>
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/lib/codemirror.css">
+<%-- codemirror theme --%>
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/eclipse.css">
+
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
     <body>
