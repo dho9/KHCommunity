@@ -1136,8 +1136,6 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 
-
-
 INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n', 'n', 'y');
 
