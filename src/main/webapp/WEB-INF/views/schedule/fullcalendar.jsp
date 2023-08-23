@@ -21,9 +21,9 @@
 .fc .fc-button-primary { background-color: royalblue; border-color: royalblue; color: white;}
 .fc .fc-button .fc-icon { font-size: 1.5em; vertical-align: middle; background-color: royalblue; border-color: royalblue; color: white;}
 .fc .fc-button-group > .fc-button {z-index: 1; background-color: royalblue; border-color: royalblue; color: white;}
-.fc .fc-toolbar-title {margin-right: 60px;}
+.fc .fc-toolbar-title {margin-right: 20px;}
 
-#calendarTitle {font-family: 'MBC1961GulimM'; font-size: 50px; color: royalblue; margin: 3% 20% 1% 25%; text-shadow: 1px 1px 0 grey;}
+#calendarTitle {font-family: 'MBC1961GulimM'; font-size: 50px; color: royalblue; margin: 3% 25.8% 1% 25%; text-shadow: 1px 1px 0 grey;}
 .modal {display: none; position: fixed;z-index: 1; left: 0;top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); animation: fadeIn 0.3s ease-in-out;}
 @keyframes fadeIn {from {opacity: 0;} to { opacity: 1;}}
 .modal-content { background-color: white; margin: 40% auto; padding: 20px; border: 1px solid #888; width: 100%; position: relative; animation: slideIn 0.3s ease-in-out;}
@@ -33,7 +33,9 @@
 #calTitleDiv h1{display:inline-block;}
 #openModalButton{display:inline-block; width: 150px; font-family: 'NanumSquareNeo-Variable'; font-size: 20px; height: 55px; border-radius: 20px; margin-top: -25;}
 .toast{background-color: grey; width: 20%}
-
+#todayTodo {display: flex; min-width: 250px; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0,0,0,.125); border-radius: 0.35rem; align-content: stretch; justify-content: space-evenly; align-items: stretch; flex-direction: column; margin-left: 80px; margin-top: -70; position: fixed;}
+#todayTodoHeader{background-color: royalblue; color:white;font-family: 'NanumSquareNeo-Variable';}
+#todayTodoBody{font-family: 'NanumSquareNeo-Variable';}
 </style>
 
 
@@ -43,6 +45,7 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 <script src='../dist/index.global.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
 <script>
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
@@ -57,18 +60,12 @@
 <h1 id="calendarTitle">Schedule <i class="bi bi-calendar-heart"></i></h1>
 <button type="button" class="btn btn-outline-primary" id="openModalButton">Add Event</button>
 </div>
-
-<!-- <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-  <div class="toast-header">
-    <strong class="me-auto">Bootstrap</strong>
-    <small>11 mins ago</small>
-    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close">123</button>
+<div class="card text-bg-primary mb-3" style="max-width: 18rem;" id="todayTodo">
+  <div class="card-header" id="todayTodoHeader"><i class="bi bi-hearts"></i>&nbsp; 오늘의 할일</div>
+  <div class="card-body">
+    <p class="card-text" id="todayTodoBody"></p>
   </div>
-  <div class="toast-body">
-    Hello, world! This is a toast message.
-  </div>
-</div> -->
-
+</div>
 <div id='calendar'></div>
 <div class="modal" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -126,13 +123,13 @@ document.addEventListener('DOMContentLoaded', function() {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth'
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       initialDate: new Date(),
       navLinks: true, 
       selectable: true,
       selectMirror: true,
-      select: function(arg) {
+/*       select: function(arg) {
     	console.log(arg);
         var eventTitle = prompt('입력할 일정:');
         if (eventTitle) {
@@ -146,28 +143,28 @@ document.addEventListener('DOMContentLoaded', function() {
           })
         }
         calendar.unselect()
-      },
+      }, */
       eventClick: function(arg) {
     	  console.log("#등록된 일정 클릭#");
     	  console.log(arg.event);
+    	  const groupId = arg.event._def.groupId;
+    	  console.log(groupId);
     	  
-        if (confirm('Are you sure you want to delete this event?')) {
-          arg.event.remove();
-          /* $.ajax({
-              type: 'POST',
+        if (confirm('일정을 삭제하시겠습니까?')) {
+           arg.event.remove();
+           $.ajax({
+              type: 'get',
               url: "${pageContext.request.contextPath}/calendar/calendar.do?method=delete", 
-              data: arg, 
-              beforeSend: function(xhr) {
-                  xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}')},
+              dataType: "text",
+              data: { groupId: groupId }, 
               contentType: 'application/json', // 데이터 타입 지정
               success: function(response) {
                 console.log('삭제 데이터 전송 성공:', response);
-                
               },
               error: function(xhr, textStatus, errorThrown) {
                 console.error('오류 발생:', errorThrown);
               }
-            });*/
+            });
           
         }
       },
@@ -180,19 +177,37 @@ document.addEventListener('DOMContentLoaded', function() {
     	        dataType: "json",
     	        success: function(responseData) {
     	            console.log("responseData =", responseData);
-
+					const todayTodoBody = document.querySelector("#todayTodoBody");
+					todayTodoBody.innerHTML ="";
     	            var events = [];
+    	            let todo = false;
     	            responseData.forEach(function(item) {
+    	            	console.log(item);
     	                var event = {
     	                    title: item.title,
     	                    start: item.start,
     	                    end: item.end,
     	                    backgroundColor: item.backgroundColor,
-    	                    borderColor: item.backgroundColor
+    	                    borderColor: item.backgroundColor,
+    	                    groupId : item.id
     	                };
     	                events.push(event);
-    	            });
+    	                
+    	            	const today = new Date();
+    	            	const startdate = new Date(event.start);
+    	            	const endate = new Date(event.end);
 
+    	            	if (today >= startdate && today <= endate) {
+    	            		todo = true;
+    	            		todayTodoBody.innerHTML += `<i class="bi bi-check-lg"></i> \${event.title}</br>`
+    	            	} 
+    	            	  
+    	            });
+    	            
+    	            if (!todo)  {
+    	            	todayTodoBody.innerHTML = `등록된 할 일이 없습니다.`
+	            	}
+    	            
     	            successCallback(events); 
     	        }
     	    });
@@ -225,71 +240,31 @@ document.addEventListener('DOMContentLoaded', function() {
     var saveEventButton = document.getElementById('saveEventButton');
     var eventForm = document.getElementById('eventForm');
     var colorSelect = document.getElementById('colorSelect');
+    
 
     saveEventButton.addEventListener('click', function() {
     	
     	const startInput = document.getElementById('startDate');
     	const endInput = document.getElementById('endDate');
-    	const form = document.getElementById('eventForm');
+    	const eventform = document.getElementById('eventForm');
     	const title = document.getElementById('eventTitle');
         
         const startDate = new Date(startInput.value);
         const endDate = new Date(endInput.value);
-		
-        if (title) {
+		console.log(title.value);
+        if (title.value == null || title.value == "") {
         	alert('일정 내용은 반드시 입력해야합니다.');
-        	form.preventDefault(); 
-       	}
-        
+        	event.preventDefault(); 
+       	}       
         if (startDate > endDate) {
         	alert('시작 날짜는 종료 날짜보다 미래일 수 없습니다.');
-        	form.preventDefault(); 
+        	event.preventDefault();
        	}
-       
-    	
-      /* event.preventDefault();
-      
-      var formData = new FormData(eventForm);
-      var title = formData.get('eventTitle');
-      var startDate = formData.get('startDate');
-      var endDate = formData.get('endDate');
-      var color = formData.get('colorSelect');
-      var backgroundColor = formData.get('backgroundColor');
-      var memberId = formData.get('calId');
-      
-      */
-
-	  /*
-      var eventData = {
-        title: title,
-        start: startDate,
-        end: endDate,
-        backgroundColor: backgroundColor,
-        memberId : memberId
-      };
-
-      $.ajax({
-        type: 'POST',
-        url: "${pageContext.request.contextPath}/calendar/calendar.do?method=data", // 실제 컨트롤러 URL로 변경
-        data: formData, 
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}')},
-        contentType: 'application/json', // 데이터 타입 지정
-        success: function(response) {
-          // 성공적으로 데이터를 전송한 후 처리할 내용
-          console.log('이벤트 데이터 전송 성공:', response);
-          eventModal.style.display = 'none'; // 모달 닫기
-          // 원하는 동작 수행 (ex: 일정을 캘린더에 추가)
-        },
-        error: function(xhr, textStatus, errorThrown) {
-          // 오류 발생 시 처리할 내용
-          console.error('오류 발생:', errorThrown);
-          // 오류 처리에 대한 추가 작업 수행
-        }
-      }); */
-      
-      
-      
+        if (!startInput.value || !endInput.value) {
+        	alert('시작 날짜와 종료날짜는 반드시 지정되어야 합니다.');
+        	event.preventDefault();
+       	}
+    
     });
     calendar.render();
   });

@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
 	integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
@@ -89,7 +90,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	
 		<sec:authentication property="principal" var="loginMember"/>
 		<div id="info-container">
-			<h2>${loginMember.name}</h2>
+			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${loginMember.name}</h2>
 			<p>${studentInfo.curriculumName }반</p>
 			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
 			
