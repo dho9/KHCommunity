@@ -62,6 +62,11 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardListDto> employeeBoardFindAll() {
 		return boardRepository.employeeBoardFindAll();
 	}
+	
+	@Override
+	public List<BoardListDto> noticeBoardFindAll() {
+		return boardRepository.noticeBoardFindAll();
+	}
 
 	@Override
 	public int deleteFavoriteByMemberId(int boardId, String memberId) {
@@ -145,6 +150,8 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardListDto> sharingInformationBoardFindAll() {
 		return boardRepository.sharingInformationBoardFindAll();
 	}
+	
+	
 
 	@Override
 	public List<BoardListDto> myClassBoardFindAll() {

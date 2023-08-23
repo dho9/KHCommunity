@@ -59,6 +59,7 @@ public interface BoardService {
 
 	List<BoardListDto> sharingInformationBoardFindAll();
 
+	List<BoardListDto> noticeBoardFindAll();
 	List<BoardListDto> myClassBoardFindAll();
 
 	List<Comment> findByCommentByPostId(int postId);
