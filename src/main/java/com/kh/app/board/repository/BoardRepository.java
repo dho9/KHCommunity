@@ -15,6 +15,8 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
+import com.kh.app.board.entity.Comment;
+import com.kh.app.board.entity.CommentLike;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
@@ -85,8 +87,8 @@ public interface BoardRepository {
 
 	List<PopularBoardDto> findByPopularPost();
 	
-	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level) " +
-	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1)")
+	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level, anonymous_check) " +
+	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1, #{comment.anonymousCheck})")
 	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
 	
 	@Select("select * from post_attachment where post_id = #{id}")
@@ -94,5 +96,21 @@ public interface BoardRepository {
 
 	List<BoardListDto> sharingInformationBoardFindAll();
 
+	List<BoardListDto> myClassBoardFindAll();
+	
+	@Select(" select * from post_comment where post_id = #{postId} order by comment_id asc")
+	List<Comment> findByCommentByPostId(int postId);
+	
+	@Select("select * from comment_like where commentId = #{commentId} and member_id = #{memberId}")
+	CommentLike findCommentLikeByMemberId(int commentId, String memberId);
+	
+	@Delete("delete from comment_like where comment_Id = #{commentId} and member_id = #{memberId}")
+	int deleteCommentLikeByMemberId(int commentId, String memberId);
+	
+	@Insert("insert into comment_like values (#{commentId}, #{memberId})")
+	int insertCommentLikeByMemberId(int commentId, String memberId);
+	
+	CommentLike findCommentLikeCount(int commentId);
+	
 
 }

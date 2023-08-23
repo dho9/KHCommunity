@@ -45,6 +45,7 @@ import com.kh.app.store.entity.Store;
 import com.kh.app.store.service.StoreService;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
+import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.common.HelloSpringUtils;
