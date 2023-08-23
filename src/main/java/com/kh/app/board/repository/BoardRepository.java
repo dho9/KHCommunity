@@ -49,6 +49,8 @@ public interface BoardRepository {
 	
 	BoardListDto findById(int id);
 
+	List<BoardListDto> noticeBoardFindAll();
+	
 	@Select("select * from post_like where post_id = #{postId} and member_id = #{memberId}")
 	PostLike findPostLikeByMemberId(int postId, String memberId);
 

@@ -66,6 +66,7 @@ public interface BoardService {
 
 
 
+	List<BoardListDto> noticeBoardFindAll();
 	List<BoardListDto> myClassBoardFindAll();
 
 	List<Comment> findByCommentByPostId(int postId);

@@ -41,6 +41,9 @@ import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
+import com.kh.app.store.entity.Store;
+import com.kh.app.store.service.StoreService;
+import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
@@ -52,6 +55,7 @@ import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.TeacherCreateDto;
+import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -67,6 +71,9 @@ public class AdminController {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private StoreService storeService;
 	
 	@Autowired
 	private AdminService adminService;
@@ -431,7 +438,8 @@ public class AdminController {
 	public void teacherList(Model model,
 	            @RequestParam(value = "searchType", required = false) String searchType,
 	            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-	            @RequestParam(value = "subject", required = false) String[] _subjects){
+	            @RequestParam(value = "subject", required = false) String[] _subjects,
+                @RequestParam(defaultValue = "1") int page){
 		List<String> subjects = null;
 		
 		if (_subjects != null) {
@@ -443,8 +451,23 @@ public class AdminController {
 		filters.put("searchKeyword", searchKeyword);
 		filters.put("subjects", subjects);
 		
-		List<Teacher> teachers = adminService.findAllTeacher(filters);
+		// 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		List<TeacherListDto> teachers = adminService.findAllTeacher(filters, params);
+		model.addAttribute("currentPage", page);
 		model.addAttribute("teachers", teachers);
+		// 전체 학생 수를 가져온다.
+	    int totalCount = adminService.totalCountTeachers(filters);
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+		
 	}
 	
 	@PostMapping("/adminTeacherDelete.do")
@@ -504,11 +527,10 @@ public class AdminController {
 	public String writeNotice(
 			@RequestParam String title,
 			@RequestParam String text,
-			@RequestParam int boardId,
+			@RequestParam(name="boardId") int boardId,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
 		
 		// 1. 파일저장
-		int result = 0;
 		List<PostAttachment> attachments = new ArrayList<>(); 
 		for(MultipartFile file : files) {
 			if(!file.isEmpty()) {
@@ -516,7 +538,6 @@ public class AdminController {
 				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
 				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
 				file.transferTo(destFile);	
-				
 				PostAttachment attach = 
 						PostAttachment.builder()
 						.postOriginalFilename(originalFilename)
@@ -532,18 +553,34 @@ public class AdminController {
 				.content(text)
 				.boardId(boardId)
 				.memberId(memberId)
+				.attachments(attachments)
 				.build();
 		log.debug("attach = {}", attachments);
 		log.debug("board = {}", board);
 		
-//		
-//		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
-//			result = adminService.insertBoardNofiles(board);
-//		}else {
-//			result = adminService.insertBoard(board);
-//		}
-//		result = adminService.insertPostContent(board);
+		int result = 0;
+		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+			result = adminService.insertBoardNofiles(board);
+		}else {
+			result = adminService.insertBoard(board);
+		}
+		result = adminService.insertPostContent(board);
 		
 		return "redirect:/admin/writeNotice.do";
 	}
-}
+	
+	@GetMapping("/adminStoreList.do")
+	public void adminStoreList(Model model) {
+		List<Store> store = storeService.findAll();
+//		 log.debug("ticekt = {}", ticket);
+		model.addAttribute("stores", store);
+	}
+	
+	@PostMapping("/adminDeleteStore.do")
+	public String adminDeleteStore(@Valid int storeId){
+		
+		int result = adminService.deleteStore(storeId);
+		
+		return "redirect:/admin/adminStoreList.do";
+	}
+ }
