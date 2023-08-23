@@ -43,6 +43,8 @@ public interface BoardRepository {
 	
 	BoardListDto findById(int id);
 
+	List<BoardListDto> noticeBoardFindAll();
+	
 	List<BoardListDto> employeeBoardFindAll();
 
 	@Select("select * from post_like where post_id = #{postId} and member_id = #{memberId}")
@@ -86,9 +88,11 @@ public interface BoardRepository {
 	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level) " +
 	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1)")
 	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
+	
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
 	List<BoardListDto> sharingInformationBoardFindAll();
+
 
 }

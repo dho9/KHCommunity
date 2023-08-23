@@ -57,4 +57,6 @@ public interface BoardService {
 
 	List<BoardListDto> sharingInformationBoardFindAll();
 
+	List<BoardListDto> noticeBoardFindAll();
+
 }

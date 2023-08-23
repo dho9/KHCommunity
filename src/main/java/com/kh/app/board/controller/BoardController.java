@@ -122,6 +122,14 @@ public class BoardController {
         return "/board/employeeBoardList";
 	}
 	
+	@GetMapping("/noticeBoardList.do")
+	public String noticeBoardList(Model model) {
+		List<BoardListDto> noticeBoardLists = boardService.noticeBoardFindAll();
+		
+		model.addAttribute("noticeBoardLists", noticeBoardLists);
+		
+		return "/board/noticeBoardList";
+	}
 	
 	
 	/**
@@ -222,7 +230,7 @@ public class BoardController {
 		log.debug("postDetail = {}", postDetail);
 		
 		Board board = boardService.findBoardName(postDetail.getBoardId());
-		log.debug("boardddddddddddd={}",postDetail);
+		log.debug("boardddddddddddd={}",board);
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
@@ -379,7 +387,7 @@ public class BoardController {
 	public List<Comment> commentList(@RequestParam int postId){
 		log.debug("idddddddddddd = {}",postId);
 		return null;
-		
 	}
+	
 }
 
