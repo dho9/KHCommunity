@@ -83,27 +83,30 @@
                 <h5 class="modal-title" id="sendMessageModalLabel">식당 추가</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form:form method="POST" action="${pageContext.request.contextPath}/admin/insertStore.do">
-                <div class="modal-body">
-                    <!-- 모달 내용 -->
-                    <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
-                    <input name="storeName" id="storeName" placeholder="식당 이름을 작성해주세요" style="width:500px;">
-                    <button type="button" id="searchAddressButton">주소 검색</button>
-                    <div id="addressResult">
-                    <!-- 주소 검색 결과를 표시할 공간 -->
-                    
-                    </div> 
-                </div>
-                <div class="modal-footer">
-                    <button id="btnSend" class="btn btn-primary">전송</button>
-                </div>
-            </form:form>
-        </div>
-    </div>
-</div>
 
+		    <div class="modal-body">
+                <!-- 모달 내용 -->
+                <form:form id="storeForm" modelAttribute="store" action="${pageContext.request.contextPath}/admin/insertStore.do" method="post" enctype="multipart/form-data">
+				    <input type="text" id="storeName" name="storeName" placeholder="식당 이름을 작성해주세요" style="width:500px;">
+				    <button type="button" id="searchAddressButton">주소 검색</button>
+				    <div><input type="text" id="postNumber" name="postNumber" readonly style="width:100px; border:none;"></div>
+				    <div><input type="text" id="address" name="address" readonly style="width:400px; border:none;"></div>
+    				<div><input type="file" id="file" name="file" accept=".jpg"></div>
+				</form:form>
+				<div class="modal-footer">
+				    <button type="button" class="btn btn-primary" onclick="submitStoreForm()">등록</button>
+				</div>
+			</div>
+    	</div>
+	</div>
+</div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+function submitStoreForm() {
+    const form = document.getElementById('storeForm');
+    form.submit();
+}
+
 //모달 창이 닫힐 때 주소 API 이벤트 해제
 $('#sendMessageModal').on('hidden.bs.modal', function () {
     var searchButton = document.getElementById('searchAddressButton');
@@ -116,19 +119,23 @@ $('#sendMessageModal').on('shown.bs.modal', function () {
     searchButton.addEventListener('click', openAddressApi);
 });
 
+//주소 API 객체를 전역으로 선언
+var postcodeApi;
+
 // 주소 검색 버튼 클릭 이벤트 핸들러
 function openAddressApi() {
     var postcodeApi = new daum.Postcode({
         oncomplete: function(data) {
             var address = data.address;
             var postNumber = data.zonecode;
-            var addressResult = document.getElementById('addressResult');
-            addressResult.innerHTML = '선택한 주소: ' + postNumber + address;
+            
+            // 우편번호와 주소 값을 각각의 input 요소에 설정
+            document.getElementById('postNumber').value = postNumber;
+            document.getElementById('address').value = address;
         }
     });
     postcodeApi.open();
 }
-console.log(address);
 </script>
 
 

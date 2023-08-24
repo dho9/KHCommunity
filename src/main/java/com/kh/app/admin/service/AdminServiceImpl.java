@@ -327,4 +327,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.updateCurriculum(curriculum);
 	}
 	
+
+	public int insertStore(String storeName, String postNumber, String address) {
+		return adminRepository.insertStore(storeName, postNumber, address);
+	}
+
 }

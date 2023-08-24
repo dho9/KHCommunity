@@ -132,6 +132,8 @@ public interface AdminService {
 
 	int updateCurriculum(CurriculumRegDto curriculum);
 
+	int insertStore(String storeName, String postNumber, String address);
+
 
 
 

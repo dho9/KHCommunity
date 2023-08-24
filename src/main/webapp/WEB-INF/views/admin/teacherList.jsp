@@ -113,12 +113,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <div class="row">
-                    <div class="col-md-6">
-                        <iframe class="border rounded-4" src="${pageContext.request.contextPath}/resources/pdf/쓰리고근로계약서.pdf" style="width: 100%; height: 500px;"></iframe>
-                    </div>
-                    <div class="col-md-6">
-                   	  <div class="border rounded-4" style="padding:30px;">
+                  <div style="width:600px; margin:auto;">
+                  	<div class="border rounded-4" style="padding:30px;">
                       <form:form id="dataForm" method="POST" name="modalFrm" action="${pageContext.request.contextPath}/admin/adminStudentUpdate.do" style="font-size: 20px;">
                           <input type="hidden" name="rowId" id="modalRowId">
                           ID : <input type="text" name="firstId" id="modalFirstId" readonly> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
@@ -130,13 +126,11 @@
                           
                           <br>
                           <hr>
-                          <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                           <button class="btn btn-danger" type="button" id="btnBan">강퇴</button> 
                       </form:form>
                    	  </div>
                     </div>
-                  </div>
-                </div>
+                    </div>
                 <!-- 모달의 나머지 부분은 동일하게 유지 -->
             </div>
         </div>

@@ -247,4 +247,8 @@ public interface AdminRepository {
 	@Update("update curriculum set class_id = #{classId}, teacher_id = #{teacherId}, subject = #{subject}, curriculum_name = #{curriculumName}, curriculum_start_at = #{startDate}, curriculum_end_at = #{endDate} where curriculum_id = #{curriculumId}")
 	int updateCurriculum(CurriculumRegDto curriculum);
 
+	@Insert("insert into store values (seq_store_id.nextval, #{storeName}, #{postNumber}, #{address}, '음식점')")
+	int insertStore(String storeName, String postNumber, String address);
+
+
 }

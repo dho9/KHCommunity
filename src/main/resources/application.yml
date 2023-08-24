@@ -90,3 +90,5 @@ oauth:
     token-uri: https://kauth.kakao.com/oauth/token
     scope: profile_nickname, account_email, profile_image
     resource-uri-host: https://kapi.kakao.com
+
+
