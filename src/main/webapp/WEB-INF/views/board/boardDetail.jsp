@@ -320,7 +320,7 @@ color: black;
 					  	<ul class="status">
 					  		<%-- 좋아요 버튼 --%>
 					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
-					  		<li class="vote" style="margin-top: 5px;">${postDetail.postLike}</li>
+					  		<li class="vote" data-value="${postDetail.postId}" style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
 					  	</ul>
@@ -442,17 +442,86 @@ color: black;
 	}
     
     
-document.addEventListener('DOMContentLoaded', () => {
-	//댓글호출함수
-	loadComment();
-	//엔터키로 폼제출방지
-	document.querySelector('.writecomment').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();}
-        
+	document.addEventListener('DOMContentLoaded', () => {
+		isLike(); // 공감했는지
+		like(); // 공감누르기
+		//댓글호출함수
+		loadComment();
+		//엔터키로 폼제출방지
+		document.querySelector('.writecomment').addEventListener('keydown', (e) => {
+	        if (e.key === 'Enter') {
+	            e.preventDefault();}
+	        
+		});
+		
 	});
 	
-});
+	//공감(좋아요) 했는지 확인
+	function isLike() {
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
+			data : {
+				_postId : document.querySelector('.like').dataset.value
+			},
+			method : "GET",
+	        dataType : "json",
+	        success(responseData) {
+	        	console.log(responseData);
+				const {available, likeCount} = responseData;
+				const {postLikeCount} = likeCount;
+				
+				const like = document.querySelector('.like');
+				const vote = document.querySelector('.vote');
+				if(available) {
+	            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	            	vote.innerHTML = `\${postLikeCount}`;
+	            }
+	            else {
+	            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	            	vote.innerHTML = `\${postLikeCount}`;
+	            }
+	        }
+		});
+	}
+	
+	// 공감(좋아요) 누르기
+	function like() {
+		document.querySelector('.vote').onclick = (e) => {
+			console.log(e.target.dataset.value);
+			
+			const token = document.tokenFrm._csrf.value;
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/board/postLike.do",
+				data : {
+					_postId : e.target.dataset.value
+				},
+				headers: {
+	                "X-CSRF-TOKEN": token
+	            },
+	            method : "POST",
+	            dataType : "json",
+	            success(responseData) {
+	            	console.log(responseData);
+					const {available, likeCount} = responseData;
+					const {postLikeCount} = likeCount;
+	    			
+	    			const like = document.querySelector('.like');
+	    			const vote = document.querySelector('.vote');
+	    			if(available) {
+	                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	                	vote.innerHTML = `\${postLikeCount}`;
+	                }
+	                else {
+	                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	                	vote.innerHTML = `\${postLikeCount}`;
+	                }
+	            }
+			});
+		};
+	}
 
 //내가 누른 댓글 좋아요 불러오기
 function loadCommentLike() {
@@ -723,75 +792,6 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	
 	</script>
 	<script>
-	// load됐을때 공감(좋아요) 했는지 확인
-	window.onload = () => {
-		
-		console.log(document.querySelector('.like').dataset.value+"ㅋㅌㅋㅌㅋㅌㅋㅌ");
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : document.querySelector('.like').dataset.value
-			},
-			method : "GET",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-    			const {available, likeCount} = responseData;
-    			const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-		
-		
-		
-		
-	};
-	
-	// 공감(좋아요) 누르기
-	document.querySelector('.like').onclick = (e) => {
-		console.log(e.target.dataset.value);
-		
-		const token = document.tokenFrm._csrf.value;
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : e.target.dataset.value
-			},
-			headers: {
-                "X-CSRF-TOKEN": token
-            },
-            method : "POST",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-				const {available, likeCount} = responseData;
-				const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-	};
 	
 	// 해시태그 검색
 	document.querySelectorAll('.tag').forEach((tag) => {
@@ -863,12 +863,6 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 		
 		
 	});
-
-
-
-
-
-
 	</script>
 	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
