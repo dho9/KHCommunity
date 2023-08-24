@@ -6,6 +6,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
@@ -33,6 +34,10 @@ public interface BoardService {
 	List<BoardListDto> preStudentBoardFindAll();
 	
 	List<BoardListDto> employeeBoardFindAll();
+	
+	List<BoardListDto> todayFoodBoardFindAll();
+
+	List<BoardListDto> studyBoardFindAll();
 
 	Favorite findFavoriteByMemberId(int boardId, String memberId);
 
@@ -58,15 +63,13 @@ public interface BoardService {
 
 	List<PopularBoardDto> findByPopularPost();
 
-	int createComment(CreateCommentDto comment, String memberId);
 	
 	int insertBoardNofiles(BoardCreateDto board);
 
 	PostAttachment findAttachById(int id);
 
-
-
 	List<BoardListDto> noticeBoardFindAll();
+	
 	List<BoardListDto> myClassBoardFindAll();
 
 	List<Comment> findByCommentByPostId(int postId);
@@ -82,5 +85,11 @@ public interface BoardService {
 	List<BoardListDto> myClassBoardFindByTag(String tag);
 	
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+
+	int deleteBoard(int deletePostId);
+	
+	int createComment(Comment comment);
+	
+	List<NoticeBoardDto> findThreeNotice();
 
 }

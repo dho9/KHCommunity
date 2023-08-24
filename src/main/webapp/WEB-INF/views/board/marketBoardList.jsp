@@ -86,6 +86,7 @@
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="2">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
+	      	<input type = "hidden" name="grade" id="grade" >
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -122,8 +123,10 @@
 	        	<div class="hashTag-container"></div>
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
-        	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right; border-left: solid 3px white;">취소</button>
+        	<button style="float: right; border-left: solid 3px white;" ><span class="material-symbols-outlined" >edit</span></button>
+        	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
+        	<button type="button" class="sell" style="float: right; color: #c62917; font-size: 18px; font-weight: bold; background: none;">팝니다</button>
         	<button type="button" class="anonymous">
         		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
@@ -138,6 +141,7 @@
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
+	    
 	    
 	 	// 익명체크
 		let anonymousButton = document.querySelector(".anonymous");  
@@ -184,6 +188,7 @@
 	    	}
 	    });
 	    
+	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
 	        console.log(tag);
@@ -212,6 +217,66 @@
 	            tagElement.setAttribute("value", "#" + tag);
 	        }
 	    }
+	    
+	 	// 삽니다, 팝니다 태그추가
+	    const buyButton = document.querySelector(".buy");
+	    const sellButton = document.querySelector(".sell");
+	    const title = document.querySelector("#title");
+	    
+	    buyButton.onclick = (() => {
+	    	title.value = "[삽니다!]"
+	    	const tagContainer = document.createElement("div");
+            tagContainer.className = "tag-container";
+
+            const tagElement = document.createElement("input");
+            tagElement.value = " #삽니다 ";
+            tagElement.setAttribute("readonly", true);
+            tagContainer.appendChild(tagElement);
+
+            const removeButton = document.createElement("i");
+            removeButton.style.cursor = "pointer";
+            removeButton.innerHTML = "x";
+            removeButton.addEventListener('click', () => {
+                hashTagContainer.removeChild(tagContainer);
+                hashTags = hashTags.filter((hashTags) => hashTags !== "#삽니다");
+	    	});
+            
+            tagContainer.appendChild(removeButton);
+
+            hashTags.push("삽니다");
+            hashTagContainer.appendChild(tagContainer);
+
+            tagElement.setAttribute("name", "_tags");
+            tagElement.setAttribute("value", "#삽니다");
+	    });
+	    
+	    sellButton.onclick = (() => {
+	    	title.value = "[팝니다!]"
+	    	const tagContainer = document.createElement("div");
+            tagContainer.className = "tag-container";
+
+            const tagElement = document.createElement("input");
+            tagElement.value = " #팝니다 ";
+            tagElement.setAttribute("readonly", true);
+            tagContainer.appendChild(tagElement);
+
+            const removeButton = document.createElement("i");
+            removeButton.style.cursor = "pointer";
+            removeButton.innerHTML = "x";
+            removeButton.addEventListener('click', () => {
+                hashTagContainer.removeChild(tagContainer);
+                hashTags = hashTags.filter((hashTags) => hashTags !== "#팝니다");
+	    	});
+            
+            tagContainer.appendChild(removeButton);
+
+            hashTags.push("팝니다");
+            hashTagContainer.appendChild(tagContainer);
+
+            tagElement.setAttribute("name", "_tags");
+            tagElement.setAttribute("value", "#팝니다");
+	    });
+	    
 	 }
 	
 	

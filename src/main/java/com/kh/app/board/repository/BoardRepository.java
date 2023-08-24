@@ -13,6 +13,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
@@ -31,12 +32,22 @@ public interface BoardRepository {
 	List<BoardListDto> freeBoardFindAll();
 	
 	List<BoardListDto> marketBoardFindAll();
+	
+	List<BoardListDto> todayFoodBoardFindAll();
 
 	List<BoardListDto> preStudentBoardFindAll();
 
 	List<BoardListDto> graduateBoardFindAll();
 	
 	List<BoardListDto> employeeBoardFindAll();
+	
+	List<BoardListDto> studyBoardFindAll();
+	
+	List<BoardListDto> sharingInformationBoardFindAll();
+
+	List<BoardListDto> askCodeBoardFindAll();
+
+	List<BoardListDto> myClassBoardFindAll();
 
 	@Select("select * from favorite where board_id = #{boardId} and member_id = #{memberId}")
 	Favorite findFavoriteByMemberId(int boardId, String memberId);
@@ -84,24 +95,16 @@ public interface BoardRepository {
 	@Insert("insert into post_attachment values(seq_post_attach_id.nextval, #{postId}, #{boardId}, #{postOriginalFilename}, #{postRenamedFilename})")
 	int insertPostAttach(PostAttachment attach);
 
-	@Select("select board_id, board_name, board_category from board where board_id = #{boardId}")
+	@Select("select * from board where board_id = #{boardId}")
 	Board findBoardName(int boardId);
 
 	List<PopularBoardDto> findByPopularPost();
 	
-	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level, anonymous_check) " +
-	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1, #{comment.anonymousCheck})")
-	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
+	
 	
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
-	List<BoardListDto> sharingInformationBoardFindAll();
-
-	List<BoardListDto> askCodeBoardFindAll();
-
-	List<BoardListDto> myClassBoardFindAll();
-	
 	@Select("  SELECT  pc.*, (SELECT COUNT(*) FROM comment_like cl WHERE cl.comment_id = pc.comment_id) AS like_count FROM post_comment pc where pc.post_id = #{postId} order by pc.comment_id asc ")
 	List<Comment> findByCommentByPostId(int postId);
 	
@@ -120,5 +123,23 @@ public interface BoardRepository {
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+	
+	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level,comment_ref, anonymous_check) " +
+	        "VALUES (seq_comment_id.nextval, #{postId}, #{boardId}, #{memberId}, #{commentContent}, #{commentLevel}, #{commentRef}, #{anonymousCheck})")
+	int createComment(Comment comment);
+
+	@Delete("delete post where post_id = #{deletePostId}")
+	int deleteBoard(int deletePostId);
+
+	
+
+	
+	@Select("SELECT p.post_id, p.title, pc.content\r\n"
+			+ "FROM post p\r\n"
+			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
+			+ "WHERE p.board_id = 10\r\n"
+			+ "ORDER BY p.post_created_at DESC\r\n"
+			+ "FETCH FIRST 3 ROWS ONLY")
+	List<NoticeBoardDto> findThreeNotice();
 	
 }

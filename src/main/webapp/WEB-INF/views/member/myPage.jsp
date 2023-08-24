@@ -84,7 +84,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 #ticketInfo-container tbody .text-center {text-align: center;}
 /*식권구매 css끝*/
 
-
+#messageBoxDiv{ display: none;}
 
 </style>
 	<section>
@@ -142,7 +142,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			</svg>
 			<p>휴가신청</p>
 		</div>	
-		<div class="myPageIcon">
+		<div class="myPageIcon" id="messageBoxList">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
   				<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
 			</svg>
@@ -382,6 +382,39 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 					<input type="submit" class="certiBtn" value="저장" >
 				</form:form>
 			</div>
+			
+			
+			
+	<div class="myPageDivs" id="messageBoxDiv" >	
+			
+				<table class="table table-hover">
+					<thead>
+						<th>No</th>
+						<th>보낸사람</th>
+						<th>내용</th>
+						<th>받은날짜</th>
+						<th>읽음여부</th>
+					</thead>
+					<tbody id= "messageBoxTbl">
+					<%-- <c:if test="${empty messageList}">
+						<tr>
+							<td colspan="5" class="text-center">받은 쪽지가 없습니다.</td>
+						</tr>
+					</c:if>
+					<c:if test="${not empty messageList}">
+						<c:forEach items="${messageList}" var="message" varStatus="vs">
+							<tr>
+								<td>${message.messageId}</td>
+								<td>${message.sendId}</td>
+								<td>${message.messageContent}</td>
+								<td>${message.sendAt}</td>
+								<td>${message.readCheck}</td>
+							</tr>
+						</c:forEach>
+					 </c:if> --%>
+					</tbody>
+				</table>
+			</div>
 			<!-- 추가된 html -->
 			
 			<!-- 휴가신청 시작  -->
@@ -539,6 +572,51 @@ document.querySelector("#certification").onclick=()=>{
 	});
 };
 
+messageBoxList.addEventListener("click", function() {
+	hideDiv();
+	document.querySelector("#messageBoxDiv").style.display = "block"; 
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/message/messageList.do",
+		method : "GET",
+		dataType : "json",
+		success(responseData){
+			const messageBoxTbl = document.querySelector("#messageBoxTbl");
+			console.log(responseData);
+			if(responseData.length > 0){
+				
+				let html = ""; 
+				
+				responseData.forEach(function(message) {
+					console.log(message);
+                    html += `
+                    <tr>
+                        <td>\${message.messageId}</td>
+                        <td>\${message.sendId}</td>
+                        <td>\${message.messageContent}</td>
+                        <td>\${message.sendAt}</td>
+                        <td>\${message.readCheck}</td>
+                    </tr>
+                    `;
+                    
+                    
+                });
+				messageBoxTbl.innerHTML = html; 	
+				console.log(html);
+				
+			} else{
+				messageBoxTbl.innerHTMl += `
+					<tr>
+					<td colspan="5" class="text-center">받은 쪽지가 없습니다.</td>
+					</tr>	
+				`
+			}
+		}
+		
+	});
+	
+	
+});
 
 document.querySelector("#myPageIcon5").onclick =()=>{
 	hideDiv();
