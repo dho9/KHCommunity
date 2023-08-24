@@ -46,8 +46,18 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public List<BoardListDto> todayFoodBoardFindAll() {
+		return boardRepository.todayFoodBoardFindAll();
+	}
+	
+	@Override
 	public List<BoardListDto> askCodeBoardFindAll() {
 		return boardRepository.askCodeBoardFindAll();
+	}
+	
+	@Override
+	public List<BoardListDto> studyBoardFindAll() {
+		return boardRepository.studyBoardFindAll();
 	}
 	
 	@Override
@@ -206,6 +216,10 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.createComment(comment);
 	}
 	@Override
+	public int deleteBoard(int deletePostId) {
+		return boardRepository.deleteBoard(deletePostId);
+	}
+	
 	public List<NoticeBoardDto> findThreeNotice() {
 		// TODO Auto-generated method stub
 		return boardRepository.findThreeNotice();

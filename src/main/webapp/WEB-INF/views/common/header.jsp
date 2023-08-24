@@ -66,6 +66,7 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/lib/codemirror.css">
 <%-- codemirror theme --%>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/eclipse.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/dracula.css">
 
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>

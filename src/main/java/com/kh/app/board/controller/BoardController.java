@@ -80,8 +80,13 @@ public class BoardController {
 	}
 
 	@GetMapping("/todayFoodBoardList.do")
-	public void todayFoodBoardList() {
-
+	public String todayFoodBoardList(Model model) {
+		List<BoardListDto> todayFoodBoardList = boardService.todayFoodBoardFindAll();
+        log.debug("todayFoodBoardList = {}", todayFoodBoardList);
+        
+        model.addAttribute("todayFoodBoardList", todayFoodBoardList);
+        
+        return "/board/todayFoodBoardList";
 	}
 
 	@GetMapping("/sharingInformationBoardList.do")
@@ -105,8 +110,13 @@ public class BoardController {
 	}
 
 	@GetMapping("/studyBoardList.do")
-	public void studyBoardList() {
-
+	public String studyBoardList(Model model) {
+		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll();
+        log.debug("studyBoardList = {}", studyBoardList);
+        
+        model.addAttribute("studyBoardList", studyBoardList);
+        
+        return "/board/studyBoardList";
 	}
 
 	@GetMapping("/preStudentBoardList.do")
@@ -328,6 +338,7 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
+			@RequestParam String grade,
 			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
@@ -355,27 +366,44 @@ public class BoardController {
 
 				attachments.add(attach);
 			}
-
 		}
-		BoardCreateDto board = BoardCreateDto.builder()
-				.title(title)
-				.content(text)
-				.boardId(boardId)
-				.memberId(member.getMemberId())
-				.tags(tags)
-				.attachments(attachments)
-				.anonymousCheck(anonymousCheck)
-				.build();
-		//log.debug("baord = {}", board);
-
+			
+			BoardCreateDto board = null;
+			log.debug("gradddeeeeededeed={}",grade);
+			
+			if(grade == null || grade.equals("")) {
+				board = BoardCreateDto.builder()
+						.title(title)
+						.content(text)
+						.boardId(boardId)
+						.memberId(member.getMemberId())
+						.tags(tags)
+						.attachments(attachments)
+						.anonymousCheck(anonymousCheck)
+						.build();
+				
+			} else {
+				String realGrade = " [평점 : " + grade + "]";
+				board = BoardCreateDto.builder()
+						.title(title + realGrade)
+						.content(text)
+						.boardId(boardId)
+						.memberId(member.getMemberId())
+						.tags(tags)
+						.attachments(attachments)
+						.anonymousCheck(anonymousCheck)
+						.build();
+			}
+		
 		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
 			result = boardService.insertBoardNofiles(board);
 		}else {
 			result = boardService.insertBoard(board);
 		}
 		result = boardService.insertPostContent(board);
-
+		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
+
 	}
 
 
@@ -522,6 +550,17 @@ public class BoardController {
 				.status(HttpStatus.OK)
 				.body(Map.of("available", available, "likeCount", likeCount));
 	}
-
+	
+	@PostMapping("/boardDelete.do")
+	public String boardDelete (
+			@RequestParam int deletePostId,
+			@RequestParam String postBoardLink
+			) {
+		int result = boardService.deleteBoard(deletePostId); 
+		log.debug("보드링크={}",postBoardLink);
+		log.debug("포스트아이디={}",deletePostId);
+		return "redirect:/board/" + postBoardLink + ".do";
+	}
+	
 }
 
