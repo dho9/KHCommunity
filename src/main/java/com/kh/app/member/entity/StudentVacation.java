@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vacation {
+public class StudentVacation {
 	private int vacationId;
 	private String studentId;
 	private String vacationStartDate;
@@ -23,6 +23,6 @@ public class Vacation {
 	private String employeeId;
 	private String vacationSendDate;
 	private String vacationApproveCheck;
-	private List<VacationAttachment> attachments;
+	private List<StudentVacationAttachment> attachments;
 	
 }

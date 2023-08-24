@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VacationAttachment {
+public class StudentVacationAttachment {
 	private int vacationAttachId;
 	private int vacationId;
 	private String vacationOriginalFilename;

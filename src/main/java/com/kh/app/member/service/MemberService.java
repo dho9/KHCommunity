@@ -14,8 +14,8 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
-import com.kh.app.member.entity.Vacation;
-import com.kh.app.member.entity.VacationAttachment;
+import com.kh.app.member.entity.StudentVacation;
+import com.kh.app.member.entity.StudentVacationAttachment;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 
@@ -43,7 +43,7 @@ public interface MemberService extends UserDetailsService{
 	Curriculum findByDdayInfo(int curriculumId);
 
 
-	int insertVacation(Vacation vacation);
+	int insertVacation(StudentVacation vacation);
 
 
 	

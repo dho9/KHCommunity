@@ -20,8 +20,8 @@ import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
-import com.kh.app.member.entity.Vacation;
-import com.kh.app.member.entity.VacationAttachment;
+import com.kh.app.member.entity.StudentVacation;
+import com.kh.app.member.entity.StudentVacationAttachment;
 import com.kh.app.member.repository.MemberRepository;
 import com.kh.app.ticket.dto.TicketBuyDto;
 import com.nimbusds.openid.connect.sdk.assurance.evidences.attachment.Attachment;
@@ -182,16 +182,16 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public int insertVacation(Vacation vacation) {
+	public int insertVacation(StudentVacation vacation) {
 		int result = 0;
 		
 		
 		result = memberRepository.insertVacation(vacation);
 		log.debug("board = {}", vacation);
 		//attachment 저장
-		List<VacationAttachment> attachments = ((Vacation) vacation).getAttachments();
+		List<StudentVacationAttachment> attachments = ((StudentVacation) vacation).getAttachments();
 		if(attachments != null && !attachments.isEmpty()) {
-			for(VacationAttachment attach : attachments) {
+			for(StudentVacationAttachment attach : attachments) {
 				attach.setVacationId(vacation.getVacationId());
 				result = memberRepository.insertAttachment(attach);
 			}

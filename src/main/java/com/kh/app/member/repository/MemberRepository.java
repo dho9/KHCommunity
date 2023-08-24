@@ -20,8 +20,8 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
-import com.kh.app.member.entity.Vacation;
-import com.kh.app.member.entity.VacationAttachment;
+import com.kh.app.member.entity.StudentVacation;
+import com.kh.app.member.entity.StudentVacationAttachment;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 @Mapper
@@ -69,7 +69,7 @@ public interface MemberRepository {
 	Curriculum findByDdayInfo(int curriculumId);
 
 	//@Insert("insert into vacation_attachment values(seq_vacation_attach_id.nextval,  seq_vacation_id.nextval, #{vacationOriginalFilename}, #{vacationRenamedFilename})")
-	int insertVacationAttach(MemberDetails member, VacationAttachment attach);
+	int insertVacationAttach(MemberDetails member, StudentVacationAttachment attach);
 
 //	@Insert("insert into vacation values( seq_vacation_id.nextval, #{member.studentId}, #{member.vacationStartDate, jdbcType=DATE}, #{member.vacationEndDate, jdbcType=DATE}, #{member.teacherId}, #{member.employeeId}, #{member.vacationSendDate}, '1' )")
 	int insertVacationById(MemberDetails member);
@@ -80,10 +80,10 @@ public interface MemberRepository {
 			keyProperty = "vacationId" , 
 			resultType = int.class,
 			statement = "select seq_vacation_id.currval from dual")
-	int insertVacation(Vacation vacation);
+	int insertVacation(StudentVacation vacation);
 	
 	  @Insert("insert into vacation_attachment values(seq_vacation_attach_id.nextval,  seq_vacation_id.nextval, #{vacationOriginalFilename}, #{vacationRenamedFilename})"
-	  ) int insertAttachment(VacationAttachment attach);
+	  ) int insertAttachment(StudentVacationAttachment attach);
 	 
 	
 
