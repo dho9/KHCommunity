@@ -333,7 +333,6 @@ color: black;
 				<div id="commentList"></div>
 				<div class="articles">
 					<article>
-						
 						<form:form name="commentFrm" class="writecomment">
 							<div style="display: flex; align-items: center;">
 								<input type="text" name="commentText" id="commentText"
@@ -368,49 +367,54 @@ color: black;
 		<input type="hidden" name="postBoardLink" id="postBoardLink" value="${board.boardLink}"/>
 	</form:form>
 	
+	<%-- 수정 폼 --%>
+	<%-- update post set title = ?, content = ?  --%>
+	<form:form action="${pageContext.request.contextPath}/board/boardUpdate.do" name="boardUpdateFrm" method="post">
+		<input type="hidden" name="updatePostId" id="updatePostId" value="${postDetail.postId}"/>
+		<input type="hidden" name="postBoardLink" id="postBoardLink" value="${board.boardLink}"/>
+	</form:form>
+	
 	
 	<!-- 쪽지 모달 -->
 
-<div id="messageContainer" class="modal">
-	<div class="message-content">
-		<form:form id="messageFrm" action="${pageContext.request.contextPath}/message/messageSend.do">
-        	<div>
-        		<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span>
-        		<span class="close" id="closeMessageBtn">&times;</span>         
-        	</div>
-        	</br>
-        	<sec:authentication property="principal" var="loginMember"/>
-        	<div class="mb-3">
-        		<label for="toInput" class="form-label">To</label>
-        		<input type="text" id="toInput" value="" readonly>
-        		<input type="hidden" id="receiveMember" value="" readonly>
-        	</div>
-        	</br></br>
-        	<div class="mb-3">
-                <label for="fromInput" class="form-label">From</label></br>
-                 <input type="text" class="form-control" id="fromInput" value="${loginMember.memberId}" readonly>
-        	</div>
-        	</br></br>
-        	<div class="mb-3">
-                <label for="contentInput" class="form-label">Content</label>
-                <textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
-        	</div>
-            <button id="sendMessageBtn">메시지 전송</button>
-        </form:form>
+	<div id="messageContainer" class="modal">
+		<div class="message-content">
+			<form:form id="messageFrm" action="${pageContext.request.contextPath}/message/messageSend.do">
+	        	<div>
+	        		<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span>
+	        		<span class="close" id="closeMessageBtn">&times;</span>         
+	        	</div>
+	        	</br>
+	        	<sec:authentication property="principal" var="loginMember"/>
+	        	<div class="mb-3">
+	        		<label for="toInput" class="form-label">To</label>
+	        		<input type="text" id="toInput" value="" readonly>
+	        		<input type="hidden" id="receiveMember" value="" readonly>
+	        	</div>
+	        	</br></br>
+	        	<div class="mb-3">
+	                <label for="fromInput" class="form-label">From</label></br>
+	                 <input type="text" class="form-control" id="fromInput" value="${loginMember.memberId}" readonly>
+	        	</div>
+	        	</br></br>
+	        	<div class="mb-3">
+	                <label for="contentInput" class="form-label">Content</label>
+	                <textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
+	        	</div>
+	            <button id="sendMessageBtn">메시지 전송</button>
+	        </form:form>
+		</div>
 	</div>
-</div>
-
-	
-	
-	
 	
 	<script>
+	
+	// 글 수정
+	const updateBtn = document.querySelector(".updateBtn");
+	
 	
 	// 글 삭제
 	const deleteBtn = document.querySelector(".deleteBtn");
 	const boardDeleteFrm = document.querySelector("form[name='boardDeleteFrm']");
-	const boardLink = document.querySelector("#postBoardLink");
-	console.log("보드링크 = ",boardLink.value);
 	
 	if(deleteBtn !== null){
 		deleteBtn.onclick = (()=>{
