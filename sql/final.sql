@@ -357,6 +357,9 @@ CREATE TABLE delete_post (
    content   varchar2(4000)      
 );
 
+ALTER TABLE delete_post
+MODIFY title VARCHAR2(2000);
+
 CREATE TABLE delete_comment (
    comment_id   number      ,
    post_id   number      ,
@@ -664,18 +667,27 @@ ALTER TABLE favorite ADD CONSTRAINT FK_board_TO_favorite_1 FOREIGN KEY (
 REFERENCES board (
    board_id
 );
+
 ALTER TABLE post_like ADD CONSTRAINT FK_post_TO_post_like_1 FOREIGN KEY (
    post_id
 )
 REFERENCES post (
    post_id
-);
+)on delete cascade;
+
+--ALTER TABLE post_like
+--DROP CONSTRAINT FK_post_TO_post_like_1;
+
+select * from board
+order by 1;
+
 ALTER TABLE comment_like ADD CONSTRAINT FK_post_TO_comment_like_1 FOREIGN KEY (
    comment_id
 )
 REFERENCES post_comment (
    comment_id
-);
+)ON DELETE CASCADE;
+
 
 ALTER TABLE favorite ADD CONSTRAINT FK_member_TO_favorite_1 FOREIGN KEY (
    member_id
@@ -1120,6 +1132,7 @@ select * from scheduler;
 select * from vacation;
 select * from board order by 1;
 select * from post order by 1;
+delete post where post_id = 42;
 select * from post_content order by 1;
 select * from post_comment;
 select * from favorite;

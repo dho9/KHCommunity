@@ -55,6 +55,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public List<BoardListDto> studyBoardFindAll() {
+		return boardRepository.studyBoardFindAll();
+	}
+	
+	@Override
 	public List<BoardListDto> preStudentBoardFindAll() {
 		return boardRepository.preStudentBoardFindAll();
 	}
@@ -208,6 +213,11 @@ public class BoardServiceImpl implements BoardService {
 	public List<CommentLike> CommentLikeCheckById(int postId, String memberId) {
 		// TODO Auto-generated method stub
 		return boardRepository.CommentLikeCheckById(postId,memberId);
+	}
+	
+	@Override
+	public int deleteBoard(int deletePostId) {
+		return boardRepository.deleteBoard(deletePostId);
 	}
 }
 

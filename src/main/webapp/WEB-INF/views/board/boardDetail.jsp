@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
 	.sstatus img {
@@ -115,6 +116,8 @@ ul.commentMenu li {
 </style>
 
 <div id="container" class="community" style="margin-top: 25px;">
+	<%-- principal을 변수 loginMember 저장 --%>
+	<sec:authentication property="principal" var="loginMember"/>
 	<div class="wrap title">
 		<h1>
 			<a>${board.boardName}</a>
@@ -141,8 +144,15 @@ ul.commentMenu li {
 						  	</time>
 				  		</div>
 				  		<ul class="status">
-				  			<li class="messagesend">쪽지</li>
-				  			<li class="abuse">신고</li>
+				  			<c:if test="${postDetail.memberId eq loginMember.username}">
+				  				<li class="updateBtn" style="margin-right: 5px;">수정 | </li>
+				  				<li class="deleteBtn" >삭제</li>
+				  			</c:if>
+				  			
+				  			<c:if test="${postDetail.memberId ne loginMember.username}">
+					  			<li class="messagesend" style="margin-right: 5px;">쪽지 | </li>
+					  			<li class="abuse">신고</li>
+				  			</c:if>
 				  		</ul>
 					  	<hr>
 					  	<h1 class="large" style="font-size : 20px;">${postDetail.title}</h2> <br>
@@ -216,7 +226,7 @@ ul.commentMenu li {
 
 	</div>
 
-	<!-- 해시태그를 클릭했을 때의 폼 -->
+	<%-- 해시태그를 클릭했을 때의 폼 --%>
 	<form name="tagFrm"
 		action="${pageContext.request.contextPath}/board/boardSearch.do">
 		<input type="hidden" name="keyword" class="keyword" />
@@ -224,7 +234,30 @@ ul.commentMenu li {
 	<form:form name="tokenFrm"></form:form>
 	<form:form name="loadCommentFrm"></form:form>
 	<form:form name="commentLikeFrm"></form:form>
+	
+	<%-- 삭제 폼 --%>
+	<form:form action="${pageContext.request.contextPath}/board/boardDelete.do" name="boardDeleteFrm" method="post">
+		<input type="hidden" name="deletePostId" id="deletePostId" value="${postDetail.postId}"/>
+		<input type="hidden" name="postBoardLink" id="postBoardLink" value="${board.boardLink}"/>
+	</form:form>
 	<script>
+	
+	// 글 삭제
+	const deleteBtn = document.querySelector(".deleteBtn");
+	const boardDeleteFrm = document.querySelector("form[name='boardDeleteFrm']");
+	const boardLink = document.querySelector("#postBoardLink");
+	console.log("보드링크 = ",boardLink.value);
+	
+	if(deleteBtn !== null){
+		deleteBtn.onclick = (()=>{
+			if(confirm("정말 삭제하시겠습니까?")){
+				boardDeleteFrm.submit();
+			}else{
+				alert("돌아가겠습니다.");
+			}
+		});	
+	}
+	 
 	
 	// 코드편집기
 	var textarea = document.querySelector('#batch_content');
@@ -234,7 +267,7 @@ ul.commentMenu li {
 	if(textarea !== null){
 		var editor = CodeMirror.fromTextArea(textarea, {
 	    	lineNumbers: true,  //왼쪽 라인넘버 표기
-	        lineWrapping: true, //줄바꿈. 음.. break-word;
+	        lineWrapping: true, //줄바꿈
 	        mode: 'text/x-java', //모드는 java 모드
 	        theme: "dracula",   //테마는 맘에드는 걸로.
 	       	readOnly: true,

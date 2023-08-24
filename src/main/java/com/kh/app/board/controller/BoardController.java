@@ -109,8 +109,13 @@ public class BoardController {
 	}
 	
 	@GetMapping("/studyBoardList.do")
-	public void studyBoardList() {
-		
+	public String studyBoardList(Model model) {
+		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll();
+        log.debug("studyBoardList = {}", studyBoardList);
+        
+        model.addAttribute("studyBoardList", studyBoardList);
+        
+        return "/board/studyBoardList";
 	}
 	
 	@GetMapping("/preStudentBoardList.do")
@@ -504,6 +509,17 @@ public class BoardController {
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(Map.of("available", available, "likeCount", likeCount));
+	}
+	
+	@PostMapping("/boardDelete.do")
+	public String boardDelete (
+			@RequestParam int deletePostId,
+			@RequestParam String postBoardLink
+			) {
+		int result = boardService.deleteBoard(deletePostId); 
+		log.debug("보드링크={}",postBoardLink);
+		log.debug("포스트아이디={}",deletePostId);
+		return "redirect:/board/" + postBoardLink + ".do";
 	}
 	
 }
