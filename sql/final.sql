@@ -198,7 +198,7 @@ CREATE TABLE vacation (
    vacation_send_date   date   DEFAULT current_date,
    vacation_approve_check   char(2)
 );
-
+ALTER TABLE vacation modify student_id varchar2(100);
 CREATE TABLE vacation_attachment (
    vacation_attach_id   number      NOT NULL,
    vacation_id   number      NOT NULL,
@@ -1118,6 +1118,7 @@ select * from teacher;
 select * from employee;
 select * from scheduler;
 select * from vacation;
+select * from vacation_attachment;
 select * from board order by 1;
 select * from post order by 1;
 select * from post_content order by 1;
@@ -1137,7 +1138,13 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
-update student set curriculum_id =null where student_id='heejin'; 
+
+select c.curriculum_name, mt.member_name, c.class_id, c.teacher_id, mt.member_id
+from member m left outer join student s on m.member_id = s.student_id 
+left outer join curriculum c on s.curriculum_id = c.curriculum_id 
+left outer join member mt on c.teacher_id = mt.member_id where m.member_id = 'heejin';
+
+update student set curriculum_id =3 where student_id='heejin'; 
 
 update student set approve_request_date=null where student_id= 'heejin';
 delete from student_attachment where member_id='heejin';
