@@ -550,7 +550,7 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	// load됐을때 공감(좋아요) 했는지 확인
 	window.onload = () => {
 		
-		console.log(document.querySelector('.like').dataset.value);
+		console.log(document.querySelector('.like').dataset.value+"ㅋㅌㅋㅌㅋㅌㅋㅌ");
 		
 		$.ajax({
 			url : "${pageContext.request.contextPath}/board/postLike.do",

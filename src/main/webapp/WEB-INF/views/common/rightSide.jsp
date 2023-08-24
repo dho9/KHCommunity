@@ -62,11 +62,12 @@
 	</div>
 </div>
 <script>
-    async function loadPopularPosts() {
-        try {
-            const response = await fetch("${pageContext.request.contextPath}/board/popularPost.do");
-            const data = await response.json();
 
+window.onload = () => {
+    $.ajax({
+        url: "${pageContext.request.contextPath}/board/popularPost.do",
+        success: function(data) {
+            console.log(data);
             const container = $("#popularPostsContainer");
             for (let i = 0; i < data.length; i++) {
                 const post = data[i];
@@ -84,14 +85,10 @@
                 </a>`;
                 container.append(postHTML);
             }
-        } catch (error) {
-            console.error("Error loading popular posts:", error);
         }
-    }
-
-    window.onload = () => {
-        loadPopularPosts();
-    };
+    });
+};
+</script>
 </script>
 
 
