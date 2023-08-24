@@ -83,4 +83,6 @@ public interface BoardService {
 	
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
 
+	List<BoardListDto> todayFoodBoardFindAll();
+
 }

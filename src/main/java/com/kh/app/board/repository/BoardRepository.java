@@ -31,6 +31,8 @@ public interface BoardRepository {
 	List<BoardListDto> freeBoardFindAll();
 	
 	List<BoardListDto> marketBoardFindAll();
+	
+	List<BoardListDto> todayFoodBoardFindAll();
 
 	List<BoardListDto> preStudentBoardFindAll();
 
@@ -120,5 +122,7 @@ public interface BoardRepository {
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+
+	
 	
 }

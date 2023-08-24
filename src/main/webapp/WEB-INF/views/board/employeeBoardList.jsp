@@ -85,6 +85,7 @@
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="9">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
+	      	<input type = "hidden" name="grade" id="grade" >
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>

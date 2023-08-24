@@ -86,6 +86,7 @@
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="2">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
+	      	<input type = "hidden" name="grade" id="grade" >
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -220,8 +221,10 @@
 	 	// 삽니다, 팝니다 태그추가
 	    const buyButton = document.querySelector(".buy");
 	    const sellButton = document.querySelector(".sell");
+	    const title = document.querySelector("#title");
 	    
 	    buyButton.onclick = (() => {
+	    	title.value = "[삽니다!]"
 	    	const tagContainer = document.createElement("div");
             tagContainer.className = "tag-container";
 
@@ -248,6 +251,7 @@
 	    });
 	    
 	    sellButton.onclick = (() => {
+	    	title.value = "[팝니다!]"
 	    	const tagContainer = document.createElement("div");
             tagContainer.className = "tag-container";
 

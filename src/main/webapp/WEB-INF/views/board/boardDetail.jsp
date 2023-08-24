@@ -229,18 +229,21 @@ ul.commentMenu li {
 	// 코드편집기
 	var textarea = document.querySelector('#batch_content');
 	var content = document.querySelector('#content').value;    
+	console.log ("textarea = ", textarea);
 	console.log("content = ", content);
-	
-    var editor = CodeMirror.fromTextArea(textarea, {
-    	lineNumbers: true,  //왼쪽 라인넘버 표기
-        lineWrapping: true, //줄바꿈. 음.. break-word;
-        mode: 'text/x-java', //모드는 java 모드
-        theme: "dracula",   //테마는 맘에드는 걸로.
-       	readOnly: true,
-       	cursorBlinkRate: 0  
-    });
+	if(textarea !== null){
+		var editor = CodeMirror.fromTextArea(textarea, {
+	    	lineNumbers: true,  //왼쪽 라인넘버 표기
+	        lineWrapping: true, //줄바꿈. 음.. break-word;
+	        mode: 'text/x-java', //모드는 java 모드
+	        theme: "dracula",   //테마는 맘에드는 걸로.
+	       	readOnly: true,
+	       	cursorBlinkRate: 0  
+	    });
+	    
+	    editor.setValue(content);
+	}
     
-    editor.setValue(content);
     
 document.addEventListener('DOMContentLoaded', () => {
 	
