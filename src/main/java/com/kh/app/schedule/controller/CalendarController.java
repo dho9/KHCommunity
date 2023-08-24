@@ -61,8 +61,7 @@ public class CalendarController {
 	
 	@GetMapping(params = "method=delete")
 	@ResponseBody
-	public String Delete(@RequestParam int groupId,
-			Model model) {
+	public String Delete(@RequestParam int groupId, Model model) {
 		
 		int eventId = groupId;
 		int result = service.deleteEvent(eventId);

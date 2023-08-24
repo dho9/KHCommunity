@@ -92,7 +92,7 @@
                     <span style="color:white;">
                       - 🗓
                     </span>
-                    <a href="${pageContext.request.contextPath}/admin/vacationApprovementList.do">수강생 휴가 관리</a>
+                    <a href="${pageContext.request.contextPath}/admin/adminVacationApprovementList.do">수강생 휴가 관리</a>
                   </div>
                   <div class="userManagement">
                     <span style="color:white;" width="16" height="16">

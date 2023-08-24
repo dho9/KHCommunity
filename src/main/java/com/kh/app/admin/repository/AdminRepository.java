@@ -33,6 +33,7 @@ import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
+import com.kh.app.vacation.dto.VacationNonApprovementListDto;
 
 
 @Mapper
@@ -76,7 +77,7 @@ public interface AdminRepository {
 	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(sysdate-1, 'yy/MM/dd')")
 	int yesterdayPostCount();
 
-	@Select("select s.student_id, approve_request_date, (select curriculum_name from curriculum c where c.curriculum_id = s.curriculum_id) curriculum_name from (select rownum, student_id, curriculum_id, approve_check, approve_request_date from student) s where approve_check = 'n' and (rownum between 1 and 3)")
+	@Select("select s.student_id, approve_request_date, (select curriculum_name from curriculum c where c.curriculum_id = s.curriculum_id) curriculum_name from (select rownum, student_id, curriculum_id, approve_check, approve_request_date from student) s where approve_check = 'i' and (rownum between 1 and 3)")
 	List<AdminStudentApproveDto> studentApproveListThree();
 
 	@Select("SELECT\r\n"
@@ -160,7 +161,7 @@ public interface AdminRepository {
 	@Select("select * from curriculum")
 	List<Curriculum> findAllCurriculum();
 
-	@Select("SELECT s.student_id, m.member_name, s.student_type, s.approve_check, s.approve_request_date FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
+	@Select("SELECT s.student_id, m.member_name, s.student_type, s.approve_check, s.approve_request_date, (select student_renamed_filename from student_attachment a where a.member_id = s.student_id) as studentRenamedFilename FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
 	List<AdminStudentApproveDto> adminStudentApprovementList(RowBounds rowBounds);
 
 	@Select("SELECT count(*) FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
@@ -213,7 +214,41 @@ public interface AdminRepository {
 	@Delete("delete from store where store_id = #{storeId}")
 	int deleteStore(int storeId);
 
+	@Select("select count(*) from vacation where vacation_approve_check = '2'")
+	int getTotalCountOfNonApprovementStudent();
+
+	@Select("SELECT\r\n"
+			+ "    v.vacation_id AS vacationId,\r\n"
+			+ "    m.member_name AS memberName,\r\n"
+			+ "    v.vacation_send_date,\r\n"
+			+ "    v.vacation_start_date,\r\n"
+			+ "    v.vacation_end_date,\r\n"
+			+ "    m.birthday,\r\n"
+			+ "    c.curriculum_start_at AS curriculumStartAt,\r\n"
+			+ "    c.curriculum_end_at AS curriculumEndAt,\r\n"
+			+ "    c.curriculum_name AS curriculumName,\r\n"
+			+ "    c.class_id AS classId,\r\n"
+			+ "    v.teacher_id,\r\n"
+			+ "    t.member_name AS teacherName\r\n"
+			+ "FROM\r\n"
+			+ "    student s\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    member m ON s.student_id = m.member_id\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    curriculum c ON s.curriculum_id = c.curriculum_id\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    vacation v ON s.student_id = v.student_id\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    member t ON v.teacher_id = t.member_id\r\n"
+			+ "WHERE\r\n"
+			+ "    v.vacation_approve_check = '2'")
+	List<VacationNonApprovementListDto> findAllNonApprovementStudent();
+
+	@Update("update curriculum set class_id = #{classId}, teacher_id = #{teacherId}, subject = #{subject}, curriculum_name = #{curriculumName}, curriculum_start_at = #{startDate}, curriculum_end_at = #{endDate} where curriculum_id = #{curriculumId}")
+	int updateCurriculum(CurriculumRegDto curriculum);
+
 	@Insert("insert into store values (seq_store_id.nextval, #{storeName}, #{postNumber}, #{address}, '음식점')")
 	int insertStore(String storeName, String postNumber, String address);
+
 
 }

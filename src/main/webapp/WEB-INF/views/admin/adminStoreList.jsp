@@ -83,6 +83,7 @@
                 <h5 class="modal-title" id="sendMessageModalLabel">식당 추가</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
 		    <div class="modal-body">
                 <!-- 모달 내용 -->
                 <form:form id="storeForm" modelAttribute="store" action="${pageContext.request.contextPath}/admin/insertStore.do" method="post" enctype="multipart/form-data">

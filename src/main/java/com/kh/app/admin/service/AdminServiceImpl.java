@@ -31,6 +31,7 @@ import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
+import com.kh.app.vacation.dto.VacationNonApprovementListDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -312,7 +313,23 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public int getTotalCountOfNonApprovementStudent() {
+		return adminRepository.getTotalCountOfNonApprovementStudent();
+	}
+	
+	@Override
+	public List<VacationNonApprovementListDto> findAllNonApprovementStudent() {
+		return adminRepository.findAllNonApprovementStudent();
+	}
+	
+	@Override
+	public int updateCurriculum(CurriculumRegDto curriculum) {
+		return adminRepository.updateCurriculum(curriculum);
+	}
+	
+
 	public int insertStore(String storeName, String postNumber, String address) {
 		return adminRepository.insertStore(storeName, postNumber, address);
 	}
+
 }

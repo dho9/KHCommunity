@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class CurriculumRegDto {
 
+	private int curriculumId;
     private String subject;
     private String curriculumName;
     private String classId;

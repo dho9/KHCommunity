@@ -26,6 +26,7 @@ import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
+import com.kh.app.vacation.dto.VacationNonApprovementListDto;
 
 public interface AdminService {
 
@@ -124,6 +125,12 @@ public interface AdminService {
 	int totalCountTeachers(Map<String, Object> filters);
 
 	int deleteStore(int storeId);
+
+	int getTotalCountOfNonApprovementStudent();
+
+	List<VacationNonApprovementListDto> findAllNonApprovementStudent();
+
+	int updateCurriculum(CurriculumRegDto curriculum);
 
 	int insertStore(String storeName, String postNumber, String address);
 
