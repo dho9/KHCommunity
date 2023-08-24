@@ -193,5 +193,16 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.findCommentLikeCount(commentId);
 	}
+	
+	@Override
+	public List<BoardListDto> myClassBoardFindByTag(String tag) {
+		return boardRepository.myClassBoardFindByTag(tag);
+	}
+	
+	@Override
+	public List<CommentLike> CommentLikeCheckById(int postId, String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.CommentLikeCheckById(postId,memberId);
+	}
 }
 

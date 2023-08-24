@@ -102,10 +102,10 @@ public interface BoardRepository {
 
 	List<BoardListDto> myClassBoardFindAll();
 	
-	@Select(" select * from post_comment where post_id = #{postId} order by comment_id asc")
+	@Select("  SELECT  pc.*, (SELECT COUNT(*) FROM comment_like cl WHERE cl.comment_id = pc.comment_id) AS like_count FROM post_comment pc where pc.post_id = #{postId} order by pc.comment_id asc ")
 	List<Comment> findByCommentByPostId(int postId);
 	
-	@Select("select * from comment_like where commentId = #{commentId} and member_id = #{memberId}")
+	@Select("select * from comment_like where comment_id = #{commentId} and member_id = #{memberId}")
 	CommentLike findCommentLikeByMemberId(int commentId, String memberId);
 	
 	@Delete("delete from comment_like where comment_Id = #{commentId} and member_id = #{memberId}")
@@ -115,6 +115,10 @@ public interface BoardRepository {
 	int insertCommentLikeByMemberId(int commentId, String memberId);
 	
 	CommentLike findCommentLikeCount(int commentId);
-	
 
+	List<BoardListDto> myClassBoardFindByTag(String tag);
+	
+	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
+	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+	
 }

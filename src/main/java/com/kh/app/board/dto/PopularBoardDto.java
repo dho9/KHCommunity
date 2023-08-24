@@ -11,7 +11,7 @@ public class PopularBoardDto {
 	private int postId;
 	private String title;
 	private String content;
-	private int postLike;
+	private int likeCount;
 	private int commentCount;
 	private String boardName;
 }

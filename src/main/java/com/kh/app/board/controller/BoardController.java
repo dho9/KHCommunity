@@ -327,7 +327,7 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@RequestParam boolean anonymousCheck,
+			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
@@ -382,7 +382,7 @@ public class BoardController {
 	@ResponseBody
 	public List<PopularBoardDto> popularPost() {
 		List<PopularBoardDto> post = boardService.findByPopularPost();
-		//log.debug("post = {}",post);
+		log.debug("post = {}",post);
 //	    model.addAttribute("post", post);
         return post;
 	}
@@ -420,36 +420,40 @@ public class BoardController {
 			@Valid AdminStudentListDto studentInfo,
 			Model model
 	) {
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll();
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-        ////log.debug("myClassBoardList = {}", myClassBoardList);
        // //log.debug("studentInfo = {}", studentInfo);
          
  		model.addAttribute("studentInfo", studentInfo);
-        model.addAttribute("myClassBoardList", myClassBoardList);
         
         return "/board/myClassBoardList";
 	}
 	
+	@PostMapping("/myClassBoardList.do")
+	@ResponseBody
+	public List<BoardListDto> myClassBoardList(@RequestParam String tag) {
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag);
+		return myClassBoardList;
+	}
 	
-//	@GetMapping("/commentLike.do")
-//	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
-//		String memberId = principal.getMemberId();
-//		int postId = Integer.parseInt(_postId);
-//		
-//		int commentLike = boardService.findCommentLikeByMemberId(postId, memberId);
-//		log.debug("commentLikeeeeeeeeeeee = {}", commentLike);
-//		
-//		boolean available = true;
-//		if(commentLike == 0)
-//			available = false;
-//		//log.debug("availalbe = {}", available);
-//		
-//		
-//		return ResponseEntity
-//				.status(HttpStatus.OK)
-//				.body(Map.of("available", available));
-//	}
+	@GetMapping("/myClassBoardFindAll.do")
+	@ResponseBody
+	public List<BoardListDto> myClassBoardFindAll() {
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll();
+		return myClassBoardList;
+	}
+	
+	
+	@GetMapping("/commentLike.do")
+	@ResponseBody
+	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
+	String memberId = principal.getMemberId();
+	int postId = Integer.parseInt(_postId);
+		List<CommentLike> commentLike = boardService.CommentLikeCheckById(postId, memberId);
+		
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("commentLike", commentLike));
+	}
 	
 	@PostMapping("/commentLike.do")
 	public ResponseEntity<?> commentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam int commentId) {
@@ -461,14 +465,15 @@ public class BoardController {
 		boolean available = true;
 		if(commentLike == null)
 			available = false;
-		//log.debug("availalbe = {}", available);
 		
 		int result = 0;
 		if(available) {
 			result = boardService.deleteCommentLikeByMemberId(commentId, memberId);
+			log.debug("availalbe = {}", available);
 		}
 		else {
 			result = boardService.insertCommentLikeByMemberId(commentId, memberId);
+			log.debug("availalbe = {}", available);
 		}
 		
 		CommentLike likeCount = boardService.findCommentLikeCount(commentId);
