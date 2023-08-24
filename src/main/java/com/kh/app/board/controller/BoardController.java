@@ -2,6 +2,9 @@ package com.kh.app.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -479,6 +482,8 @@ public class BoardController {
 		log.debug("idddddddddddd = {}",postId);
 		//		//log.debug("idddddddddddd = {}",postId);
 		List<Comment> comments = boardService.findByCommentByPostId(postId);
+		
+
 		return comments;
 
 	}
