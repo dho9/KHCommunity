@@ -93,6 +93,28 @@
 		1 desc
   </select>
   
+  <select id="todayFoodBoardFindAll" resultType="boardListDto">
+  	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=3
+	order by
+		1 desc
+  </select>
+  
   <select id="noticeBoardFindAll" resultType="boardListDto">
   	select 
   		p.post_id,
@@ -155,6 +177,28 @@
 	    p.post_id = c.post_id
 	where
 	    p.board_id=5
+	order by
+		1 desc
+  </select>
+  
+  <select id="studyBoardFindAll" resultType="boardListDto">
+  	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=6
 	order by
 		1 desc
   </select>
@@ -300,6 +344,17 @@
   	<result column="anonymous_check" property="anonymousCheck"/>
   </resultMap>
   
+  <select id="totalCountMyClassBoard" resultType="int">
+  	select 
+  		count(*)
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=11
+  </select>
+  
   <select id="findPostLikeCount" resultType="postLike">
   	select
 	    count(*) post_like_count
@@ -343,6 +398,7 @@ FETCH FIRST 5 ROWS ONLY
   	<id column="board_id" property="boardId"/>
   	<result column="board_name" property="boardName"/>
   	<result column="board_category" property="boardCategory"/>
+  	<result column="board_link" property="boardLink"/>
   </resultMap>
   
     <select id="findCommentLikeCount" resultType="commentLike">

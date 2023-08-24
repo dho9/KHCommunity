@@ -87,6 +87,7 @@
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="4">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
+	      	<input type = "hidden" name="grade" id="grade" >
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -222,8 +223,14 @@
 	}
 	
 	  
-    // load됐을때 내가 즐겨찾기한 게시판인지 확인
-    window.onload = () => {
+	// onload 됐을때 즐겨찾기/공감 했는지
+	document.addEventListener('DOMContentLoaded', () => {
+		isFovorite(); // 즐겨찾기했는지
+		isLike(); // 공감했는지
+	});
+	  
+    // 내가 즐겨찾기한 게시판인지 확인
+	function isFovorite() {
     	console.log(document.querySelector('.bi').dataset.value);
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
@@ -246,8 +253,10 @@
                 }
     		}
     	});
-    	
-    	// load됐을때 공감(좋아요) 했는지 확인
+	}
+    
+   	// 공감(좋아요) 했는지 확인
+    function isLike() {
     	document.querySelectorAll('.like').forEach((e) => {
 	    	console.log(e.dataset.value);
 	   		$.ajax({
@@ -279,6 +288,7 @@
 	   		});
     	});
     }
+   	
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
     	console.log(e.target.dataset.value);

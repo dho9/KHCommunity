@@ -24,5 +24,5 @@ public class HelloSpringUtils {
 		DecimalFormat df = new DecimalFormat("000"); 
 		return sdf.format(new Date()) + df.format(Math.random() * 1000) + ext;
 	}
-
 }
+
