@@ -160,7 +160,7 @@ ul.commentMenu li {
 					  	</c:forEach>
 					  	<ul class="status">
 					  		<%-- 좋아요 버튼 --%>
-					  		<li><img class="like" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" data-value="${postDetail.postId}" style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
@@ -202,151 +202,219 @@ ul.commentMenu li {
 	<form:form name="loadCommentFrm"></form:form>
 	<form:form name="commentLikeFrm"></form:form>
 	<script>
-document.addEventListener('DOMContentLoaded', () => {
-	console.log('댓글온로드!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-	loadComment();
-	document.querySelector('.writecomment').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();}
-        
+	// load됐을때 공감/댓글
+	document.addEventListener('DOMContentLoaded', () => {
+		isLike(); // 공감했는지
+		like(); // 공감누르기
+		loadComment();
+		document.querySelector('.writecomment').addEventListener('keydown', (e) => {
+	        if (e.key === 'Enter') {
+	            e.preventDefault();}
+		});
+		
 	});
 	
-});
-
-function loadCommentLike(){
-	console.log(document.querySelector('.like').dataset.value);
-	
-	$.ajax({
-		url : "${pageContext.request.contextPath}/board/commentLike.do",
-		data : {
-			_postId : document.querySelector('.like').dataset.value
-		},
-		method : "GET",
-        dataType : "json",
-        success(responseData) {
-        	//console.log(responseData);
-        	  
-        	  const { commentLike } = responseData;
-        	  //console.log(commentLike);
-        	  
-        	  const commentIds = commentLike.map(item => item.commentId);
-        	  // console.log(commentIds); // [7, 8, 23]
-        	  commentIds.forEach(commentId => {
-        	        const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
-        	        if (commentIds .includes(commentId)) {
-        	            like.src = `${pageContext.request.contextPath}/resources/images/fullLike.png`;
-        	        }
-        	    });
-			
-        }
-	});
-	
-}
-
-
-function loadComment(){
-	const token = document.loadCommentFrm._csrf.value;
-	const currentURL = window.location.href;
-	const urlParams = new URLSearchParams(new URL(currentURL).search);
-	const postId = urlParams.get('id');
-	
-    $.ajax({
-    	url : "${pageContext.request.contextPath}/board/loadComment.do",
-    	headers: {
-            "X-CSRF-TOKEN": token
-        },
-    	data : {
-    		postId : postId
-    	},
-    	method : "POST",
-    	success(data){
-    		loadCommentLike();
-    		renderComments(data);
-    		
-    	}
-    });
-}
-function renderComments(comments) {
-	console.log(comments);
-    const commentList = document.querySelector('#commentList'); // Select the comment list container
-  
-    commentList.innerHTML = '';
-
-    // Loop through each comment and create a DOM element for it
-    comments.forEach(comment => {
-    	const commentElement = document.createElement('article');
-        commentElement.className = 'parent';
-        commentElement.innerHTML = `
-            
-        	<h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center;">
-                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
-                <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
-            </div>
-            <ul class="commentMenu">
-                <li class="childcomment">대댓글</li>
-                <li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-                <li class="messagesend">쪽지</li>
-                <li class="abuse">신고</li>
-            </ul>
-        </h3>
-            <hr>
-            <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>
-            <ul class="sstatus commentvotestatus">
-            <li class="vote commentvote" >
-                <time class="medium">\${comment.commentCreatedAt}</time>
-                <img class="commentLike" data-commentid="\${comment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
-                <span class="likeCount" data-commentid="\${comment.commentId}">\${comment.likeCount}</span>
-            </li>
-           
-        </ul>
-            <hr class="comment-separator"/>
-        `;
-
-        // Append the comment element to the comment list container
-        commentList.appendChild(commentElement);
-    });
-}
-//댓글좋아요 기능 
-document.querySelector('#commentList').addEventListener('click', (event) => {
-    const clickedElement = event.target;
-    const token = document.commentLikeFrm._csrf.value;
-    if (clickedElement.classList.contains('commentvote')) {
-        // data-commentid 속성을 가져와서 사용
-        const commentId = clickedElement.getAttribute('data-commentid');
-        console.log(commentId);
-    	$.ajax({
-			url : "${pageContext.request.contextPath}/board/commentLike.do",
+	// 공감(좋아요) 했는지 확인
+	function isLike() {
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
 			data : {
-				commentId :commentId
+				_postId : document.querySelector('.like').dataset.value
 			},
-			headers: {
-                "X-CSRF-TOKEN": token
-            },
-            method : "POST",
+			method : "GET",
             dataType : "json",
             success(responseData) {
             	console.log(responseData);
-				const {available, likeCount} = responseData;
-				const {commentLikeCount} = likeCount;
+    			const {available, likeCount} = responseData;
+    			const {postLikeCount} = likeCount;
     			
-            	 const commentlikeCount = document.querySelector(`.likeCount[data-commentid="\${commentId}"]`);
-            	 const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
-				if(available) {
-	            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-	            	commentlikeCount.innerHTML = `\${commentLikeCount}`;
-	            }
-	            else {
-	            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-	            	commentlikeCount.innerHTML = `\${commentLikeCount}`;
-	            }
+    			const like = document.querySelector('.like');
+    			const vote = document.querySelector('.vote');
+    			if(available) {
+                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
+                else {
+                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+                	vote.innerHTML = `\${postLikeCount}`;
+                }
             }
 		});
-        
-        
-        
-    }
-});
+	}
+
+	// 공감(좋아요) 누르기
+	function like() {
+		document.querySelector('.vote').onclick = (e) => {
+			console.log(e.target.dataset.value);
+			
+			const token = document.tokenFrm._csrf.value;
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/board/postLike.do",
+				data : {
+					_postId : e.target.dataset.value
+				},
+				headers: {
+	                "X-CSRF-TOKEN": token
+	            },
+	            method : "POST",
+	            dataType : "json",
+	            success(responseData) {
+	            	console.log(responseData);
+					const {available, likeCount} = responseData;
+					const {postLikeCount} = likeCount;
+	    			
+	    			const like = document.querySelector('.like');
+	    			const vote = document.querySelector('.vote');
+	    			if(available) {
+	                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	                	vote.innerHTML = `\${postLikeCount}`;
+	                }
+	                else {
+	                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	                	vote.innerHTML = `\${postLikeCount}`;
+	                }
+	            }
+			});
+		};
+	}
+
+	function loadCommentLike(){
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/commentLike.do",
+			data : {
+				_postId : document.querySelector('.like').dataset.value
+			},
+			method : "GET",
+	        dataType : "json",
+	        success(responseData) {
+	        	//console.log(responseData);
+	        	  
+	        	  const { commentLike } = responseData;
+	        	  //console.log(commentLike);
+	        	  
+	        	  const commentIds = commentLike.map(item => item.commentId);
+	        	  // console.log(commentIds); // [7, 8, 23]
+	        	  commentIds.forEach(commentId => {
+	        	        const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
+	        	        if (commentIds .includes(commentId)) {
+	        	            like.src = `${pageContext.request.contextPath}/resources/images/fullLike.png`;
+	        	        }
+	        	    });
+				
+	        }
+		});
+		
+	}
+
+
+	function loadComment(){
+		const token = document.loadCommentFrm._csrf.value;
+		const currentURL = window.location.href;
+		const urlParams = new URLSearchParams(new URL(currentURL).search);
+		const postId = urlParams.get('id');
+		
+	    $.ajax({
+	    	url : "${pageContext.request.contextPath}/board/loadComment.do",
+	    	headers: {
+	            "X-CSRF-TOKEN": token
+	        },
+	    	data : {
+	    		postId : postId
+	    	},
+	    	method : "POST",
+	    	success(data){
+	    		loadCommentLike();
+	    		renderComments(data);
+	    		
+	    	}
+	    });
+	}
+	function renderComments(comments) {
+		console.log(comments);
+	    const commentList = document.querySelector('#commentList'); // Select the comment list container
+	  
+	    commentList.innerHTML = '';
+	
+	    // Loop through each comment and create a DOM element for it
+	    comments.forEach(comment => {
+	    	const commentElement = document.createElement('article');
+	        commentElement.className = 'parent';
+	        commentElement.innerHTML = `
+	            
+	        	<h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
+	            <div style="display: flex; align-items: center;">
+	                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
+	                <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
+	            </div>
+	            <ul class="commentMenu">
+	                <li class="childcomment">대댓글</li>
+	                <li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
+	                <li class="messagesend">쪽지</li>
+	                <li class="abuse">신고</li>
+	            </ul>
+	        </h3>
+	            <hr>
+	            <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>
+	            <ul class="sstatus commentvotestatus">
+	            <li class="vote commentvote" >
+	                <time class="medium">\${comment.commentCreatedAt}</time>
+	                <img class="commentLike" data-commentid="\${comment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
+	                <span class="likeCount" data-commentid="\${comment.commentId}">\${comment.likeCount}</span>
+	            </li>
+	           
+	        </ul>
+	            <hr class="comment-separator"/>
+	        `;
+	
+	        // Append the comment element to the comment list container
+	        commentList.appendChild(commentElement);
+	    });
+	}
+	//댓글좋아요 기능 
+	document.querySelector('#commentList').addEventListener('click', (event) => {
+	    const clickedElement = event.target;
+	    const token = document.commentLikeFrm._csrf.value;
+	    if (clickedElement.classList.contains('commentvote')) {
+	        // data-commentid 속성을 가져와서 사용
+	        const commentId = clickedElement.getAttribute('data-commentid');
+	        console.log(commentId);
+	    	$.ajax({
+				url : "${pageContext.request.contextPath}/board/commentLike.do",
+				data : {
+					commentId :commentId
+				},
+				headers: {
+	                "X-CSRF-TOKEN": token
+	            },
+	            method : "POST",
+	            dataType : "json",
+	            success(responseData) {
+	            	console.log(responseData);
+					const {available, likeCount} = responseData;
+					const {commentLikeCount} = likeCount;
+	    			
+	            	 const commentlikeCount = document.querySelector(`.likeCount[data-commentid="\${commentId}"]`);
+	            	 const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
+					if(available) {
+		            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+		            	commentlikeCount.innerHTML = `\${commentLikeCount}`;
+		            }
+		            else {
+		            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+		            	commentlikeCount.innerHTML = `\${commentLikeCount}`;
+		            }
+	            }
+			});
+	        
+	        
+	        
+	    }
+	});
 
 
 	let anonyCk = false;
@@ -407,76 +475,6 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
 	});
 	</script>
 	<script>
-	// load됐을때 공감(좋아요) 했는지 확인
-	window.onload = () => {
-		console.log('게시글!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-		console.log(document.querySelector('.like').dataset.value);
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : document.querySelector('.like').dataset.value
-			},
-			method : "GET",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-    			const {available, likeCount} = responseData;
-    			const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-		
-		
-		
-		
-	};
-	
-	// 공감(좋아요) 누르기
-	document.querySelector('.vote').onclick = (e) => {
-		console.log(e.target.dataset.value);
-		
-		const token = document.tokenFrm._csrf.value;
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : e.target.dataset.value
-			},
-			headers: {
-                "X-CSRF-TOKEN": token
-            },
-            method : "POST",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-				const {available, likeCount} = responseData;
-				const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-	};
-	
 	// 해시태그 검색
 	document.querySelectorAll('.tag').forEach((tag) => {
 	    tag.addEventListener('click', (e) => {

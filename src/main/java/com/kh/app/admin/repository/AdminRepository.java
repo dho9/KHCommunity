@@ -213,4 +213,7 @@ public interface AdminRepository {
 	@Delete("delete from store where store_id = #{storeId}")
 	int deleteStore(int storeId);
 
+	@Insert("insert into store values (seq_store_id.nextval, #{storeName}, #{postNumber}, #{address}, '음식점')")
+	int insertStore(String storeName, String postNumber, String address);
+
 }

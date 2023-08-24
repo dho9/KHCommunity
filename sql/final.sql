@@ -1108,6 +1108,8 @@ insert into board values (seq_board_id.nextval, '직원게시판', '소통', 'em
 delete teacher where teacher_id = 'ehdgus';
 delete from member where member_id = 'admin';
 
+delete from store where store_id = 3;
+
 select * from post_attachment;
 select * from member;
 select * from student;
@@ -1137,8 +1139,11 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
+update student set curriculum_id =null where student_id='heejin'; 
 
-
+update student set approve_request_date=null where student_id= 'heejin';
+delete from student_attachment where member_id='heejin';
+ 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
@@ -1313,7 +1318,12 @@ INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
     
-
+SELECT p.post_id, p.title, pc.content
+FROM post p
+JOIN post_content pc ON p.post_id = pc.post_id
+WHERE p.board_id = 10
+ORDER BY p.post_created_at DESC
+FETCH FIRST 3 ROWS ONLY;
 
 select * from calendar;
 

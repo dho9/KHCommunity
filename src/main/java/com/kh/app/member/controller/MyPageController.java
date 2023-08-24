@@ -1,5 +1,6 @@
 package com.kh.app.member.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -34,38 +35,41 @@ public class MyPageController {
 	private MemberService memberService;
 
 	@GetMapping("/myPage.do")
-	public void myPage(
-			Model model,
-			@AuthenticationPrincipal MemberDetails principal) throws Throwable {
-		//식권정보 시작
+	public void myPage(Model model, @AuthenticationPrincipal MemberDetails principal) throws Exception {
+		// 시작
 		AdminStudentListDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+		log.debug(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
-		//식권정보 끝 
-		
-		//식권정보 시작
+		log.debug("★★★studentInfo = {}", studentInfo);
+		log.debug("★★★studentInfo.getCurriculumId() = {}", studentInfo.getCurriculumId());
+		// 식권정보 끝
+
+		// 식권정보 시작
 		List<TicketBuyDto> studentTicketInfo = memberService.findByTicketInfo(principal.getMemberId());
 		model.addAttribute("studentTicketInfo", studentTicketInfo);
-		//식권정보 끝
-		
-		//Dday 시작
-		Curriculum curriculumDday = memberService.findByDdayInfo(studentInfo.getCurriculumId());
-		model.addAttribute("curriculumDday", curriculumDday);
+		// 식권정보 끝
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		// Dday 시작
+		if (studentInfo.getCurriculumId() != 0) {
+			Curriculum curriculumDday = memberService.findByDdayInfo(studentInfo.getCurriculumId());
+			log.debug("★★★curriculumDday = {}", curriculumDday);
+			model.addAttribute("curriculumDday", curriculumDday);
 
-	
-		LocalDate endDateFrm = studentInfo.getCurriculumEndAt();
-		String todayFm = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())); // 오늘날짜
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-		Date today = new Date(dateFormat.parse(todayFm).getTime());
-		Date endDate = Date.from(endDateFrm.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		
-		long calculate = endDate.getTime() - today.getTime();
-		
-		int Ddays = (int) (calculate / ( 24*60*60*1000));
-		model.addAttribute("Ddays",Ddays);
-		//Dday 끝
+			LocalDate endDateFrm = studentInfo.getCurriculumEndAt();
 
+			String todayFm = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())); // 오늘날짜
+
+			Date today = new Date(dateFormat.parse(todayFm).getTime());
+			Date endDate = Date.from(endDateFrm.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+			long calculate = endDate.getTime() - today.getTime();
+
+			int Ddays = (int) (calculate / (24 * 60 * 60 * 1000));
+			model.addAttribute("Ddays",Ddays); 
+		}
+		// Dday 끝 }
 	}
 
 }
