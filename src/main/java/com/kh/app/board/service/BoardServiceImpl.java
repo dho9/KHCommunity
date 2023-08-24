@@ -10,6 +10,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
@@ -218,6 +219,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int deleteBoard(int deletePostId) {
 		return boardRepository.deleteBoard(deletePostId);
+	}
+	
+	public List<NoticeBoardDto> findThreeNotice() {
+		// TODO Auto-generated method stub
+		return boardRepository.findThreeNotice();
 	}
 }
 

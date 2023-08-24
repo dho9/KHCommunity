@@ -1120,6 +1120,8 @@ insert into board values (seq_board_id.nextval, '직원게시판', '소통', 'em
 delete teacher where teacher_id = 'ehdgus';
 delete from member where member_id = 'admin';
 
+delete from store where store_id = 3;
+
 select * from post_attachment;
 select * from member;
 select * from student;
@@ -1329,7 +1331,12 @@ INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
     
-
+SELECT p.post_id, p.title, pc.content
+FROM post p
+JOIN post_content pc ON p.post_id = pc.post_id
+WHERE p.board_id = 10
+ORDER BY p.post_created_at DESC
+FETCH FIRST 3 ROWS ONLY;
 
 select * from calendar;
 
@@ -1345,3 +1352,34 @@ select * from comment_like;
 select * from member;
 select * from post_like;
 
+SELECT
+    v.vacation_id AS vacationId,
+    m.member_name AS memberName,
+    v.vacation_send_date,
+    v.vacation_start_date,
+    v.vacation_end_date,
+    m.birthday,
+    c.curriculum_start_at AS curriculumStartAt,
+    c.curriculum_end_at AS curriculumEndAt,
+    c.curriculum_name AS curriculumName,
+    c.class_id AS classId,
+    v.teacher_id,
+    t.member_name AS teacherName
+FROM
+    student s
+LEFT JOIN
+    member m ON s.student_id = m.member_id
+LEFT JOIN
+    curriculum c ON s.curriculum_id = c.curriculum_id
+LEFT JOIN
+    vacation v ON s.student_id = v.student_id
+LEFT JOIN
+    member t ON v.teacher_id = t.member_id
+WHERE
+    v.vacation_approve_check = '2';
+select * from vacation;
+select * from curriculum;
+
+insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
+
+update vacation set vacation_approve_check = '2', employee_id = null;

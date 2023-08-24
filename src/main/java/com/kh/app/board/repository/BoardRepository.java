@@ -13,6 +13,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
@@ -131,5 +132,12 @@ public interface BoardRepository {
 	
 
 	
+	@Select("SELECT p.post_id, p.title, pc.content\r\n"
+			+ "FROM post p\r\n"
+			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
+			+ "WHERE p.board_id = 10\r\n"
+			+ "ORDER BY p.post_created_at DESC\r\n"
+			+ "FETCH FIRST 3 ROWS ONLY")
+	List<NoticeBoardDto> findThreeNotice();
 	
 }

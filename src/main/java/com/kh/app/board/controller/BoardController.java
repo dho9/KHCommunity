@@ -27,6 +27,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
@@ -414,6 +415,14 @@ public class BoardController {
         return post;
 	}
 
+	@GetMapping("/noticeBoard.do")
+	@ResponseBody
+	public List<NoticeBoardDto> noticeBoard() {
+		List<NoticeBoardDto> post = boardService.findThreeNotice();
+		log.debug("post = {}", post);
+		return post;
+	}
+	
 	@PostMapping("/createComment.do")
 	public ResponseEntity<?> createCommnet(
 			CreateCommentDto comment,@AuthenticationPrincipal MemberDetails member
@@ -522,5 +531,6 @@ public class BoardController {
 		return "redirect:/board/" + postBoardLink + ".do";
 	}
 	
+
 }
 

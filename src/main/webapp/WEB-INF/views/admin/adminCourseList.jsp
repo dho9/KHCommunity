@@ -132,7 +132,8 @@
 		                          				data-bs-toggle="modal" data-bs-target="#updateCurriculumModal" 
 		                          				data-button-subject="${curriculum.subject}" data-curriculumname="${curriculum.curriculumName}" 
 		                          				data-button-classid="${curriculum.classId}" data-button-teachername="${curriculum.memberName}" data-button-teacherid="${curriculum.teacherId}"
-		                          				data-button-startdate="${curriculum.curriculumStartAt}" data-button-enddate="${curriculum.curriculumEndAt}">
+		                          				data-button-startdate="${curriculum.curriculumStartAt}" data-button-enddate="${curriculum.curriculumEndAt}"
+		                          				data-button-curriculumid="${curriculum.curriculumId}">
 		                          			✏️
 		                          		</button>
 		                        	</td>
@@ -220,58 +221,63 @@
 		      <div class="modal-content">
 		          <div class="modal-header">
 		              <h1 class="modal-title fs-5" id="exampleModalLabel">과정 수정</h1>
-		        	      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		      	  </div>
-		      		  <form:form name="addCourseFrm">
+		      		  <form:form name="upCourseFrm">
 		    			  <div class="modal-body">
+		    			  	  <input type="hidden" id="modalCurriculumId" name="curriculmId">
 							  <div class="mb-3">
-				  				  <p>과목 선택</p>
-					  			  <select class="form-select" name="subject" aria-label="Default select example">
+				  				  <p style="font-weight:700;">과목 선택</p>
+					  			  <select class="form-select" name="subjects" aria-label="Default select example">
 									  <option selected>과목</option>
 						  			  <option value="자바">자바</option>
 						  			  <option value="정보보안">정보보안</option>
 								  </select>
 							  </div>
 				  			  <div class="mb-3">
-					    		  <label for="exampleInputEmail1" class="form-label">과정명</label>
-					    		  <input type="email" class="form-control" id="curriculumName" aria-describedby="emailHelp">
+					    		  <label style="font-weight:700;" for="exampleInputEmail1" class="form-label">과정명</label>
+					    		  <input type="email" class="form-control" id="curriculumNames" aria-describedby="emailHelp">
 				    		  <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
 				  			  </div>
-				  			  <div class="mb-3">
-				  				  <p>반 선택</p>
-					  			  <select class="form-select" name="classId" aria-label="Default select example">
-									  <option selected>반</option>
-						  			  <c:forEach items="${khClasses}" var="khClass">
-						  				  <option value="${khClass.classId}">${khClass.classId}</option>
-						  			  </c:forEach>
-								  </select>
+				  			  <div class="flex mb-3">
+					  			  <div class="col-6">
+					  				  <p style="font-weight:700;">반 선택</p>
+						  			  <select style="width:93%;" class="form-select" name="classIds" aria-label="Default select example">
+										  <option selected>반</option>
+							  			  <c:forEach items="${khClasses}" var="khClass">
+							  				  <option value="${khClass.classId}">${khClass.classId}</option>
+							  			  </c:forEach>
+									  </select>
+					  			  </div>
+					  			  <div class="col-6">
+						    		  <p style="font-weight:700;">강사 선택</p>
+						  			  <select class="form-select" name="teacherIds" aria-label="Default select example">
+										  <option selected>강사</option>
+							  			  <c:forEach items="${teachers}" var="teacher">
+							  				  <option value="${teacher.memberId}">${teacher.memberName}(${teacher.memberId})</option>
+							  			  </c:forEach>
+									  </select>
+					  			  </div>
 				  			  </div>
-				  			  <div class="mb-3">
-					    		  <p>강사 선택</p>
-					  			  <select class="form-select" name="teacherId" aria-label="Default select example">
-									  <option selected>강사</option>
-						  			  <c:forEach items="${teachers}" var="teacher">
-						  				  <option value="${teacher.memberId}">${teacher.memberName}(${teacher.memberId})</option>
-						  			  </c:forEach>
-								  </select>
-				  			  </div>
-				  			  <div class="mb-3">
-				  				  <p>시작일</p>
-				    			  <input type="date" class="form-control" id="startDate">
-				  			  </div>
-				  			  <div class="mb-3">
-					  			  <p>수료일</p>
-					    		  <input type="date" class="form-control" id="endDate">
+				  			  <div class="flex mb-3">
+					  			  <div class="col-6">
+					  				  <p style="font-weight:700;">시작일</p>
+					    			  <input style="width:93%;" type="date" class="form-control" id="startDates">
+					  			  </div>
+					  			  <div class="col-6">
+						  			  <p style="font-weight:700;">수료일</p>
+						    		  <input type="date" class="form-control" id="endDates">
+								  </div>
 							  </div>
-		       					  </div>
-		      	 			  <div class="modal-footer">
-		       					  <button type="button" class="courseReg btn btn-primary">수정</button>
-		      				  </div>
-		  				  </form:form>
-		    		  </div>
-		  		  </div>
-			  </div>
-    </section>
+		       			  </div>
+		      	 		  <div class="modal-footer">
+		       			  	  <button type="button" id="courseUp" class="btn btn-primary">수정</button>
+		      			</div>
+		  			</form:form>
+				</div>
+			</div>
+		</div>
+</section>
 
 
 
@@ -305,6 +311,8 @@
       });
       
       $(document).ready(function() {
+    	  
+    	  // 테이블 row 클릭
     	    $('.table tbody tr').click(function() {
     	        const classId = $(this).data('classid');
     	        console.log(classId);
@@ -338,7 +346,7 @@
     	        });
     	    });
       
-    	    
+    	    // 학생 띄우기
     	    function openModalWithData(data) {
     	        // 모달 띄우고 데이터를 채우는 작업을 수행하는 함수 구현
     	        // 예: 모달 내용에 데이터 채우기
@@ -371,6 +379,7 @@
                 }
     	    }
     	    
+    	    // 과정 등록
     	    $('.courseReg').click(function() {
     	        // Form 데이터 수집
     	        const addCourseFrm = document.addCourseFrm;
@@ -420,39 +429,86 @@
     	        const curriculumName = button.data('curriculumname'); // 과정명 정보 가져오기
     	        const classId = button.data('button-classid'); // 반 정보 가져오기
     	        const teacherName = button.data('button-teachername'); // 강사 정보 가져오기
-    	        const startDate = button.data('button-startdate'); // 시작일 정보 가져오기
-    	        const endDate = button.data('button-enddate'); // 수료일 정보 가져오기
+    	        const startDateAsString = button.data('button-startdate'); // 날짜 문자열로 저장
+    	        const endDateAsString = button.data('button-enddate'); // 날짜 문자열로 저장
     	        const teacherId = button.data('button-teacherid');
+    	        const curriculumId = button.data('button-curriculumid');
     	        
-    	        console.log(button);
     	        console.log('subject='+subject);
     	        console.log('curriculumName='+curriculumName);
     	        console.log('classId='+classId);
     	        console.log('teacherName='+teacherName);
-    	        console.log('startDate='+startDate);
-    	        console.log('endDate='+endDate);
+    	        console.log('startDateAsString='+startDateAsString);
+    	        console.log('endDateAsString='+endDateAsString);
     	        console.log('teacherId='+teacherId);
+    	        console.log('curriculumId='+curriculumId);
     	        
     	        // 모달 내부의 필드에 가져온 정보 입력하기
     	        const modal = $(this);
-    	        modal.find('select[name="subject"]').val(subject);
-    	        modal.find('#curriculumName').val(curriculumName);
-    	        modal.find('select[name="classId"]').val(classId);
-    	        modal.find('select[name="teacherId"]').val(teacherId);
-    	        modal.find('#startDate').val(startDate);
-    	        modal.find('#endDate').val(endDate);
+    	        modal.find('select[name="subjects"]').val(subject);
+    	        modal.find('#curriculumNames').val(curriculumName);
+    	        modal.find('select[name="classIds"]').val(classId);
+    	        modal.find('select[name="teacherIds"]').val(teacherId);
+    	        modal.find('#startDates').val(startDateAsString);
+    	        modal.find('#endDates').val(endDateAsString);
+    	        modal.find('#modalCurriculumId').val(curriculumId);
     	    });
     	    
-    	    /* // 수정 버튼 클릭 시에 실행되는 이벤트 리스너
-    	    $('.courseReg').click(function() {
+    	    // 수정 버튼 클릭 시에 실행되는 이벤트 리스너
+    	    $('#courseUp').click(function() {
     	        // 수정된 정보 수집 및 AJAX 요청 등 처리
     	        // ...
-    	    }); */
-    	    
-    	});
-      
-      
-      $(document).ready(function() {
-    	   
-    	});
+    	        // Form 데이터 수집
+    	        
+    	        const upCourseFrm = document.upCourseFrm;
+    	        const curriculumId = $('#modalCurriculumId').val();
+    	        const subject = $('select[name=subjects]').val();
+    	        const curriculumName = $('#curriculumNames').val();
+    	        const classId = $('select[name=classIds]').val();
+    	        const teacherId = $('select[name=teacherIds]').val();
+    	        const startDateAsString = $('#startDates').val(); // 날짜 문자열로 저장
+    	        const endDateAsString = $('#endDates').val(); // 날짜 문자열로 저장
+    	        
+    	        const token = upCourseFrm._csrf.value;
+    	        
+    	        console.log(upCourseFrm);
+    	        console.log(curriculumId)
+    	        console.log('subject='+subject);
+    	        console.log('curriculumName='+curriculumName);
+    	        console.log('classId='+classId);
+    	        console.log('startDateAsString='+startDateAsString);
+    	        console.log('endDateAsString='+endDateAsString);
+    	        console.log('teacherId='+teacherId);
+    	        
+    	        if (confirm("수정 하시겠습니까?")) {
+	    	        // AJAX를 사용하여 서버에 데이터 전송
+	    	        $.ajax({
+	    	            type: 'POST', // 전송 방식 (POST)
+	    	            url: "${pageContext.request.contextPath}/admin/adminUpdateCourse.do", // 실제 서버 엔드포인트 URL
+	    	            data: {
+	    	            	curriculumId,
+	    	            	subject,
+	    	            	curriculumName,
+	    	            	classId,
+	    	            	teacherId,
+	    	            	startDateAsString,
+	    	            	endDateAsString
+	    	            }, // 전송할 데이터
+	    	            headers: {
+	    	                "X-CSRF-TOKEN": token
+	    	            },
+	    	            success: function(response) {
+	    	                // 성공적으로 응답을 받았을 때 실행되는 부분
+	    	                alert('과정이 수정되었습니다.'); // 서버의 응답 내용을 출력 (개발자 도구에서 확인 가능)
+	    	                location.href="${pageContext.request.contextPath}/admin/adminCourseList.do";
+	    	            },
+	    	            error: function(error) {
+	    	                // 오류 발생 시 실행되는 부분
+	    	                console.error("error"); // 오류 내용을 출력
+	    	            }
+	    	        });
+    	        }
+    	    });
+   		});
+    
 </script>
