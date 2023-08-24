@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -488,11 +490,11 @@ public class BoardController {
 			Model model
 			) {
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-		// //log.debug("studentInfo = {}", studentInfo);
-
+        //log.debug("studentInfo = {}", studentInfo);
 		model.addAttribute("studentInfo", studentInfo);
-
-		return "/board/myClassBoardList";
+		model.addAttribute("authority", principal.getAuthorities());
+         
+        return "/board/myClassBoardList";
 	}
 
 	@PostMapping("/myClassBoardList.do")
@@ -503,10 +505,23 @@ public class BoardController {
 	}
 
 	@GetMapping("/myClassBoardFindAll.do")
-	@ResponseBody
-	public List<BoardListDto> myClassBoardFindAll() {
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll();
-		return myClassBoardList;
+	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
+		// 페이징
+		int limit = 2;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		// 게시글 전체 수
+		int totalCount = boardService.totalCountMyClassBoard();
+		
+		// totalPage 계산
+		int totalPages = (int) Math.ceil((double) totalCount / limit);
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll(params);
+		
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("board", myClassBoardList, "currentPage", page, "totalPages", totalPages));
 	}
 
 
