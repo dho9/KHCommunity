@@ -48,7 +48,7 @@ public interface MemberRepository {
 	@Insert("insert into student_attachment values(seq_student_attach_id.nextval, #{memberId}, #{studentOriginalFilename}, #{studentRenamedFilename})")
 	int insertStudentAttach(StudentAttachment attach);
 
-	@Update("update student set approve_request_date = sysdate where student_id = #{memberId}")
+	@Update("update student set approve_request_date = sysdate, approve_check = 'i' where student_id = #{memberId}")
 	int updateApproveRequestDate(StudentAttachment attach);
 	
 	@Delete("delete from member where member_id=#{memberId}")
