@@ -1,6 +1,7 @@
 package com.kh.app.board.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
@@ -64,10 +65,11 @@ public interface BoardService {
 
 	PostAttachment findAttachById(int id);
 
-
-
 	List<BoardListDto> noticeBoardFindAll();
-	List<BoardListDto> myClassBoardFindAll();
+	
+	List<BoardListDto> myClassBoardFindAll(Map<String, Object> params);
+	
+	int totalCountMyClassBoard();
 
 	List<Comment> findByCommentByPostId(int postId);
 
@@ -82,5 +84,6 @@ public interface BoardService {
 	List<BoardListDto> myClassBoardFindByTag(String tag);
 	
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+
 
 }

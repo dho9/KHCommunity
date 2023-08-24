@@ -160,8 +160,8 @@ ul.commentMenu li {
 					  	</c:forEach>
 					  	<ul class="status">
 					  		<%-- 좋아요 버튼 --%>
-					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
-					  		<li class="vote" style="margin-top: 5px;">${postDetail.postLike}</li>
+					  		<li><img class="like" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li class="vote" data-value="${postDetail.postId}" style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
 					  	</ul>
@@ -203,7 +203,7 @@ ul.commentMenu li {
 	<form:form name="commentLikeFrm"></form:form>
 	<script>
 document.addEventListener('DOMContentLoaded', () => {
-	
+	console.log('댓글온로드!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 	loadComment();
 	document.querySelector('.writecomment').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -409,7 +409,7 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
 	<script>
 	// load됐을때 공감(좋아요) 했는지 확인
 	window.onload = () => {
-		
+		console.log('게시글!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 		console.log(document.querySelector('.like').dataset.value);
 		
 		$.ajax({
@@ -443,7 +443,7 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
 	};
 	
 	// 공감(좋아요) 누르기
-	document.querySelector('.like').onclick = (e) => {
+	document.querySelector('.vote').onclick = (e) => {
 		console.log(e.target.dataset.value);
 		
 		const token = document.tokenFrm._csrf.value;

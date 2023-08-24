@@ -300,6 +300,17 @@
   	<result column="anonymous_check" property="anonymousCheck"/>
   </resultMap>
   
+  <select id="totalCountMyClassBoard" resultType="int">
+  	select 
+  		count(*)
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=11
+  </select>
+  
   <select id="findPostLikeCount" resultType="postLike">
   	select
 	    count(*) post_like_count

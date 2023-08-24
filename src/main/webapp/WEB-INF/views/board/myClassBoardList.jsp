@@ -14,14 +14,61 @@
 .myClassBoard-title, .myClassBoard-subTitle {
 	text-align: center;
 }
-.myClassBoard-title {
-	margin-top: 4%;
+.myClassBoard-title .title {
+	font-weight: bold;
+    font-size: 49px;
+    margin-top: 7%;
+}
+.myClassBoard-title p {
+    font-size: 18px;
+    color: #444444e3;
+    padding-top: 16px;
+    font-weight: 600;
+}
+.myClassBoard-subTitle ul {
+	margin-top: 2%;
+    font-weight: 500;
 }
 .input-group-prepend {
 	cursor: pointer;
 }
+#myClassBoard-div {
+    border: 4px solid #007bff;
+    border-radius: 63px;
+    height: 1200px;
+    width: 1365px;
+    margin-top: 5%;
+    margin-left: 15%;
+}
+#writePost {
+    margin-left: 87%;
+    width: 105px;
+    height: 51px;
+    margin-top: 55px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 11px;
+}
+table {
+	margin-left: 27px;
+    margin-top: 3%;
+}
+#button-div {
+	text-align: center;
+	margin-top: -9%;
+}
+.btn.btn-outline-success {
+	width: 205px;
+    height: 60px;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border: 2px solid;
+    margin-left: 7px;
+    margin-top: 5%;
+}
 </style>
-
+	<div id="myClassBoard-div">
 	<sec:authentication property="principal" var="loginMember"/>
 	<div class="myClassBoard-title">
 		<h2 class="title">우리반 게시판</h2>
@@ -35,16 +82,16 @@
 	</div>
 	
 	<!-- Button trigger modal -->
-	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">글쓰기</button>
+	<button id="writePost" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">글쓰기</button>
 	
-	<div>
+	<div id="button-div">
 		<button type="button" class="btn btn-outline-success" id="notice">공지사항</button>
 		<button type="button" class="btn btn-outline-success" id="sharing">과제공유</button>
 		<button type="button" class="btn btn-outline-success" id="free">게시판</button>
 		<button type="button" class="btn btn-outline-success" id="allBtn">전체</button>
 	</div>
 	
-	<table class="table">
+	<table class="table" style="width: 96%;">
 	  <thead>
 	    <tr>
 	      <th scope="col">번호</th>
@@ -56,6 +103,9 @@
 	  <tbody></tbody>
 	</table>
 	
+	<!-- 페이지 이동 및 페이지 번호 표시 -->
+	<div id="pagebar"></div>
+	</div>
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
 	  <div class="modal-dialog" role="document">
@@ -73,9 +123,15 @@
 				  <div class="input-group-prepend">
 				    <input style="width: 105px; height: 43px;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="공지사항"/>
 				    <div class="dropdown-menu">
-				      <a class="dropdown-item">공지사항</a>
-				      <a class="dropdown-item">과제공유</a>
-				      <a class="dropdown-item">게시판</a>
+				      <c:if test="${authority eq '[ADMIN]'}">
+				        <a class="dropdown-item">공지사항</a>
+				        <a class="dropdown-item">과제공유</a>
+				        <a class="dropdown-item">게시판</a>
+				      </c:if>
+					  <c:if test="${authority ne '[ADMIN]'}">
+					  	<a class="dropdown-item">과제공유</a>
+				        <a class="dropdown-item">게시판</a>
+					  </c:if>
 				    </div>
 				  </div>
 				  <input type="text" name="title" class="form-control" aria-label="Text input with dropdown button" placeholder="글 제목">
@@ -122,16 +178,21 @@
 	// onload되면 전체버튼 출력
 	window.onload = () => {
 		document.querySelector('#allBtn').click();
+		document.querySelector('#allBtn').style.boxShadow = '0 0 0 0.2rem rgba(40,167,69,.5)';
 	};
 	// 전체 버튼
 	document.querySelector('#allBtn').addEventListener('click', () => {
 		$.ajax({
 			url : "${pageContext.request.contextPath}/board/myClassBoardFindAll.do",
-			success(board) {
-				console.log(board);
+			success(reponseData) {
+				console.log(reponseData);
+				const {board, currentPage, totalPages} = reponseData;
+				console.log(board, currentPage, totalPages);
 				
 				const tbody = document.querySelector('tbody');
+				const div = document.querySelector('#pagebar');
 				tbody.innerHTML = "";
+				div.innerHTML = "";
 				
 				if(board.length == 0) {
 					tbody.innerHTML = `
@@ -142,20 +203,55 @@
 				}
 				else {
 					for(let i=0; i<board.length; i++) {
-						
+						const createdAt = formatDatetime(board[i].postCreatedAt)
 						tbody.innerHTML += `
 						    <tr>
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
 						      <td>\${board[i].memberId}</td>
-						      <td>\${board[i].postCreatedAt}</td>
+						      <td>\${createdAt}</td>
 						    </tr>
 						`;
 					}
 				}
+				
+				div.innerHTML = `
+					<div class="d-flex justify-content-center">
+				        <ul class="pagination">
+				            <c:if test="${currentPage > 1}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentList.do?page=${currentPage - 1}" aria-label="Previous">
+				                        <span aria-hidden="true">&laquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				            
+				            <c:forEach var="pageNum" begin="1" end="${totalPages}">
+				                <c:choose>
+				                    <c:when test="${pageNum eq currentPage}">
+				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
+				                    </c:when>
+				                    <c:otherwise>
+				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/employeeList.do?page=${pageNum}">${pageNum}</a></li>
+				                    </c:otherwise>
+				                </c:choose>
+				            </c:forEach>
+				            
+				            <c:if test="${currentPage < totalPages}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/employeeList.do?page=${currentPage + 1}" aria-label="Next">
+				                        <span aria-hidden="true">&raquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				        </ul>
+				</div>
+			`;	
 			}
 		});
 	});
+	
+	
 	// 공지사항 버튼
 	document.querySelector('#notice').addEventListener('click', () => {
 		board('공지사항');
@@ -171,6 +267,7 @@
 	
 	function board (e) {
 		console.log(e);
+		document.querySelector('#allBtn').style.boxShadow = '';
 		document.querySelector('.btn.btn-outline-success').value = e;
 		const btnValue = document.querySelector('.btn.btn-outline-success').value;
 		const token = document.tokenFrm._csrf.value;
@@ -200,12 +297,13 @@
 				else {
 					for(let i=0; i<board.length; i++) {
 						
+						const createdAt = formatDatetime(board[i].postCreatedAt)
 						tbody.innerHTML += `
 						    <tr>
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
 						      <td>\${board[i].memberId}</td>
-						      <td>\${board[i].postCreatedAt}</td>
+						      <td>\${createdAt}</td>
 						    </tr>
 						`;
 					}
@@ -214,7 +312,17 @@
 		});
 	};
 	
-	
+	// 날짜 포맷 yyyy/MM/dd
+	const formatDatetime = (millis) => {
+		const d = new Date(millis);
+	    const f = (n) => n.toString().padStart(2, "0");
+	    const yyyy = d.getFullYear();
+	    const MM = f(d.getMonth() + 1);
+	    const dd = f(d.getDate());
+	    const hh = f(d.getHours());
+	    const mm = f(d.getMinutes());
+	    return `\${yyyy}/\${MM}/\${dd}`;
+	}
 		
 	document.querySelector('#clearBtn').addEventListener('click', () => {
 		clearForm();

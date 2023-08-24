@@ -1,7 +1,9 @@
 package com.kh.app.board.service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -164,8 +166,18 @@ public class BoardServiceImpl implements BoardService {
 	
 
 	@Override
-	public List<BoardListDto> myClassBoardFindAll() {
-		return boardRepository.myClassBoardFindAll();
+	public List<BoardListDto> myClassBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.myClassBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountMyClassBoard() {
+		return boardRepository.totalCountMyClassBoard();
 	}
 
 	@Override
@@ -204,5 +216,7 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.CommentLikeCheckById(postId,memberId);
 	}
+	
+
 }
 

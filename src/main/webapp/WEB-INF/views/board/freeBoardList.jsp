@@ -273,6 +273,7 @@
 	       			for(let i=0; i<like.length; i++) {
 	       				if(like[i].dataset.value == e.dataset.value) {
 			       			if(available) {
+			       				console.log('잉?');
 			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
 			                   	vote[i].innerHTML = `\${postLikeCount}`;
 			                   }
