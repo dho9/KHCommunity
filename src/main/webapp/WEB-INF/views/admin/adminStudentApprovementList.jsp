@@ -27,7 +27,10 @@
                   <tbody>
                   <c:if test="${students != null}">
                   	<c:forEach items="${students}" var="student" varStatus="vs">
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" data-handle="@mdo">
+                      <tr data-bs-toggle="modal" data-bs-target="#myModal" 
+                      	  data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" 
+                      	  data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" 
+                      	  data-student-file="${student.studentRenamedFilename}" data-handle="@mdo">
                           <td>${vs.count}</td>
                           <td>${student.studentId}</td>
                           <td>${student.memberName}</td>
@@ -89,7 +92,7 @@
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-6">
-                        <iframe class="border rounded-4" src="${pageContext.request.contextPath}/resources/pdf/쓰리고근로계약서.pdf" style="width: 100%; height: 500px;"></iframe>
+                        <iframe id="studentPdf" class="border rounded-4" src="${pageContext.request.contextPath}/resources/images/approveUpload/" style="width: 100%; height: 500px;"></iframe>
                     </div>
                     <div class="col-md-6">
                    	  <div class="border rounded-4" style="padding:30px;">
@@ -160,7 +163,14 @@
             const firstId = row.getAttribute("data-first-id");
             const secondName = row.getAttribute("data-second-name");
             const studentCurriculumId = row.getAttribute("data-curriculum-id");
-    
+            const studentRenamedFilename = row.getAttribute("data-student-file");
+            
+            const iframe = document.getElementById("studentPdf"); // "iframeElement"을 실제 iframe의 ID로 변경해주세요
+            const currentSrc = iframe.src; // 이미 있는 URL 가져오기
+            const updatedSrc = currentSrc + studentRenamedFilename; // 기존 URL 뒤에 studentRenamedFilename 추가
+
+            iframe.src = updatedSrc;
+            
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
             document.getElementById("modalFirstId").value = firstId;
