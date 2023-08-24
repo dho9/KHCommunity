@@ -5,6 +5,70 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
+form.writecomment.child{
+    margin: 0 4px 4px 35px;
+    border: 1px solid #e3e3e3;
+        position: relative;
+    /* border-top: 1px solid #e3e3e3; */
+    background-color: #f8f8f8;
+}
+
+
+.writecomment.child input.text {
+       margin: 0;
+    padding: 10px 85px 10px 10px;
+    border: 0;
+    width: 100%;
+    height: 45px;
+    line-height: 20px;
+    box-sizing: border-box;
+    color: #262626;
+    font-size: 13px;
+    overflow: hidden;
+    resize: none;
+    background-color: transparent;
+}
+
+.writecomment.child ul.option {
+    display: flex;
+    align-items: center;
+    list-style: none;
+}
+
+.writecomment.child ul.option li {
+     display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 40px 40px;
+    cursor: pointer;
+}
+
+.writecomment.child ul.option li.anonym {
+    background-image: url('../resources/images/anonymous.png');
+    
+    margin-right: 5px;
+}
+
+.writecomment.child ul.option li.anonym.active {
+    background-image: url('../resources/images/anonymouscheck.png');
+}
+
+.writecomment.child ul.option li.submit {
+    background-image: url('../resources/images/댓글제출.png');
+    background-color: #c62917;
+}
+
+
+/*--*/
+.writecomment.child.active {
+    display: block; /* 혹은 필요한 스타일로 설정 */
+}
+.writecomment.child {
+        display: none;
+        /* 스타일을 추가하여 입력폼을 원하는 형태로 꾸밀 수 있습니다. */
+    }
 	.sstatus img {
     width: 13px;
 }
@@ -174,6 +238,7 @@ ul.commentMenu li {
 				<div id="commentList"></div>
 				<div class="articles">
 					<article>
+						
 						<form:form name="commentFrm" class="writecomment">
 							<div style="display: flex; align-items: center;">
 								<input type="text" name="commentText" id="commentText"
@@ -181,7 +246,7 @@ ul.commentMenu li {
 									class="text" data-listener-added_4fb6911b="true">
 								<ul class="option">
 									<li title="익명" class="anonym"></li>
-									<li title="완료" class="submit"></li>
+									<li title="완료" class="submit" data-value="1"></li>
 								</ul>
 							</div>
 						</form:form>
@@ -201,10 +266,11 @@ ul.commentMenu li {
 	<form:form name="tokenFrm"></form:form>
 	<form:form name="loadCommentFrm"></form:form>
 	<form:form name="commentLikeFrm"></form:form>
-	<script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-	
+	//댓글호출함수
 	loadComment();
+	//엔터키로 폼제출방지
 	document.querySelector('.writecomment').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();}
@@ -212,38 +278,33 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 	
 });
-
-function loadCommentLike(){
-	console.log(document.querySelector('.like').dataset.value);
-	
-	$.ajax({
-		url : "${pageContext.request.contextPath}/board/commentLike.do",
-		data : {
-			_postId : document.querySelector('.like').dataset.value
-		},
-		method : "GET",
-        dataType : "json",
+//내가 누른 댓글 좋아요 불러오기
+function loadCommentLike() {
+    $.ajax({
+        url: "${pageContext.request.contextPath}/board/commentLike.do",
+        data: {
+            _postId: document.querySelector('.like').dataset.value
+        },
+        method: "GET",
+        dataType: "json",
         success(responseData) {
-        	//console.log(responseData);
-        	  
-        	  const { commentLike } = responseData;
-        	  //console.log(commentLike);
-        	  
-        	  const commentIds = commentLike.map(item => item.commentId);
-        	  // console.log(commentIds); // [7, 8, 23]
-        	  commentIds.forEach(commentId => {
-        	        const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
-        	        if (commentIds .includes(commentId)) {
-        	            like.src = `${pageContext.request.contextPath}/resources/images/fullLike.png`;
-        	        }
-        	    });
-			
+            const { commentLike } = responseData;
+            const commentIds = commentLike.map(item => item.commentId);
+            
+            commentIds.forEach(commentId => {
+                const likeElements = document.querySelectorAll(`.commentLike[data-commentid="\${commentId}"]`);
+                likeElements.forEach(likeElement => {
+                    if (commentIds.includes(commentId)) {
+                        likeElement.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+                    }
+                });
+            });
         }
-	});
-	
+    });
 }
 
 
+//댓글불러오기
 function loadComment(){
 	const token = document.loadCommentFrm._csrf.value;
 	const currentURL = window.location.href;
@@ -266,47 +327,94 @@ function loadComment(){
     	}
     });
 }
+
+function submitComment(adata){
+	const token = document.commentFrm._csrf.value;
+	    $.ajax({
+        	url : "${pageContext.request.contextPath}/board/createComment.do",
+        	headers: {
+                "X-CSRF-TOKEN": token
+            },
+        	data :adata,
+        	method : "POST",
+        	success(data){
+        		loadComment();
+        		document.querySelector("#commentText").value = "";
+        	     const anonymLi = document.querySelector('.option li.anonym');
+        	        if (anonyCk) {
+        	            anonymLi.classList.remove('active');
+        	            anonymLi.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymous.png')`;
+        	            anonyCk = false;
+        	        }
+        		
+        	}
+        })
+	
+	
+}
+//댓글불러온걸토대로 댓글랜더.
 function renderComments(comments) {
-	console.log(comments);
+	//console.log(comments);
     const commentList = document.querySelector('#commentList'); // Select the comment list container
   
     commentList.innerHTML = '';
 
     // Loop through each comment and create a DOM element for it
     comments.forEach(comment => {
-    	const commentElement = document.createElement('article');
-        commentElement.className = 'parent';
-        commentElement.innerHTML = `
-            
-        	<h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center;">
-                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
-                <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
-            </div>
-            <ul class="commentMenu">
-                <li class="childcomment">대댓글</li>
-                <li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-                <li class="messagesend">쪽지</li>
-                <li class="abuse">신고</li>
+    	//console.log("장준"+comment.commentRef);
+    	if(comment.commentLevel ==1){
+    		const commentElement = document.createElement('article');
+            commentElement.className = 'parent';
+            commentElement.setAttribute('data-commentid', comment.commentId);
+            //console.log("sdsadsadsadsadsad"+commentElement);
+            commentElement.innerHTML = `
+                
+            	<h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
+                    <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
+                </div>
+                <ul class="commentMenu">
+                    <li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
+                    <li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
+                    <li class="messagesend">쪽지</li>
+                    <li class="abuse">신고</li>
+                </ul>
+            </h3>
+                <hr>
+                <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>
+                <ul class="sstatus commentvotestatus">
+                <li class="vote commentvote" >
+                    <time class="medium">\${comment.commentCreatedAt}</time>
+                    <img class="commentLike" data-commentid="\${comment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
+                    <span class="likeCount" data-commentid="\${comment.commentId}">\${comment.likeCount}</span>
+                </li>
+               
             </ul>
-        </h3>
-            <hr>
-            <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>
-            <ul class="sstatus commentvotestatus">
-            <li class="vote commentvote" >
-                <time class="medium">\${comment.commentCreatedAt}</time>
-                <img class="commentLike" data-commentid="\${comment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
-                <span class="likeCount" data-commentid="\${comment.commentId}">\${comment.likeCount}</span>
-            </li>
-           
-        </ul>
-            <hr class="comment-separator"/>
-        `;
+            <form class="writecomment child">
+            <div class="writecommentWrap" style="display: flex; align-items: center;">
+            <input type="text" name="text" maxlength="300" autocomplete="off" placeholder="대댓글을 입력하세요." class="text" data-listener-added_ce8d996c="true">
+            <ul class="option">
+                <li title="익명" class="anonym"></li>
+                <li title="완료" class="submit" data-parentcommentid="\${comment.commentId}" data-value="2"></li>
+            </ul>
+           </div>
+        </form>
+                <hr class="comment-separator"/>
+            `;
 
-        // Append the comment element to the comment list container
-        commentList.appendChild(commentElement);
+            // Append the comment element to the comment list container
+            commentList.appendChild(commentElement);
+    	}
+    
+    	
     });
+
+
 }
+
+
+
 //댓글좋아요 기능 
 document.querySelector('#commentList').addEventListener('click', (event) => {
     const clickedElement = event.target;
@@ -314,7 +422,7 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
     if (clickedElement.classList.contains('commentvote')) {
         // data-commentid 속성을 가져와서 사용
         const commentId = clickedElement.getAttribute('data-commentid');
-        console.log(commentId);
+      
     	$.ajax({
 			url : "${pageContext.request.contextPath}/board/commentLike.do",
 			data : {
@@ -326,7 +434,7 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
             method : "POST",
             dataType : "json",
             success(responseData) {
-            	console.log(responseData);
+            	//console.log(responseData);
 				const {available, likeCount} = responseData;
 				const {commentLikeCount} = likeCount;
     			
@@ -349,62 +457,94 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
 });
 
 
-	let anonyCk = false;
-	document.querySelectorAll('.option li.anonym').forEach((li) => {
-		
-	    li.addEventListener('click', () => {
-	    
-	        // 클릭한 li 요소에 active 클래스 추가 또는 제거
-	        li.classList.toggle('active');
+//대댓글 입력창 추가
+//document.querySelectorAll('.commentMenu li.childcomment').forEach((li) => {
+//	li.addEventListener('click', (e)=>{   
+	//	 const commentId = li.getAttribute('data-commentid');
+	//        const commentElement = document.querySelector(`.parent[data-commentid="\${commentId}"]`); // 이 부분을 수정
+	//        console.log(commentElement);
+	//        if (commentElement) { // 존재하는 경우에만 작업 수행
+	 //           const childCommentForm = commentElement.querySelectorAll('.writecomment');
+	 //           console.log(childCommentForm);
+	 //           childCommentForm.forEach(form => {
+	  //              form.classList.toggle('active');
+	 //           });
+	  //      }
+//});
+//});
 
-	        // 배경 이미지 변경
-	        if (li.classList.contains('active')) {
-	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymouscheck.png')`;
-	            anonyCk= true;
-	        } else {
-	            li.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymous.png')`;
-	            anonyCk= false;
+//익명 , 제출버튼에 관한 기능
+let anonyCk = false;
+document.querySelector('#commnetContainer').addEventListener('click', (event) => {
+    const clickedElement = event.target;
+    const value = clickedElement.getAttribute('data-value');
+    
+    const urlParams = new URLSearchParams(new URL(window.location.href).search);
+    const postId = urlParams.get('id');
+   // console.log("Event handler activated!"+value);
+    if (clickedElement.classList.contains('anonym')) {
+        clickedElement.classList.toggle('active');
+        
+        if (clickedElement.classList.contains('active')) {// 익명체크시 바뀌게
+            clickedElement.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymouscheck.png')`;
+            anonyCk= true;
+        } else {
+            clickedElement.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymous.png')`;
+            anonyCk= false;
+        }
+    }
+    if (clickedElement.classList.contains('submit')){// 제출버튼시
+    	const parentCommentId = clickedElement.getAttribute('data-parentcommentid'); // 대댓글의 부모 댓글 ID
+    	const commentContentInput = clickedElement.closest('.writecomment').querySelector('input[name="text"]');
+    	if(value==1){//댓글
+    		 
+    		 const postData = {
+    	                postId: postId,
+    	                boardId: ${board.boardId},
+    	                commentContent : document.querySelector("#commentText").value,
+    	                anonymousCheck: anonyCk,
+    	                commentRef: null
+    	            };
+    		 submitComment(postData);
+    	 }else{
+    		 //대댓글
+    		 const reply = {
+ 	                postId: postId,
+ 	                boardId: ${board.boardId},
+ 	                commentContent : commentContentInput.value,
+ 	                anonymousCheck: anonyCk,
+ 	                commentRef: parentCommentId
+ 	            };
+    		 submitComment(reply);
+    	 }
+    }
+    if (clickedElement.classList.contains('childcomment')){
+    	 const commentId = clickedElement.getAttribute('data-commentid');
+	        const commentElement = document.querySelector(`.parent[data-commentid="\${commentId}"]`); // 이 부분을 수정
+	        //console.log(commentElement);
+	        if (commentElement) { // 존재하는 경우에만 작업 수행
+	            const childCommentForm = commentElement.querySelectorAll('.writecomment');
+	            //console.log(childCommentForm);
+	            childCommentForm.forEach(form => {
+	                form.classList.toggle('active');
+	            });
 	        }
-	        
-	     
-	    });
+    }
+     
+    
+});
+
+	// 댓글제출 
+	//document.querySelectorAll('.option li.submit').forEach((li) => {
+	//	li.addEventListener('click', (e)=>{
+		
+			
 	
-	});
-	document.querySelectorAll('.option li.submit').forEach((li) => {
-		li.addEventListener('click', (e)=>{
-		const currentURL = window.location.href;
-		const urlParams = new URLSearchParams(new URL(currentURL).search);
-		const postId = urlParams.get('id');
-			    	console.log("id 파라미터 값:", postId);	
-		console.log(anonyCk);
-		console.log(${board.boardId});
-		const token = document.commentFrm._csrf.value;
-		    $.ajax({
-	        	url : "${pageContext.request.contextPath}/board/createComment.do",
-	        	headers: {
-	                "X-CSRF-TOKEN": token
-	            },
-	        	data : {
-	        		postId : postId,
-	        		boardId : ${board.boardId},
-	        		commentContent : document.querySelector("#commentText").value,
-	        		anonymousCheck: anonyCk
-	        	},
-	        	method : "POST",
-	        	success(data){
-	        		loadComment();
-	        		document.querySelector("#commentText").value = "";
-	        	     const anonymLi = document.querySelector('.option li.anonym');
-	        	        if (anonyCk) {
-	        	            anonymLi.classList.remove('active');
-	        	            anonymLi.style.backgroundImage = `url('${pageContext.request.contextPath}/resources/images/anonymous.png')`;
-	        	            anonyCk = false;
-	        	        }
-	        		
-	        	}
-	        })
-		})
-	});
+		//})
+	//});
+	
+	
+	
 	</script>
 	<script>
 	// load됐을때 공감(좋아요) 했는지 확인
