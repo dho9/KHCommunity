@@ -76,7 +76,7 @@ public interface AdminRepository {
 	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(sysdate-1, 'yy/MM/dd')")
 	int yesterdayPostCount();
 
-	@Select("select s.student_id, approve_request_date, (select curriculum_name from curriculum c where c.curriculum_id = s.curriculum_id) curriculum_name from (select rownum, student_id, curriculum_id, approve_check, approve_request_date from student) s where approve_check = 'n' and (rownum between 1 and 3)")
+	@Select("select s.student_id, approve_request_date, (select curriculum_name from curriculum c where c.curriculum_id = s.curriculum_id) curriculum_name from (select rownum, student_id, curriculum_id, approve_check, approve_request_date from student) s where approve_check = 'i' and (rownum between 1 and 3)")
 	List<AdminStudentApproveDto> studentApproveListThree();
 
 	@Select("SELECT\r\n"
@@ -160,7 +160,7 @@ public interface AdminRepository {
 	@Select("select * from curriculum")
 	List<Curriculum> findAllCurriculum();
 
-	@Select("SELECT s.student_id, m.member_name, s.student_type, s.approve_check, s.approve_request_date FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
+	@Select("SELECT s.student_id, m.member_name, s.student_type, s.approve_check, s.approve_request_date, (select student_renamed_filename from student_attachment a where a.member_id = s.student_id) as studentRenamedFilename FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
 	List<AdminStudentApproveDto> adminStudentApprovementList(RowBounds rowBounds);
 
 	@Select("SELECT count(*) FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")

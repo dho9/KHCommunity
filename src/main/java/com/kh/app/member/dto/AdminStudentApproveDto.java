@@ -16,6 +16,6 @@ public class AdminStudentApproveDto {
 	private LocalDate approveRequestDate;
 	private StudentType studentType;
 	private String curriculumName;
-	
+	private String studentRenamedFilename;
 	
 }

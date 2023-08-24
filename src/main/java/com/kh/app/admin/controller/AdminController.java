@@ -385,6 +385,7 @@ public class AdminController {
 		model.addAttribute("currentPage", page);
 		
 		List<AdminStudentApproveDto> students = adminService.adminStudentApprovementList(params);
+		log.debug("students = {}", students);
 		model.addAttribute("students", students);
 		
 		// 전체 학생 수를 가져온다.
