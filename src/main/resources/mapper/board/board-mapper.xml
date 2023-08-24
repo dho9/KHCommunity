@@ -176,7 +176,7 @@
 	    	on
 	    p.post_id = c.post_id
 	where
-	    p.board_id=4
+	    p.board_id=11
 	order by
 		1 desc
   </select>

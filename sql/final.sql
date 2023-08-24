@@ -1002,11 +1002,6 @@ INSERT INTO vacation (vacation_id, student_id, vacation_start_date, vacation_end
 VALUES (seq_vacation_id.NEXTVAL, 'gmlwls', '23/09/06', '23/09/06', 'ehdgus',  'godwjd',0);
 
 --board
-INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '자유게시판');
-INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '히히게시판');
-INSERT INTO board (board_id, board_category, board_name) VALUES (seq_board_id.NEXTVAL, '소통', '깔깔게시판');
-INSERT INTO board (board_id, board_category, board_name, board_link) VALUES (seq_board_id.NEXTVAL, '소통', '직원게시판', 'empolyeeBoardList');
-
 
 -- post
 INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
@@ -1103,7 +1098,7 @@ select * from employee;
 select * from scheduler;
 select * from vacation;
 select * from board order by 1;
-insert into board values (seq_board_id.nextval, '직원게시판', '소통', 'employeeBoardList');
+insert into board values (seq_board_id.nextval, '우리반게시판', '소통', 'myClassBoardList');
 select * from post order by 1;
 update post set anonymous_check = 'n' where post_id = 12;
 select * from post_content order by 1;
