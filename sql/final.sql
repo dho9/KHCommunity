@@ -1332,3 +1332,34 @@ select * from comment_like;
 select * from member;
 select * from post_like;
 
+SELECT
+    v.vacation_id AS vacationId,
+    m.member_name AS memberName,
+    v.vacation_send_date,
+    v.vacation_start_date,
+    v.vacation_end_date,
+    m.birthday,
+    c.curriculum_start_at AS curriculumStartAt,
+    c.curriculum_end_at AS curriculumEndAt,
+    c.curriculum_name AS curriculumName,
+    c.class_id AS classId,
+    v.teacher_id,
+    t.member_name AS teacherName
+FROM
+    student s
+LEFT JOIN
+    member m ON s.student_id = m.member_id
+LEFT JOIN
+    curriculum c ON s.curriculum_id = c.curriculum_id
+LEFT JOIN
+    vacation v ON s.student_id = v.student_id
+LEFT JOIN
+    member t ON v.teacher_id = t.member_id
+WHERE
+    v.vacation_approve_check = '2';
+select * from vacation;
+select * from curriculum;
+
+insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
+
+update vacation set vacation_approve_check = '2', employee_id = null;
