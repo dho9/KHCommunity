@@ -39,13 +39,11 @@ public class CalendarController {
 	public ArrayList<Calendar> data(Model model, @AuthenticationPrincipal MemberDetails member) {
 		String memberId= member.getMemberId();
 		ArrayList<Calendar> calList = service.calenList(memberId);
-		log.debug("이게 뭐야 대체.... = {} {}", calList, member.getMemberId());
 		model.addAttribute("list", service.calenList(memberId));
 		return calList;
 	}
 	
 	@PostMapping(params = "method=data")
-//	@ResponseBody
 	public String dataSet(@RequestParam String eventTitle,
 			@RequestParam String start,
 			@RequestParam String end,
@@ -59,5 +57,16 @@ public class CalendarController {
 		int result = service.insertEvent(calendarInsertDto);	
 		model.addAttribute("list", service.calenList(memberId));
 		return "redirect:/calendar/calendar.do?method=list";
+	}
+	
+	@GetMapping(params = "method=delete")
+	@ResponseBody
+	public String Delete(@RequestParam int groupId,
+			Model model) {
+		
+		int eventId = groupId;
+		int result = service.deleteEvent(eventId);
+		
+		return "뭐..........";
 	}
  }

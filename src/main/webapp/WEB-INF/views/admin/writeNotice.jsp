@@ -85,7 +85,7 @@ element.style {
 			</div>
 		</div>
 		<div class="card-body" id="todayIssueBody">
-			<form:form class="hidden" action="${pageContext.request.contextPath}/admin/writeNotice.do" id="createForm" method="POST" style="height: 550px;">
+			<form:form class="hidden" action="${pageContext.request.contextPath}/admin/writeNotice.do" id="createForm" method="POST" style="height: 550px;" enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="10">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
