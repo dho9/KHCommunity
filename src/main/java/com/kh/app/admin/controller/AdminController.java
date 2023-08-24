@@ -63,6 +63,7 @@ import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
+import com.kh.app.vacation.dto.VacationNonApprovementListDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -600,7 +601,18 @@ public class AdminController {
         
 		return "redirect:/admin/adminCourseList.do";
 	}
-
+	
+	// 과정 수정
+	@PostMapping("/adminUpdateCourse.do")
+	public String adminUpdateCourse(@Valid CurriculumRegDto curriculum) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        curriculum.setStartDate(LocalDate.parse(curriculum.getStartDateAsString(), formatter));
+        curriculum.setEndDate(LocalDate.parse(curriculum.getEndDateAsString(), formatter));
+        
+        int result = adminService.updateCurriculum(curriculum);
+        
+		return "redirect:/admin/adminCourseList.do";
+	}
 
 	@GetMapping("/adminStoreList.do")
 	public void adminStoreList(Model model) {
@@ -615,5 +627,29 @@ public class AdminController {
 		int result = adminService.deleteStore(storeId);
 		
 		return "redirect:/admin/adminStoreList.do";
+	}
+	
+	// 수강생 휴가 승인 페이지
+	@GetMapping("/adminVacationApprovementList.do")
+	public void adminVacationApprovementList(@RequestParam(defaultValue = "1") int page, Model model) {
+		// 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+	    model.addAttribute("currentPage", page);
+	    
+	    // 전체 학생 수를 가져온다.
+	    int totalNonApprovementStudentCount = adminService.getTotalCountOfNonApprovementStudent();
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalNonApprovementStudentCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+	    
+	    // 휴가 미승인 리스트
+	    List<VacationNonApprovementListDto> students = adminService.findAllNonApprovementStudent();
+	    model.addAttribute("students", students);
 	}
  }

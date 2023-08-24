@@ -33,6 +33,7 @@ import com.kh.app.member.dto.TeacherCreateDto;
 import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
+import com.kh.app.vacation.dto.VacationNonApprovementListDto;
 
 
 @Mapper
@@ -212,5 +213,38 @@ public interface AdminRepository {
 
 	@Delete("delete from store where store_id = #{storeId}")
 	int deleteStore(int storeId);
+
+	@Select("select count(*) from vacation where vacation_approve_check = '2'")
+	int getTotalCountOfNonApprovementStudent();
+
+	@Select("SELECT\r\n"
+			+ "    v.vacation_id AS vacationId,\r\n"
+			+ "    m.member_name AS memberName,\r\n"
+			+ "    v.vacation_send_date,\r\n"
+			+ "    v.vacation_start_date,\r\n"
+			+ "    v.vacation_end_date,\r\n"
+			+ "    m.birthday,\r\n"
+			+ "    c.curriculum_start_at AS curriculumStartAt,\r\n"
+			+ "    c.curriculum_end_at AS curriculumEndAt,\r\n"
+			+ "    c.curriculum_name AS curriculumName,\r\n"
+			+ "    c.class_id AS classId,\r\n"
+			+ "    v.teacher_id,\r\n"
+			+ "    t.member_name AS teacherName\r\n"
+			+ "FROM\r\n"
+			+ "    student s\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    member m ON s.student_id = m.member_id\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    curriculum c ON s.curriculum_id = c.curriculum_id\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    vacation v ON s.student_id = v.student_id\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    member t ON v.teacher_id = t.member_id\r\n"
+			+ "WHERE\r\n"
+			+ "    v.vacation_approve_check = '2'")
+	List<VacationNonApprovementListDto> findAllNonApprovementStudent();
+
+	@Update("update curriculum set class_id = #{classId}, teacher_id = #{teacherId}, subject = #{subject}, curriculum_name = #{curriculumName}, curriculum_start_at = #{startDate}, curriculum_end_at = #{endDate} where curriculum_id = #{curriculumId}")
+	int updateCurriculum(CurriculumRegDto curriculum);
 
 }

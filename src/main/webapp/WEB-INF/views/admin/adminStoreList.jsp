@@ -101,7 +101,7 @@
         </div>
     </div>
 </div>
-</div>
+
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
 //모달 창이 닫힐 때 주소 API 이벤트 해제
