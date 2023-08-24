@@ -35,7 +35,7 @@
 <link type="text/css" href="/css/common.partial.css" rel="stylesheet">
 <link type="text/css" href="/css/container.community.css" 
 --%>
-	rel="stylesheet">
+	
 <link href="/favicon.ico" rel="shortcut icon">
 	<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/style.css" />
     <title>KH소통할까?</title>
@@ -66,6 +66,7 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/lib/codemirror.css">
 <%-- codemirror theme --%>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/eclipse.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/dracula.css">
 
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>

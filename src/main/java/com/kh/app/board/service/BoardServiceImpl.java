@@ -46,8 +46,18 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public List<BoardListDto> todayFoodBoardFindAll() {
+		return boardRepository.todayFoodBoardFindAll();
+	}
+	
+	@Override
 	public List<BoardListDto> askCodeBoardFindAll() {
 		return boardRepository.askCodeBoardFindAll();
+	}
+	
+	@Override
+	public List<BoardListDto> studyBoardFindAll() {
+		return boardRepository.studyBoardFindAll();
 	}
 	
 	@Override
@@ -146,11 +156,6 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findByPopularPost();
 	}
 
-	@Override
-	public int createComment(CreateCommentDto comment, String memberId) {
-		// TODO Auto-generated method stub
-		return boardRepository.createComment(comment,memberId);
-	}
 
 	@Override
 	public PostAttachment findAttachById(int id) {
@@ -205,8 +210,16 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.CommentLikeCheckById(postId,memberId);
 	}
-	
 	@Override
+	public int createComment(Comment comment) {
+		// TODO Auto-generated method stub
+		return boardRepository.createComment(comment);
+	}
+	@Override
+	public int deleteBoard(int deletePostId) {
+		return boardRepository.deleteBoard(deletePostId);
+	}
+	
 	public List<NoticeBoardDto> findThreeNotice() {
 		// TODO Auto-generated method stub
 		return boardRepository.findThreeNotice();
