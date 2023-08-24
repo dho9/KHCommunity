@@ -1,4 +1,4 @@
-package com.kh.app.message.controller;
+package com.kh.app.messageBox.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;

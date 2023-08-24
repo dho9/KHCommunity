@@ -1139,8 +1139,11 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
+update student set curriculum_id =null where student_id='heejin'; 
 
-
+update student set approve_request_date=null where student_id= 'heejin';
+delete from student_attachment where member_id='heejin';
+ 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
