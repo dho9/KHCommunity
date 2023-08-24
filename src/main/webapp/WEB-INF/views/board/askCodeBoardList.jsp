@@ -87,6 +87,7 @@
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="5">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
+	      	<input type = "hidden" name="text" id="text" value="">
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
@@ -97,7 +98,6 @@
 					<option value="html">Html</option>	      			
 					<option value="sql">Sql</option>	      			
 	      		</select>
-	      		<button type="button" id="testBtn">버튼</button>
 	      	</p>
 	        <p>
 	        	<textarea id="batch_content" name="batch_content"></textarea>
@@ -109,7 +109,7 @@
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
-        	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+        	<button type="submit" id="submitBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="anonymous">
         		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
@@ -120,24 +120,21 @@
 	    articlesContainer.insertAdjacentHTML("afterbegin", formHtml);
 	    const createForm = document.getElementById("createForm");
 	    const titleInput = document.getElementById("title");
-	    const contentTextarea = document.getElementById("text");
 
 	    writeButton.style.display = "none";
 	    createForm.classList.remove("hidden");
 	    
 	    // 에디터 설정 
-	    var textarea = document.getElementById('batch_content');
-	    var language = document.getElementById('language');
-	    let testButton = document.querySelector("#testBtn");
-	    console.log("testButton", testButton);
-	    
+	    var textarea = document.querySelector('#batch_content');
+	    var language = document.querySelector('#language');
 	    
 	    var editor = CodeMirror.fromTextArea(textarea, {
 	        lineNumbers: true,  //왼쪽 라인넘버 표기
 	        lineWrapping: true, //줄바꿈. 음.. break-word;
-	        mode: 'text/x-java', //모드는 sql 모드
-	        theme: "eclipse",   //테마는 맘에드는 걸로.
-	        val: textarea.value
+	        mode: 'text/x-java', //모드는 java 모드
+	        theme: "dracula",   //테마는 맘에드는 걸로.
+	        val: textarea.value,
+	        
 	    });
 	    
 	    language.addEventListener('change', (e) => {
@@ -148,10 +145,7 @@
 	        	editor.setOption('mode', `text/x-\${lang}`);
 	        }
 	    });
-	    var userInput = editor.getValue();
-	    testButton.onclick = (()=>{
-		    console.log("사용자 입력 내용:", userInput);
-	    });
+	    
 	    
 	 	// 익명체크
 		let anonymousButton = document.querySelector(".anonymous");  
@@ -226,6 +220,15 @@
 	            tagElement.setAttribute("value", "#" + tag);
 	        }
 	    }
+	    
+	    const submitBtn = document.querySelector("#submitBtn");
+	    const text = document.querySelector("#text");
+	    
+	    
+	    submitBtn.addEventListener('click', (e) => {
+		    var userInput = editor.getValue();
+		    text.value = userInput;
+	    });
 	 }
 	
 	

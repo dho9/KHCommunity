@@ -146,15 +146,38 @@ ul.commentMenu li {
 				  		</ul>
 					  	<hr>
 					  	<h1 class="large" style="font-size : 20px;">${postDetail.title}</h2> <br>
+					  	<input type="hidden" name="content" id="content" value="${postDetail.content}">
 					  	<c:if test="${postAttach != null }">
-						  	<img 
+					  		<c:if test="${postDetail.boardId eq '5'}">
+					  			<img 
 						  		src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
 						  		style="width: 747px;">
-						  	<p class="large">${postDetail.content}</p> <br>
+							  	<p class="large">
+							  		<textarea id="batch_content" name="batch_content"></textarea>
+							  		
+							  	</p> <br>
+					  		</c:if>
+					  		<c:if test="${postDetail.boardId ne '5'}">
+						  		<img 
+							  		src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
+							  		style="width: 747px;">
+					  			<p class="large">${postDetail.content}</p> <br>
+					  		</c:if>
+						  	
 					  	</c:if>
 					  	<c:if test="${postAttach == null }">
-						  	<p class="large">${postDetail.content}</p> <br>
+					  		<c:if test="${postDetail.boardId eq '5'}">
+							  	<p class="large">
+							  		<textarea id="batch_content" name="batch_content"></textarea>
+							  	</p> <br>
+					  		</c:if>
+					  		<c:if test="${postDetail.boardId ne '5'}">
+					  			<p class="large">${postDetail.content}</p> <br>
+					  		</c:if>
+					  	
 					  	</c:if>
+					  	
+					  	
 					  	<c:forEach items="${postDetail.tag}" var="tag">
 					  		<span class="tag">${tag}</span>
 					  	</c:forEach>
@@ -202,6 +225,23 @@ ul.commentMenu li {
 	<form:form name="loadCommentFrm"></form:form>
 	<form:form name="commentLikeFrm"></form:form>
 	<script>
+	
+	// 코드편집기
+	var textarea = document.querySelector('#batch_content');
+	var content = document.querySelector('#content').value;    
+	console.log("content = ", content);
+	
+    var editor = CodeMirror.fromTextArea(textarea, {
+    	lineNumbers: true,  //왼쪽 라인넘버 표기
+        lineWrapping: true, //줄바꿈. 음.. break-word;
+        mode: 'text/x-java', //모드는 java 모드
+        theme: "dracula",   //테마는 맘에드는 걸로.
+       	readOnly: true,
+       	cursorBlinkRate: 0  
+    });
+    
+    editor.setValue(content);
+    
 document.addEventListener('DOMContentLoaded', () => {
 	
 	loadComment();
