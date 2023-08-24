@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -26,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +40,7 @@ import com.kh.app.member.entity.Authority;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
+import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
@@ -53,6 +56,7 @@ import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.common.HelloSpringUtils;
+import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.khclass.entity.KhClass;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -615,4 +619,34 @@ public class AdminController {
 		
 		return "redirect:/admin/adminStoreList.do";
 	}
+	
+	@PostMapping("/insertStore.do")
+    public String insertStore(@ModelAttribute("store") Store store,
+    		@RequestParam(value = "file", required = false) MultipartFile file,
+    		HttpServletRequest request) throws IllegalStateException, IOException {
+		log.debug("file = {}", file);
+		String storeName = store.getStoreName();
+		String postNumber = store.getPostNumber();
+		String address = store.getAddress();
+		
+		 // 1. 새로운 저장 경로 지정
+	    ServletContext servletContext =  request.getServletContext();
+	    String resourcesPath = "/resources/images/store/";
+		String approveUploadPath = servletContext.getRealPath(resourcesPath);
+
+	    // 2. 파일 저장
+	    StudentAttachment attach = null;
+
+	    if (file != null && !file.isEmpty()) {
+	        String originalFilename = file.getOriginalFilename();
+	        String renamedFilename = storeName+".jpg";
+
+	        File destFile = new File(approveUploadPath + File.separator + renamedFilename);
+
+	        file.transferTo(destFile);
+	    }
+
+	    int result = adminService.insertStore(storeName, postNumber, address);
+        return "redirect:/admin/adminStoreList.do"; // 예시 리다이렉트 URL
+    }
  }

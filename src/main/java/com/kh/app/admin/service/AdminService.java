@@ -125,6 +125,8 @@ public interface AdminService {
 
 	int deleteStore(int storeId);
 
+	int insertStore(String storeName, String postNumber, String address);
+
 
 
 

@@ -311,4 +311,8 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.deleteStore(storeId);
 	}
 	
+	@Override
+	public int insertStore(String storeName, String postNumber, String address) {
+		return adminRepository.insertStore(storeName, postNumber, address);
+	}
 }
