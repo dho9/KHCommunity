@@ -813,11 +813,13 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 		 const receiveId =document.getElementById("receiveMember");
 		 const toInput = document.getElementById("toInput");
 		 if(${postDetail.anonymousCheck ne '1'}){
-		 	toInput.value = "${postDetail.memberId}";   
+		 	toInput.value = "${postDetail.memberId}";  
+		 	receiveId.value = "${postDetail.memberId}";  
 		 }
 		 if(${postDetail.anonymousCheck eq '1'}){
 		 	toInput.value = "익명";   
-			receiveId.value = "${postDetail.memberId}";   
+			receiveId.value = "${postDetail.memberId}";  
+			 
 		 }
 		 openMessageBtn.addEventListener("click", function() {
 		    messageContainer.style.display = "block";

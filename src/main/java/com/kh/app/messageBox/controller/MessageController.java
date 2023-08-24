@@ -30,43 +30,43 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequestMapping("/message")
 public class MessageController {
-	
-	@Autowired
-	private MessageService messageService;
 
-	@PostMapping("/messageSend.do")
-	@ResponseBody
-	public ResponseEntity<?> messageSend (@RequestParam String sendId, @RequestParam String anonymousCheck,
-			@RequestParam String receiveId, @RequestParam String messageContent) {
-		
-		MessageBox message = MessageBox.builder()
-				.sendId(sendId)
-				.receiveId(receiveId)
-				.messageContent(messageContent)
-				.anonymousCheck(AnonymousCheck.valueOf(anonymousCheck))
-				.readCheck(ReadCheck.n)
-				.build();
-		
-		
-		int result = messageService.insertMessage(message);
-	
-		log.debug("&&&&&&&&&message / result ={} {}", message, result);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(Map.of("sendId", sendId, "receiveId", receiveId));
-	}
-	
-	
-	@GetMapping("/messageList.do")
-	@ResponseBody
-	public List<MessageBox> data(Model model, @AuthenticationPrincipal MemberDetails member) {
-		String memberId= member.getMemberId();
-		List<MessageBox> messageList = messageService.getMessageList(memberId);
-		
-		model.addAttribute("messageList", messageList);
-		
-		log.debug("&&&%%%%%%%%%%%%%&&&&&&message ={}", messageList);
-		return messageList;
-	}
+   @Autowired
+   private MessageService messageService;
 
-	
+   @PostMapping("/messageSend.do")
+   @ResponseBody
+   public ResponseEntity<?> messageSend (@RequestParam String sendId, @RequestParam String anonymousCheck,
+         @RequestParam String receiveId, @RequestParam String messageContent) {
+
+      MessageBox message = MessageBox.builder()
+            .sendId(sendId)
+            .receiveId(receiveId)
+            .messageContent(messageContent)
+            .anonymousCheck(AnonymousCheck.valueOf(anonymousCheck))
+            .readCheck(ReadCheck.n)
+            .build();
+
+
+      int result = messageService.insertMessage(message);
+
+      log.debug("&&&&&&&&&message / result ={} {}", message, result);
+
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("sendId", sendId, "receiveId", receiveId));
+   }
+
+
+   @GetMapping("/messageList.do")
+   @ResponseBody
+   public List<MessageBox> data(Model model, @AuthenticationPrincipal MemberDetails member) {
+      String memberId= member.getMemberId();
+      List<MessageBox> messageList = messageService.getMessageList(memberId);
+
+      model.addAttribute("messageList", messageList);
+
+      log.debug("&&&%%%%%%%%%%%%%&&&&&&message ={}", messageList);
+      return messageList;
+   }
+
+
 }

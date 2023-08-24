@@ -10,5 +10,4 @@ public interface MessageService {
 
 	ArrayList<MessageBox> getMessageList(String memberId);
 
-
 }
