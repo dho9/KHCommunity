@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
+import org.apache.ibatis.session.RowBounds;
 
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
@@ -100,11 +101,11 @@ public interface BoardRepository {
 
 	List<PopularBoardDto> findByPopularPost();
 	
-	
-	
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
+	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds);
+	
 	@Select("  SELECT  pc.*, (SELECT COUNT(*) FROM comment_like cl WHERE cl.comment_id = pc.comment_id) AS like_count FROM post_comment pc where pc.post_id = #{postId} order by pc.comment_id asc ")
 	List<Comment> findByCommentByPostId(int postId);
 	
@@ -128,12 +129,11 @@ public interface BoardRepository {
 	        "VALUES (seq_comment_id.nextval, #{postId}, #{boardId}, #{memberId}, #{commentContent}, #{commentLevel}, #{commentRef}, #{anonymousCheck})")
 	int createComment(Comment comment);
 
+	int totalCountMyClassBoard();
+	
 	@Delete("delete post where post_id = #{deletePostId}")
 	int deleteBoard(int deletePostId);
 
-	
-
-	
 	@Select("SELECT p.post_id, p.title, pc.content\r\n"
 			+ "FROM post p\r\n"
 			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"

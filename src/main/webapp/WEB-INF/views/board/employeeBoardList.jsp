@@ -55,7 +55,7 @@
 					  		<span class="tag">${tag}</span>
 					  	</c:forEach>
 					  	<ul class="status">
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
+					  		<li><img class="like" data-value="${board.postId}" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
 					  		<li class="vote" style="margin-top: 5px;">${board.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${board.commentCount}</li>
@@ -227,8 +227,20 @@
 		  createForm.remove();
 	}
 	  
-    // load됐을때 내가 즐겨찾기한 게시판인지 확인
-    window.onload = () => {
+	// onload 됐을때 즐겨찾기/공감 했는지
+	document.addEventListener('DOMContentLoaded', () => {
+		isFovorite(); // 즐겨찾기했는지
+		isLike(); // 공감했는지
+	});
+	  
+	// onload 됐을때 즐겨찾기/공감 했는지
+	document.addEventListener('DOMContentLoaded', () => {
+		isFovorite(); // 즐겨찾기했는지
+		isLike(); // 공감했는지
+	});
+	  
+    // 내가 즐겨찾기한 게시판인지 확인
+	function isFovorite() {
     	console.log(document.querySelector('.bi').dataset.value);
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
@@ -238,7 +250,6 @@
     		method : "GET",
     		dataType : "json",
     		success(responseData) {
-    			console.log(responseData);
     			const {available} = responseData;
     			
     			const star = document.querySelector('.bi');
@@ -252,7 +263,42 @@
                 }
     		}
     	});
+	}
+    
+   	// 공감(좋아요) 했는지 확인
+    function isLike() {
+    	document.querySelectorAll('.like').forEach((e) => {
+	    	console.log(e.dataset.value);
+	   		$.ajax({
+	   			url : "${pageContext.request.contextPath}/board/postLike.do",
+	   			data : {
+	   				_postId : e.dataset.value
+	   			},
+	   			method : "GET",
+	               dataType : "json",
+	               success(responseData) {
+	       			const {available, likeCount} = responseData;
+	       			const {postLikeCount} = likeCount;
+	       			
+	       			const like = document.querySelectorAll('.like');
+	       			const vote = document.querySelectorAll('.vote');
+	       			for(let i=0; i<like.length; i++) {
+	       				if(like[i].dataset.value == e.dataset.value) {
+			       			if(available) {
+			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+			                   	vote[i].innerHTML = `\${postLikeCount}`;
+			                   }
+			                   else {
+			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/like.png";
+			                   	vote[i].innerHTML = `\${postLikeCount}`;
+			                   }
+	       				}
+	       			}
+	               }
+	   		});
+    	});
     }
+   	
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
     	console.log(e.target.dataset.value);
@@ -285,36 +331,6 @@
             }
         });
     };
-    
- 	// load됐을때 공감(좋아요) 했는지 확인
-	window.onload = () => {
-		console.log(document.querySelector('.like').dataset.value);
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : document.querySelector('.like').dataset.value
-			},
-			method : "GET",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-    			const {available, likeCount} = responseData;
-    			const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-	};
     </script>
 <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

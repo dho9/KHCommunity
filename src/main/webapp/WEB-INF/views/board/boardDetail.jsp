@@ -177,6 +177,68 @@ ul.commentMenu li {
 	border: solid 0.7px lightgray;
 	background-color: #f2eded75;
 }
+
+
+#messageContainer {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.message-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 450px;
+}
+
+#closeMessageBtn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#closeMessageBtn:hover,
+#closeMessageBtn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+}
+
+#openMessageBtn {
+background-color: white; border: 0px;
+color: black;
+}
+
 </style>
 
 <div id="container" class="community" style="margin-top: 25px;">
@@ -197,10 +259,10 @@ ul.commentMenu li {
 				  		<img class="picture large" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<div class="profile">
 				  			<c:if test="${postDetail.anonymousCheck eq '1'}">
-					  			<h3 class="large" style="font-size: 13px">익명</h3>
+					  			<h3 class="large" style="font-size: 13px" id="postAnonymous">익명</h3>
 					  		</c:if>
 					  		<c:if test="${postDetail.anonymousCheck ne '1'}">
-						  		<h3 class="large" style="font-size: 13px">${postDetail.memberId}</h3>
+						  		<h3 class="large" style="font-size: 13px" id="postCreateId">${postDetail.memberId}</h3>
 					  		</c:if>
 						  	<time class="large" style="font-size: 12px">
 							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
@@ -214,7 +276,7 @@ ul.commentMenu li {
 				  			</c:if>
 				  			
 				  			<c:if test="${postDetail.memberId ne loginMember.username}">
-					  			<li class="messagesend" style="margin-right: 5px;">쪽지 | </li>
+					  			<li class="messagesend" style="margin-right: 5px;" id="openMessageBtn">쪽지 | </li>
 					  			<li class="abuse">신고</li>
 				  			</c:if>
 				  		</ul>
@@ -258,7 +320,7 @@ ul.commentMenu li {
 					  	<ul class="status">
 					  		<%-- 좋아요 버튼 --%>
 					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
-					  		<li class="vote" style="margin-top: 5px;">${postDetail.postLike}</li>
+					  		<li class="vote" data-value="${postDetail.postId}" style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
 					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
 					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
 					  	</ul>
@@ -305,6 +367,43 @@ ul.commentMenu li {
 		<input type="hidden" name="deletePostId" id="deletePostId" value="${postDetail.postId}"/>
 		<input type="hidden" name="postBoardLink" id="postBoardLink" value="${board.boardLink}"/>
 	</form:form>
+	
+	
+	<!-- 쪽지 모달 -->
+
+<div id="messageContainer" class="modal">
+	<div class="message-content">
+		<form:form id="messageFrm" action="${pageContext.request.contextPath}/message/messageSend.do">
+        	<div>
+        		<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span>
+        		<span class="close" id="closeMessageBtn">&times;</span>         
+        	</div>
+        	</br>
+        	<sec:authentication property="principal" var="loginMember"/>
+        	<div class="mb-3">
+        		<label for="toInput" class="form-label">To</label>
+        		<input type="text" id="toInput" value="" readonly>
+        		<input type="hidden" id="receiveMember" value="" readonly>
+        	</div>
+        	</br></br>
+        	<div class="mb-3">
+                <label for="fromInput" class="form-label">From</label></br>
+                 <input type="text" class="form-control" id="fromInput" value="${loginMember.memberId}" readonly>
+        	</div>
+        	</br></br>
+        	<div class="mb-3">
+                <label for="contentInput" class="form-label">Content</label>
+                <textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
+        	</div>
+            <button id="sendMessageBtn">메시지 전송</button>
+        </form:form>
+	</div>
+</div>
+
+	
+	
+	
+	
 	<script>
 	
 	// 글 삭제
@@ -343,17 +442,86 @@ ul.commentMenu li {
 	}
     
     
-document.addEventListener('DOMContentLoaded', () => {
-	//댓글호출함수
-	loadComment();
-	//엔터키로 폼제출방지
-	document.querySelector('.writecomment').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();}
-        
+	document.addEventListener('DOMContentLoaded', () => {
+		isLike(); // 공감했는지
+		like(); // 공감누르기
+		//댓글호출함수
+		loadComment();
+		//엔터키로 폼제출방지
+		document.querySelector('.writecomment').addEventListener('keydown', (e) => {
+	        if (e.key === 'Enter') {
+	            e.preventDefault();}
+	        
+		});
+		
 	});
 	
-});
+	//공감(좋아요) 했는지 확인
+	function isLike() {
+		console.log(document.querySelector('.like').dataset.value);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/postLike.do",
+			data : {
+				_postId : document.querySelector('.like').dataset.value
+			},
+			method : "GET",
+	        dataType : "json",
+	        success(responseData) {
+	        	console.log(responseData);
+				const {available, likeCount} = responseData;
+				const {postLikeCount} = likeCount;
+				
+				const like = document.querySelector('.like');
+				const vote = document.querySelector('.vote');
+				if(available) {
+	            	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	            	vote.innerHTML = `\${postLikeCount}`;
+	            }
+	            else {
+	            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	            	vote.innerHTML = `\${postLikeCount}`;
+	            }
+	        }
+		});
+	}
+	
+	// 공감(좋아요) 누르기
+	function like() {
+		document.querySelector('.vote').onclick = (e) => {
+			console.log(e.target.dataset.value);
+			
+			const token = document.tokenFrm._csrf.value;
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/board/postLike.do",
+				data : {
+					_postId : e.target.dataset.value
+				},
+				headers: {
+	                "X-CSRF-TOKEN": token
+	            },
+	            method : "POST",
+	            dataType : "json",
+	            success(responseData) {
+	            	console.log(responseData);
+					const {available, likeCount} = responseData;
+					const {postLikeCount} = likeCount;
+	    			
+	    			const like = document.querySelector('.like');
+	    			const vote = document.querySelector('.vote');
+	    			if(available) {
+	                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
+	                	vote.innerHTML = `\${postLikeCount}`;
+	                }
+	                else {
+	                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
+	                	vote.innerHTML = `\${postLikeCount}`;
+	                }
+	            }
+			});
+		};
+	}
 
 //내가 누른 댓글 좋아요 불러오기
 function loadCommentLike() {
@@ -624,75 +792,6 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	
 	</script>
 	<script>
-	// load됐을때 공감(좋아요) 했는지 확인
-	window.onload = () => {
-		
-		console.log(document.querySelector('.like').dataset.value+"ㅋㅌㅋㅌㅋㅌㅋㅌ");
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : document.querySelector('.like').dataset.value
-			},
-			method : "GET",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-    			const {available, likeCount} = responseData;
-    			const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-		
-		
-		
-		
-	};
-	
-	// 공감(좋아요) 누르기
-	document.querySelector('.like').onclick = (e) => {
-		console.log(e.target.dataset.value);
-		
-		const token = document.tokenFrm._csrf.value;
-		
-		$.ajax({
-			url : "${pageContext.request.contextPath}/board/postLike.do",
-			data : {
-				_postId : e.target.dataset.value
-			},
-			headers: {
-                "X-CSRF-TOKEN": token
-            },
-            method : "POST",
-            dataType : "json",
-            success(responseData) {
-            	console.log(responseData);
-				const {available, likeCount} = responseData;
-				const {postLikeCount} = likeCount;
-    			
-    			const like = document.querySelector('.like');
-    			const vote = document.querySelector('.vote');
-    			if(available) {
-                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-                else {
-                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-                	vote.innerHTML = `\${postLikeCount}`;
-                }
-            }
-		});
-	};
 	
 	// 해시태그 검색
 	document.querySelectorAll('.tag').forEach((tag) => {
@@ -702,6 +801,69 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 			
 			document.tagFrm.submit();
 	    });
+	});
+	
+	
+	// 게시글 작성자 쪽지 보내기
+	document.querySelector("#openMessageBtn").addEventListener("click", function(event) {
+	
+		 const openMessageBtn = document.getElementById("openMessageBtn");
+		 const messageContainer = document.getElementById("messageContainer");
+		 const closeMessageBtn = document.getElementById("closeMessageBtn");
+		 const receiveId =document.getElementById("receiveMember");
+		 const toInput = document.getElementById("toInput");
+		 if(${postDetail.anonymousCheck ne '1'}){
+		 	toInput.value = "${postDetail.memberId}";  
+		 	receiveId.value = "${postDetail.memberId}";  
+		 }
+		 if(${postDetail.anonymousCheck eq '1'}){
+		 	toInput.value = "익명";   
+			receiveId.value = "${postDetail.memberId}";  
+			 
+		 }
+		 openMessageBtn.addEventListener("click", function() {
+		    messageContainer.style.display = "block";
+		 });
+
+		 closeMessageBtn.addEventListener("click", function() {
+		     messageContainer.style.display = "none";
+		 });
+	});
+	
+	document.querySelector("#sendMessageBtn").addEventListener("click", function(event) {
+		
+		event.preventDefault();
+		const sendId = document.getElementById("fromInput").value;
+		const receiveId =document.getElementById("receiveMember").value;
+		const messageContent =document.getElementById("messageContent").value;
+		const toInput = document.getElementById("toInput").value;
+		const token = document.tokenFrm._csrf.value;
+		let anonymousCheck = 'n';
+		
+		console.log(receiveId);
+		
+		if(toInput == "익명"){
+			anonymousCheck = 'y'
+		}
+		console.log(sendId, receiveId, messageContent);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/message/messageSend.do",
+			data : {	sendId: sendId,
+	            		receiveId: receiveId,
+	            		messageContent: messageContent,
+	            		anonymousCheck : anonymousCheck},
+			headers: {
+                "X-CSRF-TOKEN": token
+            },
+            method : "POST",
+            dataType : "json",
+            success(responseData) {
+            	alert("쪽지전송이 완료되었습니다.");
+            }
+		});
+		
+		
 	});
 	</script>
 	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
