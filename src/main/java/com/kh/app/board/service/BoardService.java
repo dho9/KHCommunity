@@ -63,7 +63,6 @@ public interface BoardService {
 
 	List<PopularBoardDto> findByPopularPost();
 
-	int createComment(CreateCommentDto comment, String memberId);
 	
 	int insertBoardNofiles(BoardCreateDto board);
 
@@ -88,7 +87,8 @@ public interface BoardService {
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
 
 	int deleteBoard(int deletePostId);
-
+	
+	int createComment(Comment comment);
 	
 	List<NoticeBoardDto> findThreeNotice();
 

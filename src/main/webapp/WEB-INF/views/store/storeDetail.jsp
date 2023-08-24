@@ -246,6 +246,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                 	memberId: userId,
                     storename: name,
                     amount: quantity,
+         
                     totalPrice : totalAmount
                     
                 };
