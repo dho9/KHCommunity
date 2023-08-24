@@ -65,7 +65,7 @@ img { border: 0; }
 div,nav,aside,article,figure { display: block; }
 dl,ul,ol,menu,li { list-style:none; }
 img,input,select,textarea { vertical-align: middle; }
-a { color: #666; text-decoration: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+a {  text-decoration: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 em { font-style: normal; font-weight: bold; }
 em.underline { font-style: normal; font-weight: normal; text-decoration: underline; }
 address { font-style: normal; }

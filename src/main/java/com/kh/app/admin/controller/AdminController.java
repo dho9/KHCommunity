@@ -42,16 +42,25 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
+import com.kh.app.curriculum.dto.CurriculumRegDto;
+import com.kh.app.store.entity.Store;
+import com.kh.app.store.service.StoreService;
+import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.CurriculumListDto;
+import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.khclass.entity.KhClass;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.TeacherCreateDto;
+import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -67,6 +76,9 @@ public class AdminController {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private StoreService storeService;
 	
 	@Autowired
 	private AdminService adminService;
@@ -354,7 +366,7 @@ public class AdminController {
 	// 수강생에게 쪽지 보내기 - 유성근
 	@PostMapping("/adminSendMessage.do")
 	public String adminStudentSendMessage(@Valid MessageBox message) {
-		message.setSendId("chdan");
+		message.setSendId("admin");
 		int result = adminService.sendMessageToStudent(message);
 		return "redirect:/admin/adminStudentList.do";
 	}
@@ -431,39 +443,8 @@ public class AdminController {
 	public void teacherList(Model model,
 	            @RequestParam(value = "searchType", required = false) String searchType,
 	            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-	            @RequestParam(value = "subject", required = false) String[] _subjects){
-		List<String> subjects = null;
-		
-		if (_subjects != null) {
-			subjects = Arrays.asList(_subjects);
-		}
-		
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("searchType", searchType);
-		filters.put("searchKeyword", searchKeyword);
-		filters.put("subjects", subjects);
-		
-		List<Teacher> teachers = adminService.findAllTeacher(filters);
-		model.addAttribute("teachers", teachers);
-	}
-	
-	@PostMapping("/adminTeacherDelete.do")
-	public String adminTeacherDelete(@Valid Teacher teacher) {
-		String memberId = teacher.getMemberId();
-		// member테이블에서 삭제
-		int result1 = adminService.deleteAdminTeacher(memberId);
-		int result2 = adminService.deleteAdminAuthority(memberId);
-		return "redirect:/admin/teacherList.do";
-	}
-	
-	// 과정등록/조회
-	@GetMapping("/adminCourseList.do")
-	public void adminCourseList(Model model, @RequestParam(defaultValue = "1") int page,
-							@RequestParam(value = "searchType", required = false) String searchType,
-				            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-				            @RequestParam(value = "subjects", required = false) String[] _subjects
-								) {
-		
+	            @RequestParam(value = "subject", required = false) String[] _subjects,
+                @RequestParam(defaultValue = "1") int page){
 		List<String> subjects = null;
 		
 		if (_subjects != null) {
@@ -482,20 +463,83 @@ public class AdminController {
 				"limit", limit
 		);
 		
+		List<TeacherListDto> teachers = adminService.findAllTeacher(filters, params);
 		model.addAttribute("currentPage", page);
-		
+		model.addAttribute("teachers", teachers);
 		// 전체 학생 수를 가져온다.
-	    int totalCount = adminService.totalCountCurriculum(filters);
+	    int totalCount = adminService.totalCountTeachers(filters);
 
 	    // totalPages 계산
 	    int totalPages = (int) Math.ceil((double) totalCount / limit);
 	    model.addAttribute("totalPages", totalPages);
-	    
 		
-		List<CurriculumListDto> curriculumList = adminService.adminCourseList(filters, params);
-		log.debug("curriculumList={}", curriculumList);
-		model.addAttribute("curriculumList", curriculumList);
 	}
+	
+	@PostMapping("/adminTeacherDelete.do")
+	public String adminTeacherDelete(@Valid Teacher teacher) {
+		String memberId = teacher.getMemberId();
+		// member테이블에서 삭제
+		int result1 = adminService.deleteAdminTeacher(memberId);
+		int result2 = adminService.deleteAdminAuthority(memberId);
+		return "redirect:/admin/teacherList.do";
+	}
+
+	// 과정 조회
+	@GetMapping("/adminCourseList.do")
+    @ResponseBody
+    public Object adminCourseList(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "subjects", required = false) String[] _subjects,
+            @RequestParam(value = "classId", required = false) String classId,
+            @RequestParam(value = "curriculumId", required = false) Integer curriculumId,
+            Model model
+    ) {
+        List<String> subjects = null;
+
+        if (_subjects != null) {
+            subjects = Arrays.asList(_subjects);
+        }
+
+        Map<String, Object> filters = new HashMap<>();
+        filters.put("searchType", searchType);
+        filters.put("searchKeyword", searchKeyword);
+        filters.put("subjects", subjects);
+
+        int limit = 10;
+        Map<String, Object> params = Map.of(
+                "page", page,
+                "limit", limit
+        );
+
+        int totalCount = adminService.totalCountCurriculum(filters);
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+
+        List<CurriculumListDto> curriculumList = adminService.adminCourseList(filters, params);
+        
+        log.debug("curriculumId = {}", curriculumId);
+        
+        if (classId != null && curriculumId != 0) {
+            List<AdminCurriculumDetailDto> classStudents = adminService.findStudentsByClassId(classId, curriculumId);
+            return classStudents;
+        }
+
+        // 강사 불러오기
+        List<Teacher> teachers = adminService.findAllTeachers();
+        
+        // 반 불러오기
+        List<KhClass> khClasses = adminService.findAllClass();
+        
+        
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("curriculumList", curriculumList);
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("khClasses", khClasses);
+        
+        return model;
+    }
 
 	@GetMapping("/writeNotice.do")
 	public void writeNotice() {}
@@ -504,11 +548,10 @@ public class AdminController {
 	public String writeNotice(
 			@RequestParam String title,
 			@RequestParam String text,
-			@RequestParam int boardId,
+			@RequestParam(name="boardId") int boardId,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
 		
 		// 1. 파일저장
-		int result = 0;
 		List<PostAttachment> attachments = new ArrayList<>(); 
 		for(MultipartFile file : files) {
 			if(!file.isEmpty()) {
@@ -516,7 +559,6 @@ public class AdminController {
 				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
 				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
 				file.transferTo(destFile);	
-				
 				PostAttachment attach = 
 						PostAttachment.builder()
 						.postOriginalFilename(originalFilename)
@@ -532,18 +574,45 @@ public class AdminController {
 				.content(text)
 				.boardId(boardId)
 				.memberId(memberId)
+				.attachments(attachments)
 				.build();
-		log.debug("attach = {}", attachments);
-		log.debug("board = {}", board);
 		
-//		
-//		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
-//			result = adminService.insertBoardNofiles(board);
-//		}else {
-//			result = adminService.insertBoard(board);
-//		}
-//		result = adminService.insertPostContent(board);
+		int result = 0;
+		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+			result = adminService.insertBoardNofiles(board);
+		}else {
+			result = adminService.insertBoard(board);
+		}
+		result = adminService.insertPostContent(board);
 		
 		return "redirect:/admin/writeNotice.do";
 	}
-}
+	
+	// 과정 등록
+	@PostMapping("/adminAddCourse.do")
+	public String adminAddCourse(@Valid CurriculumRegDto curriculum) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        curriculum.setStartDate(LocalDate.parse(curriculum.getStartDateAsString(), formatter));
+        curriculum.setEndDate(LocalDate.parse(curriculum.getEndDateAsString(), formatter));
+        
+        int result = adminService.addCurriculum(curriculum);
+        
+		return "redirect:/admin/adminCourseList.do";
+	}
+
+
+	@GetMapping("/adminStoreList.do")
+	public void adminStoreList(Model model) {
+		List<Store> store = storeService.findAll();
+//		 log.debug("ticekt = {}", ticket);
+		model.addAttribute("stores", store);
+	}
+	
+	@PostMapping("/adminDeleteStore.do")
+	public String adminDeleteStore(@Valid int storeId){
+		
+		int result = adminService.deleteStore(storeId);
+		
+		return "redirect:/admin/adminStoreList.do";
+	}
+ }

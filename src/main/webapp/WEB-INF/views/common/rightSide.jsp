@@ -62,11 +62,11 @@
 	</div>
 </div>
 <script>
-window.onload = () => {
-    $.ajax({
-        url: "${pageContext.request.contextPath}/board/popularPost.do",
-        success: function(data) {
-            console.log(data);
+    async function loadPopularPosts() {
+        try {
+            const response = await fetch("${pageContext.request.contextPath}/board/popularPost.do");
+            const data = await response.json();
+
             const container = $("#popularPostsContainer");
             for (let i = 0; i < data.length; i++) {
                 const post = data[i];
@@ -76,7 +76,7 @@ window.onload = () => {
                     <h4>\${post.boardName}</h4>
                     <ul class="status">
                         <li><img src="${pageContext.request.contextPath}/resources/images/like.png" /></li>
-                        <li class="vote active">\${post.postLike}</li>
+                        <li class="vote active">\${post.likeCount}</li>
                         <li><img src="${pageContext.request.contextPath}/resources/images/comment.png" /></li>
                         <li class="comment active">\${post.commentCount}</li>
                     </ul>
@@ -84,9 +84,14 @@ window.onload = () => {
                 </a>`;
                 container.append(postHTML);
             }
+        } catch (error) {
+            console.error("Error loading popular posts:", error);
         }
-    });
-};
+    }
+
+    window.onload = () => {
+        loadPopularPosts();
+    };
 </script>
 
 

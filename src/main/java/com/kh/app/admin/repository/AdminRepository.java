@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
@@ -17,13 +18,19 @@ import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
+import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
+import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.curriculum.dto.CurriculumListDto;
+import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.khclass.entity.KhClass;
 import com.kh.app.member.dto.AdminEmployeeListDto;
 import com.kh.app.member.dto.AdminStudentApproveDto;
 import com.kh.app.member.dto.EmployeeCreateDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.TeacherCreateDto;
+import com.kh.app.member.dto.TeacherListDto;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.vacation.dto.AdminVacationApproveDto;
 
@@ -133,13 +140,15 @@ public interface AdminRepository {
 	@Delete("delete from member where member_id = #{employeeId}")
 	int deleteAdminMember(AdminEmployeeListDto employee);
 
-	List<Teacher> findAllTeacher(Map<String, Object> filters);
+	List<TeacherListDto> findAllTeacher(Map<String, Object> filters, RowBounds rowBounds);
 
 	@Delete("delete from member where member_id = #{memberId}")
 	int deleteAdminTeacher(String memberId);
 
 	int totalCountEmployees(Map<String, Object> filters);
 
+	int totalCountTeachers(Map<String, Object> filters);
+	
 	@Delete("delete from authority where member_id = #{memberId}")
 	int deleteAdminAuthority(String memberId);
 
@@ -166,5 +175,42 @@ public interface AdminRepository {
 	List<CurriculumListDto> adminCourseList(Map<String, Object> filters, RowBounds rowBounds);
 
 	int totalCountCurriculum(Map<String, Object> filters);
+
+	@Select("select * from member m join student s on m.member_id = s.student_id join curriculum c on s.curriculum_id = c.curriculum_id where c.class_id = #{classId} and c.curriculum_id = #{curriculumId}")
+	List<AdminCurriculumDetailDto> findStudentsByClassId(String classId, int curriculumId);
+
+	@Select("select member_id, member_name from member m join teacher t on m.member_id = t.teacher_id")
+	List<Teacher> findAllTeachers();
+
+	@Select("select * from class")
+	List<KhClass> findAllClass();
+
+	@Insert("insert into curriculum (curriculum_id, class_id, teacher_id, subject, curriculum_name, curriculum_start_at, curriculum_end_at) values (seq_curriculum_id.nextval, #{classId}, #{teacherId}, #{subject}, #{curriculumName}, #{startDate}, #{endDate})")
+	int addCurriculum(CurriculumRegDto curriculum);	
+	
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'y', 'y', #{tags, typeHandler=stringListTypeHandler})")
+	@SelectKey(
+			before = false, 
+			keyProperty = "postId", 
+			resultType = int.class,
+			statement = "select seq_post_id.currval from dual")
+	int insertBoard(BoardCreateDto board);
+
+	@Insert("insert into post_content (post_id, board_id, content) values(#{postId}, #{boardId}, #{content})")
+	int insertPostContent(BoardCreateDto board);
+
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler})")
+	@SelectKey(
+			before = false, 
+			keyProperty = "postId", 
+			resultType = int.class,
+			statement = "select seq_post_id.currval from dual")
+	int insertBoardNofiles(BoardCreateDto board);
+
+	@Insert("insert into post_attachment values(seq_post_attach_id.nextval, #{postId}, #{boardId}, #{postOriginalFilename}, #{postRenamedFilename})")
+	int insertPostAttach(PostAttachment attach);
+
+	@Delete("delete from store where store_id = #{storeId}")
+	int deleteStore(int storeId);
 
 }

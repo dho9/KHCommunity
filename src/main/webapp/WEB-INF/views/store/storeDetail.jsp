@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 
 <link rel="stylesheet"
@@ -39,8 +41,9 @@
 	justify-content: center;
 	margin-top: 10px; /* 상단 여백 조정 */
 }
-div.container{
-font-family: 'HakgyoansimWoojuR';
+
+div.container {
+	font-family: 'HakgyoansimWoojuR';
 }
 </style>
 <!-- jQuery -->
@@ -49,6 +52,11 @@ font-family: 'HakgyoansimWoojuR';
 <!-- iamport.payment.js -->
 <script type="text/javascript"
 	src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+<sec:authorize access="isAuthenticated()">
+	<script>
+	const memberId = '<sec:authentication property="principal.username"/>';
+	</script>
+</sec:authorize>
 <div class="container mt-5y" style="margin-top: 20px;">
 	<div class="row">
 		<div class="col-md-8">
@@ -70,7 +78,7 @@ font-family: 'HakgyoansimWoojuR';
 						</dd>
 						<div id="payHidden" style="display: none;">
 							<div class="row">
-								<div class="col-sm-3" font-size: 36px; font-weight:bold; >수량</div>
+								<div class="col-sm-3"font-size: 36px; font-weight:bold; >수량</div>
 								<div class="col-sm-9">
 									<input type="number" id="ticketQuantity" value="0"
 										style="width: 150px; font-size: 20px;" />
@@ -79,17 +87,24 @@ font-family: 'HakgyoansimWoojuR';
 						</div>
 
 						<a class="text-center" id="create-kakao-link-btn"
-							href="javascript:;" style="display: none;" />
-						<img
+							href="javascript:;" style="display: none;"> <img
 							src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" />
-						결제 후 카카오톡 링크공유 창이 뜨지 않으면 눌러주세요.
+							결제 후 카카오톡 링크공유 창이 뜨지 않으면 눌러주세요.
 						</a>
 						<div class="card-footer text-muted text-center ">식권결제는 카카오페이
 							결제를 지원하고 있습니다.</div>
-						<div class="mt-4 centered-button">
-							<button type="button" class="btn btn-primary"
-								onclick="checkAndRequestPay()">식권 구매하기</button>
-						</div>
+						<sec:authorize access="isAnonymous()">
+							<div class="mt-4 centered-button">
+								<button type="button" class="btn btn-primary"
+									onclick="loginPage()">식권 구매하기</button>
+							</div>
+						</sec:authorize>
+						<sec:authorize access="isAuthenticated()">
+							<div class="mt-4 centered-button">
+								<button type="button" class="btn btn-primary"
+									onclick="checkAndRequestPay()">식권 구매하기</button>
+							</div>
+						</sec:authorize>
 					</dl>
 				</div>
 			</div>
@@ -97,7 +112,7 @@ font-family: 'HakgyoansimWoojuR';
 
 		</div>
 
-		<div class="col-md-4" >
+		<div class="col-md-4">
 			<div class="card">
 				<div class="card-body" style="font-size: 20px;">
 					<h2 class="large-text">위치</h2>
@@ -121,9 +136,7 @@ font-family: 'HakgyoansimWoojuR';
 			src="./CryptoJS/components/enc-base64.js"></script>
 	</div>
 </div>
-</div>
-</div>
-</div>
+
 <form:form name="paymentFrm"></form:form>
 <script>
 var mapContainer = document.getElementById('map');
@@ -164,20 +177,32 @@ geocoder.addressSearch('${store.address}', function(result, status) {
 });
 </script>
 <script>
+	function loginPage(){
+		alert("로그인 후 이용 가능합니다..");
+	}		
+
+
+
             function checkAndRequestPay() {
-            	document.querySelector('#payHidden').style.display = 'block';
             	
-                const quantity = parseInt(document.getElementById('ticketQuantity').value);
-                
-                if (quantity > 0) {
-                	if(confirm('선택하신 식권의 수량은 ' +quantity+ ' 장 입니다. 결제하시겠습니까?')){
-                		
-                    requestPay(quantity);
-                	}
-                } else {
-                    alert('수량을 선택 후 눌러주세요.');
-                    document.getElementById('ticketQuantity').focus();
-                }
+            	if(memberId!== null ){
+            		document.querySelector('#payHidden').style.display = 'block';
+                    const quantity = parseInt(document.getElementById('ticketQuantity').value);
+                    if (quantity > 0) {
+                    	if(confirm('선택하신 식권의 수량은 ' +quantity+ ' 장 입니다. 결제하시겠습니까?')){
+                    		
+                        requestPay(quantity);
+                    	}
+                    } else {
+                        alert('수량을 선택 후 눌러주세요.');
+                        document.getElementById('ticketQuantity').focus();
+                    }
+            	
+            	}else{
+            		alert("로그인 후 이용 부탁드립니다.")
+            	}
+            	
+            
             }
         
             function requestPay(quantity) {
@@ -202,7 +227,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                     if (rsp.success) {
                         console.log(rsp);
                         const {name} = rsp;
-                        const userId = 'alfn';
+                        const userId = memberId;
                         const totalAmount = quantity * 3000; // 총 결제 금액을 계산
                       	
                         sendPaymentDataToServer(rsp.merchant_uid, userId, name, quantity, totalAmount);

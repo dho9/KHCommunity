@@ -155,8 +155,11 @@
 	            	<div class="modal-body">
 		            <!-- 모달 내용 -->
 		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
-		                <input name="receiveId" id="receiveStudent" readonly>
-		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
+		                받는 사람 : <input style="border:0; outline:none;" name="receiveId" id="receiveStudent" readonly>
+		                <br> <br>
+		                내용 :
+		                <br>
+		                <textarea style="border-radius:10px; width:75%" name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
 		            </div>
 	            	<div class="modal-footer">
 		                <button id="btnSend" class="btn btn-primary">전송</button>	            
