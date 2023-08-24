@@ -18,6 +18,7 @@ public class Comment {
 	private String memberId;
 	private String commentContent;
 	private int commentLevel;
+	private int commentRef;
 	private Date commentCreatedAt;
 	private boolean anonymousCheck;
 	private int likeCount;

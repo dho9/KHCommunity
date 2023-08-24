@@ -146,11 +146,6 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findByPopularPost();
 	}
 
-	@Override
-	public int createComment(CreateCommentDto comment, String memberId) {
-		// TODO Auto-generated method stub
-		return boardRepository.createComment(comment,memberId);
-	}
 
 	@Override
 	public PostAttachment findAttachById(int id) {
@@ -205,7 +200,11 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.CommentLikeCheckById(postId,memberId);
 	}
-	
+	@Override
+	public int createComment(Comment comment) {
+		// TODO Auto-generated method stub
+		return boardRepository.createComment(comment);
+	}
 	@Override
 	public List<NoticeBoardDto> findThreeNotice() {
 		// TODO Auto-generated method stub

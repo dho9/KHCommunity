@@ -90,9 +90,7 @@ public interface BoardRepository {
 
 	List<PopularBoardDto> findByPopularPost();
 	
-	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level, anonymous_check) " +
-	        "VALUES (seq_comment_id.nextval, #{comment.postId}, #{comment.boardId}, #{memberId}, #{comment.commentContent}, 1, #{comment.anonymousCheck})")
-	int createComment(@Param("comment") CreateCommentDto comment, @Param("memberId") String memberId);
+	
 	
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
@@ -121,6 +119,10 @@ public interface BoardRepository {
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+	
+	@Insert("INSERT INTO post_comment(comment_id, post_id, board_id, member_id, comment_content, comment_level,comment_ref, anonymous_check) " +
+	        "VALUES (seq_comment_id.nextval, #{postId}, #{boardId}, #{memberId}, #{commentContent}, #{commentLevel}, #{commentRef}, #{anonymousCheck})")
+	int createComment(Comment comment);
 
 	@Select("SELECT p.post_id, p.title, pc.content\r\n"
 			+ "FROM post p\r\n"
