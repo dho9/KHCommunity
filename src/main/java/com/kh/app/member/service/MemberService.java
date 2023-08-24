@@ -9,9 +9,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.Member;
+import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
+import com.kh.app.member.entity.Vacation;
+import com.kh.app.member.entity.VacationAttachment;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 
@@ -32,11 +36,15 @@ public interface MemberService extends UserDetailsService{
 
 	int deleteMember(String memberId);
 
-	AdminStudentListDto findByMemberInfo(String memberId);
+	StudentMypageInfoDto findByMemberInfo(String memberId);
 
 	List<TicketBuyDto> findByTicketInfo(String memberId);
 
 	Curriculum findByDdayInfo(int curriculumId);
+
+
+	int insertVacation(Vacation vacation);
+
 
 	
 

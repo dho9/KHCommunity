@@ -5,7 +5,6 @@ import java.util.Random;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -16,13 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.curriculum.entity.Curriculum;
-import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
+import com.kh.app.member.entity.Vacation;
+import com.kh.app.member.entity.VacationAttachment;
 import com.kh.app.member.repository.MemberRepository;
 import com.kh.app.ticket.dto.TicketBuyDto;
+import com.nimbusds.openid.connect.sdk.assurance.evidences.attachment.Attachment;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -139,7 +141,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public Student findStudentById(String memberId) {
-		
 		return memberRepository.findStudentById(memberId);
 	}
 
@@ -156,7 +157,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public AdminStudentListDto findByMemberInfo(String memberId) {
+	public StudentMypageInfoDto findByMemberInfo(String memberId) {
 		return memberRepository.findByMemberInfo(memberId);
 	}
 
@@ -169,5 +170,38 @@ public class MemberServiceImpl implements MemberService {
 	public Curriculum findByDdayInfo(int curriculumId) {
 		return memberRepository.findByDdayInfo(curriculumId);
 	}
+
+//	@Override
+//	public int insertVacationAttach(VacationAttachment attach, MemberDetails member) {
+//		int result=0;
+//		result = memberRepository.insertVacation(member);
+//		result = memberRepository.insertVacationAttach(attach);
+//		result = memberRepository.updateVacationState(attach);
+//		return result;
+//	}
+
+
+	@Override
+	public int insertVacation(Vacation vacation) {
+		int result = 0;
+		
+		
+		result = memberRepository.insertVacation(vacation);
+		log.debug("board = {}", vacation);
+		//attachment 저장
+		List<VacationAttachment> attachments = ((Vacation) vacation).getAttachments();
+		if(attachments != null && !attachments.isEmpty()) {
+			for(VacationAttachment attach : attachments) {
+				attach.setVacationId(vacation.getVacationId());
+				result = memberRepository.insertAttachment(attach);
+			}
+		}
+		
+		return result;
+	}
+
+
+
+	
 
 }

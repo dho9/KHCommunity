@@ -53,6 +53,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 
 /*  추가된 css */
 #certificationDiv{display:none;} 
+#vacationDiv{display:none;} 
 #delete-container{display:none;}
 #certificationDiv label{ font-size: 50px; color: blue; width:90%}
 #certificationDiv h1{font-family: 'HakgyoansimWoojuR'; font-size: 50px; font-weight:bold;}
@@ -92,7 +93,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		<sec:authentication property="principal" var="loginMember"/>
 		<div id="info-container">
 			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${loginMember.name}</h2>
-			<p>${studentInfo.curriculumName }반</p>
+			<p>${studentInfo.curriculumName }반 </p>
 			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
 			<a href="${pageContext.request.contextPath}/message/messageSend.do" style="text-decoration: none;">테스트용</a>
 		</div>
@@ -135,7 +136,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			</svg>
 			<p>회원탈퇴</p>
 		</div>	
-		<div class="myPageIcon">
+		<div class="myPageIcon" id="myPageIcon5">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-airplane" viewBox="0 0 16 16">
   				<path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Zm.894.448C7.111 2.02 7 2.569 7 3v4a.5.5 0 0 1-.276.447l-5.448 2.724a.5.5 0 0 0-.276.447v.792l5.418-.903a.5.5 0 0 1 .575.41l.5 3a.5.5 0 0 1-.14.437L6.708 15h2.586l-.647-.646a.5.5 0 0 1-.14-.436l.5-3a.5.5 0 0 1 .576-.411L15 11.41v-.792a.5.5 0 0 0-.276-.447L9.276 7.447A.5.5 0 0 1 9 7V3c0-.432-.11-.979-.322-1.401C8.458 1.159 8.213 1 8 1c-.213 0-.458.158-.678.599Z"/>
 			</svg>
@@ -384,23 +385,41 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			<!-- 추가된 html -->
 			
 			<!-- 휴가신청 시작  -->
-			<div class="myPageDivs" id="certificationDiv" >		
+			<div class="myPageDivs" id="vacationDiv" >		
 				<h1>휴가신청</h1>
-				<form:form name="VacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
-					enctype = "multipart/form-data" method="post" id="VacationSubmitFrm">
+				<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
+					enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
+				
 					<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
 					<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
-					</br></br>
-					<label class="frmStyles" for="state">처리상황 &nbsp;: &nbsp;</label>
-					<span id="state" class="frmStyles"></span>
+						<tr>
+							<th>휴가시작날짜 : </th>
+							<td>
+								<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>휴가끝나는날짜 : </th>
+							<td>
+								<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
+							</td>
+						</tr>
+						
+						<br/>
+						<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
+					<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId} " readonly>
+					
 					<div class="input-group" style="padding:0px;">
 		  				<div class="custom-file">
 		    				<input type="file" class="fileInput" name="upFile" id="upFile" multiple>
 		    				<!-- <label class="custom-file-label" for="upFile">파일을 선택하세요</label> -->
 		  				</div>		  				
 					</div>
+					<label class="frmStyles" for="state">처리상황 &nbsp;: &nbsp;</label>
+					<span id="state" class="frmStyles"></span>
 					<br/>
-					<input type="submit" class="certiBtn" value="저장" >
+					<input type="submit" class="VacationBtn" value="저장" >
 				</form:form>
 			</div>
 			<!-- 휴가신청 끝  -->
@@ -520,6 +539,44 @@ document.querySelector("#certification").onclick=()=>{
 	});
 };
 
+
+document.querySelector("#myPageIcon5").onclick =()=>{
+	hideDiv();
+	document.querySelector("#vacationDiv").style.display = "block"; 
+	const value = document.querySelector("#memberId").value;
+	const teacherValue = document.querySelector("#teacherId").value;
+	
+$.ajax({
+		url: "${pageContext.request.contextPath}/member/vacationSubmit.do",
+		data :{
+			memberId :value,
+			teacherId : teacherValue
+		},
+		method : "GET",
+		dataType : "json",
+		success(responseData){
+			const {student} = responseData;
+			const {approveCompleteDate, approveRequestDate} = student;
+			const state = document.querySelector("#state");
+			const upFile = document.querySelector("#upFile");
+			if(approveCompleteDate ==null && approveRequestDate==null){
+				state.value ="인증요청 없음";
+				state.innerHTML=state.value;				
+			}
+			if(approveCompleteDate ==null && approveRequestDate!=null){
+				state.value ="인증요청 처리중";
+				state.innerHTML=state.value;
+				$('#upFile').attr('disabled',true);
+			}
+			if(approveCompleteDate !=null && approveRequestDate !=null){
+				state.value ="인증완료";
+				state.innerHTML=state.value;
+				$('#upFile').attr('disabled',true);
+			}
+		}
+		
+	});
+};
 
 
 </script>	
