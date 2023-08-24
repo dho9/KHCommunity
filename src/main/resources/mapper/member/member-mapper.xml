@@ -84,18 +84,18 @@
   </resultMap>
   
   <select id="findByMemberInfo" resultMap="findByMemberInfoMap">
-  select c.curriculum_name, mt.member_name, c.class_id, c.curriculum_end_at , s.curriculum_id
+  select *
   from member m left outer join student s
     on m.member_id = s.student_id
                 left outer join curriculum c
     on s.curriculum_id = c.curriculum_id
                 left outer join member mt
     on c.teacher_id = mt.member_id
- where m.member_id = #{memberId}
+ where m.member_id = #{studentId}
 </select>
 
  <resultMap id="findByMemberInfoMap" type="AdminStudentListDto">
-      <id column="member_id" property="memberId"/>
+      <id column="member_id" property="studentId"/>
       <result column="curriculum_name" property="curriculumName"/>
       <result column="member_name" property="memberName"/>
       <result column="class_id" property="classId"/>

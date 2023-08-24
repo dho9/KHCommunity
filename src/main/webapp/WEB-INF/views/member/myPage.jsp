@@ -382,6 +382,29 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 				</form:form>
 			</div>
 			<!-- 추가된 html -->
+			
+			<!-- 휴가신청 시작  -->
+			<div class="myPageDivs" id="certificationDiv" >		
+				<h1>휴가신청</h1>
+				<form:form name="VacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
+					enctype = "multipart/form-data" method="post" id="VacationSubmitFrm">
+					<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
+					<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
+					</br></br>
+					<label class="frmStyles" for="state">처리상황 &nbsp;: &nbsp;</label>
+					<span id="state" class="frmStyles"></span>
+					<div class="input-group" style="padding:0px;">
+		  				<div class="custom-file">
+		    				<input type="file" class="fileInput" name="upFile" id="upFile" multiple>
+		    				<!-- <label class="custom-file-label" for="upFile">파일을 선택하세요</label> -->
+		  				</div>		  				
+					</div>
+					<br/>
+					<input type="submit" class="certiBtn" value="저장" >
+				</form:form>
+			</div>
+			<!-- 휴가신청 끝  -->
+			
 			</div>
 			
 			</div>

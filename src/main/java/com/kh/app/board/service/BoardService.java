@@ -6,6 +6,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
@@ -81,7 +82,9 @@ public interface BoardService {
 	List<BoardListDto> myClassBoardFindByTag(String tag);
 	
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
-
+	
 	int createComment(Comment comment);
+	
+	List<NoticeBoardDto> findThreeNotice();
 
 }
