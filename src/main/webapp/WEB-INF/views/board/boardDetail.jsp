@@ -253,7 +253,7 @@ color: black;
 }
 
 </style>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div id="container" class="community" style="margin-top: 25px;">
 	<%-- principal을 변수 loginMember 저장 --%>
 	<sec:authentication property="principal" var="loginMember"/>
@@ -464,12 +464,14 @@ color: black;
 		like(); // 공감누르기
 		//댓글호출함수
 		loadComment();
-		//엔터키로 폼제출방지
-		document.querySelector('.writecomment').addEventListener('keydown', (e) => {
-	        if (e.key === 'Enter') {
-	            e.preventDefault();}
-	        
+		$('.comments').on('keypress', '.text', function(e) {
+		    if (e.keyCode === 13) {
+		        e.preventDefault();
+		        // 대댓글 전송 버튼 클릭 이벤트 호출
+		        $(this).siblings('.option').find('.submit').click(); // 적절한 선택자로 수정
+		    }
 		});
+		
 		
 	});
 	
@@ -768,23 +770,6 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
     }
 });
 
-
-//대댓글 입력창 추가
-//document.querySelectorAll('.commentMenu li.childcomment').forEach((li) => {
-//	li.addEventListener('click', (e)=>{   
-	//	 const commentId = li.getAttribute('data-commentid');
-	//        const commentElement = document.querySelector(`.parent[data-commentid="\${commentId}"]`); // 이 부분을 수정
-	//        console.log(commentElement);
-	//        if (commentElement) { // 존재하는 경우에만 작업 수행
-	 //           const childCommentForm = commentElement.querySelectorAll('.writecomment');
-	 //           console.log(childCommentForm);
-	 //           childCommentForm.forEach(form => {
-	  //              form.classList.toggle('active');
-	 //           });
-	  //      }
-//});
-//});
-
 //익명 , 제출버튼에 관한 기능
 let anonyCk = false;
 document.querySelector('#commnetContainer').addEventListener('click', (event) => {
@@ -845,17 +830,6 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
      
     
 });
-
-	// 댓글제출 
-	//document.querySelectorAll('.option li.submit').forEach((li) => {
-	//	li.addEventListener('click', (e)=>{
-		
-			
-	
-		//})
-	//});
-	
-	
 	
 	</script>
 	<script>
