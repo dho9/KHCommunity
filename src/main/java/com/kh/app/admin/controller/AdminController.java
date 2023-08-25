@@ -44,6 +44,7 @@ import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
+import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
@@ -445,6 +446,39 @@ public class AdminController {
 		return "redirect:/admin/employeeList.do";
 	}
 	
+	@GetMapping("/reportList.do")
+	public void reportList(Model model,
+			@RequestParam(value = "reportType", required = false) String _reportType, 
+			@RequestParam(defaultValue = "1") int page) {
+		// 페이징
+		int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		if (_reportType != null) {
+			String reportType = _reportType;
+			// checkbox 선택했을때, 해당 신고내역 불러오기
+			
+			List<Report> reports = adminService.findReportsByFilter(reportType, params);
+			int totalCount = adminService.countReportsByFilter(reportType);
+			int totalPages = (int) Math.ceil((double) totalCount / limit);
+			model.addAttribute("reports", reports);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", totalPages);
+		}else {
+			// 아무것도 선택안됐을때, 모든 신고내역 불러오기
+			List<Report> reports = adminService.findAllReports(params);
+			int totalCount = adminService.countAllReports();
+			int totalPages = (int) Math.ceil((double) totalCount / limit);
+			model.addAttribute("reports", reports);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", totalPages);
+		}
+		
+	}
+	
 	@GetMapping("/teacherList.do")
 	public void teacherList(Model model,
 	            @RequestParam(value = "searchType", required = false) String searchType,
@@ -686,4 +720,5 @@ public class AdminController {
 	    int result = adminService.insertStore(storeName, postNumber, address);
         return "redirect:/admin/adminStoreList.do"; // 예시 리다이렉트 URL
     }
+	
  }

@@ -17,6 +17,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
+import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
@@ -249,6 +250,17 @@ public interface AdminRepository {
 
 	@Insert("insert into store values (seq_store_id.nextval, #{storeName}, #{postNumber}, #{address}, '음식점')")
 	int insertStore(String storeName, String postNumber, String address);
+
+	@Select("select * from report")
+	List<Report> findAllReports(Map<String, Object> params);
+
+	@Select("select count(*) from report")
+	int countAllReports();
+
+	List<Report> findReportsByFilter(String reportType, Map<String, Object> params);
+
+	@Select("select count(*) from report")
+	int countReportsByFilter(String reportType);
 
 
 }

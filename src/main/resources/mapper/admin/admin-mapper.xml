@@ -181,4 +181,26 @@
     
   </select>
   
+  <select id="findReportsByFilter" resultType="Report">
+    SELECT *
+    FROM report
+    <where>
+        <if test="reportType == '게시글'">
+            AND post_id IS NOT NULL
+            AND comment_id IS NULL
+            AND message_id IS NULL
+        </if>
+        <if test="reportType == '댓글'">
+            AND post_id IS NULL
+            AND comment_id IS NOT NULL
+            AND message_id IS NULL
+        </if>
+        <if test="reportType == '쪽지'">
+            AND post_id IS NULL
+            AND comment_id IS NULL
+            AND message_id IS NOT NULL
+        </if>
+    </where>
+</select>
+
 </mapper>
