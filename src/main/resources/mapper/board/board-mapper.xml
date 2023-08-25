@@ -412,6 +412,47 @@ FETCH FIRST 5 ROWS ONLY
   <resultMap type="commentLike" id="findCommentLikeCount">
   	<result column="comment_like_count" property="commentLikeCount"/>
   </resultMap>
-  
+    <select id="AllBoardFindMyarticle" resultType="boardListDto">
+  	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    member_id = #{memberId}
+	order by
+		1 desc
+  </select>
+  <select id="AllBoardFindMycommentarticle" resultType="boardListDto">
+  select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	   p.post_id in (select post_id from post_comment where member_id = #{memberId} group by post_id)
+	order by
+		 (SELECT MAX(pc.comment_created_at) FROM post_comment pc WHERE pc.post_id = p.post_id) DESC
+  </select>
   
 </mapper>
