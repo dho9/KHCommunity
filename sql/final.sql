@@ -1170,6 +1170,13 @@ select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
 select * from authority;
+m.member_name, a.auth 
+select * from curriculum;
+
+select *
+from member m left outer join curriculum c  on  c.teacher_id = m.member_id
+right outer join  authority a on m.member_id = a.member_id 
+where m.member_id='godwjd';
 
 select c.curriculum_name, mt.member_name, c.class_id, c.teacher_id, mt.member_id
 from member m left outer join student s on m.member_id = s.student_id 
