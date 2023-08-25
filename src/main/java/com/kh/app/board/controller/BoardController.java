@@ -42,7 +42,7 @@ import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.common.HelloSpringUtils;
-import com.kh.app.member.dto.AdminStudentListDto;
+import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 
@@ -491,7 +491,7 @@ public class BoardController {
 	@GetMapping("/myClassBoardList.do")
 	public String myClassBoardList(
 			@AuthenticationPrincipal MemberDetails principal,
-			@Valid AdminStudentListDto studentInfo,
+			@Valid StudentMypageInfoDto studentInfo,
 			Model model
 			) {
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
