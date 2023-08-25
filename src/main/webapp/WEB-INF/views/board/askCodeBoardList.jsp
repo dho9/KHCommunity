@@ -134,7 +134,7 @@
 	        lineWrapping: true, //줄바꿈. 음.. break-word;
 	        mode: 'text/x-java', //모드는 java 모드
 	        theme: "dracula",   //테마는 맘에드는 걸로.
-	        val: textarea.value,
+	        val: textarea.value
 	        
 	    });
 	    

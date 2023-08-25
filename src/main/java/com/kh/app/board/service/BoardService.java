@@ -97,4 +97,8 @@ public interface BoardService {
 	
 	List<NoticeBoardDto> findThreeNotice();
 
+	int updatePost(BoardCreateDto board);
+
+	int updatePostContent(BoardCreateDto board);
+
 }

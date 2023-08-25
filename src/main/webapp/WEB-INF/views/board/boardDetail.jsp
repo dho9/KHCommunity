@@ -101,7 +101,6 @@ time.medium {
 	margin-left: 9px;
 	padding-top: 2px;
 }
-
 ul.commentMenu li {
 	float: right;
 	margin-left: 8px;
@@ -112,8 +111,8 @@ ul.commentMenu li {
 	font-size: 12px;
 	background-repeat: no-repeat;
 	background-position: left center;
-	background-size: 11px 11px;
 	cursor: pointer;
+	background-size: 11px 11px;
 }
 
 .tag {
@@ -136,6 +135,7 @@ ul.commentMenu li {
 	border-top: 1px solid lightgray;
 	margin: 5px 0;
 }
+
 
 #commnetContainer>div.articles>article form.writecomment input.text {
 	margin: 0;
@@ -226,7 +226,11 @@ ul.commentMenu li {
     cursor: pointer;
 }
 
-button {
+button.updateBtn, button.deleteBtn{
+	border: none;
+}
+
+/* button {
     padding: 10px 20px;
     background-color: #007BFF;
     color: white;
@@ -236,9 +240,9 @@ button {
 
 button:hover {
     background-color: #0056b3;
-}
+} */
 
-input[type="text"],
+/* input[type="text"],
 input[type="email"],
 textarea {
     width: 100%;
@@ -246,10 +250,19 @@ textarea {
     margin: 5px 0;
     box-sizing: border-box;
 }
-
+ */
 #openMessageBtn {
 background-color: white; border: 0px;
 color: black;
+}
+
+.anonymous{
+	float: right;
+	background-color: white;
+	margin-right: 13px;
+}
+.anonymousImg{
+	width: 59px;
 }
 
 </style>
@@ -427,53 +440,41 @@ color: black;
 	const updateBtn = document.querySelector(".updateBtn");
 	
 	function showInputForm() {
-		 
+		
 		const updateBtn = document.querySelector(".updateBtn");
 	    const articlesContainer = document.querySelector(".articles");
 	    const detailArticle = document.querySelector(".article");
 	    const commnetContainer = document.querySelector("#commnetContainer");
+	    let formHtml = "";
 
-	    const formHtml = `
+	    if("${postDetail.boardId}" === "5"){
+	    formHtml = `
 	      <form:form 
-	      	name="createFrm" 
+	      	name="updateFrm" 
 	      	class="hidden" 
-	      	action="${pageContext.request.contextPath}/board/createPost.do" 
-	      	id="createForm" 
+	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
+	      	id="updateForm" 
 	      	method="post" 
-	      	style="height: 63%;"
+	      	style="height: 66%;"
       		enctype="multipart/form-data">
-	      	<input type = "hidden" name="boardId" id="boardId" value="1">
-	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
+	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
+	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
+	      	<input type = "hidden" name="text" id="text" value="">
+	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
 	      	<input type = "hidden" name="grade" id="grade" >
 	      	<p>
 	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
 	      	</p>
+	      	<p>
+	      		<select name="language" id="language">
+					<option value="java">Java</option>	      			
+					<option value="javascript">JavaScript</option>	      			
+					<option value="html">Html</option>	      			
+					<option value="sql">Sql</option>	      			
+	      		</select>
+	      	</p>
 	        <p>
-	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
-
-	아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
-
-	※ 정치·사회 관련 행위 금지 
-	- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
-	- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
-	- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
-	- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
-	* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
-
-	※ 홍보 및 판매 관련 행위 금지 
-	- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
-	- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
-	* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
-
-	※ 불법촬영물 유통 금지
-	불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
-
-	※ 그 밖의 규칙 위반 
-	- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
-	- 범죄, 불법 행위 등 법령을 위반하는 행위 
-	- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
-	- 음란물, 성적 수치심을 유발하는 행위 
-	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
+	        	<textarea id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>
 	        	<label for="hashTag">해시태그</label><br>
@@ -481,28 +482,125 @@ color: black;
 	        	<div class="hashTag-container"></div>
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
-        	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
+        	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
         	<button type="button" class="anonymous">
         		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
 	      </form:form>
 	    `;
+	    } else {
+	    	formHtml = `
+	  	      <form:form 
+	  	      	name="updateFrm" 
+	  	      	class="hidden" 
+	  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
+	  	      	id="updateForm" 
+	  	      	method="post" 
+	  	      	style="height: 66%;"
+	        		enctype="multipart/form-data">
+	  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
+	  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
+	  	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
+	  	      	<input type = "hidden" name="grade" id="grade" >
+	  	      	<p>
+	  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
+	  	      	</p>
+	  	        <p>
+	  	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
+
+	  	        		아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
+
+	  	        		※ 정치·사회 관련 행위 금지 
+	  	        		- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
+	  	        		- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
+	  	        		- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
+	  	        		- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
+	  	        		* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
+
+	  	        		※ 홍보 및 판매 관련 행위 금지 
+	  	        		- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
+	  	        		- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
+	  	        		* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
+
+	  	        		※ 불법촬영물 유통 금지
+	  	        		불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
+
+	  	        		※ 그 밖의 규칙 위반 
+	  	        		- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
+	  	        		- 범죄, 불법 행위 등 법령을 위반하는 행위 
+	  	        		- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
+	  	        		- 음란물, 성적 수치심을 유발하는 행위 
+	  	        		- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text">${postDetail.content}</textarea>
+	  	        </p>
+	  	        	
+	  	        <div>
+	  	        	<label for="hashTag">해시태그</label><br>
+	  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
+	  	        	<div class="hashTag-container"></div>
+	  	        </div>
+	  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+	  	        
+	  	      	
+	  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
+	          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
+	          	<button type="button" class="anonymous">
+	          		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
+	          	</button>
+	          	
+	  	      </form:form>
+	  	      <div id="delDiv">
+		  	    <input type="text" id="fileName" value="${postAttach.postOriginalFilename}" readonly>
+		  	    <button type="button" id="delFileBtn">삭제</button>
+	  	      </div>
+		  	    
+	  	    `;
+	    }
 	    
 	   
 	    articlesContainer.insertAdjacentHTML("afterbegin", formHtml);
-	    const createForm = document.getElementById("createForm");
+	    const updateForm = document.getElementById("updateForm");
 	    const titleInput = document.getElementById("title");
 	    const contentTextarea = document.getElementById("text");
 
 	    detailArticle.style.display = "none";
 	    commnetContainer.style.display = "none";
-	    createForm.classList.remove("hidden");
+	    updateForm.classList.remove("hidden");
+	    
+		// 에디터 설정 
+	    var textarea = document.querySelector('#batch_content');
+	    var language = document.querySelector('#language');
+	    if(textarea !== null && language !== null ){
+	    	var editor = CodeMirror.fromTextArea(textarea, {
+		        lineNumbers: true,  //왼쪽 라인넘버 표기
+		        lineWrapping: true, //줄바꿈. 음.. break-word;
+		        mode: 'text/x-java', //모드는 java 모드
+		        theme: "dracula",   //테마는 맘에드는 걸로.
+		        val: textarea.value
+		        
+		    });
+		    
+		    language.addEventListener('change', (e) => {
+		        var lang = e.target.value;
+		        if(lang === "javascript" || lang === "html"){
+		        	editor.setOption('mode', `text/\${lang}`);
+		        }else {
+		        	editor.setOption('mode', `text/x-\${lang}`);
+		        }
+		    });
+	    }
+	    
 	    
 	 	// 익명체크
 		let anonymousButton = document.querySelector(".anonymous");  
 		let anonymousImg = document.querySelector(".anonymousImg");
 		let anonymousCheck = document.querySelector("#anonymousCheck");
+		
+		if(${postDetail.anonymousCheck}){
+			anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
+		} else {
+			anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
+		}
 		
 		anonymousButton.onclick = (()=>{
 		    if (anonymousImg.src.endsWith('/anonymous.png')) {
@@ -578,11 +676,11 @@ color: black;
 	function hideInputForm() {
 	  const detailArticle = document.querySelector(".article");
 	  const commnetContainer = document.querySelector("#commnetContainer");
-	  const createForm = document.getElementById("createForm");
+	  const updateForm = document.getElementById("updateForm");
 	
 	  detailArticle.style.display = "block";
 	  commnetContainer.style.display = "block";
-	  createForm.remove();
+	  updateForm.remove();
 	}
 	
 	
@@ -1107,7 +1205,7 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	
 	
 	// 게시글 작성자 쪽지 보내기
-	document.querySelector("#openMessageBtn").addEventListener("click", function(event) {
+	/* document.querySelector("#openMessageBtn").addEventListener("click", function(event) {
 	
 		 const openMessageBtn = document.getElementById("openMessageBtn");
 		 const messageContainer = document.getElementById("messageContainer");
@@ -1166,7 +1264,7 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 		});
 		
 		
-	});
+	}); */
 	</script>
 	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
