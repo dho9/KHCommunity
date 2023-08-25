@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostReportDto {
+	private int reportId;
 	private int postId;
 	private String reporterId;
 	private String attackerId;

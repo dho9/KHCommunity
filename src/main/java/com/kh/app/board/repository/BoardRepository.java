@@ -168,8 +168,8 @@ public interface BoardRepository {
 	List<CommentLike> commentLikeCheck(int postId);
 
 	
-	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
-	        "values(seq_report_id.nextval, #{postId})")
-	int insertPostReport(PostReportDto postReport);
+//	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
+//	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attakerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+//	int insertPostReport(PostReportDto postReport);
 	
 }

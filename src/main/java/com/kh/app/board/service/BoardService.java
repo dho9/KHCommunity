@@ -112,6 +112,6 @@ public interface BoardService {
 
 	List<CommentLike> commentLikeCheck(int postId);
 
-	int insertPostReport(PostReportDto postReport);
+//	int insertPostReport(PostReportDto postReport);
 
 }

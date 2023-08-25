@@ -401,6 +401,15 @@ FETCH FIRST 5 ROWS ONLY
   	<result column="board_link" property="boardLink"/>
   </resultMap>
   
+  <!-- <resultMap type="postReportDto" id="insertPostReport">
+  	<id column="report_id" property="reportId"/>
+  	<result column="post_id" property="postId"/>
+  	<result column="reporter_id" property="reporterId"/>
+  	<result column="attaker_id" property="attackerId"/>
+  	<result column="report_content" property="reportContent"/>
+  	<result column="report_type" property="reportType"/>
+  </resultMap> -->
+  
     <select id="findCommentLikeCount" resultType="commentLike">
   	select
 	    count(*) comment_like_count
