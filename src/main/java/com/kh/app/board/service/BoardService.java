@@ -89,12 +89,26 @@ public interface BoardService {
 
 	List<BoardListDto> myClassBoardFindByTag(String tag);
 	
-	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+	List<CommentLike> commentLikeCheckById(int postId, String memberId);
 
 	int deleteBoard(int deletePostId);
 	
 	int createComment(Comment comment);
 	
 	List<NoticeBoardDto> findThreeNotice();
+
+	int updatePost(BoardCreateDto board);
+
+	int updatePostContent(BoardCreateDto board);
+	
+	List<BoardListDto> AllBoardFindMyarticle(String memberId, Map<String, Object> params);
+
+	int totalCountMyarticle(String memberId);
+
+	List<BoardListDto> AllBoardFindMycommentarticle(String memberId, Map<String, Object> params);
+
+	int totalCountMycommentarticle(String memberId);
+
+	List<CommentLike> commentLikeCheck(int postId);
 
 }

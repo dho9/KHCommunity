@@ -291,7 +291,8 @@ CREATE TABLE report (
 
 CREATE TABLE chat_room (
    chat_id   number      NOT NULL,
-   chat_date   date   DEFAULT current_date
+   chat_date   date   DEFAULT current_date,
+   chat_type varchar2(100) default null
 );
 
 CREATE TABLE talker (
@@ -367,13 +368,40 @@ update(
         post p join post_content pc 
             on
         p.post_id = pc.post_id 
-)p_pc
+) p_pc
 set
     p_pc.title = '수정제목',
     p_pc.content = '수정내용'
 where
     p_pc.post_id=1;
     
+MERGE INTO post p
+USING post_content pc ON (p.post_id = pc.post_id)
+WHEN MATCHED THEN
+UPDATE SET p.title = '수정제목', pc.content = '수정내용'
+WHERE p.post_id = 1;
+
+select * from post_content;
+
+MERGE INTO post p
+USING (
+    SELECT post_id, content
+    FROM post_content
+) pc ON (p.post_id = pc.post_id)
+WHEN MATCHED THEN
+    UPDATE SET p.title = '수정제목', pc.content = '수정내용'
+WHERE p.post_id = 1;
+
+UPDATE (
+    SELECT p.post_id, p.title, pc.content
+    FROM post p
+    JOIN post_content pc ON p.post_id = pc.post_id
+) merged
+SET merged.title = '수정제목',
+      merged.content = '수정내용'
+where
+    merged.post_id = 1;
+
 
 select * from post order by 1;
 
@@ -1100,12 +1128,12 @@ VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공
 INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type, report_send_date, report_check)
 VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판인데 왜 이상한 글 을 올렸어요','욕설', current_date, 'n');
 
-
 -- chat_room
-INSERT INTO chat_room (chat_id, chat_date) VALUES (seq_chat_id.NEXTVAL, '23/08/14');
+INSERT INTO chat_room (chat_id, chat_date, chat_type) VALUES (seq_chat_id.NEXTVAL, '23/08/14', '교육원 등록 문의');
 
 -- talker
 INSERT INTO talker (chat_id, student_id, employee_id) VALUES (1, 'alfn', 'godwjd');
+
 -- chat_message
 INSERT INTO chat_message (chat_no,chat_id, member_id, chat_content) VALUES (seq_chat_message_no.nextval,1, 'alfn', '자바반 커리큐럼이 어떻게 되나요 ?');
 INSERT INTO chat_message (chat_no,chat_id, employee_id  , chat_content) VALUES ( seq_chat_message_no.nextval,1, 'godwjd', '안녕하세요 ?? 자바반 등록하려고 하시나요?');
@@ -1333,3 +1361,129 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
 
 
+update student set approve_request_date = sysdate where student_id = 'xogus';
+
+select 
+    p.*
+from
+    post p 
+where 
+    member_id ='eogh' and
+    ;
+    
+ select * from post_content;   
+ 
+ 
+  
+  	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    member_id = 'eogh'
+	order by
+		1 desc;
+  
+
+ select post_id from post_comment where member_id = 'eogh' group by post_id;
+  select  *from post_comment;
+SELECT COUNT(*) FROM (SELECT COUNT(*) FROM post_comment WHERE member_id = 'eogh' GROUP BY post_id);
+select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	   p.post_id in (select post_id from post_comment pq where member_id = 'eogh' group by post_id)
+	order by
+		 (SELECT MAX(pc.comment_created_at) FROM post_comment pc WHERE pc.post_id = p.post_id) DESC;
+select * from post_comment where member_id='eogh'  order by comment_created_at desc;
+
+select * from calendar;
+
+select m.member_name, m.member_phone, m.member_email, m.birthday, s.curriculum_id, c.class_id from member m join student s on m.member_id = s.student_id join curriculum c on s.curriculum_id = c.curriculum_id where c.class_id = '352';
+
+select * from post_comment where post_id =8;
+select * from comment_like;
+
+select * from member;
+select * from post_like;
+
+SELECT
+    v.vacation_id AS vacationId,
+    m.member_name AS memberName,
+    v.vacation_send_date,
+    v.vacation_start_date,
+    v.vacation_end_date,
+    m.birthday,
+    c.curriculum_start_at AS curriculumStartAt,
+    c.curriculum_end_at AS curriculumEndAt,
+    c.curriculum_name AS curriculumName,
+    c.class_id AS classId,
+    v.teacher_id,
+    t.member_name AS teacherName
+FROM
+    student s
+LEFT JOIN
+    member m ON s.student_id = m.member_id
+LEFT JOIN
+    curriculum c ON s.curriculum_id = c.curriculum_id
+LEFT JOIN
+    vacation v ON s.student_id = v.student_id
+LEFT JOIN
+    member t ON v.teacher_id = t.member_id
+WHERE
+    v.vacation_approve_check = '2';
+select * from vacation;
+select * from curriculum;
+
+insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
+
+update vacation set vacation_approve_check = '2', employee_id = null;
+
+select * from chat_room;
+select * from talker;
+select * from chat_message;
+select * from curriculum;
+select * from student;
+select * from member;
+select
+    t.chat_id,
+    t.student_id,
+    m.member_name student_name,
+    r.chat_type,
+    r.chat_date,
+    c.curriculum_name,
+    c.class_id,
+    s.student_type
+from 
+    talker t 
+        join chat_room r
+            on t.chat_id = r.chat_id
+        join student s
+            on t.student_id = s.student_id
+        join curriculum c
+            on s.curriculum_id = c.curriculum_id
+        join member m
+            on s.student_id = m.member_id;

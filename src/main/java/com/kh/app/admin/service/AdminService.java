@@ -14,6 +14,8 @@ import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
@@ -133,6 +135,12 @@ public interface AdminService {
 	int updateCurriculum(CurriculumRegDto curriculum);
 
 	int insertStore(String storeName, String postNumber, String address);
+
+	List<AdminChatListDto> findAllChat(Map<String, Object> params);
+
+	int getTotalCountOfChatList();
+
+	List<ChatMessage> getChatMessagesByChatId(int chatId);
 
 
 

@@ -45,7 +45,7 @@ import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.common.HelloSpringUtils;
-import com.kh.app.member.dto.AdminStudentListDto;
+import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 
@@ -276,7 +276,6 @@ public class BoardController {
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
-		System.out.println("board = " + board);
 		model.addAttribute("postAttach",postAttach);
 	}
 
@@ -383,7 +382,6 @@ public class BoardController {
 		}
 			
 			BoardCreateDto board = null;
-			log.debug("gradddeeeeededeed={}",grade);
 			
 			if(grade == null || grade.equals("")) {
 				board = BoardCreateDto.builder()
@@ -423,6 +421,88 @@ public class BoardController {
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 
 	}
+	
+	/**
+	 * 글 수정
+	 * @param title
+	 * @param text
+	 * @param boardId
+	 * @param grade
+	 * @param anonymousCheck
+	 * @param _tags
+	 * @param member
+	 * @param files
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@PostMapping("/updatePost.do")
+	public String updatePost(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam int postId,
+			@RequestParam String grade,
+			@RequestParam(required = false) boolean anonymousCheck,
+			@RequestParam(required = false) String[] _tags,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+		
+		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+		BoardCreateDto board = null;
+		int result = 0;
+		
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		for(MultipartFile file : files) {
+			if(!file.isEmpty()) {
+				String originalFilename = file.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				file.transferTo(destFile);	
+
+				PostAttachment attach = 
+						PostAttachment.builder()
+						.postOriginalFilename(originalFilename)
+						.postRenamedFilename(renamedFilename)
+						.boardId(boardId)
+						.postId(postId)
+						.build();
+
+				attachments.add(attach);
+			}
+		}
+		
+		if(grade == null || grade.equals("")) {
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments) 
+					.anonymousCheck(anonymousCheck)
+					.build();
+			
+		} else {
+			String realGrade = " [평점 : " + grade + "]";
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title + realGrade)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments)
+					.anonymousCheck(anonymousCheck)
+					.build();
+		}
+		result = boardService.updatePost(board);
+		result = boardService.updatePostContent(board);
+		
+		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
+	}
+	
 
 
 	@GetMapping("/popularPost.do")
@@ -504,7 +584,7 @@ public class BoardController {
 	@GetMapping("/myClassBoardList.do")
 	public String myClassBoardList(
 			@AuthenticationPrincipal MemberDetails principal,
-			@Valid AdminStudentListDto studentInfo,
+			@Valid StudentMypageInfoDto studentInfo,
 			Model model
 			) {
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
@@ -548,11 +628,12 @@ public class BoardController {
 	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
 		String memberId = principal.getMemberId();
 		int postId = Integer.parseInt(_postId);
-		List<CommentLike> commentLike = boardService.CommentLikeCheckById(postId, memberId);
-
+		List<CommentLike> commentLike = boardService.commentLikeCheckById(postId, memberId);
+		
+		List<Comment> commentLikeCheck = boardService.findByCommentByPostId(postId);
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(Map.of("commentLike", commentLike));
+				.body(Map.of("commentLike", commentLike,"commentLikeCheck",commentLikeCheck));
 	}
 
 	@PostMapping("/commentLike.do")
@@ -615,8 +696,8 @@ public class BoardController {
 	@ResponseBody
 	public Resource fileDownload(@RequestParam int id, HttpServletResponse response) throws FileNotFoundException {
 		PostAttachment attach = boardService.findAttachById(id);
-		log.debug("attach = {}, ", attach);
-		log.debug("multipartLocation = {}", multipartLocation);
+//		log.debug("attach = {}, ", attach);
+//		log.debug("multipartLocation = {}", multipartLocation);
 		
 		File downFile = new File(multipartLocation, attach.getPostRenamedFilename());
 		
@@ -631,5 +712,78 @@ public class BoardController {
 		return resource;
 	}
 	
+	@GetMapping("myarticle.do")
+	public String myarticle(@AuthenticationPrincipal MemberDetails principal, Model model,@RequestParam(defaultValue = "1") int page) {
+//		log.debug("myarticleList={}",myarticleList);
+		   int limit = 6;
+			Map<String, Object> params = Map.of(
+					"page", page,
+					"limit", limit
+			);
+			List<BoardListDto> myarticleList = boardService.AllBoardFindMyarticle(principal.getMemberId(),params);
+			
+		    int totalCount = boardService.totalCountMyarticle(principal.getMemberId());
+
+		    // total학생 계산
+		    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		    model.addAttribute("totalPages", totalPages);
+			
+			model.addAttribute("myarticle",myarticleList);
+			
+		return "/board/myarticle";
+	}
+	
+	@GetMapping("mycommentarticle.do")
+	public String mycommentarticle(@AuthenticationPrincipal MemberDetails principal, Model model,@RequestParam(defaultValue = "1") int page) {
+//		log.debug("myarticleList={}",myarticleList);
+		   int limit = 6;
+			Map<String, Object> params = Map.of(
+					"page", page,
+					"limit", limit
+			);
+			List<BoardListDto> mycommentarticle = boardService.AllBoardFindMycommentarticle(principal.getMemberId(),params);
+			log.debug("sdsdsdsdsdsdsd={}",mycommentarticle);
+		    int totalCount = boardService.totalCountMycommentarticle(principal.getMemberId());
+		    log.debug("토탈카운트에요.={}",totalCount);
+		    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		    model.addAttribute("totalPages", totalPages);
+			model.addAttribute("comment",mycommentarticle);
+			
+		return "/board/mycommentarticle";
+	}
+	
+	@PostMapping("/createMyClassBoardComment.do")
+	public String createMyClassBoardComment(CreateCommentDto _comment, @AuthenticationPrincipal MemberDetails member, Model model) {
+		log.debug("_comment = {}", _comment);
+		if(member != null &&_comment.getCommentRef()==""){ //댓글용
+			Comment comment = Comment.builder()  
+					.postId(_comment.getPostId())
+					.boardId(_comment.getBoardId())
+					.memberId(member.getMemberId())
+					.commentContent(_comment.getCommentContent())
+					.commentLevel(1)
+					.commentRef(0)
+					.anonymousCheck(_comment.isAnonymousCheck()).build();
+			int result = boardService.createComment(comment);
+		}
+		
+		if(member != null &&_comment.getCommentRef()!="" ) {//대댓글용
+			int ref = Integer.parseInt(_comment.getCommentRef()); 
+			Comment comment = Comment.builder()  
+					.postId(_comment.getPostId())
+					.boardId(_comment.getBoardId())
+					.memberId(member.getMemberId())
+					.commentContent(_comment.getCommentContent())
+					.commentLevel(2)
+					.commentRef(ref)
+					.anonymousCheck(_comment.isAnonymousCheck()).build();
+			int result = boardService.createComment(comment);
+		}
+		
+		List<Comment> comments = boardService.findByCommentByPostId(_comment.getPostId());
+		model.addAttribute("comments", comments);
+		
+		return "redirect:/board/myClassBoardDetail.do?id=" + _comment.getPostId();
+	}
 }
 

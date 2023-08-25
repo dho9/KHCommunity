@@ -2,6 +2,7 @@ package com.kh.app.board.entity;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class Comment {
 	private String commentContent;
 	private int commentLevel;
 	private int commentRef;
-	private Date commentCreatedAt;
+	private LocalDateTime commentCreatedAt;
 	private boolean anonymousCheck;
 	private int likeCount;
 	private String memberName;

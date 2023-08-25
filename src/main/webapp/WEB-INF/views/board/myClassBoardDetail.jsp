@@ -37,6 +37,22 @@
 }
 .list-group.list-group-flush {
 	width: 1200px;
+	margin-top: 1%;
+	margin-bottom: 2%;
+}
+#commentFrm textarea {
+	margin-left: 7%;
+    padding: 2px;
+}
+#commentFrm button {
+	margin-right: -6%;
+    width: 105px;
+}
+.list-group.list-group-flush span {
+	font-size: 13px;
+}
+.list-group.list-group-flush li {
+	background-color: #fff;
 }
 </style>
 	<div id="myClassBoard-div">
@@ -52,33 +68,105 @@
 		</ul>
 	</div>
 
+	<!-- 게시글 -->
 	<div class="d-flex justify-content-center">
-	<div class="card border-primary mb-3">
-	  <div class="card-header">
-	  	<h3>${postDetail.title}</h3>
-	  	<h5>${postDetail.memberName}</h5>
-	  </div>
-	  <div class="card-header"><a href = '${pageContext.request.contextPath}/board/fileDownload.do?id=${postDetail.postId}';>첨부파일 - ${postAttach.postRenamedFilename != null ? postAttach.postRenamedFilename : '없음'}</a></div>
-	  <div class="card-body">
-	    <p class="card-text">${postDetail.content}</p>
-	  </div>
-	</div>
-	</div>
-
-	<div class="d-flex justify-content-center">
-	<c:if test="${comments ne null}">
-		<c:forEach items="${comments}" var="comment">
-			<ul class="list-group list-group-flush">
-			  <li class="list-group-item">
-			  	${comment.getMemberName}
-			  	${comment.getCommentCreatedAt}
-			  	${comment.getCommentContent}
-			  </li>
-			</ul>
-		</c:forEach>
-	</c:if>
+		<div class="card border-primary mb-3">
+		  <div class="card-header">
+		  	<h3>${postDetail.title}</h3>
+		  	<h5>${postDetail.memberName}</h5>
+		  </div>
+		  <div class="card-header"><a href = '${pageContext.request.contextPath}/board/fileDownload.do?id=${postDetail.postId}';>첨부파일 - ${postAttach.postRenamedFilename != null ? postAttach.postRenamedFilename : '없음'}</a></div>
+		  <div class="card-body">
+		    <p class="card-text">${postDetail.content}</p>
+		  </div>
+		</div>
 	</div>
 	
-
+	<!-- 댓글 -->
+	<div class="d-flex justify-content-center">
+		<c:if test="${comments ne null}">
+			<ul class="list-group list-group-flush">
+				<c:forEach items="${comments}" var="comment">
+					<c:if test="${comment.commentLevel eq 1}">
+					  <li class="list-group-item">
+					  	<b>${comment.memberName}</b>
+					  	<span>
+					  		<fmt:parseDate value="${comment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+						  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
+					  	</span>
+					  	<c:if test="${loginMember.memberId eq comment.memberId}">
+						  	<b id="deleteComment" style="float: right;">&nbsp; 삭제</b>
+					  	</c:if>
+					  	<b id="childComment" style="float: right;">답글 &nbsp;|</b>
+					  	<input type="hidden" name=commentId value="${comment.commentId}"/>
+					  	<div>${comment.commentContent}</div>
+					  </li>
+					</c:if>
+					<c:if test="${comment.commentLevel eq 2}">
+					  <li class="list-group-item">
+					    <b>${comment.memberName}</b>
+					    <span>
+					  		<fmt:parseDate value="${comment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+						  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
+					  	</span>
+					  	<c:if test="${loginMember.memberId eq comment.memberId}">
+						  	<b id="deleteComment" style="float: right;">&nbsp; 삭제</b>
+					  	</c:if>
+					  	<input type="hidden" name=commentId value="${comment.commentId}"/>
+					  	<div>${comment.commentContent}</div>
+					  </li>
+					</c:if>
+				</c:forEach>
+			</ul>
+		</c:if>
+	</div>
+	
+	<form:form 
+		name="commentFrm" id="commentFrm" method="POST"
+		action="${pageContext.request.contextPath}/board/createMyClassBoardComment.do">
+		<div class="d-flex justify-content-center"  style="width: 1200px;" >
+			<input type="hidden" name="postId" value="${postDetail.postId}"/>
+			<input type="hidden" name="boardId" value="${postDetail.boardId}"/>
+			<input type="hidden" name="commentRef" />
+		    <textarea id="commentContent" name="commentContent" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+			<button id="commentBtn" type="submit" class="btn btn-outline-warning">등록</button>
+		</div>
+	</form:form>
+	<form:form name="tokenFrm"></form:form>
+	<script>
+	document.querySelectorAll('#childComment').forEach((childComment) => {
+		childComment.addEventListener('click', (e) => {
+			const html = `
+	            <textarea name="commentContent" class="form-control" id="exampleFormControlTextarea1" rows="3" style="background-color: #6495ed1c; height: 70px;"></textarea>
+	            <button id="childCommentBtn" type="button" class="btn btn-outline-warning">등록</button>
+	        `;
+	        e.target.closest('li').insertAdjacentHTML('afterend', html);
+	        document.querySelector('#commentContent').style.display = 'none';
+	        document.querySelector('#commentBtn').style.display = 'none';
+	        
+	        document.querySelector('#childCommentBtn').addEventListener('click', () => {
+	        	const token = document.tokenFrm._csrf.value;
+				const postId = document.querySelector('input[name=postId]').value;
+				$.ajax({
+					url : "${pageContext.request.contextPath}/board/createMyClassBoardComment.do",
+					method : "POST",
+					headers: {
+		                "X-CSRF-TOKEN": token
+		            },
+					data : {
+						postId : document.querySelector('input[name=postId]').value,
+						boardId : document.querySelector('input[name=boardId]').value,
+						commentContent : document.querySelector('textarea[name=commentContent]').value,
+						commentRef : document.querySelector('input[name=commentId]').value
+					},
+					success(responseData) {
+						console.log(responseData);
+						window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId
+					}
+				})
+	        });
+		});
+	});
+	</script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

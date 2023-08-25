@@ -54,7 +54,8 @@
                     <p class="school">${ loginMember.memberEmail}</p>
                     </sec:authorize>
                     <ul class="buttons">
-                        <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
+                  <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
+                  <li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
                          <li><a href="#" id="logoutLink">로그아웃</a></li>                       
                     </ul>
                     <hr>
@@ -62,8 +63,8 @@
             </div>
             <div class="card">
                 <div class="menus">
-                    <a href="/myarticle" class="myarticle">내가 쓴 글</a>
-                    <a href="/mycommentarticle" class="mycommentarticle">댓글 단 글</a>
+                    <a href="${pageContext.request.contextPath}/board/myarticle.do" class="myarticle">내가 쓴 글</a>
+                    <a href="${pageContext.request.contextPath}/board/mycommentarticle.do" class="mycommentarticle">댓글 단 글</a>
                     <a class="myBoard" id="myBoard">즐겨찾기</a>
                     <div class="favorite"></div>
                     <hr>

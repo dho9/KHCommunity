@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.app.board.dto.BoardCreateDto;
@@ -140,5 +141,28 @@ public interface BoardRepository {
 			+ "ORDER BY p.post_created_at DESC\r\n"
 			+ "FETCH FIRST 3 ROWS ONLY")
 	List<NoticeBoardDto> findThreeNotice();
+
+	@Update("update post set title = #{title}, tag = #{tags, typeHandler=stringListTypeHandler}, anonymous_check = #{anonymousCheck} where post_id = #{postId}")
+	int updatePost(BoardCreateDto board);
+	
+	@Update("update post_content set content = #{content} where post_id = #{postId}")
+	int updatePostContent(BoardCreateDto board);
+
+	@Delete("delete post_attachment where post_id = #{postId}")
+	int deletePostAttach(PostAttachment attach);
+	
+	
+	List<BoardListDto> AllBoardFindMyarticle(String memberId, RowBounds rowBounds);
+
+	@Select("select count(*) from post where member_id= #{memberId}")
+	int totalCountMyarticle(String memberId);
+	
+	
+	List<BoardListDto> AllBoardFindMycommentarticle(String memberId, RowBounds rowBounds);
+	
+	@Select("SELECT COUNT(*) FROM (SELECT COUNT(*) FROM post_comment WHERE member_id = #{memberId} GROUP BY post_id)")
+	int totalCountMycommentarticle(String memberId);
+
+	List<CommentLike> commentLikeCheck(int postId);
 	
 }
