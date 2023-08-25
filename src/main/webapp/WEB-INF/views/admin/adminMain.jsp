@@ -69,7 +69,7 @@
 			    </div>
 			    <div>
 			      <button type="button" class="btn btn-warning btn-sm mr-2" onclick="location.href='${pageContext.request.contextPath}/admin/adminStudentApprovementList.do'">수강생 승인</button>
-			      <button type="button" class="btn btn-success btn-sm" onclick="location.href='${pageContext.request.contextPath}/admin/vacationApprovementList.do'">휴가 승인</button>
+			      <button type="button" class="btn btn-success btn-sm" onclick="location.href='${pageContext.request.contextPath}/admin/adminVacationApprovementList.do'">휴가 승인</button>
 			    </div>
 			  </div>
               <div class="card-body">

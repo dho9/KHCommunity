@@ -291,7 +291,8 @@ CREATE TABLE report (
 
 CREATE TABLE chat_room (
    chat_id   number      NOT NULL,
-   chat_date   date   DEFAULT current_date
+   chat_date   date   DEFAULT current_date,
+   chat_type varchar2(100) default null
 );
 
 CREATE TABLE talker (
@@ -1100,12 +1101,12 @@ VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공
 INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type, report_send_date, report_check)
 VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판인데 왜 이상한 글 을 올렸어요','욕설', current_date, 'n');
 
-
 -- chat_room
-INSERT INTO chat_room (chat_id, chat_date) VALUES (seq_chat_id.NEXTVAL, '23/08/14');
+INSERT INTO chat_room (chat_id, chat_date, chat_type) VALUES (seq_chat_id.NEXTVAL, '23/08/14', '교육원 등록 문의');
 
 -- talker
 INSERT INTO talker (chat_id, student_id, employee_id) VALUES (1, 'alfn', 'godwjd');
+
 -- chat_message
 INSERT INTO chat_message (chat_no,chat_id, member_id, chat_content) VALUES (seq_chat_message_no.nextval,1, 'alfn', '자바반 커리큐럼이 어떻게 되나요 ?');
 INSERT INTO chat_message (chat_no,chat_id, employee_id  , chat_content) VALUES ( seq_chat_message_no.nextval,1, 'godwjd', '안녕하세요 ?? 자바반 등록하려고 하시나요?');
@@ -1400,3 +1401,29 @@ select * from curriculum;
 insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
 
 update vacation set vacation_approve_check = '2', employee_id = null;
+
+select * from chat_room;
+select * from talker;
+select * from chat_message;
+select * from curriculum;
+select * from student;
+select * from member;
+select
+    t.chat_id,
+    t.student_id,
+    m.member_name student_name,
+    r.chat_type,
+    r.chat_date,
+    c.curriculum_name,
+    c.class_id,
+    s.student_type
+from 
+    talker t 
+        join chat_room r
+            on t.chat_id = r.chat_id
+        join student s
+            on t.student_id = s.student_id
+        join curriculum c
+            on s.curriculum_id = c.curriculum_id
+        join member m
+            on s.student_id = m.member_id;
