@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.Member;
@@ -198,6 +199,12 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public EmployeeInfoDto findByEmployeeInfo(String memberId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
