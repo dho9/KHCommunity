@@ -27,6 +27,16 @@ public class MessageServiceImpl implements MessageService {
 		// TODO Auto-generated method stub
 		return messageRepository.getMessageList(memberId);
 	}
+	@Override
+	public int messageDelete(String messageId) {
+		// TODO Auto-generated method stub
+		return messageRepository.messageDelete(messageId);
+	}
+	@Override
+	public int messageUpdate(String checked, String messageId) {
+		// TODO Auto-generated method stub
+		return messageRepository.messageUpdate(checked, messageId);
+	}
 	
 
 

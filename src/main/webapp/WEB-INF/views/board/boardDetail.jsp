@@ -226,34 +226,39 @@ ul.commentMenu li {
     cursor: pointer;
 }
 
-button {
+#sendMessageBtn {
     padding: 10px 20px;
     background-color: #007BFF;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 7% 40% 6% 35.3%;
 }
 
-button:hover {
+#messageContainer button:hover {
     background-color: #0056b3;
 }
 
-input[type="text"],
-input[type="email"],
-textarea {
+#messageContainer input[type="text"],
+#messageContainer textarea {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
     box-sizing: border-box;
 }
 
-#openMessageBtn {
-background-color: white; border: 0px;
-color: black;
+.message-content {
+	border-radius: 20px;
+}
+
+#openMessageBtn:hover {
+	cursor: pointer;
 }
 
 </style>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div id="container" class="community" style="margin-top: 25px;">
 	<%-- principal을 변수 loginMember 저장 --%>
 	<sec:authentication property="principal" var="loginMember"/>
@@ -290,7 +295,7 @@ color: black;
 				  			</c:if>
 				  			
 				  			<c:if test="${postDetail.memberId ne loginMember.username}">
-					  			<li class="messagesend" style="margin-right: 5px;" id="openMessageBtn">쪽지 | </li>
+					  			<li class="messagesend" style="margin-right: 5px;" id="openMessageBtn"  onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지 | </li>
 					  			<li class="abuse">신고</li>
 				  			</c:if>
 				  		</ul>
@@ -464,12 +469,14 @@ color: black;
 		like(); // 공감누르기
 		//댓글호출함수
 		loadComment();
-		//엔터키로 폼제출방지
-		document.querySelector('.writecomment').addEventListener('keydown', (e) => {
-	        if (e.key === 'Enter') {
-	            e.preventDefault();}
-	        
+		$('.comments').on('keypress', '.text', function(e) {
+		    if (e.keyCode === 13) {
+		        e.preventDefault();
+		        // 대댓글 전송 버튼 클릭 이벤트 호출
+		        $(this).siblings('.option').find('.submit').click(); // 적절한 선택자로 수정
+		    }
 		});
+		
 		
 	});
 	
@@ -638,7 +645,7 @@ function renderComments(comments) {
 	 	        	<ul class="commentMenu">
 	                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 	                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-	                 	<li class="messagesend">쪽지</li>
+	                 	<li class="messagesend" onclick="messageSend('\${comment.memberId}', '\${comment.anonymousCheck}')">쪽지</li>
 	                 	<li class="abuse">신고</li>
 	             	</ul>
 	             </h3>
@@ -701,7 +708,7 @@ function renderComments(comments) {
 	 	            </div>
 	 	        	<ul class="commentMenu">
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
-	                 	<li class="messagesend">쪽지</li>
+	                 	<li class="messagesend" onclick="messageSend('\${childComment.memberId}', '\${childComment.anonymousCheck}')">쪽지</li>
 	                 	<li class="abuse">신고</li>
 	             	</ul>
 	             </h3>
@@ -768,23 +775,6 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
     }
 });
 
-
-//대댓글 입력창 추가
-//document.querySelectorAll('.commentMenu li.childcomment').forEach((li) => {
-//	li.addEventListener('click', (e)=>{   
-	//	 const commentId = li.getAttribute('data-commentid');
-	//        const commentElement = document.querySelector(`.parent[data-commentid="\${commentId}"]`); // 이 부분을 수정
-	//        console.log(commentElement);
-	//        if (commentElement) { // 존재하는 경우에만 작업 수행
-	 //           const childCommentForm = commentElement.querySelectorAll('.writecomment');
-	 //           console.log(childCommentForm);
-	 //           childCommentForm.forEach(form => {
-	  //              form.classList.toggle('active');
-	 //           });
-	  //      }
-//});
-//});
-
 //익명 , 제출버튼에 관한 기능
 let anonyCk = false;
 document.querySelector('#commnetContainer').addEventListener('click', (event) => {
@@ -845,17 +835,6 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
      
     
 });
-
-	// 댓글제출 
-	//document.querySelectorAll('.option li.submit').forEach((li) => {
-	//	li.addEventListener('click', (e)=>{
-		
-			
-	
-		//})
-	//});
-	
-	
 	
 	</script>
 	<script>
@@ -871,32 +850,8 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	});
 	
 	
-	// 게시글 작성자 쪽지 보내기
-	document.querySelector("#openMessageBtn").addEventListener("click", function(event) {
-	
-		 const openMessageBtn = document.getElementById("openMessageBtn");
-		 const messageContainer = document.getElementById("messageContainer");
-		 const closeMessageBtn = document.getElementById("closeMessageBtn");
-		 const receiveId =document.getElementById("receiveMember");
-		 const toInput = document.getElementById("toInput");
-		 if(${postDetail.anonymousCheck ne '1'}){
-		 	toInput.value = "${postDetail.memberId}";  
-		 	receiveId.value = "${postDetail.memberId}";  
-		 }
-		 if(${postDetail.anonymousCheck eq '1'}){
-		 	toInput.value = "익명";   
-			receiveId.value = "${postDetail.memberId}";  
-			 
-		 }
-		 openMessageBtn.addEventListener("click", function() {
-		    messageContainer.style.display = "block";
-		 });
+	// 쪽지 보내기
 
-		 closeMessageBtn.addEventListener("click", function() {
-		     messageContainer.style.display = "none";
-		 });
-	});
-	
 	document.querySelector("#sendMessageBtn").addEventListener("click", function(event) {
 		
 		event.preventDefault();
@@ -905,13 +860,13 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 		const messageContent =document.getElementById("messageContent").value;
 		const toInput = document.getElementById("toInput").value;
 		const token = document.tokenFrm._csrf.value;
+		const closeMessageBtn = document.getElementById("closeMessageBtn");
 		let anonymousCheck = 'n';
-		
-		console.log(receiveId);
 		
 		if(toInput == "익명"){
 			anonymousCheck = 'y'
 		}
+		
 		console.log(sendId, receiveId, messageContent);
 		
 		$.ajax({
@@ -927,11 +882,35 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
             dataType : "json",
             success(responseData) {
             	alert("쪽지전송이 완료되었습니다.");
+            	messageContainer.style.display = "none";
             }
 		});
 		
 		
 	});
+	
+	const messageSend =(messageReceiveId, anonymousCheck) => {
+		 const messageContainer = document.getElementById("messageContainer");
+		 messageContainer.style.display = "block";
+		 const closeMessageBtn = document.getElementById("closeMessageBtn");
+		 const receiveId =document.getElementById("receiveMember");
+		 const toInput = document.getElementById("toInput");
+		 receiveId.value = messageReceiveId;  
+		 
+		 console.log(messageReceiveId, anonymousCheck);
+		 
+		 if(anonymousCheck != '1' || anonymousCheck == 'false'){
+		 	toInput.value = messageReceiveId;  
+		 }
+		 if(anonymousCheck == '1' || anonymousCheck == 'true'){
+		 	toInput.value = "익명";   
+		 }
+		 closeMessageBtn.addEventListener("click", function() {
+		     messageContainer.style.display = "none";
+		 });
+		
+	};
+	
 	</script>
 	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>

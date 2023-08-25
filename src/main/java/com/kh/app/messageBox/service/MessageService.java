@@ -10,4 +10,8 @@ public interface MessageService {
 
 	ArrayList<MessageBox> getMessageList(String memberId);
 
+	int messageDelete(String messageId);
+
+	int messageUpdate(String checked, String messageId);
+
 }

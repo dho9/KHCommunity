@@ -2,7 +2,9 @@ package com.kh.app.member.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -33,15 +35,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.MemberLoginDto;
 import com.kh.app.member.dto.MemberUpdateDto;
+import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
+import com.kh.app.member.entity.StudentVacation;
+import com.kh.app.member.entity.StudentVacationAttachment;
 import com.kh.app.member.service.MemberService;
+import com.nimbusds.openid.connect.sdk.assurance.evidences.attachment.Attachment;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,9 +75,6 @@ public class MemberSecurityController {
 
 	@PostMapping("/memberCreate2.do")
 	public String create(@Valid MemberCreateDto member, BindingResult bindingResult, RedirectAttributes redirectAttr) {
-
-		log.debug("member = {}", member);
-
 		if (bindingResult.hasErrors()) {
 			ObjectError error = bindingResult.getAllErrors().get(0);
 			redirectAttr.addFlashAttribute("msg", error.getDefaultMessage());
@@ -80,8 +84,6 @@ public class MemberSecurityController {
 		String rawPassword = member.getMemberPwd();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		member.setMemberPwd(encodedPassword);
-		log.debug("rawPassword = " + rawPassword);
-		log.debug("encodedPassword = " + encodedPassword);
 		
 		int result = memberService.insertMember(member);
 		redirectAttr.addFlashAttribute("msg", "회원가입을 축하드립니다.");
@@ -95,13 +97,9 @@ public class MemberSecurityController {
 
 	@GetMapping("/memberDetail.do")
 	public void memberDetail(Authentication authentication, @AuthenticationPrincipal MemberDetails member) {
-		log.debug("authentication = {}", authentication);
 		MemberDetails principal = (MemberDetails) authentication.getPrincipal();
 		Object credentials = authentication.getCredentials();
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		log.debug("principal = {}", principal);
-		log.debug("credentials = {}", credentials);
-		log.debug("authorities = {}", authorities);
 
 	}
 
@@ -124,7 +122,6 @@ public class MemberSecurityController {
 
 		log.debug("email = {}", email);
 		model.addAttribute("email", email);
-
 		return memberService.joinEmail(email);
 	}
 
@@ -138,7 +135,6 @@ public class MemberSecurityController {
 			@Valid MemberUpdateDto _member, 
 			BindingResult bindingResult, 
 			RedirectAttributes redirectAttr) {
-		log.debug("_member = {}", _member);
 		Member member = _member.toMember();
 		String memberId = principal.getMemberId();
 		member.setMemberId(memberId);
@@ -172,7 +168,6 @@ public class MemberSecurityController {
 
 		Student student = memberService.findStudentById(memberId);
 
-		log.debug("student ={}", student);
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
 	}
 
@@ -233,8 +228,6 @@ public class MemberSecurityController {
 	                .build();
 	    }
 
-	    log.debug("attach = {}", attach);
-
 	    int result = memberService.insertStudentAttach(attach);
 
 	    return "redirect:/member/myPage.do";
@@ -250,12 +243,9 @@ public class MemberSecurityController {
 	
 	
 		String memberId = _member.getMemberId();
-		log.debug("★memberId = {}", memberId);
 		
 		// 1. db수정요청
 		int result = memberService.deleteMember(memberId);
-		
-		log.debug("★★result = {}", result);
 		
 	    if (result > 0) {
 	    	redirectAttr.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다.");
@@ -268,6 +258,90 @@ public class MemberSecurityController {
 	
 	}
 	
+//	
+//	@GetMapping("/messageDelete.do")
+//	@ResponseBody
+//	public ResponseEntity<?> messageDelete(@RequestParam String messageId) {
+//
+////		int result= memberService.messageDelete(messageId);
+//		log.debug("★★messageDelete = {}", messageId);
+//		return ResponseEntity.status(HttpStatus.OK).body(Map.of("messageId", messageId));
+//	}
+//	
+
+	
+	@GetMapping("/vacationSubmit.do")
+	@ResponseBody
+	public ResponseEntity<?> studnetVacationSubmit(@RequestParam String memberId) {
+
+		Student student = memberService.findStudentById(memberId);
+		log.debug("student={}", student);
+	
+		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
+	}
+
+	@PostMapping("/vacationSubmit.do")
+	public String vacationSubmit(@AuthenticationPrincipal MemberDetails member, 
+								@AuthenticationPrincipal Employee employee,
+								@Valid StudentVacation _vacation, 
+	                            @RequestParam(value = "upFile", required = true) MultipartFile upFiles,
+	                             HttpServletRequest request)
+	                            throws IllegalStateException, IOException {
+		
+		
+	
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇmember = {}", member);
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation11 = {}",_vacation);
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation.getVacationId() = {}", _vacation.getVacationId());
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation.getTeacherId()={}", _vacation.getTeacherId());
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_employee={}", employee);
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_employee={}", employee);
+	    // 1. 새로운 저장 경로 지정
+	    ServletContext servletContext =  request.getServletContext();
+	    String resourcesPath = "/resources/images/vacationSubmitUpload/";
+		String approveUploadPath = servletContext.getRealPath(resourcesPath);
+
+	    // 2. 파일 저장
+		StudentVacationAttachment attach = null;
+					
+			if(!upFiles.isEmpty()) {
+				String originalFilename = upFiles.getOriginalFilename();
+				String renamedFilename = KhCoummunityUtils.getRenamedFilename(originalFilename); // 20230807_142828888_123.jpg
+				File destFile = new File(approveUploadPath + renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				upFiles.transferTo(destFile); // 실제파일 저장
+				
+				attach = StudentVacationAttachment.builder()
+						.vacationOriginalFilename(originalFilename)
+						.vacationRenamedFilename(renamedFilename)
+						.build();
+				
+				//attachments.add(attach);
+			}
+			
+		
+		
+		
+		
+		StudentVacation vacation = StudentVacation.builder()
+				.vacationId(_vacation.getVacationId())
+				.studentId(member.getMemberId())
+				.vacationStartDate(_vacation.getVacationStartDate())
+				.vacationEndDate(_vacation.getVacationEndDate())
+				.teacherId(_vacation.getTeacherId())
+				.employeeId(employee.getEmployeeId())
+				.vacationSendDate(_vacation.getVacationSendDate())
+				.vacationApproveCheck(_vacation.getVacationApproveCheck())
+				//.attachments(attachments)
+				.build();
+		
+		log.debug("ㅂㅂㅂㅂㅂㅂㅂvacation = {}", vacation);
+		int result = memberService.insertVacation(vacation);
+		log.debug("dddddddddㅇㅇresult = {}", result);
+
+
+
+	    return "redirect:/member/myPage.do";
+	}
 
 }
 
