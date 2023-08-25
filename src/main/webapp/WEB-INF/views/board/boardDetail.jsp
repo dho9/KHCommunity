@@ -237,7 +237,26 @@ ul.commentMenu li {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.7);
 }
-
+#sendMessageBtn {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 7% 40% 6% 35.3%;
+}
+#messageContainer button:hover {
+    background-color: #0056b3;
+}
+#messageContainer input[type="text"],
+#messageContainer textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+}
 .message-content {
     background-color: #fff;
     margin: 10% auto;
@@ -262,11 +281,6 @@ ul.commentMenu li {
 
 button.updateBtn, button.deleteBtn{
 	border: none;
-}
-
-#openMessageBtn {
-background-color: white; border: 0px;
-color: black;
 }
 
 .message-content {
@@ -1237,7 +1251,7 @@ color: black;
 		 	        	<ul class="commentMenu">
 		                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 		                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-		                 	<li class="messagesend">쪽지</li>
+		                 	<li class="messagesend" onclick="messageSend('\${comment.memberId}', '\${comment.anonymousCheck}')">쪽지</li>
 		                 	<li class="abuse">신고</li>
 		             	</ul>
 		             </h3>
@@ -1295,7 +1309,7 @@ color: black;
 	 	            </div>
 	 	        	<ul class="commentMenu">
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
-	                 	<li class="messagesend">쪽지</li>
+	                 	<li class="messagesend" onclick="messageSend('\${childComment.memberId}', '\${childComment.anonymousCheck}')">쪽지</li>
 	                 	<li class="abuse">신고</li>
 	             	</ul>
 	             </h3>
@@ -1502,11 +1516,10 @@ function likeComment(){
 		const token = document.tokenFrm._csrf.value;
 		const closeMessageBtn = document.getElementById("closeMessageBtn");
 		let anonymousCheck = 'n';
-		
+
 		if(toInput == "익명"){
 			anonymousCheck = 'y'
 		}
-		
 		
 		$.ajax({
 			url : "${pageContext.request.contextPath}/message/messageSend.do",
@@ -1522,14 +1535,19 @@ function likeComment(){
             success(responseData) {
             	alert("쪽지전송이 완료되었습니다.");
             	messageContainer.style.display = "none";
+            
             }
 		});
+		
+        $("#messageContainer").removeClass("modal-active");
+        $("#messageContent").val("");
 		
 		
 	});
 	
 	const messageSend =(messageReceiveId, anonymousCheck) => {
 		 const messageContainer = document.getElementById("messageContainer");
+		 const messageContent =document.getElementById("messageContent").value;
 		 messageContainer.style.display = "block";
 		 const closeMessageBtn = document.getElementById("closeMessageBtn");
 		 const receiveId =document.getElementById("receiveMember");
@@ -1546,7 +1564,10 @@ function likeComment(){
 		 }
 		 closeMessageBtn.addEventListener("click", function() {
 		     messageContainer.style.display = "none";
+		     $("#messageContainer").removeClass("modal-active");
+             $("#messageContent").val("");
 		 });
+		
 		
 	};
 	
