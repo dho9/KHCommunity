@@ -476,7 +476,70 @@ color: black;
         	</button>
 	      </form:form>
 	    `;
+	    } else if("${postDetail.boardId}" === "2"){
+	    	formHtml = `
+		  	      <form:form 
+		  	      	name="updateFrm" 
+		  	      	class="hidden" 
+		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
+		  	      	id="updateForm" 
+		  	      	method="post" 
+		  	      	style="height: 66%;"
+		        		enctype="multipart/form-data">
+		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
+		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
+		  	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
+		  	      	<input type = "hidden" name="grade" id="grade" >
+		  	      	<p>
+		  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
+		  	      	</p>
+		  	        <p>
+		  	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
+
+		  	        		아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
+
+		  	        		※ 정치·사회 관련 행위 금지 
+		  	        		- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
+		  	        		- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
+		  	        		- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
+		  	        		- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
+		  	        		* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
+
+		  	        		※ 홍보 및 판매 관련 행위 금지 
+		  	        		- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
+		  	        		- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
+		  	        		* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
+
+		  	        		※ 불법촬영물 유통 금지
+		  	        		불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
+
+		  	        		※ 그 밖의 규칙 위반 
+		  	        		- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
+		  	        		- 범죄, 불법 행위 등 법령을 위반하는 행위 
+		  	        		- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
+		  	        		- 음란물, 성적 수치심을 유발하는 행위 
+		  	        		- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text">${postDetail.content}</textarea>
+		  	        </p>
+		  	        	
+		  	        <div>
+		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
+		  	        	<div class="hashTag-container"></div>
+		  	        </div>
+		  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
+		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
+		          	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
+		        	<button type="button" class="sell" style="float: right; color: #c62917; font-size: 18px; font-weight: bold; background: none;">팝니다</button>
+		          	<button type="button" class="anonymous">
+		          		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
+		          	</button>
+		          	
+		  	      </form:form>
+		  	    `;
 	    } else if("${postDetail.boardId}" === "3") {
+	    	let _titleValue = "${postDetail.title}";
+	    	let titleValue = _titleValue.replace(/\[.*?\]/g, "");
 	    	formHtml = `
 	  	      <form:form 
 	  	      	name="updateFrm" 
@@ -484,15 +547,24 @@ color: black;
 	  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 	  	      	id="updateForm" 
 	  	      	method="post" 
-	  	      	style="height: 66%;"
+	  	      	style="height: 71.2%;"
 	        		enctype="multipart/form-data">
 	  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 	  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
 	  	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
-	  	      	<input type = "hidden" name="grade" id="grade" >
+	  	      	<input type = "hidden" name="grade" id="grade" value="★">
 	  	      	<p>
-	  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
+	  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="\${titleValue}">
 	  	      	</p>
+	  	        <p>
+		      		<select name="grade_" id="grade_" style="height: 37px; font-size: 30px; color: #dddd3c;;">
+						<option value="★">★</option>	      			
+						<option value="★ ★">★ ★</option>	      			
+						<option value="★ ★ ★">★ ★ ★</option>	      			
+						<option value="★ ★ ★ ★">★ ★ ★ ★</option>	      			
+						<option value="★ ★ ★ ★ ★">★ ★ ★ ★ ★</option>	      			
+		      		</select>
+	    		</p>
 	  	        <p>
 	  	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
 
@@ -527,17 +599,15 @@ color: black;
 	  	        	<div class="hashTag-container"></div>
 	  	        </div>
 	  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
-	  	        
-	  	      	
 	  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
-	          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
+	  	      	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
 	          	<button type="button" class="anonymous">
 	          		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
 	          	</button>
 	          	
 	  	      </form:form>
 	  	    `;
-	    }else {
+	    } else {
 	    	formHtml = `
 		  	      <form:form 
 		  	      	name="updateFrm" 
@@ -636,6 +706,16 @@ color: black;
 		    });
 	    }
 	    
+	 	// 평점
+	    const grade_ = document.querySelector("#grade_");
+	    const grade = document.querySelector("#grade");
+	    
+	    if(grade_ !== null && grade !== null){
+	    	grade_.addEventListener('change', (e) => {
+	 	       grade.value = grade_.value;
+	 	       console.log(grade);
+	 	    });
+	    }
 	    
 	 	// 익명체크
 		let anonymousButton = document.querySelector(".anonymous");  
@@ -716,6 +796,69 @@ color: black;
 	            tagElement.setAttribute("value", "#" + tag);
 	        }
 	    }
+	    
+	 	// 삽니다, 팝니다 태그추가
+	    const buyButton = document.querySelector(".buy");
+	    const sellButton = document.querySelector(".sell");
+	    const title = document.querySelector("#title");
+	    
+	    if(buyButton !== null && sellButton !== null){
+	    	buyButton.onclick = (() => {
+		    	title.value = "[삽니다!]"
+		    	const tagContainer = document.createElement("div");
+	            tagContainer.className = "tag-container";
+
+	            const tagElement = document.createElement("input");
+	            tagElement.value = " #삽니다 ";
+	            tagElement.setAttribute("readonly", true);
+	            tagContainer.appendChild(tagElement);
+
+	            const removeButton = document.createElement("i");
+	            removeButton.style.cursor = "pointer";
+	            removeButton.innerHTML = "x";
+	            removeButton.addEventListener('click', () => {
+	                hashTagContainer.removeChild(tagContainer);
+	                hashTags = hashTags.filter((hashTags) => hashTags !== "#삽니다");
+		    	});
+	            
+	            tagContainer.appendChild(removeButton);
+
+	            hashTags.push("삽니다");
+	            hashTagContainer.appendChild(tagContainer);
+
+	            tagElement.setAttribute("name", "_tags");
+	            tagElement.setAttribute("value", "#삽니다");
+		    });
+		    
+		    sellButton.onclick = (() => {
+		    	title.value = "[팝니다!]"
+		    	const tagContainer = document.createElement("div");
+	            tagContainer.className = "tag-container";
+
+	            const tagElement = document.createElement("input");
+	            tagElement.value = " #팝니다 ";
+	            tagElement.setAttribute("readonly", true);
+	            tagContainer.appendChild(tagElement);
+
+	            const removeButton = document.createElement("i");
+	            removeButton.style.cursor = "pointer";
+	            removeButton.innerHTML = "x";
+	            removeButton.addEventListener('click', () => {
+	                hashTagContainer.removeChild(tagContainer);
+	                hashTags = hashTags.filter((hashTags) => hashTags !== "#팝니다");
+		    	});
+	            
+	            tagContainer.appendChild(removeButton);
+
+	            hashTags.push("팝니다");
+	            hashTagContainer.appendChild(tagContainer);
+
+	            tagElement.setAttribute("name", "_tags");
+	            tagElement.setAttribute("value", "#팝니다");
+		    });
+	    }
+	    
+	    
 	    
 	    const submitBtn = document.querySelector("#submitBtn");
 	    const text = document.querySelector("#text");
