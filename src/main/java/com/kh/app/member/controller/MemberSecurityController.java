@@ -40,6 +40,7 @@ import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.MemberLoginDto;
 import com.kh.app.member.dto.MemberUpdateDto;
+import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
@@ -262,29 +263,34 @@ public class MemberSecurityController {
 	public ResponseEntity<?> studnetVacationSubmit(@RequestParam String memberId) {
 
 		Student student = memberService.findStudentById(memberId);
-
-		log.debug("student ={}", student);
+		log.debug("student={}", student);
+	
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
 	}
 
 	@PostMapping("/vacationSubmit.do")
 	public String vacationSubmit(@AuthenticationPrincipal MemberDetails member, 
+								@AuthenticationPrincipal Employee employee,
 								@Valid StudentVacation _vacation, 
 	                            @RequestParam(value = "upFile", required = true) MultipartFile upFiles,
 	                             HttpServletRequest request)
 	                            throws IllegalStateException, IOException {
+		
+		
 	
 		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇmember = {}", member);
-		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation = {}",_vacation);
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation11 = {}",_vacation);
 		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation.getVacationId() = {}", _vacation.getVacationId());
-		
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation.getTeacherId()={}", _vacation.getTeacherId());
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_employee={}", employee);
+		log.debug("ㅇㅇㅇㅇㅇㅇㅇㅇ_employee={}", employee);
 	    // 1. 새로운 저장 경로 지정
 	    ServletContext servletContext =  request.getServletContext();
 	    String resourcesPath = "/resources/images/vacationSubmitUpload/";
 		String approveUploadPath = servletContext.getRealPath(resourcesPath);
 
 	    // 2. 파일 저장
-		StudentVacationAttachment attachments = null;
+		StudentVacationAttachment attach = null;
 					
 			if(!upFiles.isEmpty()) {
 				String originalFilename = upFiles.getOriginalFilename();
@@ -292,8 +298,7 @@ public class MemberSecurityController {
 				File destFile = new File(approveUploadPath + renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
 				upFiles.transferTo(destFile); // 실제파일 저장
 				
-				StudentVacationAttachment attach = 
-						StudentVacationAttachment.builder()
+				attach = StudentVacationAttachment.builder()
 						.vacationOriginalFilename(originalFilename)
 						.vacationRenamedFilename(renamedFilename)
 						.build();
@@ -311,7 +316,7 @@ public class MemberSecurityController {
 				.vacationStartDate(_vacation.getVacationStartDate())
 				.vacationEndDate(_vacation.getVacationEndDate())
 				.teacherId(_vacation.getTeacherId())
-				.employeeId(_vacation.getEmployeeId())
+				.employeeId(employee.getEmployeeId())
 				.vacationSendDate(_vacation.getVacationSendDate())
 				.vacationApproveCheck(_vacation.getVacationApproveCheck())
 				//.attachments(attachments)

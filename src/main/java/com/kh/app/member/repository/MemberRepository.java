@@ -74,7 +74,7 @@ public interface MemberRepository {
 //	@Insert("insert into vacation values( seq_vacation_id.nextval, #{member.studentId}, #{member.vacationStartDate, jdbcType=DATE}, #{member.vacationEndDate, jdbcType=DATE}, #{member.teacherId}, #{member.employeeId}, #{member.vacationSendDate}, '1' )")
 	int insertVacationById(MemberDetails member);
 	
-	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, #{employeeId, jdbcType=VARCHAR}, sysdate, '1' )")
+	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', sysdate, '1' )")
 	@SelectKey(
 			before = false, 
 			keyProperty = "vacationId" , 
@@ -86,6 +86,8 @@ public interface MemberRepository {
 	  ) int insertAttachment(StudentVacationAttachment attach);
 	 
 	
-
-	
+		/*
+		 * INSERT INTO VACATION VALUES(SEQ_VACATION_ID.NEXTVAL,'',SYSDATE,SYSDATE, '',
+		 * '',SYSDATE,'');
+		 */
 }
