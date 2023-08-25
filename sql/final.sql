@@ -1139,41 +1139,39 @@ delete from member where member_id = 'admin';
 
 delete from store where store_id = 3;
 
-select * from post_attachment;
-select * from member;
-select * from student;
-select * from student_attachment;
-select * from class;
-select * from curriculum;
-select * from teacher;
-select * from employee;
-select * from scheduler;
-select * from vacation;
-select * from board order by 1;
-select * from post order by 1;
-delete post where post_id = 42;
-select * from post_content order by 1;
-select * from post_comment;
-select * from favorite;
-select * from post_like;
-select * from comment_like;
-select * from message_box;
-select * from report;
-select * from chat_room;
-select * from talker;
-select * from chat_message;
-select * from store;
-select * from ticket;
-select * from ticket_order;
-select * from quit_member;
-select * from delete_post;
-select * from delete_comment;
-select * from authority;
-update student set curriculum_id =null where student_id='heejin'; 
+--select * from post_attachment;
+--select * from member;
+--select * from student;
+--select * from student_attachment;
+--select * from class;
+--select * from curriculum;
+--select * from teacher;
+--select * from employee;
+--select * from scheduler;
+--select * from vacation;
+--select * from board order by 1;
+--select * from post order by 1;
+--delete post where post_id = 42;
+--select * from post_content order by 1;
+--select * from post_comment;
+--select * from favorite;
+--select * from post_like;
+--select * from comment_like;
+--select * from message_box;
+--select * from report;
+--select * from chat_room;
+--select * from talker;
+--select * from chat_message;
+--select * from store;
+--select * from ticket;
+--select * from ticket_order;
+--select * from quit_member;
+--select * from delete_post;
+--select * from delete_comment;
+--select * from authority;
+--select * from calendar;
 
-update student set approve_request_date=null where student_id= 'heejin';
-delete from student_attachment where member_id='heejin';
- 
+
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
@@ -1191,20 +1189,6 @@ VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
 
 INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
 VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
-
-SELECT
-    b.board_name,
-    COUNT(p.post_id) AS post_count
-FROM
-    board b
-LEFT JOIN
-    post p ON b.board_id = p.board_id
-GROUP BY
-    b.board_name
-ORDER BY
-    post_count DESC, board_name;
-
-   
 
 INSERT INTO student (student_id, curriculum_id, approve_check,  approve_request_date, approve_complete_date, student_type)
 VALUES ('test2', '3', 'y', '23/08/18', current_date, 'p');
@@ -1347,56 +1331,5 @@ INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
-    
-SELECT p.post_id, p.title, pc.content
-FROM post p
-JOIN post_content pc ON p.post_id = pc.post_id
-WHERE p.board_id = 10
-ORDER BY p.post_created_at DESC
-FETCH FIRST 3 ROWS ONLY;
 
-select * from calendar;
 
-update student set approve_request_date = sysdate where student_id = 'xogus';
-
-select * from calendar;
-
-select m.member_name, m.member_phone, m.member_email, m.birthday, s.curriculum_id, c.class_id from member m join student s on m.member_id = s.student_id join curriculum c on s.curriculum_id = c.curriculum_id where c.class_id = '352';
-
-select * from post_comment where post_id =8;
-select * from comment_like;
-
-select * from member;
-select * from post_like;
-
-SELECT
-    v.vacation_id AS vacationId,
-    m.member_name AS memberName,
-    v.vacation_send_date,
-    v.vacation_start_date,
-    v.vacation_end_date,
-    m.birthday,
-    c.curriculum_start_at AS curriculumStartAt,
-    c.curriculum_end_at AS curriculumEndAt,
-    c.curriculum_name AS curriculumName,
-    c.class_id AS classId,
-    v.teacher_id,
-    t.member_name AS teacherName
-FROM
-    student s
-LEFT JOIN
-    member m ON s.student_id = m.member_id
-LEFT JOIN
-    curriculum c ON s.curriculum_id = c.curriculum_id
-LEFT JOIN
-    vacation v ON s.student_id = v.student_id
-LEFT JOIN
-    member t ON v.teacher_id = t.member_id
-WHERE
-    v.vacation_approve_check = '2';
-select * from vacation;
-select * from curriculum;
-
-insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
-
-update vacation set vacation_approve_check = '2', employee_id = null;
