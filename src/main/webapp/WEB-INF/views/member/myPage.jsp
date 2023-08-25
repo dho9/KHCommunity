@@ -117,6 +117,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		<sec:authentication property="principal" var="loginMember"/>
 		<div id="info-container">
 			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${loginMember.name}</h2>
+			<a style="color:white;" href="${pageContext.request.contextPath}/admin/adminConsultingRequest.do">상담요청</a>
 			<p>${studentInfo.curriculumName }반 </p>
 			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
 			<a href="${pageContext.request.contextPath}/message/messageSend.do" style="text-decoration: none;">테스트용</a>
