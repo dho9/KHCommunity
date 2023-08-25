@@ -54,8 +54,8 @@
                     <p class="school">${ loginMember.memberEmail}</p>
                     </sec:authorize>
                     <ul class="buttons">
-               <%--    <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li> --%>
-                  <li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">내 정보(직원)</a></li>
+                  <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
+                  <li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
                          <li><a href="#" id="logoutLink">로그아웃</a></li>                       
                     </ul>
                     <hr>

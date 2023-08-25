@@ -258,6 +258,18 @@ public class MemberSecurityController {
 	
 	}
 	
+//	
+//	@GetMapping("/messageDelete.do")
+//	@ResponseBody
+//	public ResponseEntity<?> messageDelete(@RequestParam String messageId) {
+//
+////		int result= memberService.messageDelete(messageId);
+//		log.debug("★★messageDelete = {}", messageId);
+//		return ResponseEntity.status(HttpStatus.OK).body(Map.of("messageId", messageId));
+//	}
+//	
+
+	
 	@GetMapping("/vacationSubmit.do")
 	@ResponseBody
 	public ResponseEntity<?> studnetVacationSubmit(@RequestParam String memberId) {
