@@ -17,6 +17,10 @@
 	<!-- bootstrap css -->
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">  -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.css" />
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
 @font-face {
     font-family: 'HakgyoansimWoojuR';
@@ -85,6 +89,26 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 
 #messageBoxDiv{ display: none;}
 
+.truncate-text {
+    max-width: 80px; /* 원하는 최대 너비 설정 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 것을 나타냄 */
+    display: inline-block;
+}
+#messageDetail {
+    background-color: rgba(0, 0, 0, 0.2); /* 투명한 회색 배경 색상 설정 */
+}
+.modal-dialog{
+	margin: 10% auto;
+	width: 40%;
+}
+
+.modal-message-content{
+	width: 100%;
+	height: 200px;
+}
 </style>
 	<section>
 	<div id="memberInfo">
@@ -441,7 +465,19 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			</div>
 			
 			</div>
-			
+<div id="messageDetail" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal">&times;</button></br>
+                <h3>쪽지내용 상세보기</h3></br></br>
+                <textarea class="modal-message-content"></textarea></br></br>
+                 <button type="button" class="btn btn-primary" id="editButton">삭제</button>&nbsp;&nbsp;&nbsp;
+                 <button type="button" class="btn btn-outline-primary" id="reportButton">신고</button>
+            </div>
+        </div>
+    </div>
+</div>		
 	</section>
 
 	<script>
@@ -566,24 +602,26 @@ messageBoxList.addEventListener("click", function() {
 			console.log(responseData);
 			if(responseData.length > 0){
 				
-				let html = ""; 
-				
-				responseData.forEach(function(message) {
-					console.log(message);
-                    html += `
-                    <tr>
-                        <td>\${message.messageId}</td>
-                        <td>\${message.sendId}</td>
-                        <td>\${message.messageContent}</td>
-                        <td>\${message.sendAt}</td>
-                        <td>\${message.readCheck}</td>
-                    </tr>
-                    `;
-                    
-                    
-                });
-				messageBoxTbl.innerHTML = html; 	
-				console.log(html);
+				msgList(responseData);	
+				const title = document.querySelectorAll(".truncate-text");
+				let msgId = "";
+				let readCheckValue ="";
+				$(document).ready(function() {
+				    $(".truncate-text").click(function() {
+				        var messageContent = $(this).text();
+				        $(".modal-message-content").text(messageContent);
+				        readCheckValue = $(this).closest("tr").find(".readCheckColumn").html();
+				        msgId = $(this).closest("tr").find(".msgId").html();
+				        $("#messageDetail").modal("show");
+				        updateReadCheck(readCheckValue, msgId);
+				        console.log(msgId);
+				    });
+				    $("#editButton").click(function() {
+				        console.log("msgId", msgId);
+				        deleteMsg(msgId);
+				    });
+				});
+		
 				
 			} else{
 				messageBoxTbl.innerHTMl += `
@@ -595,10 +633,66 @@ messageBoxList.addEventListener("click", function() {
 		}
 		
 	});
-	
-	
+
 });
 
+const updateReadCheck = (checked, msgId) =>{
+	console.log(checked, msgId);
+	if(checked == 'n'){
+		$.ajax({
+			url: "${pageContext.request.contextPath}/message/messageUpdate.do",
+			data :{
+				checked :checked,
+				messageId: msgId
+			},
+			method : "GET",
+			dataType : "json",
+			success(responseData){
+				console.log("메세지 수정 성공");
+			}
+			
+		});
+	}
+	
+};
+
+
+const deleteMsg = (msgId) =>{
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/message/messageDelete.do",
+		data :{
+			messageId :msgId
+		},
+		method : "GET",
+		dataType : "json",
+		success(responseData){
+			alert("메세지 삭제 성공");
+		}
+		
+	});
+};
+
+const msgList =(responseData) =>{
+	
+	let html = ""; 
+	
+	responseData.forEach(function(message) {
+		console.log(message);
+        html += `
+        <tr>
+            <td class="msgId">\${message.messageId}</td>
+            <td>\${message.sendId}</td>
+            <td><span class="truncate-text">\${message.messageContent}</span></td>
+            <td>\${message.sendAt}</td>
+            <td class="readCheckColumn">\${message.readCheck}</td>
+        </tr>
+        `;
+        
+    });
+	
+	messageBoxTbl.innerHTML = html; 	
+};
 
 </script>	
 
