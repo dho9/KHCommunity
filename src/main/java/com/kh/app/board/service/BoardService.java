@@ -97,6 +97,10 @@ public interface BoardService {
 	
 	List<NoticeBoardDto> findThreeNotice();
 
+	int updatePost(BoardCreateDto board);
+
+	int updatePostContent(BoardCreateDto board);
+	
 	List<BoardListDto> AllBoardFindMyarticle(String memberId, Map<String, Object> params);
 
 	int totalCountMyarticle(String memberId);

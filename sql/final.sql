@@ -368,13 +368,40 @@ update(
         post p join post_content pc 
             on
         p.post_id = pc.post_id 
-)p_pc
+) p_pc
 set
     p_pc.title = '수정제목',
     p_pc.content = '수정내용'
 where
     p_pc.post_id=1;
     
+MERGE INTO post p
+USING post_content pc ON (p.post_id = pc.post_id)
+WHEN MATCHED THEN
+UPDATE SET p.title = '수정제목', pc.content = '수정내용'
+WHERE p.post_id = 1;
+
+select * from post_content;
+
+MERGE INTO post p
+USING (
+    SELECT post_id, content
+    FROM post_content
+) pc ON (p.post_id = pc.post_id)
+WHEN MATCHED THEN
+    UPDATE SET p.title = '수정제목', pc.content = '수정내용'
+WHERE p.post_id = 1;
+
+UPDATE (
+    SELECT p.post_id, p.title, pc.content
+    FROM post p
+    JOIN post_content pc ON p.post_id = pc.post_id
+) merged
+SET merged.title = '수정제목',
+      merged.content = '수정내용'
+where
+    merged.post_id = 1;
+
 
 select * from post order by 1;
 

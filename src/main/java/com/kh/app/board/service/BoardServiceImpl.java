@@ -242,6 +242,29 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.myClassBoardFindAll();
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updatePost(BoardCreateDto board) {
+		int result = 0;
+		result = boardRepository.updatePost(board);
+		
+		List<PostAttachment> attachments = board.getAttachments();
+		if(attachments != null && !attachments.isEmpty()) {
+			for(PostAttachment attach : attachments) {
+				attach.setPostId(board.getPostId());
+				result = boardRepository.deletePostAttach(attach);
+				result = boardRepository.insertPostAttach(attach);
+			}
+		}
+		
+		
+		return result;
+	}
+	
+	@Override
+	public int updatePostContent(BoardCreateDto board) {
+		return boardRepository.updatePostContent(board);
+	}
 	@Override
 	public List<BoardListDto> AllBoardFindMyarticle(String memberId, Map<String, Object> params) {
 		int limit = (int) params.get("limit");

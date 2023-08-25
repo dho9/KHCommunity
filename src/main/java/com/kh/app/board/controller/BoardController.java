@@ -373,7 +373,6 @@ public class BoardController {
 		}
 			
 			BoardCreateDto board = null;
-			log.debug("gradddeeeeededeed={}",grade);
 			
 			if(grade == null || grade.equals("")) {
 				board = BoardCreateDto.builder()
@@ -409,6 +408,88 @@ public class BoardController {
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 
 	}
+	
+	/**
+	 * 글 수정
+	 * @param title
+	 * @param text
+	 * @param boardId
+	 * @param grade
+	 * @param anonymousCheck
+	 * @param _tags
+	 * @param member
+	 * @param files
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@PostMapping("/updatePost.do")
+	public String updatePost(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam int postId,
+			@RequestParam String grade,
+			@RequestParam(required = false) boolean anonymousCheck,
+			@RequestParam(required = false) String[] _tags,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+		
+		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+		BoardCreateDto board = null;
+		int result = 0;
+		
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		for(MultipartFile file : files) {
+			if(!file.isEmpty()) {
+				String originalFilename = file.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				file.transferTo(destFile);	
+
+				PostAttachment attach = 
+						PostAttachment.builder()
+						.postOriginalFilename(originalFilename)
+						.postRenamedFilename(renamedFilename)
+						.boardId(boardId)
+						.postId(postId)
+						.build();
+
+				attachments.add(attach);
+			}
+		}
+		
+		if(grade == null || grade.equals("")) {
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments) 
+					.anonymousCheck(anonymousCheck)
+					.build();
+			
+		} else {
+			String realGrade = " [평점 : " + grade + "]";
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title + realGrade)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments)
+					.anonymousCheck(anonymousCheck)
+					.build();
+		}
+		result = boardService.updatePost(board);
+		result = boardService.updatePostContent(board);
+		
+		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
+	}
+	
 
 
 	@GetMapping("/popularPost.do")
