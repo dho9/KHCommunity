@@ -218,7 +218,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<CommentLike> CommentLikeCheckById(int postId, String memberId) {
+	public List<CommentLike> commentLikeCheckById(int postId, String memberId) {
 		// TODO Auto-generated method stub
 		return boardRepository.CommentLikeCheckById(postId,memberId);
 	}
@@ -264,6 +264,38 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int updatePostContent(BoardCreateDto board) {
 		return boardRepository.updatePostContent(board);
+	}
+	@Override
+	public List<BoardListDto> AllBoardFindMyarticle(String memberId, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.AllBoardFindMyarticle(memberId, rowBounds);
+	}
+	
+	@Override
+	public int totalCountMyarticle(String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.totalCountMyarticle(memberId);
+	}
+	@Override
+	public List<BoardListDto> AllBoardFindMycommentarticle(String memberId, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.AllBoardFindMycommentarticle(memberId,rowBounds);
+	}
+	@Override
+	public int totalCountMycommentarticle(String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.totalCountMycommentarticle(memberId);
+	}
+	@Override
+	public List<CommentLike> commentLikeCheck(int postId) {
+		// TODO Auto-generated method stub
+		return boardRepository.commentLikeCheck(postId);
 	}
 }
 

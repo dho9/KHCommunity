@@ -1359,4 +1359,60 @@ INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
 
+select 
+    p.*
+from
+    post p 
+where 
+    member_id ='eogh' and
+    ;
+    
+ select * from post_content;   
+ 
+ 
+  
+  	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    member_id = 'eogh'
+	order by
+		1 desc;
+  
+
+ select post_id from post_comment where member_id = 'eogh' group by post_id;
+  select  *from post_comment;
+SELECT COUNT(*) FROM (SELECT COUNT(*) FROM post_comment WHERE member_id = 'eogh' GROUP BY post_id);
+select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	   p.post_id in (select post_id from post_comment pq where member_id = 'eogh' group by post_id)
+	order by
+		 (SELECT MAX(pc.comment_created_at) FROM post_comment pc WHERE pc.post_id = p.post_id) DESC;
+select * from post_comment where member_id='eogh'  order by comment_created_at desc;
 

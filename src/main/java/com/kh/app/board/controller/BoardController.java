@@ -267,7 +267,6 @@ public class BoardController {
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
-		System.out.println("board = " + board);
 		model.addAttribute("postAttach",postAttach);
 	}
 
@@ -616,11 +615,12 @@ public class BoardController {
 	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
 		String memberId = principal.getMemberId();
 		int postId = Integer.parseInt(_postId);
-		List<CommentLike> commentLike = boardService.CommentLikeCheckById(postId, memberId);
-
+		List<CommentLike> commentLike = boardService.commentLikeCheckById(postId, memberId);
+		
+		List<Comment> commentLikeCheck = boardService.findByCommentByPostId(postId);
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(Map.of("commentLike", commentLike));
+				.body(Map.of("commentLike", commentLike,"commentLikeCheck",commentLikeCheck));
 	}
 
 	@PostMapping("/commentLike.do")
@@ -663,5 +663,44 @@ public class BoardController {
 		return "redirect:/board/" + postBoardLink + ".do";
 	}
 	
+	@GetMapping("myarticle.do")
+	public String myarticle(@AuthenticationPrincipal MemberDetails principal, Model model,@RequestParam(defaultValue = "1") int page) {
+//		log.debug("myarticleList={}",myarticleList);
+		   int limit = 6;
+			Map<String, Object> params = Map.of(
+					"page", page,
+					"limit", limit
+			);
+			List<BoardListDto> myarticleList = boardService.AllBoardFindMyarticle(principal.getMemberId(),params);
+			
+		    int totalCount = boardService.totalCountMyarticle(principal.getMemberId());
+
+		    // total학생 계산
+		    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		    model.addAttribute("totalPages", totalPages);
+			
+			model.addAttribute("myarticle",myarticleList);
+			
+		return "/board/myarticle";
+	}
+	
+	@GetMapping("mycommentarticle.do")
+	public String mycommentarticle(@AuthenticationPrincipal MemberDetails principal, Model model,@RequestParam(defaultValue = "1") int page) {
+//		log.debug("myarticleList={}",myarticleList);
+		   int limit = 6;
+			Map<String, Object> params = Map.of(
+					"page", page,
+					"limit", limit
+			);
+			List<BoardListDto> mycommentarticle = boardService.AllBoardFindMycommentarticle(principal.getMemberId(),params);
+			log.debug("sdsdsdsdsdsdsd={}",mycommentarticle);
+		    int totalCount = boardService.totalCountMycommentarticle(principal.getMemberId());
+		    log.debug("토탈카운트에요.={}",totalCount);
+		    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		    model.addAttribute("totalPages", totalPages);
+			model.addAttribute("comment",mycommentarticle);
+			
+		return "/board/mycommentarticle";
+	}
 }
 
