@@ -23,5 +23,5 @@ public class Comment {
 	private Date commentCreatedAt;
 	private boolean anonymousCheck;
 	private int likeCount;
-	
+	private String memberName;
 }

@@ -1,21 +1,24 @@
 package com.kh.app.board.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -63,6 +66,12 @@ public class BoardController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private ResourceLoader resourceLoader;
+	
+	@Value("${spring.servlet.multipart.location}")
+	private String multipartLocation;
 
 	@GetMapping("/freeBoardList.do")
 	public String freeBoardList(Model model) {
@@ -343,7 +352,7 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@RequestParam String grade,
+			@RequestParam(required = false) String grade,
 			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
@@ -406,6 +415,10 @@ public class BoardController {
 			result = boardService.insertBoard(board);
 		}
 		result = boardService.insertPostContent(board);
+		
+		if(board.getBoardId() == 11) {
+			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+		}
 		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 
@@ -580,6 +593,42 @@ public class BoardController {
 		log.debug("보드링크={}",postBoardLink);
 		log.debug("포스트아이디={}",deletePostId);
 		return "redirect:/board/" + postBoardLink + ".do";
+	}
+	
+	@GetMapping("/myClassBoardDetail.do")
+	public void myClassBoardDetail(@RequestParam int id, Model model) {
+		BoardListDto postDetail = boardService.findById(id);
+		log.debug("postDetail = {}", postDetail);
+
+		PostAttachment postAttach = boardService.findAttachById(id);
+		log.debug("postAttach = {}", postAttach);
+		
+		List<Comment> comments = boardService.findByCommentByPostId(id);
+		log.debug("comments = {}", comments);
+		
+		model.addAttribute("postDetail", postDetail);
+		model.addAttribute("postAttach", postAttach);
+		model.addAttribute("comments", comments);
+	}
+	
+	@GetMapping("/fileDownload.do")
+	@ResponseBody
+	public Resource fileDownload(@RequestParam int id, HttpServletResponse response) throws FileNotFoundException {
+		PostAttachment attach = boardService.findAttachById(id);
+		log.debug("attach = {}, ", attach);
+		log.debug("multipartLocation = {}", multipartLocation);
+		
+		File downFile = new File(multipartLocation, attach.getPostRenamedFilename());
+		
+		if(!downFile.exists())
+			throw new FileNotFoundException(attach.getPostRenamedFilename());
+		String location = "file:" + downFile;
+		Resource resource = resourceLoader.getResource(location);
+		
+		response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+		String filename = URLEncoder.encode(attach.getPostOriginalFilename());
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+		return resource;
 	}
 	
 }

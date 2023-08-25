@@ -106,7 +106,6 @@ public interface BoardRepository {
 
 	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds);
 	
-	@Select("  SELECT  pc.*, (SELECT COUNT(*) FROM comment_like cl WHERE cl.comment_id = pc.comment_id) AS like_count FROM post_comment pc where pc.post_id = #{postId} order by pc.comment_id asc ")
 	List<Comment> findByCommentByPostId(int postId);
 	
 	@Select("select * from comment_like where comment_id = #{commentId} and member_id = #{memberId}")
