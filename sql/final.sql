@@ -1169,13 +1169,15 @@ select * from ticket_order;
 select * from quit_member;
 select * from delete_post;
 select * from delete_comment;
-select * from authority;
-m.member_name, a.auth 
-select * from curriculum;
+select * from employee;
 
-select *
+select * from curriculum;
+m.member_id, m.member_name, c.class_id, c.subject, c.curriculum_name, a.auth, e.job_code
+
+select m.member_id, m.member_name, c.class_id, c.subject, c.curriculum_name, a.auth, e.job_code
 from member m left outer join curriculum c  on  c.teacher_id = m.member_id
 right outer join  authority a on m.member_id = a.member_id 
+left outer join employee e on employee_id = m.member_id
 where m.member_id='godwjd';
 
 select c.curriculum_name, mt.member_name, c.class_id, c.teacher_id, mt.member_id
