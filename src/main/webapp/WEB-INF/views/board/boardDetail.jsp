@@ -230,30 +230,17 @@ button.updateBtn, button.deleteBtn{
 	border: none;
 }
 
-/* button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-} */
-
-/* input[type="text"],
-input[type="email"],
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    box-sizing: border-box;
-}
- */
 #openMessageBtn {
 background-color: white; border: 0px;
 color: black;
+}
+
+.message-content {
+	border-radius: 20px;
+}
+
+#openMessageBtn:hover {
+	cursor: pointer;
 }
 
 .anonymous{
@@ -310,7 +297,7 @@ color: black;
 				  			</c:if>
 				  			
 				  			<c:if test="${postDetail.memberId ne loginMember.username}">
-					  			<li class="messagesend" style="margin-right: 5px;" id="openMessageBtn">쪽지 | </li>
+					  			<li class="messagesend" style="margin-right: 5px;" id="openMessageBtn"  onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지 | </li>
 					  			<li class="abuse">신고</li>
 				  			</c:if>
 				  		</ul>
@@ -483,14 +470,13 @@ color: black;
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
-        	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
-        	<button type="submit" id="submitBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+        	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
         	<button type="button" class="anonymous">
         		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
 	      </form:form>
 	    `;
-	    } else {
+	    } else if("${postDetail.boardId}" === "3") {
 	    	formHtml = `
 	  	      <form:form 
 	  	      	name="updateFrm" 
@@ -551,6 +537,67 @@ color: black;
 	          	
 	  	      </form:form>
 	  	    `;
+	    }else {
+	    	formHtml = `
+		  	      <form:form 
+		  	      	name="updateFrm" 
+		  	      	class="hidden" 
+		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
+		  	      	id="updateForm" 
+		  	      	method="post" 
+		  	      	style="height: 66%;"
+		        		enctype="multipart/form-data">
+		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
+		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
+		  	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
+		  	      	<input type = "hidden" name="grade" id="grade" >
+		  	      	<p>
+		  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
+		  	      	</p>
+		  	        <p>
+		  	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
+
+		  	        		아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
+
+		  	        		※ 정치·사회 관련 행위 금지 
+		  	        		- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
+		  	        		- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
+		  	        		- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
+		  	        		- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
+		  	        		* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
+
+		  	        		※ 홍보 및 판매 관련 행위 금지 
+		  	        		- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
+		  	        		- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
+		  	        		* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
+
+		  	        		※ 불법촬영물 유통 금지
+		  	        		불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
+
+		  	        		※ 그 밖의 규칙 위반 
+		  	        		- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
+		  	        		- 범죄, 불법 행위 등 법령을 위반하는 행위 
+		  	        		- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
+		  	        		- 음란물, 성적 수치심을 유발하는 행위 
+		  	        		- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text">${postDetail.content}</textarea>
+		  	        </p>
+		  	        	
+		  	        <div>
+		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
+		  	        	<div class="hashTag-container"></div>
+		  	        </div>
+		  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+		  	        
+		  	      	
+		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
+		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
+		          	<button type="button" class="anonymous">
+		          		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
+		          	</button>
+		          	
+		  	      </form:form>
+		  	    `;
 	    }
 	    
 	   
@@ -1010,7 +1057,7 @@ function renderComments(comments) {
 	 	        	<ul class="commentMenu">
 	                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 	                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-	                 	<li class="messagesend">쪽지</li>
+	                 	<li class="messagesend" onclick="messageSend('\${comment.memberId}', '\${comment.anonymousCheck}')">쪽지</li>
 	                 	<li class="abuse">신고</li>
 	             	</ul>
 	             </h3>
@@ -1073,7 +1120,7 @@ function renderComments(comments) {
 	 	            </div>
 	 	        	<ul class="commentMenu">
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
-	                 	<li class="messagesend">쪽지</li>
+	                 	<li class="messagesend" onclick="messageSend('\${childComment.memberId}', '\${childComment.anonymousCheck}')">쪽지</li>
 	                 	<li class="abuse">신고</li>
 	             	</ul>
 	             </h3>
@@ -1215,32 +1262,8 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	});
 	
 	
-	// 게시글 작성자 쪽지 보내기
-	/* document.querySelector("#openMessageBtn").addEventListener("click", function(event) {
-	
-		 const openMessageBtn = document.getElementById("openMessageBtn");
-		 const messageContainer = document.getElementById("messageContainer");
-		 const closeMessageBtn = document.getElementById("closeMessageBtn");
-		 const receiveId =document.getElementById("receiveMember");
-		 const toInput = document.getElementById("toInput");
-		 if(${postDetail.anonymousCheck ne '1'}){
-		 	toInput.value = "${postDetail.memberId}";  
-		 	receiveId.value = "${postDetail.memberId}";  
-		 }
-		 if(${postDetail.anonymousCheck eq '1'}){
-		 	toInput.value = "익명";   
-			receiveId.value = "${postDetail.memberId}";  
-			 
-		 }
-		 openMessageBtn.addEventListener("click", function() {
-		    messageContainer.style.display = "block";
-		 });
 
-		 closeMessageBtn.addEventListener("click", function() {
-		     messageContainer.style.display = "none";
-		 });
-	});
-	
+	// 쪽지 보내기
 	document.querySelector("#sendMessageBtn").addEventListener("click", function(event) {
 		
 		event.preventDefault();
@@ -1249,13 +1272,13 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 		const messageContent =document.getElementById("messageContent").value;
 		const toInput = document.getElementById("toInput").value;
 		const token = document.tokenFrm._csrf.value;
+		const closeMessageBtn = document.getElementById("closeMessageBtn");
 		let anonymousCheck = 'n';
-		
-		console.log(receiveId);
 		
 		if(toInput == "익명"){
 			anonymousCheck = 'y'
 		}
+		
 		console.log(sendId, receiveId, messageContent);
 		
 		$.ajax({
@@ -1271,11 +1294,35 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
             dataType : "json",
             success(responseData) {
             	alert("쪽지전송이 완료되었습니다.");
+            	messageContainer.style.display = "none";
             }
 		});
 		
 		
-	}); */
+	});
+	
+	const messageSend =(messageReceiveId, anonymousCheck) => {
+		 const messageContainer = document.getElementById("messageContainer");
+		 messageContainer.style.display = "block";
+		 const closeMessageBtn = document.getElementById("closeMessageBtn");
+		 const receiveId =document.getElementById("receiveMember");
+		 const toInput = document.getElementById("toInput");
+		 receiveId.value = messageReceiveId;  
+		 
+		 console.log(messageReceiveId, anonymousCheck);
+		 
+		 if(anonymousCheck != '1' || anonymousCheck == 'false'){
+		 	toInput.value = messageReceiveId;  
+		 }
+		 if(anonymousCheck == '1' || anonymousCheck == 'true'){
+		 	toInput.value = "익명";   
+		 }
+		 closeMessageBtn.addEventListener("click", function() {
+		     messageContainer.style.display = "none";
+		 });
+		
+	};
+	
 	</script>
 	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
