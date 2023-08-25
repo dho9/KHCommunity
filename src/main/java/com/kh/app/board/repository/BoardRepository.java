@@ -142,4 +142,17 @@ public interface BoardRepository {
 			+ "FETCH FIRST 3 ROWS ONLY")
 	List<NoticeBoardDto> findThreeNotice();
 	
+	List<BoardListDto> AllBoardFindMyarticle(String memberId, RowBounds rowBounds);
+
+	@Select("select count(*) from post where member_id= #{memberId}")
+	int totalCountMyarticle(String memberId);
+	
+	
+	List<BoardListDto> AllBoardFindMycommentarticle(String memberId, RowBounds rowBounds);
+	
+	@Select("SELECT COUNT(*) FROM (SELECT COUNT(*) FROM post_comment WHERE member_id = #{memberId} GROUP BY post_id)")
+	int totalCountMycommentarticle(String memberId);
+
+	List<CommentLike> commentLikeCheck(int postId);
+	
 }

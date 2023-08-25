@@ -63,8 +63,8 @@
             </div>
             <div class="card">
                 <div class="menus">
-                    <a href="/myarticle" class="myarticle">내가 쓴 글</a>
-                    <a href="/mycommentarticle" class="mycommentarticle">댓글 단 글</a>
+                    <a href="${pageContext.request.contextPath}/board/myarticle.do" class="myarticle">내가 쓴 글</a>
+                    <a href="${pageContext.request.contextPath}/board/mycommentarticle.do" class="mycommentarticle">댓글 단 글</a>
                     <a class="myBoard" id="myBoard">즐겨찾기</a>
                     <div class="favorite"></div>
                     <hr>
