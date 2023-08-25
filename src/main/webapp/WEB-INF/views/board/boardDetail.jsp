@@ -6,77 +6,90 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
-form.writecomment.child{
-    margin: 0 4px 4px 35px;
-    border: 1px solid #e3e3e3;
-        position: relative;
-    /* border-top: 1px solid #e3e3e3; */
-    background-color: #f8f8f8;
+
+li.vote commentvote{
+padding-bottom:10px;}
+div.child-comments{
+    width: 95%;
+    margin-left: 5%;
+    margin-top: 1%;
+}
+article.child{
+border: 1px solid #e2e2e3;
+background-color: #e5e8eb66;
+
+}
+form.writecomment.child {
+	margin: 0 4px 4px 35px;
+	border: 1px solid #e3e3e3;
+	position: relative;
+	/* border-top: 1px solid #e3e3e3; */
+	background-color: #f8f8f8;
 }
 
-
 .writecomment.child input.text {
-       margin: 0;
-    padding: 10px 85px 10px 10px;
-    border: 0;
-    width: 100%;
-    height: 45px;
-    line-height: 20px;
-    box-sizing: border-box;
-    color: #262626;
-    font-size: 13px;
-    overflow: hidden;
-    resize: none;
-    background-color: transparent;
+	margin: 0;
+	padding: 10px 85px 10px 10px;
+	border: 0;
+	width: 100%;
+	height: 45px;
+	line-height: 20px;
+	box-sizing: border-box;
+	color: #262626;
+	font-size: 13px;
+	overflow: hidden;
+	resize: none;
+	background-color: transparent;
 }
 
 .writecomment.child ul.option {
-    display: flex;
-    align-items: center;
-    list-style: none;
+	display: flex;
+	align-items: center;
+	list-style: none;
 }
 
 .writecomment.child ul.option li {
-     display: inline-block;
-    width: 40px;
-    height: 40px;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 40px 40px;
-    cursor: pointer;
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 40px 40px;
+	cursor: pointer;
 }
 
 .writecomment.child ul.option li.anonym {
-    background-image: url('../resources/images/anonymous.png');
-    
-    margin-right: 5px;
+	background-image: url('../resources/images/anonymous.png');
+	margin-right: 5px;
 }
 
 .writecomment.child ul.option li.anonym.active {
-    background-image: url('../resources/images/anonymouscheck.png');
+	background-image: url('../resources/images/anonymouscheck.png');
 }
 
 .writecomment.child ul.option li.submit {
-    background-image: url('../resources/images/댓글제출.png');
-    background-color: #c62917;
+	background-image: url('../resources/images/댓글제출.png');
+	background-color: #c62917;
 }
-
 
 /*--*/
 .writecomment.child.active {
-    display: block; /* 혹은 필요한 스타일로 설정 */
+	display: block; /* 혹은 필요한 스타일로 설정 */
 }
+
 .writecomment.child {
-        display: none;
-        /* 스타일을 추가하여 입력폼을 원하는 형태로 꾸밀 수 있습니다. */
-    }
-	.sstatus img {
-    width: 13px;
+	display: none;
+	/* 스타일을 추가하여 입력폼을 원하는 형태로 꾸밀 수 있습니다. */
 }
-  ul.sstatus li.vote span.likeCount {
-    color: #c62917;
- 	marging-left:0;
- 	font-size: 11px;
+
+.sstatus img {
+	width: 13px;
+}
+
+ul.sstatus li.vote span.likeCount {
+	color: #c62917;
+	marging-left: 0;
+	font-size: 11px;
 }
 
 h3.medium {
@@ -255,6 +268,7 @@ color: black;
 		</c:if>
 		<c:if test="${not empty postDetail}">
 			<article>
+
 					<a class="article" >
 				  		<img class="picture large" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<div class="profile">
@@ -333,7 +347,6 @@ color: black;
 				<div id="commentList"></div>
 				<div class="articles">
 					<article>
-						
 						<form:form name="commentFrm" class="writecomment">
 							<div style="display: flex; align-items: center;">
 								<input type="text" name="commentText" id="commentText"
@@ -361,56 +374,60 @@ color: black;
 	<form:form name="tokenFrm"></form:form>
 	<form:form name="loadCommentFrm"></form:form>
 	<form:form name="commentLikeFrm"></form:form>
-	
 	<%-- 삭제 폼 --%>
 	<form:form action="${pageContext.request.contextPath}/board/boardDelete.do" name="boardDeleteFrm" method="post">
 		<input type="hidden" name="deletePostId" id="deletePostId" value="${postDetail.postId}"/>
 		<input type="hidden" name="postBoardLink" id="postBoardLink" value="${board.boardLink}"/>
 	</form:form>
 	
+	<%-- 수정 폼 --%>
+	<%-- update post set title = ?, content = ?  --%>
+	<form:form action="${pageContext.request.contextPath}/board/boardUpdate.do" name="boardUpdateFrm" method="post">
+		<input type="hidden" name="updatePostId" id="updatePostId" value="${postDetail.postId}"/>
+		<input type="hidden" name="postBoardLink" id="postBoardLink" value="${board.boardLink}"/>
+	</form:form>
+	
 	
 	<!-- 쪽지 모달 -->
 
-<div id="messageContainer" class="modal">
-	<div class="message-content">
-		<form:form id="messageFrm" action="${pageContext.request.contextPath}/message/messageSend.do">
-        	<div>
-        		<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span>
-        		<span class="close" id="closeMessageBtn">&times;</span>         
-        	</div>
-        	</br>
-        	<sec:authentication property="principal" var="loginMember"/>
-        	<div class="mb-3">
-        		<label for="toInput" class="form-label">To</label>
-        		<input type="text" id="toInput" value="" readonly>
-        		<input type="hidden" id="receiveMember" value="" readonly>
-        	</div>
-        	</br></br>
-        	<div class="mb-3">
-                <label for="fromInput" class="form-label">From</label></br>
-                 <input type="text" class="form-control" id="fromInput" value="${loginMember.memberId}" readonly>
-        	</div>
-        	</br></br>
-        	<div class="mb-3">
-                <label for="contentInput" class="form-label">Content</label>
-                <textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
-        	</div>
-            <button id="sendMessageBtn">메시지 전송</button>
-        </form:form>
+	<div id="messageContainer" class="modal">
+		<div class="message-content">
+			<form:form id="messageFrm" action="${pageContext.request.contextPath}/message/messageSend.do">
+	        	<div>
+	        		<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span>
+	        		<span class="close" id="closeMessageBtn">&times;</span>         
+	        	</div>
+	        	</br>
+	        	<sec:authentication property="principal" var="loginMember"/>
+	        	<div class="mb-3">
+	        		<label for="toInput" class="form-label">To</label>
+	        		<input type="text" id="toInput" value="" readonly>
+	        		<input type="hidden" id="receiveMember" value="" readonly>
+	        	</div>
+	        	</br></br>
+	        	<div class="mb-3">
+	                <label for="fromInput" class="form-label">From</label></br>
+	                 <input type="text" class="form-control" id="fromInput" value="${loginMember.memberId}" readonly>
+	        	</div>
+	        	</br></br>
+	        	<div class="mb-3">
+	                <label for="contentInput" class="form-label">Content</label>
+	                <textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
+	        	</div>
+	            <button id="sendMessageBtn">메시지 전송</button>
+	        </form:form>
+		</div>
 	</div>
-</div>
-
-	
-	
-	
 	
 	<script>
+	
+	// 글 수정
+	const updateBtn = document.querySelector(".updateBtn");
+	
 	
 	// 글 삭제
 	const deleteBtn = document.querySelector(".deleteBtn");
 	const boardDeleteFrm = document.querySelector("form[name='boardDeleteFrm']");
-	const boardLink = document.querySelector("#postBoardLink");
-	console.log("보드링크 = ",boardLink.value);
 	
 	if(deleteBtn !== null){
 		deleteBtn.onclick = (()=>{
@@ -568,6 +585,7 @@ function loadComment(){
     	success(data){
     		loadCommentLike();
     		renderComments(data);
+    		console.log(data);
     		
     	}
     });
@@ -599,63 +617,112 @@ function submitComment(adata){
 }
 //댓글불러온걸토대로 댓글랜더.
 function renderComments(comments) {
-	//console.log(comments);
-    const commentList = document.querySelector('#commentList'); // Select the comment list container
-  
-    commentList.innerHTML = '';
+	  const commentList = document.querySelector('#commentList');
+	    commentList.innerHTML = '';
 
-    // Loop through each comment and create a DOM element for it
-    comments.forEach(comment => {
-    	//console.log("장준"+comment.commentRef);
-    	if(comment.commentLevel ==1){
-    		const commentElement = document.createElement('article');
-            commentElement.className = 'parent';
-            commentElement.setAttribute('data-commentid', comment.commentId);
-            //console.log("sdsadsadsadsadsad"+commentElement);
-            commentElement.innerHTML = `
-                
-            	<h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
-                <div style="display: flex; align-items: center;">
-                    <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
-                    <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
-                </div>
-                <ul class="commentMenu">
-                    <li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
-                    <li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-                    <li class="messagesend">쪽지</li>
-                    <li class="abuse">신고</li>
-                </ul>
-            </h3>
-                <hr>
-                <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>
-                <ul class="sstatus commentvotestatus">
-                <li class="vote commentvote" >
-                    <time class="medium">\${comment.commentCreatedAt}</time>
-                    <img class="commentLike" data-commentid="\${comment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
-                    <span class="likeCount" data-commentid="\${comment.commentId}">\${comment.likeCount}</span>
-                </li>
-               
-            </ul>
-            <form class="writecomment child">
-            <div class="writecommentWrap" style="display: flex; align-items: center;">
-            <input type="text" name="text" maxlength="300" autocomplete="off" placeholder="대댓글을 입력하세요." class="text" data-listener-added_ce8d996c="true">
-            <ul class="option">
-                <li title="익명" class="anonym"></li>
-                <li title="완료" class="submit" data-parentcommentid="\${comment.commentId}" data-value="2"></li>
-            </ul>
-           </div>
-        </form>
-                <hr class="comment-separator"/>
-            `;
+	    // Loop through each comment and create a DOM element for it
+	    comments.forEach(comment => {
+	    	
+	    	if(comment.commentLevel ===1){
+	    		const commentElement = document.createElement('article');
+	 	        commentElement.className = 'parent';
+	 	        commentElement.setAttribute('data-commentid', comment.commentId);
+	 	       
 
-            // Append the comment element to the comment list container
-            commentList.appendChild(commentElement);
-    	}
-    
-    	
-    });
+	 	        commentElement.innerHTML = `
+	 	        <h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
+	 	            <div style="display: flex; align-items: center;">
+	 	                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
+	 	                <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
+	 	            </div>
+	 	        	<ul class="commentMenu">
+	                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
+	                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
+	                 	<li class="messagesend">쪽지</li>
+	                 	<li class="abuse">신고</li>
+	             	</ul>
+	             </h3>
+	             <hr>
+	             <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>
+	             <ul class="sstatus commentvotestatus">
+	             <li class="vote commentvote" >
+	             
+	             
+	             
+	                
+	                 <img class="commentLike" data-commentid="\${comment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
+	                 <span class="likeCount" data-commentid="\${comment.commentId}">\${comment.likeCount}</span>
+	             </li>
+	            
+	         </ul>
+	         <form class="writecomment child">
+	         <div class="writecommentWrap" style="display: flex; align-items: center;">
+	         <input type="text" name="text" maxlength="300" autocomplete="off" placeholder="대댓글을 입력하세요." class="text" data-listener-added_ce8d996c="true">
+	         <ul class="option">
+	             <li title="익명" class="anonym"></li>
+	             <li title="완료" class="submit" data-parentcommentid="\${comment.commentId}" data-value="2"></li>
+	         </ul>
+	        </div>
+	     </form>
+	            
+	 	        `;
+	 	const separator = document.createElement('hr');
+        separator.className = 'comment-separator';
+	 	        
+        const childComments = comments.filter(childComment => childComment.commentRef === comment.commentId);
+        renderChildComments(childComments, commentElement);
+        commentElement.appendChild(separator);
 
+        commentList.appendChild(commentElement);
+	    	
+	       
+	    	
 
+	        // Append the comment element to the comment list container
+
+	        // Find child comments for this parent comment
+	    };
+	})
+}
+	function renderChildComments(childComments, parentCommentElement) {
+	    const childCommentsContainer = document.createElement('div');
+	    childCommentsContainer.className = 'child-comments';
+	    
+	    childComments.forEach(childComment => {
+	        const childCommentElement = document.createElement('article');
+	        childCommentElement.className = 'child';
+	        childCommentElement.setAttribute('data-commentid', childComment.commentId);
+	        
+	        childCommentElement.innerHTML = `
+	 	        <h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
+	 	            <div style="display: flex; align-items: center;">
+	 	                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
+	 	                <span>\${childComment.anonymousCheck ? '익명' : childComment.memberId}</span>
+	 	            </div>
+	 	        	<ul class="commentMenu">
+	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
+	                 	<li class="messagesend">쪽지</li>
+	                 	<li class="abuse">신고</li>
+	             	</ul>
+	             </h3>
+	             <hr>
+	             <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${childComment.commentContent}</p>
+	             <ul class="sstatus commentvotestatus">
+	             <li class="vote commentvote" >
+	                 <time class="medium">\${childComment.commentCreatedAt}</time>
+	                 <img class="commentLike" data-commentid="\${childComment.commentId}" src="${pageContext.request.contextPath}/resources/images/like.png">
+	                 <span class="likeCount" data-commentid="\${childComment.commentId}">\${childComment.likeCount}</span>
+	             </li>
+	            
+	         </ul>
+	            
+	 	        `;
+	       
+
+	        childCommentsContainer.appendChild(childCommentElement);
+	    });
+
+	    parentCommentElement.appendChild(childCommentsContainer);
 }
 
 
@@ -683,8 +750,8 @@ document.querySelector('#commentList').addEventListener('click', (event) => {
 				const {available, likeCount} = responseData;
 				const {commentLikeCount} = likeCount;
     			
-            	 const commentlikeCount = document.querySelector(`.likeCount[data-commentid="\${commentId}"]`);
-            	 const like = document.querySelector(`.commentLike[data-commentid="\${commentId}"]`);
+            	 const commentlikeCount = document.querySelectorAll(`.likeCount[data-commentid="\${commentId}"]`);
+            	 const like = document.querySelectorAll(`.commentLike[data-commentid="\${commentId}"]`);
 				if(available) {
 	            	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
 	            	commentlikeCount.innerHTML = `\${commentLikeCount}`;
@@ -813,11 +880,13 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 		 const receiveId =document.getElementById("receiveMember");
 		 const toInput = document.getElementById("toInput");
 		 if(${postDetail.anonymousCheck ne '1'}){
-		 	toInput.value = "${postDetail.memberId}";   
+		 	toInput.value = "${postDetail.memberId}";  
+		 	receiveId.value = "${postDetail.memberId}";  
 		 }
 		 if(${postDetail.anonymousCheck eq '1'}){
 		 	toInput.value = "익명";   
-			receiveId.value = "${postDetail.memberId}";   
+			receiveId.value = "${postDetail.memberId}";  
+			 
 		 }
 		 openMessageBtn.addEventListener("click", function() {
 		    messageContainer.style.display = "block";

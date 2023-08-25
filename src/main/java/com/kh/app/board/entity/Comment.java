@@ -1,6 +1,7 @@
 package com.kh.app.board.entity;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,4 +23,5 @@ public class Comment {
 	private Date commentCreatedAt;
 	private boolean anonymousCheck;
 	private int likeCount;
+	
 }

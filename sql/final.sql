@@ -360,6 +360,23 @@ CREATE TABLE delete_post (
 ALTER TABLE delete_post
 MODIFY title VARCHAR2(2000);
 
+update(
+    select 
+        *
+    from
+        post p join post_content pc 
+            on
+        p.post_id = pc.post_id 
+)p_pc
+set
+    p_pc.title = '수정제목',
+    p_pc.content = '수정내용'
+where
+    p_pc.post_id=1;
+    
+
+select * from post order by 1;
+
 CREATE TABLE delete_comment (
    comment_id   number      ,
    post_id   number      ,
