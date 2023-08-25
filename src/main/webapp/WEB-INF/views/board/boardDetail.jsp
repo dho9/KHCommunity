@@ -463,7 +463,7 @@ color: black;
 	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
 	      	<input type = "hidden" name="grade" id="grade" >
 	      	<p>
-	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title">
+	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
 	      	</p>
 	      	<p>
 	      		<select name="language" id="language">
@@ -484,6 +484,7 @@ color: black;
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
         	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
+        	<button type="submit" id="submitBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="anonymous">
         		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
@@ -549,11 +550,6 @@ color: black;
 	          	</button>
 	          	
 	  	      </form:form>
-	  	      <div id="delDiv">
-		  	    <input type="text" id="fileName" value="${postAttach.postOriginalFilename}" readonly>
-		  	    <button type="button" id="delFileBtn">삭제</button>
-	  	      </div>
-		  	    
 	  	    `;
 	    }
 	    
@@ -562,6 +558,7 @@ color: black;
 	    const updateForm = document.getElementById("updateForm");
 	    const titleInput = document.getElementById("title");
 	    const contentTextarea = document.getElementById("text");
+	    
 
 	    detailArticle.style.display = "none";
 	    commnetContainer.style.display = "none";
@@ -570,6 +567,8 @@ color: black;
 		// 에디터 설정 
 	    var textarea = document.querySelector('#batch_content');
 	    var language = document.querySelector('#language');
+	    
+	    
 	    if(textarea !== null && language !== null ){
 	    	var editor = CodeMirror.fromTextArea(textarea, {
 		        lineNumbers: true,  //왼쪽 라인넘버 표기
@@ -577,9 +576,9 @@ color: black;
 		        mode: 'text/x-java', //모드는 java 모드
 		        theme: "dracula",   //테마는 맘에드는 걸로.
 		        val: textarea.value
-		        
 		    });
 		    
+	    editor.setValue("${postDetail.content}");
 		    language.addEventListener('change', (e) => {
 		        var lang = e.target.value;
 		        if(lang === "javascript" || lang === "html"){
@@ -670,6 +669,18 @@ color: black;
 	            tagElement.setAttribute("value", "#" + tag);
 	        }
 	    }
+	    
+	    const submitBtn = document.querySelector("#submitBtn");
+	    const text = document.querySelector("#text");
+	    
+	    if(submitBtn !== null && text !== null){
+	    	submitBtn.addEventListener('click', (e) => {
+			    var userInput = editor.getValue();
+			    text.value = userInput;
+		    });
+	    }
+	    
+	    
 	 }
 	
 	// 폼 숨기기
