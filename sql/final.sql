@@ -1400,3 +1400,9 @@ select * from curriculum;
 insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
 
 update vacation set vacation_approve_check = '2', employee_id = null;
+
+SELECT *
+FROM report
+WHERE post_id IS NOT NULL
+  AND comment_id IS NULL
+  AND message_id IS NULL;
