@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/myClassBoard.css" />
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <!-- bootstrap js: jquery load 이후에 작성할것.-->
@@ -10,64 +11,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-<style>
-.myClassBoard-title, .myClassBoard-subTitle {
-	text-align: center;
-}
-.myClassBoard-title .title {
-	font-weight: bold;
-    font-size: 49px;
-    margin-top: 7%;
-}
-.myClassBoard-title p {
-    font-size: 18px;
-    color: #444444e3;
-    padding-top: 16px;
-    font-weight: 600;
-}
-.myClassBoard-subTitle ul {
-	margin-top: 2%;
-    font-weight: 500;
-}
-.input-group-prepend {
-	cursor: pointer;
-}
-#myClassBoard-div {
-    border: 4px solid #007bff;
-    border-radius: 63px;
-    height: 1200px;
-    width: 1365px;
-    margin-top: 5%;
-    margin-left: 15%;
-}
-#writePost {
-    margin-left: 87%;
-    width: 105px;
-    height: 51px;
-    margin-top: 55px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 11px;
-}
-table {
-	margin-left: 27px;
-    margin-top: 3%;
-}
-#button-div {
-	text-align: center;
-	margin-top: -9%;
-}
-.btn.btn-outline-success {
-	width: 205px;
-    height: 60px;
-    border-radius: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    border: 2px solid;
-    margin-left: 7px;
-    margin-top: 5%;
-}
-</style>
+
 	<div id="myClassBoard-div">
 	<sec:authentication property="principal" var="loginMember"/>
 	<div class="myClassBoard-title">
@@ -91,7 +35,7 @@ table {
 		<button type="button" class="btn btn-outline-success" id="allBtn">전체</button>
 	</div>
 	
-	<table class="table" style="width: 96%;">
+	<table class="table table-hover" style="width: 96%;">
 	  <thead>
 	    <tr>
 	      <th scope="col">번호</th>
@@ -104,7 +48,15 @@ table {
 	</table>
 	
 	<!-- 페이지 이동 및 페이지 번호 표시 -->
-	<div id="pagebar"></div>
+	<ul class="pagination">
+	    <li class="page-item disabled">
+	      <a id="prev" class="page-link" href="#">이전</a>
+	    </li>
+	    
+	    <li class="page-item">
+	      <a id="next" class="page-link" href="#">다음</a>
+	    </li>
+    </ul>
 	</div>
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
@@ -116,12 +68,12 @@ table {
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
-	      <div class="modal-body" style="height: 690px;">
+	      <div class="modal-body" style="height: 700px;">
 	      	<form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="POST" enctype="multipart/form-data" style="height: 550px;">
 		      	<input type = "hidden" name="boardId" id="boardId" value="11">
 		      	<div class="input-group mb-3">
 				  <div class="input-group-prepend">
-				    <input style="width: 105px; height: 43px;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="공지사항"/>
+				    <input style="width: 105px; height: 43px; background-color: #a6a6a6;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="게시판"/>
 				    <div class="dropdown-menu">
 				      <c:if test="${authority eq '[ADMIN]'}">
 				        <a class="dropdown-item">공지사항</a>
@@ -130,7 +82,7 @@ table {
 				      </c:if>
 					  <c:if test="${authority ne '[ADMIN]'}">
 					  	<a class="dropdown-item">과제공유</a>
-				        <a class="dropdown-item">게시판</a>
+				        <a class="dropdown-item">게시판 </a>
 					  </c:if>
 				    </div>
 				  </div>
@@ -175,13 +127,39 @@ table {
 	</div>
 	<form:form name="tokenFrm"></form:form>
 	<script>
-	// onload되면 전체버튼 출력
-	window.onload = () => {
-		document.querySelector('#allBtn').click();
-		document.querySelector('#allBtn').style.boxShadow = '0 0 0 0.2rem rgba(40,167,69,.5)';
-	};
-	// 전체 버튼
-	document.querySelector('#allBtn').addEventListener('click', () => {
+	function renderPagination(currentPage, totalPages) {
+	    const pagination = document.querySelector('.pagination');
+	    pagination.innerHTML = '';
+	    
+	    const prevButton = document.createElement('li');
+	    prevButton.classList.add('page-item', 'disabled');
+	    prevButton.innerHTML = '<a class="page-link" href="#">이전</a>';
+	    if (currentPage > 1) {
+	        prevButton.classList.remove('disabled');
+	        prevButton.innerHTML = `<a class="page-link" href="${pageContext.request.contextPath}/board/myClassBoardList.do" data-page="${currentPage - 1}">이전</a>`;
+	    }
+	    pagination.appendChild(prevButton);
+
+	    for (let i = 1; i <= totalPages; i++) {
+	        const pageItem = document.createElement('li');
+	        pageItem.classList.add('page-item');
+	        pageItem.innerHTML = `<a class="page-link" href="${pageContext.request.contextPath}/board/myClassBoardList.do?page=\${currentPage}" data-page="${i}">\${i}</a>`;
+	        if (i === currentPage) {
+	            pageItem.classList.add('active');
+	        }
+	        pagination.appendChild(pageItem);
+	    }
+
+	    const nextButton = document.createElement('li');
+	    nextButton.classList.add('page-item');
+	    nextButton.innerHTML = '<a class="page-link" href="#">다음</a>';
+	    if (currentPage < totalPages) {
+	        nextButton.innerHTML = `<a class="page-link" href="${pageContext.request.contextPath}/board/myClassBoardList.do?page=\${currentPage + 1}" data-page="${currentPage + 1}">다음</a>`;
+	    }
+	    pagination.appendChild(nextButton);
+	}
+	
+	function rendermyClassBoardList() {
 		$.ajax({
 			url : "${pageContext.request.contextPath}/board/myClassBoardFindAll.do",
 			success(reponseData) {
@@ -190,9 +168,7 @@ table {
 				console.log(board, currentPage, totalPages);
 				
 				const tbody = document.querySelector('tbody');
-				const div = document.querySelector('#pagebar');
 				tbody.innerHTML = "";
-				div.innerHTML = "";
 				
 				if(board.length == 0) {
 					tbody.innerHTML = `
@@ -205,53 +181,36 @@ table {
 					for(let i=0; i<board.length; i++) {
 						const createdAt = formatDatetime(board[i].postCreatedAt)
 						tbody.innerHTML += `
-						    <tr>
+						    <tr data-value="\${board[i].postId}">
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
-						      <td>\${board[i].memberId}</td>
+						      <td>\${board[i].memberName}</td>
 						      <td>\${createdAt}</td>
 						    </tr>
 						`;
 					}
 				}
-				
-				div.innerHTML = `
-					<div class="d-flex justify-content-center">
-				        <ul class="pagination">
-				            <c:if test="${currentPage > 1}">
-				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentList.do?page=${currentPage - 1}" aria-label="Previous">
-				                        <span aria-hidden="true">&laquo;</span>
-				                    </a>
-				                </li>
-				            </c:if>
-				            
-				            <c:forEach var="pageNum" begin="1" end="${totalPages}">
-				                <c:choose>
-				                    <c:when test="${pageNum eq currentPage}">
-				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
-				                    </c:when>
-				                    <c:otherwise>
-				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/employeeList.do?page=${pageNum}">${pageNum}</a></li>
-				                    </c:otherwise>
-				                </c:choose>
-				            </c:forEach>
-				            
-				            <c:if test="${currentPage < totalPages}">
-				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/employeeList.do?page=${currentPage + 1}" aria-label="Next">
-				                        <span aria-hidden="true">&raquo;</span>
-				                    </a>
-				                </li>
-				            </c:if>
-				        </ul>
-				</div>
-			`;	
+				// 디테일 페이지로 넘기기
+				document.querySelectorAll('tbody tr').forEach((tr) => {
+					tr.addEventListener('click', () => {
+						const postId = tr.getAttribute('data-value');
+						window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
+					});
+				})
+				renderPagination(currentPage, totalPages); // 페이지바 출력
 			}
 		});
+	}
+	
+	// onload되면 전체버튼 출력
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelector('#allBtn').click();
+		document.querySelector('#allBtn').style.boxShadow = '0 0 0 0.2rem rgba(40,167,69,.5)';
 	});
-	
-	
+	// 전체 버튼
+	document.querySelector('#allBtn').addEventListener('click', () => {
+		rendermyClassBoardList();
+	});
 	// 공지사항 버튼
 	document.querySelector('#notice').addEventListener('click', () => {
 		board('공지사항');

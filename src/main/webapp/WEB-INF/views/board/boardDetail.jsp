@@ -237,26 +237,7 @@ ul.commentMenu li {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.7);
 }
-#sendMessageBtn {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    display: inline-block;
-    margin: 7% 40% 6% 35.3%;
-}
-#messageContainer button:hover {
-    background-color: #0056b3;
-}
-#messageContainer input[type="text"],
-#messageContainer textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    box-sizing: border-box;
-}
+
 .message-content {
     background-color: #fff;
     margin: 10% auto;
@@ -281,6 +262,11 @@ ul.commentMenu li {
 
 button.updateBtn, button.deleteBtn{
 	border: none;
+}
+
+#openMessageBtn {
+background-color: white; border: 0px;
+color: black;
 }
 
 .message-content {
@@ -644,7 +630,7 @@ button.updateBtn, button.deleteBtn{
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+		  	         
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
@@ -1186,7 +1172,7 @@ button.updateBtn, button.deleteBtn{
 	// 공감(좋아요) 누르기
 	function like() {
 		document.querySelector('.vote').onclick = (e) => {
-			
+			console.log('!!!!!!!!!!!!!');
 			const token = document.tokenFrm._csrf.value;
 			
 			$.ajax({
@@ -1270,7 +1256,7 @@ button.updateBtn, button.deleteBtn{
 		 	        	<ul class="commentMenu">
 		                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 		                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-		                 	<li class="messagesend" onclick="messageSend('\${comment.memberId}', '\${comment.anonymousCheck}')">쪽지</li>
+		                 	<li class="messagesend">쪽지</li>
 		                 	<li class="abuse">신고</li>
 		             	</ul>
 		             </h3>
@@ -1328,7 +1314,7 @@ button.updateBtn, button.deleteBtn{
 	 	            </div>
 	 	        	<ul class="commentMenu">
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
-	                 	<li class="messagesend" onclick="messageSend('\${childComment.memberId}', '\${childComment.anonymousCheck}')">쪽지</li>
+	                 	<li class="messagesend">쪽지</li>
 	                 	<li class="abuse">신고</li>
 	             	</ul>
 	             </h3>
@@ -1535,10 +1521,11 @@ function likeComment(){
 		const token = document.tokenFrm._csrf.value;
 		const closeMessageBtn = document.getElementById("closeMessageBtn");
 		let anonymousCheck = 'n';
-
+		
 		if(toInput == "익명"){
 			anonymousCheck = 'y'
 		}
+		
 		
 		$.ajax({
 			url : "${pageContext.request.contextPath}/message/messageSend.do",
@@ -1554,19 +1541,14 @@ function likeComment(){
             success(responseData) {
             	alert("쪽지전송이 완료되었습니다.");
             	messageContainer.style.display = "none";
-            
             }
 		});
-		
-        $("#messageContainer").removeClass("modal-active");
-        $("#messageContent").val("");
 		
 		
 	});
 	
 	const messageSend =(messageReceiveId, anonymousCheck) => {
 		 const messageContainer = document.getElementById("messageContainer");
-		 const messageContent =document.getElementById("messageContent").value;
 		 messageContainer.style.display = "block";
 		 const closeMessageBtn = document.getElementById("closeMessageBtn");
 		 const receiveId =document.getElementById("receiveMember");
@@ -1583,10 +1565,7 @@ function likeComment(){
 		 }
 		 closeMessageBtn.addEventListener("click", function() {
 		     messageContainer.style.display = "none";
-		     $("#messageContainer").removeClass("modal-active");
-             $("#messageContent").val("");
 		 });
-		
 		
 	};
 	

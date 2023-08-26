@@ -95,223 +95,90 @@
 		<%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
         <div class="main">
             <div class="card">
-                <div class="board">
+                <div class="board" id="freeBoardContainer">
                     <h3>
-                        <a href="">자유게시판</a>
+                        <a href="${pageContext.request.contextPath}/board/freeBoardList.do">자유게시판</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
             <div class="card">
-                <div class="board">
+                <div class="board" id="preStudentBoardContainer">
                     <h3>
-                        <a href="">예비생게시판</a>
+                        <a href="${pageContext.request.contextPath}/board/preStudentBoardList.do">예비생게시판</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
             <div class="card">
-                <div class="board">
+                <div class="board" id="graduateBoardContainer">
                     <h3>
-                        <a href="">수료생게시판</a>
+                        <a href="${pageContext.request.contextPath}/board/graduateBoardList.do">수료생게시판</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
             <div class="card">
-                <div class="board">
+                <div class="board" id="myClassBoardContainer">
                     <h3>
-                        <a href="">우리반게시판</a>
+                        <a href="${pageContext.request.contextPath}/board/myClassBoardList.do">우리반게시판</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
             <div class="card">
-                <div class="board">
+                <div class="board" id="jobSearchBoardContainer">
                     <h3>
-                        <a href="">취업정보게시판</a>
+                        <a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do">취업정보게시판</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
             <div class="card">
-                <div class="board">
+                <div class="board" id="sharingInformationBoardContainer">
                     <h3>
-                        <a href="">정보게시판</a>
+                        <a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do">정보게시판</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
             <div class="card">
-                <div class="board">
+                <div class="board" id="askCodeBoardContainer">
                     <h3>
-                        <a href="">질문게시판</a>
+                        <a href="${pageContext.request.contextPath}/board/askCodeBoardList.do">질문게시판</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
             <div class="card">
-                <div class="board">
+                <div class="board" id="todayFoodBoardContainer">
                     <h3>
-                        <a href="">오늘 뭐먹지?</a>
+                        <a href="${pageContext.request.contextPath}/board/todayFoodBoardList.do">오늘 뭐먹지?</a>
                     </h3>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
-                    <a href="" class="list">
-                        <time>방금</time>
-                        <p>필수교양 하나 2학년대 들어두 괜찮아여??</p>
-                    </a>
                 </div>
             </div>
         </div>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+	loadThreePostByBoardId(1, "freeBoardContainer");
+	loadThreePostByBoardId(3, "todayFoodBoardContainer");
+	loadThreePostByBoardId(4, "sharingInformationBoardContainer");
+	loadThreePostByBoardId(5, "askCodeBoardContainer");
+	loadThreePostByBoardId(7, "graduateBoardContainer");
+	loadThreePostByBoardId(8, "preStudentBoardContainer");
+	loadThreePostByBoardId(11, "myClassBoardContainer");
+	loadThreePostByBoardId(12, "jobSearchBoardContainer");
+});
+
+async function loadThreePostByBoardId(boardId, boardContainer) {
+	const response = await fetch(`${pageContext.request.contextPath}/board/threePostByBoardId.do?boardId=`+boardId);
+    const data = await response.json();
+    
+    const container  = $("#"+boardContainer);
+    for (let i = 0; i < data.length; i++) {
+        const post = data[i];
+        const postHTML = `<a href="${pageContext.request.contextPath}/board/boardDetail.do?id=\${post.postId}" class="article">
+            <p class="title">\${post.title}</p>
+            <p class="small">\${post.content}</p>
+            <h4>\${post.boardName} 게시판</h4>
+            <hr>
+        </a>`;
+        container.append(postHTML);
+    }
+}
 // 즐겨찾기
 document.querySelector('#myBoard').addEventListener('mouseover', () => {
     $.ajax({
