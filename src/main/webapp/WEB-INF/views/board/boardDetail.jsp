@@ -1172,7 +1172,7 @@ color: black;
 	// 공감(좋아요) 누르기
 	function like() {
 		document.querySelector('.vote').onclick = (e) => {
-			
+			console.log('!!!!!!!!!!!!!');
 			const token = document.tokenFrm._csrf.value;
 			
 			$.ajax({

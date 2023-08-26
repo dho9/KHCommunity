@@ -612,7 +612,7 @@ public class BoardController {
 	@GetMapping("/myClassBoardFindAll.do")
 	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
 		// 페이징
-		int limit = 100;
+		int limit = 3;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit
@@ -815,13 +815,20 @@ public class BoardController {
 	
 	@GetMapping("/jobSearchBoardList.do")
 	public String jobSearchBoardList(Model model) {
-		List<BoardListDto> jobSearchBoardList = boardService.freeBoardFindAll();
-		//log.debug("freeBoardLists = {}", freeBoardLists);
+		List<BoardListDto> jobSearchBoardList = boardService.jobSearchBoardFindAll();
 
 		model.addAttribute("jobSearchBoardList", jobSearchBoardList);
 
 		return "/board/jobSearchBoardList";
 	} 
+	
+	@GetMapping("/threePostByBoardId.do")
+	@ResponseBody
+	public List<PopularBoardDto> threePostByBoardId(@RequestParam int boardId) {
+		List<PopularBoardDto> post = boardService.findThreePostByBoardId(boardId);
+		log.debug("post = {}", post);
+		return post;
+	}
 	
 }
 

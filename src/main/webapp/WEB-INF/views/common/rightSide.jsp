@@ -23,7 +23,7 @@
 </div>
 <script>
 
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
 	loadNoticeBoards();
     $.ajax({
         url: "${pageContext.request.contextPath}/board/popularPost.do",
@@ -48,7 +48,7 @@ window.onload = () => {
             }
         }
     });
-};
+});
 
 async function loadNoticeBoards() {
 	const response = await fetch("${pageContext.request.contextPath}/board/noticeBoard.do");

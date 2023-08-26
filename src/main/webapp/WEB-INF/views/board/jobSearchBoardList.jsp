@@ -26,8 +26,8 @@ iframe {
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
-			<a>블라블라</a>
-			<i class="bi bi-star" data-value="${freeBoardLists[0].boardId}"></i>
+			<a>취업 게시판</a>
+			<i class="bi bi-star" data-value="${jobSearchBoardList[0].boardId}"></i>
 		</h1>
 	</div>
 	<div class="wrap articles">
@@ -36,14 +36,14 @@ iframe {
 		<span class="material-symbols-outlined" style="float: right;">edit</span>
 		</button>
 		
-		<c:if test="${empty freeBoardLists}">
+		<c:if test="${empty jobSearchBoardList}">
 			<article class="dialog">
 				조회된 게시글이 존재하지 않습니다.
 			</article>
 		</c:if>
-		<c:if test="${not empty freeBoardLists}">
+		<c:if test="${not empty jobSearchBoardList}">
 			<article>
-				<c:forEach items="${freeBoardLists}" var="board">
+				<c:forEach items="${jobSearchBoardList}" var="board">
 					<a class="article" href="${pageContext.request.contextPath}/board/boardDetail.do?id=${board.postId}">
 				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 				  		<c:if test="${board.anonymousCheck eq '1'}">
@@ -92,7 +92,7 @@ iframe {
 	      	method="post" 
 	      	style="height: 63%;"
       		enctype="multipart/form-data">
-	      	<input type = "hidden" name="boardId" id="boardId" value="1">
+	      	<input type = "hidden" name="boardId" id="boardId" value="12">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
 	      	<input type = "hidden" name="grade" id="grade" >
 	      	<p>

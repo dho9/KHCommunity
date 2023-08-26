@@ -47,6 +47,17 @@
 	  <tbody></tbody>
 	</table>
 	
+	<!-- 페이지 이동 및 페이지 번호 표시 -->
+	<ul class="pagination">
+	    <li class="page-item disabled">
+	      <a id="prev" class="page-link" href="#">이전</a>
+	    </li>
+	    
+	    <li class="page-item">
+	      <a id="next" class="page-link" href="#">다음</a>
+	    </li>
+    </ul>
+	</div>
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
 	  <div class="modal-dialog" role="document">
@@ -116,6 +127,38 @@
 	</div>
 	<form:form name="tokenFrm"></form:form>
 	<script>
+	function renderPagination(currentPage, totalPages) {
+	    const pagination = document.querySelector('.pagination');
+	    pagination.innerHTML = '';
+	    
+	    const prevButton = document.createElement('li');
+	    prevButton.classList.add('page-item', 'disabled');
+	    prevButton.innerHTML = '<a class="page-link" href="#">이전</a>';
+	    if (currentPage > 1) {
+	        prevButton.classList.remove('disabled');
+	        prevButton.innerHTML = `<a class="page-link" href="${pageContext.request.contextPath}/board/myClassBoardList.do" data-page="${currentPage - 1}">이전</a>`;
+	    }
+	    pagination.appendChild(prevButton);
+
+	    for (let i = 1; i <= totalPages; i++) {
+	        const pageItem = document.createElement('li');
+	        pageItem.classList.add('page-item');
+	        pageItem.innerHTML = `<a class="page-link" href="${pageContext.request.contextPath}/board/myClassBoardList.do?page=\${currentPage}" data-page="${i}">\${i}</a>`;
+	        if (i === currentPage) {
+	            pageItem.classList.add('active');
+	        }
+	        pagination.appendChild(pageItem);
+	    }
+
+	    const nextButton = document.createElement('li');
+	    nextButton.classList.add('page-item');
+	    nextButton.innerHTML = '<a class="page-link" href="#">다음</a>';
+	    if (currentPage < totalPages) {
+	        nextButton.innerHTML = `<a class="page-link" href="${pageContext.request.contextPath}/board/myClassBoardList.do?page=\${currentPage + 1}" data-page="${currentPage + 1}">다음</a>`;
+	    }
+	    pagination.appendChild(nextButton);
+	}
+	
 	function rendermyClassBoardList() {
 		$.ajax({
 			url : "${pageContext.request.contextPath}/board/myClassBoardFindAll.do",
@@ -154,7 +197,7 @@
 						window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
 					});
 				})
-				
+				renderPagination(currentPage, totalPages); // 페이지바 출력
 			}
 		});
 	}

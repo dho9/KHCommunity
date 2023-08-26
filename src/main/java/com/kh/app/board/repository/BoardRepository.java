@@ -170,5 +170,16 @@ public interface BoardRepository {
 	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
 	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
 	int insertPostReport(PostReportDto postReport);
+
+	@Select("SELECT p.post_id, p.title, pc.content, b.board_name\r\n"
+			+ "FROM post p\r\n"
+			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
+			+ "left join board b on b.board_id = p.board_id\r\n"
+			+ "WHERE p.board_id = #{boardId}\r\n"
+			+ "ORDER BY p.post_created_at DESC\r\n"
+			+ "FETCH FIRST 3 ROWS ONLY")
+	List<PopularBoardDto> findThreePostByBoardId(int boardId);
+
+	List<BoardListDto> jobSearchBoardFindAll();
 	
 }

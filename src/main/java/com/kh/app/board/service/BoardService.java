@@ -114,4 +114,8 @@ public interface BoardService {
 
 	int insertPostReport(PostReportDto postReport);
 
+	List<PopularBoardDto> findThreePostByBoardId(int boardId);
+
+	List<BoardListDto> jobSearchBoardFindAll();
+
 }
