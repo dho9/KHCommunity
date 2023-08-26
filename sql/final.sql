@@ -298,7 +298,7 @@ CREATE TABLE chat_room (
 CREATE TABLE talker (
    chat_id   number      NOT NULL,
    student_id   varchar2(20)      NOT NULL,
-   employee_id   varchar2(20)      NOT NULL
+   employee_id   varchar2(20)
 );
 
 CREATE TABLE chat_message (
@@ -1132,7 +1132,7 @@ VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판
 INSERT INTO chat_room (chat_id, chat_date, chat_type) VALUES (seq_chat_id.NEXTVAL, '23/08/14', '교육원 등록 문의');
 
 -- talker
-INSERT INTO talker (chat_id, student_id, employee_id) VALUES (1, 'alfn', 'godwjd');
+INSERT INTO talker (chat_id, student_id, employee_id) VALUES (21, 'alfn', 'godwjd');
 
 -- chat_message
 INSERT INTO chat_message (chat_no,chat_id, member_id, chat_content) VALUES (seq_chat_message_no.nextval,1, 'alfn', '자바반 커리큐럼이 어떻게 되나요 ?');
@@ -1186,7 +1186,7 @@ delete from store where store_id = 3;
 --select * from post_like;
 --select * from comment_like;
 --select * from message_box;
---select * from report;
+select * from report;
 --select * from chat_room;
 --select * from talker;
 --select * from chat_message;
@@ -1196,7 +1196,7 @@ delete from store where store_id = 3;
 --select * from quit_member;
 --select * from delete_post;
 --select * from delete_comment;
---select * from authority;
+select * from authority;
 --select * from calendar;
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)

@@ -93,20 +93,22 @@
 		            <div class="modal-body">
 		                <div class="chat_window">
 		                	<div class="top_menu">
-		                		<div class="buttons flex">
-		                			<div class="button close"></div>상담신청자
-		                		</div>
 		                		<div class="title">KH TIME</div>
 		                	</div>
 		                	<ul class="messages" id="modalMessages">
 		                		<c:forEach items="${messages}" var="msg">
 		                			<c:if test="${msg.memberId != null}">
 				                		<li class="message left appeared">
-				                			<div class="avatar"></div>
-				                			<div class="text_wrapper">
+				                			<div class="avatarBox">
+				                				<img src="${pageContext.request.contextPath}/resources/images/usericon.png">
+				                			</div>
+				                			<div class="text_wrapper" style="margin-top:10px;">
 				                				<div class="text">
+						                			<span style="font-size:13px; color:black; font-weight:600;">
+						                				${msg.memberId}
+						                			</span> <br>
 				                					<span>${msg.chatContent}</span> <br>
-				                					<span style="font-size:13px; color:black; font-weight:600;">
+				                					<span style="font-size:12px; color:black; font-weight:500;">
 				                						<fmt:parseDate value="${msg.chatSendAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="chatSendAt"/>
 	        											<fmt:formatDate value="${chatSendAt}" pattern="yy/MM/dd HH:mm"/>
 				                					</span>
@@ -116,11 +118,16 @@
 		                			</c:if>
 		                			<c:if test="${msg.memberId == null}">
 				                		<li class="message right appeared">
-				                			<div class="avatar"></div>
+				                			<div class="avatarBox">
+				                				<img style="margin-top:20px;"src="${pageContext.request.contextPath}/resources/images/kh admin logo.png">
+				                			</div>
 				                			<div class="text_wrapper">
 				                				<div class="text">
-				                					<span>${msg.chatContent}</span> <br>
 				                					<span style="font-size:13px; color:black; font-weight:600;">
+						                				관리자
+						                			</span> <br>
+				                					<span>${msg.chatContent}</span> <br>
+				                					<span style="font-size:12px; color:black; font-weight:500;">
 				                						<fmt:parseDate value="${msg.chatSendAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="chatSendAt"/>
 	        											<fmt:formatDate value="${chatSendAt}" pattern="yy/MM/dd HH:mm"/>
 				                					</span>
