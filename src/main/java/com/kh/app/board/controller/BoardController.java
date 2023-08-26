@@ -1,21 +1,24 @@
 package com.kh.app.board.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -64,6 +67,12 @@ public class BoardController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private ResourceLoader resourceLoader;
+	
+	@Value("${spring.servlet.multipart.location}")
+	private String multipartLocation;
 
 	@GetMapping("/freeBoardList.do")
 	public String freeBoardList(Model model) {
@@ -343,7 +352,7 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@RequestParam String grade,
+			@RequestParam(required = false) String grade,
 			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
@@ -406,6 +415,10 @@ public class BoardController {
 		}
 		result = boardService.insertPostContent(board);
 		
+		if(board.getBoardId() == 11) {
+			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+		}
+		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 
 	}
@@ -430,7 +443,7 @@ public class BoardController {
 			@RequestParam String text,
 			@RequestParam int boardId,
 			@RequestParam int postId,
-			@RequestParam String grade,
+			@RequestParam(required = false) String grade,
 			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
@@ -441,22 +454,25 @@ public class BoardController {
 		int result = 0;
 		
 		List<PostAttachment> attachments = new ArrayList<>(); 
-		for(MultipartFile file : files) {
-			if(!file.isEmpty()) {
-				String originalFilename = file.getOriginalFilename();
-				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-				file.transferTo(destFile);	
-
-				PostAttachment attach = 
-						PostAttachment.builder()
-						.postOriginalFilename(originalFilename)
-						.postRenamedFilename(renamedFilename)
-						.boardId(boardId)
-						.postId(postId)
-						.build();
-
-				attachments.add(attach);
+		if(files != null) {
+			
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.postId(postId)
+							.build();
+					
+					attachments.add(attach);
+				}
 			}
 		}
 		
@@ -488,6 +504,9 @@ public class BoardController {
 		result = boardService.updatePost(board);
 		result = boardService.updatePostContent(board);
 		
+		if(boardId == 11) {
+			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+		}
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 	}
 	
@@ -593,7 +612,7 @@ public class BoardController {
 	@GetMapping("/myClassBoardFindAll.do")
 	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
 		// 페이징
-		int limit = 2;
+		int limit = 3;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit
@@ -664,6 +683,42 @@ public class BoardController {
 		return "redirect:/board/" + postBoardLink + ".do";
 	}
 	
+	@GetMapping("/myClassBoardDetail.do")
+	public void myClassBoardDetail(@RequestParam int id, Model model) {
+		BoardListDto postDetail = boardService.findById(id);
+		log.debug("postDetail = {}", postDetail);
+
+		PostAttachment postAttach = boardService.findAttachById(id);
+		log.debug("postAttach = {}", postAttach);
+		
+		List<Comment> comments = boardService.findByCommentByPostId(id);
+		log.debug("comments = {}", comments);
+		
+		model.addAttribute("postDetail", postDetail);
+		model.addAttribute("postAttach", postAttach);
+		model.addAttribute("comments", comments);
+	}
+	
+	@GetMapping("/fileDownload.do")
+	@ResponseBody
+	public Resource fileDownload(@RequestParam int id, HttpServletResponse response) throws FileNotFoundException {
+		PostAttachment attach = boardService.findAttachById(id);
+//		log.debug("attach = {}, ", attach);
+//		log.debug("multipartLocation = {}", multipartLocation);
+		
+		File downFile = new File(multipartLocation, attach.getPostRenamedFilename());
+		
+		if(!downFile.exists())
+			throw new FileNotFoundException(attach.getPostRenamedFilename());
+		String location = "file:" + downFile;
+		Resource resource = resourceLoader.getResource(location);
+		
+		response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+		String filename = URLEncoder.encode(attach.getPostOriginalFilename());
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+		return resource;
+	}
+	
 	@GetMapping("myarticle.do")
 	public String myarticle(@AuthenticationPrincipal MemberDetails principal, Model model,@RequestParam(defaultValue = "1") int page) {
 //		log.debug("myarticleList={}",myarticleList);
@@ -704,6 +759,40 @@ public class BoardController {
 		return "/board/mycommentarticle";
 	}
 	
+	@PostMapping("/createMyClassBoardComment.do")
+	public String createMyClassBoardComment(CreateCommentDto _comment, @AuthenticationPrincipal MemberDetails member, Model model) {
+		log.debug("_comment = {}", _comment);
+		if(member != null &&_comment.getCommentRef()==""){ //댓글용
+			Comment comment = Comment.builder()  
+					.postId(_comment.getPostId())
+					.boardId(_comment.getBoardId())
+					.memberId(member.getMemberId())
+					.commentContent(_comment.getCommentContent())
+					.commentLevel(1)
+					.commentRef(0)
+					.anonymousCheck(_comment.isAnonymousCheck()).build();
+			int result = boardService.createComment(comment);
+		}
+		
+		if(member != null &&_comment.getCommentRef()!="" ) {//대댓글용
+			int ref = Integer.parseInt(_comment.getCommentRef()); 
+			Comment comment = Comment.builder()  
+					.postId(_comment.getPostId())
+					.boardId(_comment.getBoardId())
+					.memberId(member.getMemberId())
+					.commentContent(_comment.getCommentContent())
+					.commentLevel(2)
+					.commentRef(ref)
+					.anonymousCheck(_comment.isAnonymousCheck()).build();
+			int result = boardService.createComment(comment);
+		}
+		
+		List<Comment> comments = boardService.findByCommentByPostId(_comment.getPostId());
+		model.addAttribute("comments", comments);
+		
+		return "redirect:/board/myClassBoardDetail.do?id=" + _comment.getPostId();
+	}
+	
 	@PostMapping("postReport.do")
 	public String postReport(
 			@RequestParam int reportPostId,
@@ -722,6 +811,23 @@ public class BoardController {
 		int result = boardService.insertPostReport(postReport);
 		
 		return "redirect:/board/boardDetail.do?id="+reportPostId;
+	}
+	
+	@GetMapping("/jobSearchBoardList.do")
+	public String jobSearchBoardList(Model model) {
+		List<BoardListDto> jobSearchBoardList = boardService.jobSearchBoardFindAll();
+
+		model.addAttribute("jobSearchBoardList", jobSearchBoardList);
+
+		return "/board/jobSearchBoardList";
+	} 
+	
+	@GetMapping("/threePostByBoardId.do")
+	@ResponseBody
+	public List<PopularBoardDto> threePostByBoardId(@RequestParam int boardId) {
+		List<PopularBoardDto> post = boardService.findThreePostByBoardId(boardId);
+		log.debug("post = {}", post);
+		return post;
 	}
 	
 }

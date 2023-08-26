@@ -303,5 +303,15 @@ public class BoardServiceImpl implements BoardService {
 	public int insertPostReport(PostReportDto postReport) {
 		return boardRepository.insertPostReport(postReport);
 	}
+	
+	@Override
+	public List<PopularBoardDto> findThreePostByBoardId(int boardId) {
+		return boardRepository.findThreePostByBoardId(boardId);
+	}
+	
+	@Override
+	public List<BoardListDto> jobSearchBoardFindAll() {
+		return boardRepository.jobSearchBoardFindAll();
+	}
 }
 
