@@ -34,6 +34,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -702,5 +703,26 @@ public class BoardController {
 			
 		return "/board/mycommentarticle";
 	}
+	
+	@PostMapping("postReport.do")
+	public String postReport(
+			@RequestParam int reportPostId,
+			@RequestParam String reporterId,
+			@RequestParam String attackerId,
+			@RequestParam String reportType,
+			@RequestParam String reportContent
+			) {
+		PostReportDto postReport = PostReportDto.builder()
+				.postId(reportPostId)
+				.reporterId(reporterId)
+				.attackerId(attackerId)
+				.reportType(reportType)
+				.reportContent(reportContent)
+				.build();
+		int result = boardService.insertPostReport(postReport);
+		
+		return "redirect:/board/boardDetail.do?id="+reportPostId;
+	}
+	
 }
 
