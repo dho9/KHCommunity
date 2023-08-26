@@ -12,7 +12,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/chat").withSockJS(); // 웹소켓 미지원 브라우저를 위한 설정 : withSockJS
+		registry.addEndpoint("/ws").withSockJS(); // 웹소켓 미지원 브라우저를 위한 설정 : withSockJS
 	}
 	
 	@Override
