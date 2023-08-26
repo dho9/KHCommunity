@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Report {
+public class Report_ {
 	private int reportId;
 	private int postId;
 	private int commentId;

@@ -299,9 +299,9 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.commentLikeCheck(postId);
 	}
 	
-//	@Override
-//	public int insertPostReport(PostReportDto postReport) {
-//		return boardRepository.insertPostReport(postReport);
-//	}
+	@Override
+	public int insertPostReport(PostReportDto postReport) {
+		return boardRepository.insertPostReport(postReport);
+	}
 }
 

@@ -719,9 +719,9 @@ public class BoardController {
 				.reportType(reportType)
 				.reportContent(reportContent)
 				.build();
-//		int result = boardService.insertPostReport(postReport);
+		int result = boardService.insertPostReport(postReport);
 		
-		return null;
+		return "redirect:/board/boardDetail.do?id="+reportPostId;
 	}
 	
 }

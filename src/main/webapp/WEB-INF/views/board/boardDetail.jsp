@@ -483,8 +483,17 @@ button.updateBtn, button.deleteBtn{
 	      <input type="hidden" name="reportPostId" id="reportPostId" value="${postDetail.postId}">
 	      <input type="hidden" name="reporterId" id="reporterId" value="${loginMember.username}">
 	      <input type="hidden" name="attackerId" id="attackerId" value="${postDetail.memberId}">
+	      <input type="hidden" id="reportType" name="reportType" value="">
 	      <label for="reportType">신고유형:</label>
-	      <input type="text" id="reportType" name="reportType" required>
+	      <select name="reportType_" id="reportType_" >
+					<option value="게시판 성격에 부적절함">게시판 성격에 부적절함</option>	      			
+					<option value="욕설/비하">욕설/비하</option>	      			
+					<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>	      			
+					<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>	      			
+					<option value="유출/사칭/사기">유출/사칭/사기</option>	      			
+					<option value="낚시/놀람/도배">낚시/놀람/도배</option>	      			
+					<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>	      			
+     	  </select>
 	      <label for="reportContent">신고내용:</label>
 	      <textarea id="reportContent" name="reportContent" rows="4" required></textarea>
 	      <button type="submit">신고 제출</button>
@@ -516,6 +525,16 @@ button.updateBtn, button.deleteBtn{
 	    modal.style.display = "none";
 	  }
 	});
+	
+	const reportType_ = document.querySelector("#reportType_");
+	const reportType = document.querySelector("#reportType");
+	if(reportType_ !== null && reportType !== null){
+		reportType_.addEventListener('change', (e) => {
+			reportType.value = reportType_.value;
+		});
+	}
+	
+	
 
 	  
     // 신고 제출 후 모달을 닫습니다.
