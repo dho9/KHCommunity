@@ -280,11 +280,13 @@
 	    c.content,
 	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
 	    p.board_id,
-	    p.anonymous_check
+	    p.anonymous_check,
+	    m.member_name
 	from
 	    post p join post_content c
-	    	on
-	    p.post_id = c.post_id
+	    	on p.post_id = c.post_id
+	    left join member m
+            on p.member_id = m.member_id
 	where
 	    p.board_id=11
 	order by
@@ -402,6 +404,15 @@ FETCH FIRST 5 ROWS ONLY
   	<result column="board_name" property="boardName"/>
   	<result column="board_category" property="boardCategory"/>
   	<result column="board_link" property="boardLink"/>
+  </resultMap>
+  
+  <resultMap type="postReportDto" id="insertPostReport">
+  	<id column="report_id" property="reportId"/>
+  	<result column="post_id" property="postId"/>
+  	<result column="reporter_id" property="reporterId"/>
+  	<result column="attacker_id" property="attackerId"/>
+  	<result column="report_content" property="reportContent"/>
+  	<result column="report_type" property="reportType"/>
   </resultMap>
   
     <select id="findCommentLikeCount" resultType="commentLike">

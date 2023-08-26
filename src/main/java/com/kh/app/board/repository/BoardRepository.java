@@ -17,6 +17,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -164,5 +165,10 @@ public interface BoardRepository {
 	int totalCountMycommentarticle(String memberId);
 
 	List<CommentLike> commentLikeCheck(int postId);
+
+
+	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
+	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+	int insertPostReport(PostReportDto postReport);
 	
 }

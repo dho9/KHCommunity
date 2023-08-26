@@ -13,12 +13,13 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
-#myClassBoard-div {
+#myClassBoard-div2 {
 	border: 4px solid #fff;
     border-radius: 63px;
-    height: 800%;
+    height: 180%;
     width: 1365px;
-    margin-left: 15%;
+    margin-left: 20%;
+    margin-top: 5%;
     background-color: #e9ecef;
 }
 .myClassBoard-title .title {
@@ -65,7 +66,7 @@
 	margin-top: -3%;
 }
 </style>
-	<div id="myClassBoard-div">
+	<div id="myClassBoard-div2">
 	<sec:authentication property="principal" var="loginMember"/>
 	<div class="myClassBoard-title">
 		<h2 class="title">우리반 게시판</h2>
@@ -73,15 +74,17 @@
 	</div>
 	<div class="myClassBoard-subTitle">
 		<ul>
-			<li>${studentInfo.curriculumName}반</li>
-			<li>[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
+			<li style="margin-left: 4%;">${studentInfo.curriculumName}반</li>
+			<li style="margin-left: 3.5%;">[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
 		</ul>
 	</div>
 	
-	<div id="updateAndDeleteBtn-div">
-		<button type="button" class="btn btn-outline-primary">수정</button>
-		<button type="button" class="btn btn-outline-primary">삭제</button>
-	</div>
+	<c:if test="${loginMember.memberId eq postDetail.memberId}">
+		<div id="updateAndDeleteBtn-div">
+			<button id="updateBtn" type="button" class="btn btn-outline-primary">수정</button>
+			<button id="deleteBtn" type="button" class="btn btn-outline-primary">삭제</button>
+		</div>
+	</c:if>
 
 	<!-- 게시글 -->
 	<div id="post-div" class="d-flex justify-content-center">
@@ -93,8 +96,18 @@
 				<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
 			</h5>
 		  </div>
-		  <div class="card-header"><a href = '${pageContext.request.contextPath}/board/fileDownload.do?id=${postDetail.postId}';>첨부파일 - ${postAttach.postRenamedFilename != null ? postAttach.postRenamedFilename : '없음'}</a></div>
+		  <div class="card-header">
+			  <c:if test="${postAttach.postRenamedFilename ne null}">
+		  		<a href = '${pageContext.request.contextPath}/board/fileDownload.do?id=${postDetail.postId}';>첨부파일 - ${postAttach.postRenamedFilename}</a>
+			  </c:if>
+			  <c:if test="${postAttach.postRenamedFilename eq null}">
+		  		<a>첨부파일 - 없음</a>
+			  </c:if>
+  	  	  </div>
 		  <div class="card-body">
+		  	<c:if test="${postAttach.postRenamedFilename ne null}">
+			  	<img src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}" style="width: 55%; height: 75%">
+		  	</c:if>
 		    <p class="card-text">${postDetail.content}</p>
 		  </div>
 		</div>
@@ -140,15 +153,10 @@
 			</ul>
 		</c:if>
 	</div>
-	<!-- 게시글 수정폼 -->
-	<form:form 
-		name="updateFrm" method="POST"
-		action="${pageContext.request.contextPath}/board/updatePost.do">
-			<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
-	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
-	      	<input type="hidden" name="title" value="${postDetail.title}">
-	      	<input class="file" type="file" name="file" multiple="multiple">
-	      	<input type="hidden" name="text" value="${postDetail.content}"/>
+	<!-- 삭제 폼 -->
+	<form:form action="${pageContext.request.contextPath}/board/boardDelete.do" name="boardDeleteFrm" method="POST">
+		<input type="hidden" name="deletePostId" id="deletePostId" value="${postDetail.postId}"/>
+		<input type="hidden" name="postBoardLink" id="postBoardLink" value="myClassBoardList"/>
 	</form:form>
 	
 	<!-- 댓글 등록폼 -->
@@ -165,6 +173,45 @@
 	</form:form>
 	<form:form name="tokenFrm"></form:form>
 	<script>
+	// 게시글 삭제
+	if(document.querySelector('#deleteBtn')) {
+		document.querySelector('#deleteBtn').addEventListener('click', () => {
+			document.boardDeleteFrm.submit();
+		});
+	}
+	
+	// 게시글 수정
+	if(document.querySelector('#updateBtn')){
+		document.querySelector('#updateBtn').addEventListener('click', () => {
+			const postDiv = document.querySelector('#post-div');
+			postDiv.innerHTML = "";
+			postDiv.innerHTML += `
+				<form:form 
+					name="updateFrm" method="POST"
+					action="${pageContext.request.contextPath}/board/updatePost.do">
+						<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}"/>
+				      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}"/>
+						<div class="card border-primary mb-3">
+						  <div class="card-header">
+						  	<h3><input style="width: 80%;" name="title" value="${postDetail.title}"/></h3>
+						  	<h5>${postDetail.memberName} | 
+							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+								<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
+							</h5>
+						  </div>
+						  <div class="card-header">
+				      	  	<input class="file" type="file" name="file" multiple="multiple"/>
+				      	  </div>
+						  <div class="card-body">
+						    <p class="card-text"><textarea style="width: 80%; height: 95%;" name="text">${postDetail.content}</textarea></p>
+						  </div>
+						  <button style="height: 10%;" id="updateBtn" type="submit" class="btn btn-outline-primary">작성</button>
+						</div>
+				</form:form>
+			`;
+		});
+	}
+	
 	// 대댓글 등록
 	document.querySelectorAll('#childComment').forEach((childComment) => {
 		childComment.addEventListener('click', (e) => {

@@ -14,6 +14,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -296,6 +297,11 @@ public class BoardServiceImpl implements BoardService {
 	public List<CommentLike> commentLikeCheck(int postId) {
 		// TODO Auto-generated method stub
 		return boardRepository.commentLikeCheck(postId);
+	}
+	
+	@Override
+	public int insertPostReport(PostReportDto postReport) {
+		return boardRepository.insertPostReport(postReport);
 	}
 }
 

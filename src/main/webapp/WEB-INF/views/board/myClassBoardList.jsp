@@ -47,18 +47,6 @@
 	  <tbody></tbody>
 	</table>
 	
-	<!-- 페이지 이동 및 페이지 번호 표시 -->
-	<ul class="pagination">
-	    <li class="page-item disabled">
-	      <a id="prev" class="page-link" href="#">이전</a>
-	    </li>
-	    
-	    <li class="page-item">
-	      <a id="next" class="page-link" href="#">다음</a>
-	    </li>
-    </ul>
-	</div>
-	
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
 	  <div class="modal-dialog" role="document">
@@ -69,12 +57,12 @@
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
-	      <div class="modal-body" style="height: 728px;">
+	      <div class="modal-body" style="height: 700px;">
 	      	<form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="POST" enctype="multipart/form-data" style="height: 550px;">
 		      	<input type = "hidden" name="boardId" id="boardId" value="11">
 		      	<div class="input-group mb-3">
 				  <div class="input-group-prepend">
-				    <input style="width: 105px; height: 43px;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="공지사항"/>
+				    <input style="width: 105px; height: 43px; background-color: #a6a6a6;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="게시판"/>
 				    <div class="dropdown-menu">
 				      <c:if test="${authority eq '[ADMIN]'}">
 				        <a class="dropdown-item">공지사항</a>
@@ -83,7 +71,7 @@
 				      </c:if>
 					  <c:if test="${authority ne '[ADMIN]'}">
 					  	<a class="dropdown-item">과제공유</a>
-				        <a class="dropdown-item">게시판</a>
+				        <a class="dropdown-item">게시판 </a>
 					  </c:if>
 				    </div>
 				  </div>
@@ -116,7 +104,6 @@
 	- 음란물, 성적 수치심을 유발하는 행위 
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text" style="width: 100%; height: 91%;"></textarea>
 		        </p>
-		 	    <input style="margin-top: 5px;" class="file" type="file" name="file" multiple="multiple">
 		 	    <input style="margin-top: 5px;" class="file" type="file" name="file" multiple="multiple">
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" id="clearBtn">취소</button>
@@ -154,7 +141,7 @@
 						    <tr data-value="\${board[i].postId}">
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
-						      <td>\${board[i].memberId}</td>
+						      <td>\${board[i].memberName}</td>
 						      <td>\${createdAt}</td>
 						    </tr>
 						`;
@@ -167,6 +154,7 @@
 						window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
 					});
 				})
+				
 			}
 		});
 	}

@@ -37,6 +37,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -453,22 +454,25 @@ public class BoardController {
 		int result = 0;
 		
 		List<PostAttachment> attachments = new ArrayList<>(); 
-		for(MultipartFile file : files) {
-			if(!file.isEmpty()) {
-				String originalFilename = file.getOriginalFilename();
-				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-				file.transferTo(destFile);	
-
-				PostAttachment attach = 
-						PostAttachment.builder()
-						.postOriginalFilename(originalFilename)
-						.postRenamedFilename(renamedFilename)
-						.boardId(boardId)
-						.postId(postId)
-						.build();
-
-				attachments.add(attach);
+		if(files != null) {
+			
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.postId(postId)
+							.build();
+					
+					attachments.add(attach);
+				}
 			}
 		}
 		
@@ -500,6 +504,9 @@ public class BoardController {
 		result = boardService.updatePost(board);
 		result = boardService.updatePostContent(board);
 		
+		if(boardId == 11) {
+			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+		}
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 	}
 	
@@ -605,7 +612,7 @@ public class BoardController {
 	@GetMapping("/myClassBoardFindAll.do")
 	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
 		// 페이징
-		int limit = 2;
+		int limit = 100;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit
@@ -785,5 +792,36 @@ public class BoardController {
 		
 		return "redirect:/board/myClassBoardDetail.do?id=" + _comment.getPostId();
 	}
+	
+	@PostMapping("postReport.do")
+	public String postReport(
+			@RequestParam int reportPostId,
+			@RequestParam String reporterId,
+			@RequestParam String attackerId,
+			@RequestParam String reportType,
+			@RequestParam String reportContent
+			) {
+		PostReportDto postReport = PostReportDto.builder()
+				.postId(reportPostId)
+				.reporterId(reporterId)
+				.attackerId(attackerId)
+				.reportType(reportType)
+				.reportContent(reportContent)
+				.build();
+		int result = boardService.insertPostReport(postReport);
+		
+		return "redirect:/board/boardDetail.do?id="+reportPostId;
+	}
+	
+	@GetMapping("/jobSearchBoardList.do")
+	public String jobSearchBoardList(Model model) {
+		List<BoardListDto> jobSearchBoardList = boardService.freeBoardFindAll();
+		//log.debug("freeBoardLists = {}", freeBoardLists);
+
+		model.addAttribute("jobSearchBoardList", jobSearchBoardList);
+
+		return "/board/jobSearchBoardList";
+	} 
+	
 }
 
