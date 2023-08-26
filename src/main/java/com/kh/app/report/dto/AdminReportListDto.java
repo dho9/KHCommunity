@@ -13,7 +13,7 @@ public class AdminReportListDto {
 	public int messageId;
 	public String reporterId;
 	public String reportContent;
-	public String attakerId;
+	public String attackerId;
 	public LocalDate reportSendDate;
 	
 }

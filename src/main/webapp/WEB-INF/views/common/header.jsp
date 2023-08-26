@@ -18,7 +18,6 @@
 }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <!DOCTYPE html>
@@ -48,6 +47,7 @@
     <link type="text/css" href="/css/container.community.css" rel="stylesheet"> 
     --%>
     <link href="/favicon.ico" rel="shortcut icon">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <c:if test="${not empty message }">
 	<script>
@@ -68,6 +68,28 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/eclipse.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/dracula.css">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<sec:authorize access="hasAuthority('ADMIN')">
+	<script>
+	const memberId = '<sec:authentication property="principal.username"/>';
+	</script>
+	<script>
+		console.log('Hello stomp.js');
+		const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
+		const stompClient = Stomp.over(ws);
+	
+		stompClient.connect({}, (frame) => {
+			console.log('open : ', frame);
+			
+			// 구독신청 
+			stompClient.subscribe('/topic/chat', (message) => {
+				console.log('/topic/notice : ', message);
+				renderMessage(message);
+			});
+		});
+	</script>
+</sec:authorize>
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
     <body>
@@ -78,9 +100,11 @@
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
-            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:50px;">
-            		관리자페이지
-            	</a>
+            	<sec:authorize access="hasAuthority('ADMIN')">
+	            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:60px; font-size: 1px;">
+	            		관리자페이지
+	            	</a>
+            	</sec:authorize>
                <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="로그인" class="icon message">로그인</a>
                <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="회원가입" class="icon my">회원가입</a>
 

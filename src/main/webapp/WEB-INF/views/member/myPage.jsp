@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
@@ -105,7 +106,10 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		<sec:authentication property="principal" var="loginMember"/>
 	<div id="info-container">
 		<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${loginMember.name}</h2>
-		<a style="color:white;" href="${pageContext.request.contextPath}/admin/adminConsultingRequest.do">상담요청</a>
+		<form:form name="consultReqFrm">
+			<input type="hidden" name="loginMemberId" id="loginMemberId" value="${loginMember.username}">
+			<button type="button" id="consultRequest">상담요청</button>
+		</form:form>
 		<p>${studentInfo.curriculumName }반 </p>
 		<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
 		<a href="${pageContext.request.contextPath}/message/messageSend.do" style="text-decoration: none;">테스트용</a>
@@ -728,6 +732,51 @@ $.ajax({
 };
 
 
+</script>
+
+<script>
+// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
+document.querySelector("#consultRequest").onclick = () => {
+	const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
+	const stompClient = Stomp.over(ws);
+
+	stompClient.connect({}, (frame) => {
+		console.log('open : ', frame);
+		
+		// 구독신청 
+		stompClient.subscribe('/topic/chat', (message) => {
+			console.log('/topic/notice : ', message);
+			renderMessage(message);
+		});
+	});
+	
+	const consultReqFrm = document.consultReqFrm; 
+	const loginMemberId = document.querySelector("#loginMemberId").value;
+	const token = consultReqFrm._csrf.value;
+	
+	console.log(consultReqFrm);
+	console.log(loginMemberId);
+	
+	$.ajax({
+		type : "POST",
+		url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
+		data :{
+			memberId: loginMemberId
+		},
+		headers: {
+            "X-CSRF-TOKEN": token
+        },
+		success(responseData){
+			console.log("성공")
+			/* location.href="${pageContext.request.contextPath}/chat/chatConsultingRequest.do"; */
+			
+		},
+		error(error) {
+            // 오류 발생 시 실행되는 부분
+            console.error("error"); // 오류 내용을 출력
+        }
+	});
+};
 </script>	
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

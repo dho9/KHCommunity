@@ -126,8 +126,8 @@
                   	<c:if test="${report.messageId != 0}">
 	                    <p style="font-weight: 600;">[쪽지 신고] ${report.reportContent}</p>
                   	</c:if>
-                    <p style="font-size: 13px;">&nbsp;신고자 ${report.reporterId} | ${report.reportSendDate} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    	<span style="color:red;">신고대상유저 ${report.attakerId}</span>
+                    <p style="font-size: 13px;">&nbsp;신고자 : ${report.reporterId} | ${report.reportSendDate} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    	<span style="color:red;">피신고자 :  ${report.attackerId}</span>
                     </p>
                   </div>
                 </div>
