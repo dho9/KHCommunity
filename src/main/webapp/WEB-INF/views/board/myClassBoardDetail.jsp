@@ -51,8 +51,18 @@
 .list-group.list-group-flush span {
 	font-size: 13px;
 }
-.list-group.list-group-flush li {
+.list-group.list-group-flush {
 	background-color: #fff;
+}
+#updateAndDeleteBtn-div {
+	margin-left: 78%;
+}
+#updateAndDeleteBtn-div button {
+    width: 100px;
+    height: 44px;
+}
+#post-div {
+	margin-top: -3%;
 }
 </style>
 	<div id="myClassBoard-div">
@@ -67,13 +77,21 @@
 			<li>[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
 		</ul>
 	</div>
+	
+	<div id="updateAndDeleteBtn-div">
+		<button type="button" class="btn btn-outline-primary">수정</button>
+		<button type="button" class="btn btn-outline-primary">삭제</button>
+	</div>
 
 	<!-- 게시글 -->
-	<div class="d-flex justify-content-center">
+	<div id="post-div" class="d-flex justify-content-center">
 		<div class="card border-primary mb-3">
 		  <div class="card-header">
 		  	<h3>${postDetail.title}</h3>
-		  	<h5>${postDetail.memberName}</h5>
+		  	<h5>${postDetail.memberName} | 
+			  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+				<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
+			</h5>
 		  </div>
 		  <div class="card-header"><a href = '${pageContext.request.contextPath}/board/fileDownload.do?id=${postDetail.postId}';>첨부파일 - ${postAttach.postRenamedFilename != null ? postAttach.postRenamedFilename : '없음'}</a></div>
 		  <div class="card-body">
@@ -95,32 +113,45 @@
 						  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
 					  	</span>
 					  	<c:if test="${loginMember.memberId eq comment.memberId}">
-						  	<b id="deleteComment" style="float: right;">&nbsp; 삭제</b>
+						  	<b id="deleteComment" style="float: right;">|&nbsp; 삭제</b>
 					  	</c:if>
-					  	<b id="childComment" style="float: right;">답글 &nbsp;|</b>
+					  	<b id="childComment" style="float: right;">답글 &nbsp;</b>
 					  	<input type="hidden" name=commentId value="${comment.commentId}"/>
 					  	<div>${comment.commentContent}</div>
 					  </li>
-					</c:if>
-					<c:if test="${comment.commentLevel eq 2}">
-					  <li class="list-group-item">
-					    <b>${comment.memberName}</b>
-					    <span>
-					  		<fmt:parseDate value="${comment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
-						  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
-					  	</span>
-					  	<c:if test="${loginMember.memberId eq comment.memberId}">
-						  	<b id="deleteComment" style="float: right;">&nbsp; 삭제</b>
-					  	</c:if>
-					  	<input type="hidden" name=commentId value="${comment.commentId}"/>
-					  	<div>${comment.commentContent}</div>
-					  </li>
+					  <c:forEach items="${comments}" var="childComment">
+						<c:if test="${childComment.commentLevel eq 2 && childComment.commentRef eq comment.commentId}">
+						  <li class="list-group-item ml-2">
+						  	<i class="bi bi-arrow-return-right"></i>
+						    <b>${childComment.memberName}</b>
+						    <span>
+						  		<fmt:parseDate value="${childComment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+							  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
+						  	</span>
+						  	<c:if test="${loginMember.memberId eq childComment.memberId}">
+							  	<b id="deleteComment" style="float: right;">&nbsp; 삭제</b>
+						  	</c:if>
+						  	<div style="margin-left: 21px;">${childComment.commentContent}</div>
+						  </li>
+						</c:if>
+					  </c:forEach>
 					</c:if>
 				</c:forEach>
 			</ul>
 		</c:if>
 	</div>
+	<!-- 게시글 수정폼 -->
+	<form:form 
+		name="updateFrm" method="POST"
+		action="${pageContext.request.contextPath}/board/updatePost.do">
+			<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
+	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
+	      	<input type="hidden" name="title" value="${postDetail.title}">
+	      	<input class="file" type="file" name="file" multiple="multiple">
+	      	<input type="hidden" name="text" value="${postDetail.content}"/>
+	</form:form>
 	
+	<!-- 댓글 등록폼 -->
 	<form:form 
 		name="commentFrm" id="commentFrm" method="POST"
 		action="${pageContext.request.contextPath}/board/createMyClassBoardComment.do">
@@ -134,6 +165,7 @@
 	</form:form>
 	<form:form name="tokenFrm"></form:form>
 	<script>
+	// 대댓글 등록
 	document.querySelectorAll('#childComment').forEach((childComment) => {
 		childComment.addEventListener('click', (e) => {
 			const html = `
@@ -157,7 +189,7 @@
 						postId : document.querySelector('input[name=postId]').value,
 						boardId : document.querySelector('input[name=boardId]').value,
 						commentContent : document.querySelector('textarea[name=commentContent]').value,
-						commentRef : document.querySelector('input[name=commentId]').value
+						commentRef : e.target.closest('li').querySelector('input[name=commentId]').value
 					},
 					success(responseData) {
 						console.log(responseData);

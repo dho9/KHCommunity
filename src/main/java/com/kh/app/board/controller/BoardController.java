@@ -442,7 +442,7 @@ public class BoardController {
 			@RequestParam String text,
 			@RequestParam int boardId,
 			@RequestParam int postId,
-			@RequestParam String grade,
+			@RequestParam(required = false) String grade,
 			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
