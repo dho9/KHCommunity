@@ -364,7 +364,7 @@
 						
 						const createdAt = formatDatetime(board[i].postCreatedAt)
 						tbody.innerHTML += `
-						    <tr>
+							<tr data-value="\${board[i].postId}">
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
 						      <td>\${board[i].memberId}</td>
@@ -373,6 +373,14 @@
 						`;
 					}
 				}
+				// 디테일 페이지로 넘기기
+				document.querySelectorAll('tbody tr').forEach((tr) => {
+					tr.addEventListener('click', () => {
+						const postId = tr.getAttribute('data-value');
+						if(postId != null)
+							window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
+					});
+				})
 				renderPaginationByTag(currentPage, totalPages); // 페이지바 출력
 			}
 		});
