@@ -22,6 +22,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 <style>
 @font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
 #top-container{width: 100%; height: 180px; background-color: royalblue; z-index: -10;}
@@ -686,7 +690,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			});
 		}
 		
-	};
+
+	});
 	
 	// MH - 쪽지함 관련 기능 끝!	
 	
@@ -798,6 +803,43 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	// 회원 관련 기능 끝
 
 
+</script>	
+
+<script>
+// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
+document.querySelector("#consultRequest").onclick = () => {
+	const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
+	const stompClient = Stomp.over(ws);
+
+	stompClient.connect({}, (frame) => {
+		console.log('open : ', frame);
+		
+		// 구독신청 
+		stompClient.subscribe('/topic/chat', (message) => {
+			console.log('/topic/chat : ', message);
+			renderMessage(message);
+		});
+	});
+
+	$.ajax({
+		type : "POST",
+		url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
+		data :{
+			memberId: loginMemberId
+		},
+		headers: {
+            "X-CSRF-TOKEN": token
+        },
+		success(responseData){
+			console.log("ChatId: ", responseData)
+			const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
+			if (newWindow) {
+                newWindow.focus();
+            }
+		}); 
+	};
+};
+	
 </script>	
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

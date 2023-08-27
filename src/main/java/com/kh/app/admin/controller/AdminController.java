@@ -717,8 +717,8 @@ public class AdminController {
 	    	int chatId = chat.getChatId();
 	        messages = adminService.getChatMessagesByChatId(chatId);
 	        chat.setChatMessage(messages);
+	        System.out.println("messages = " + messages);
 	    }
-	    
 	    model.addAttribute("messages", messages);
 	    model.addAttribute("adminChatList", adminChatList);
 	    
