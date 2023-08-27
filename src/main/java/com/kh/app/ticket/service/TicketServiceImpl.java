@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.app.ticket.dto.TicketBuyDto;
 import com.kh.app.ticket.entity.TicketOrder;
 import com.kh.app.ticket.repository.TicketRepository;
 
@@ -22,5 +23,10 @@ public class TicketServiceImpl implements TicketService {
 	public int createOrder(TicketOrder order) {
 		// TODO Auto-generated method stub
 		return ticketRepository.createOrder(order);
+	}
+	@Override
+	public TicketBuyDto checkOreder(TicketBuyDto _order) {
+		// TODO Auto-generated method stub
+		return ticketRepository.checkOreder(_order);
 	}
 }

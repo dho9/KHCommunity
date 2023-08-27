@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.app.store.service.StoreService;
@@ -26,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/ticket")
 public class TicketController {
-	
 	@Autowired
 	private TicketService ticketService;
 	
@@ -36,6 +36,8 @@ public class TicketController {
 	@PostMapping("/buyTicket.do")
 	public ResponseEntity<?> buyTicket( @RequestBody TicketBuyDto _order){
 //		log.debug("dto = {}",order);
+		
+//		return api.paymentByImpUid(imp_uid);
 		String name = _order.getStorename();
 		int storeId = storeService.findStoreIdByName(name);
 		int ticketId = ticketService.findTicketIdByStoreId(storeId);
@@ -64,6 +66,15 @@ public class TicketController {
 		}
 		 
 		
+	}
+	
+	@PostMapping("checkPaymentValidity.do")
+	@ResponseBody
+	public String checkPaymentValidity (@RequestBody TicketBuyDto _order) {
+//		System.out.println(_order);//TicketBuyDto(orderId=IMP961, memberId=eogh, storename=맥주창고, amount=1, totalPrice=3000)
+		TicketBuyDto order =  ticketService.checkOreder(_order);
+		
+		return null;
 	}
 		
 }
