@@ -138,6 +138,7 @@ div.container {
 </div>
 
 <form:form name="paymentFrm"></form:form>
+<form:form name="checkPaymentValidity"></form:form>
 <script>
 var mapContainer = document.getElementById('map');
 var mapOption = {
@@ -239,7 +240,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
       
             function sendPaymentDataToServer(merchantUid, userId, name, quantity,totalAmount) {
                 const token = document.paymentFrm._csrf.value;
-                console.log(token);
+                const token1 = document.checkPaymentValidity._csrf.value;
                 
                 const requestData = {
                 	orderId: merchantUid,
@@ -260,10 +261,29 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                     },
                     data: JSON.stringify(requestData) // 데이터를 JSON 형식으로 변환
                 }).done(function(data) {
-                	console.log("Payment successful:", data);
-                	alert(data);
-                	 document.getElementById('create-kakao-link-btn').style.display = 'block';
-                	 document.getElementById('create-kakao-link-btn').click();
+                	$.ajax({
+                		   url: '${pageContext.request.contextPath}/ticket/checkPaymentValidity.do',
+                           type: 'POST',
+                           data: JSON.stringify(requestData),
+                           contentType: 'application/json',
+                           headers: {
+                               "X-CSRF-TOKEN": token1
+                           },
+                           success: function(validationData) {
+                               console.log("Payment validity checked:", validationData);
+                               if (validationData.isValid) {
+                                   alert("결제가 유효합니다.");
+                                   document.getElementById('create-kakao-link-btn').style.display = 'block';
+                                   document.getElementById('create-kakao-link-btn').click();
+                               } else {
+                                   alert("결제 유효성 검사에 실패했습니다.");
+                               }
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               console.error("Validation Request Failed:", textStatus, errorThrown);
+                               alert("결제 유효성 검사 오류");
+                           }
+                       });
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     console.error("AJAX Request Failed:", textStatus, errorThrown);
                     alert(errorThrown);
@@ -284,11 +304,11 @@ geocoder.addressSearch('${store.address}', function(result, status) {
         title: '${store.storeName} 식권',
         description: '주소 : ${store.address} ',
         imageUrl:
-        	 '${pageContext.request.contextPath}/resources/images/store/code.jpg',
+        	 '${pageContext.request.contextPath}/resources/images/store/맥주창고.jpg',
 
         link: {
-          mobileWebUrl:  'http://localhost:8080/kh/resources/images/store/code.jpg',
-          webUrl:  'http://localhost:8080/kh/resources/images/store/code.jpg',
+          mobileWebUrl: 'http://localhost:8080/kh/resources/images/store/code.jpg',
+          webUrl: 'http://localhost:8080/kh/resources/images/store/code.jpg',
         },
       },
      
