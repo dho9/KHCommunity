@@ -337,6 +337,7 @@ public class MemberSecurityController {
 		log.debug("ㅂㅂㅂㅂㅂㅂㅂvacation = {}", vacation);
 		int result = memberService.insertVacation(vacation);
 		log.debug("dddddddddㅇㅇresult = {}", result);
+//		이거 들어가나 민희야?
 
 
 

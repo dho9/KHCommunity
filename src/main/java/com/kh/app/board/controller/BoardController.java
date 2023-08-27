@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +36,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
@@ -277,6 +279,7 @@ public class BoardController {
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
+		System.out.println(board);
 		model.addAttribute("postAttach",postAttach);
 	}
 
@@ -578,11 +581,11 @@ public class BoardController {
 
 	@PostMapping("/loadComment.do")
 	@ResponseBody
-	public List<Comment> commentList(@RequestParam int postId){
+	public List<Comment> commentList(@RequestParam int postId, @AuthenticationPrincipal MemberDetails principal, Model model){
 		log.debug("idddddddddddd = {}",postId);
 		//		//log.debug("idddddddddddd = {}",postId);
 		List<Comment> comments = boardService.findByCommentByPostId(postId);
-		
+		model.addAttribute("memberId", principal.getMemberId());
 
 		return comments;
 
@@ -843,6 +846,39 @@ public class BoardController {
 		List<PopularBoardDto> post = boardService.findThreePostByBoardId(boardId);
 		log.debug("post = {}", post);
 		return post;
+	}
+	
+	@GetMapping("/deleteComment.do")
+	@ResponseBody
+	public String deleteComment(@RequestParam int commentId) {
+		
+		int ckRef = boardService.checkRef(commentId);
+		if(ckRef>0) {
+			
+			int result = boardService.deleteComment(commentId);
+		}else {
+			int result = boardService.deleteCommentId(commentId);
+		}
+	
+		return "삭제성공";
+		
+	}
+	
+	@GetMapping("/jobKorea.do")
+	public String jobKorea(@RequestParam(defaultValue = "1") int page, Model model) throws IOException {
+		int limit = 8;
+		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		
+		// 게시글 전체 수
+	    int totalCount = 100; // 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+	    // totalPage 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		
+		log.info("jobKoreaList={}", jobKoreaList);
+		model.addAttribute("jobKoreaList", jobKoreaList);
+		model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+		return "/board/jobSearchBoardList";
 	}
 	
 }

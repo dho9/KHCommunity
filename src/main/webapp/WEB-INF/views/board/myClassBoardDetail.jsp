@@ -183,17 +183,20 @@
 	// 댓글 삭제
 	document.querySelectorAll('#deleteComment').forEach((deleteBtn) => {
 		deleteBtn.addEventListener('click', (e) => {
-			console.log(e.target.dataset.value);
-			$.ajax({
-				url : "${pageContext.request.contextPath}/board/deleteComment.do",
-				data : {
-					commentId : e.target.dataset.value					
-				},
-				method : "POST",
-				success(responseData) {
-					console.log(responseData);
-				}
-			});
+			if(confirm('정말 삭제하시겠습니까?')) {
+				console.log(e.target.dataset.value);
+				const postId = document.querySelector('input[name=postId]').value;
+				$.ajax({
+					url : "${pageContext.request.contextPath}/board/deleteComment.do",
+					data : {
+						commentId : e.target.dataset.value					
+					},
+					success(responseData) {
+						alert(responseData);
+						window.location.href="${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
+					}
+				});
+			}
 		});
 	});
 	

@@ -185,4 +185,12 @@ public interface BoardRepository {
 	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=11 and tag =#{tag}")
 	int totalCountMyClassBoardByTag(String tag);
 	
+	@Update ("update post_comment set comment_content = '삭제된 댓글입니다.', delete_ck = 1 where comment_id = #{commentId}" )
+	int deleteComment(int commentId);
+	@Select ("select count(*)from post_comment  where comment_ref= #{commentId}")
+	int checkRef(int commentId);
+	
+	@Delete ("delete from post_comment where comment_id =#{commentId}")
+	int deleteCommentId(int commentId);
+	
 }

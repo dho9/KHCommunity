@@ -219,7 +219,7 @@
 			success(reponseData) {
 				console.log(reponseData);
 				const {board, currentPage, totalPages} = reponseData;
-				console.log(board, currentPage, totalPages);
+				console.log('sss'+board, currentPage, totalPages);
 				
 				const tbody = document.querySelector('tbody');
 				tbody.innerHTML = "";
@@ -460,7 +460,66 @@
 			btn.value = e.target.innerHTML;
 		});
 	});
-	</script>
+	
+	function renderPagination(currentPage, totalPages) {
+	    const paginationElement = document.querySelector('.pagination');
+	    paginationElement.innerHTML = ""; // 기존 페이지 바 내용 초기화
+
+	    // 이전 페이지 링크
+	    const prevButton = document.createElement('li');
+	    prevButton.classList.add('page-item');
+	    if (currentPage === 1) {
+	        prevButton.classList.add('disabled');
+	    }
+	    const prevLink = document.createElement('a');
+	    prevLink.classList.add('page-link');
+	    prevLink.textContent = '이전';
+	    prevLink.setAttribute('href', '#');
+	    prevLink.addEventListener('click', () => {
+	        loadPage(currentPage - 1);
+	    });
+	    prevButton.appendChild(prevLink);
+	    paginationElement.appendChild(prevButton);
+
+	    // 페이지 번호 링크
+	    for (let i = 1; i <= totalPages; i++) {
+	        const pageButton = document.createElement('li');
+	        pageButton.classList.add('page-item');
+	        if (i === currentPage) {
+	            pageButton.classList.add('active');
+	        }
+	        const pageLink = document.createElement('a');
+	        pageLink.classList.add('page-link');
+	        pageLink.textContent = i;
+	        pageLink.setAttribute('href', '#');
+	        pageLink.setAttribute('data-page', i);
+	        pageLink.addEventListener('click', (event) => {
+	            const clickedPage = event.target.getAttribute('data-page');
+	            if (clickedPage) {
+	                loadPage(parseInt(clickedPage));
+	            }
+	        });
+	        pageButton.appendChild(pageLink);
+	        paginationElement.appendChild(pageButton);
+	    }
+
+	    // 다음 페이지 링크
+	    const nextButton = document.createElement('li');
+	    nextButton.classList.add('page-item');
+	    if (currentPage === totalPages) {
+	        nextButton.classList.add('disabled');
+	    }
+	    const nextLink = document.createElement('a');
+	    nextLink.classList.add('page-link');
+	    nextLink.textContent = '다음';
+	    nextLink.setAttribute('href', '#');
+	    nextLink.addEventListener('click', () => {
+	        loadNextPage();
+	    });
+	    nextButton.appendChild(nextLink);
+	    paginationElement.appendChild(nextButton);
+	}
+</script>
 	
 </body>
 </html>
