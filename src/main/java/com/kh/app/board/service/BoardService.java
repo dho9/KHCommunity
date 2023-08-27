@@ -118,4 +118,10 @@ public interface BoardService {
 
 	List<BoardListDto> jobSearchBoardFindAll();
 
+	int deleteComment(int commentId);
+
+	int checkRef(int commentId);
+
+	int deleteCommentId(int commentId);
+
 }
