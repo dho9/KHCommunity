@@ -15,6 +15,12 @@
 *{
 font-family: 'HakgyoansimWoojuR';
 }
+.img-wrapper {
+    width: 100%; /* 이미지를 부모 요소에 맞게 확장 */
+    max-height: 200px; /* 이미지의 최대 높이를 지정 (조절 가능) */
+    overflow: hidden; /* 이미지의 내용을 넘치지 않도록 숨김 */
+}
+.list-group{ margin-top : 3%;}
 </style>
 <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
   <ul class="list-group" style="max-width: 800px;"> <!-- 리스트로 감싸기 -->
@@ -24,7 +30,9 @@ font-family: 'HakgyoansimWoojuR';
           <div class="card" style="max-width: 800px;">
             <div class="row g-0">
               <div class="col-md-4">
+              	<div class="img-wrapper">
                 <img src="${pageContext.request.contextPath}/resources/images/store/${store.storeName}.jpg" class="img-fluid rounded-start" alt="식당사진">
+              	 </div>
               </div>
               <div class="col-md-8">
                 <div class="card-body">
