@@ -3,56 +3,60 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
-
+.author{
+font-size:10px;}
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-  background-color: white;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 50%;
-  position: relative;
+	background-color: white;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 50%;
+	position: relative;
 }
 
 .close {
-  position: absolute;
-  top: 0;
-  right: 10px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 10px;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 textarea {
-  width: 100%;
+	width: 100%;
 }
 
-
-li.vote commentvote{
-padding-bottom:10px;}
-div.child-comments{
-    width: 95%;
-    margin-left: 5%;
-    margin-top: 1%;
+li.vote commentvote {
+	padding-bottom: 10px;
 }
-article.child{
-border: 1px solid #e2e2e3;
-background-color: #e5e8eb66;
 
+div.child-comments {
+	width: 95%;
+	margin-left: 5%;
+	margin-top: 1%;
 }
+
+article.child {
+	border: 1px solid #e2e2e3;
+	background-color: #e5e8eb66;
+}
+
 form.writecomment.child {
 	margin: 0 4px 4px 35px;
 	border: 1px solid #e3e3e3;
@@ -135,6 +139,7 @@ time.medium {
 	margin-left: 9px;
 	padding-top: 2px;
 }
+
 ul.commentMenu li {
 	float: right;
 	margin-left: 8px;
@@ -169,7 +174,6 @@ ul.commentMenu li {
 	border-top: 1px solid lightgray;
 	margin: 5px 0;
 }
-
 
 #commnetContainer>div.articles>article form.writecomment input.text {
 	margin: 0;
@@ -225,48 +229,47 @@ ul.commentMenu li {
 	background-color: #f2eded75;
 }
 
-
 #messageContainer {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.7);
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
 .message-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 450px;
+	background-color: #fff;
+	margin: 10% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 450px;
 }
 
 #closeMessageBtn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
 }
 
-#closeMessageBtn:hover,
-#closeMessageBtn:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+#closeMessageBtn:hover, #closeMessageBtn:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
 }
 
-button.updateBtn, button.deleteBtn{
+button.updateBtn, button.deleteBtn {
 	border: none;
 }
 
 #openMessageBtn {
-background-color: white; border: 0px;
-color: black;
+	background-color: white;
+	border: 0px;
+	color: black;
 }
 
 .message-content {
@@ -277,24 +280,23 @@ color: black;
 	cursor: pointer;
 }
 
-.anonymous{
+.anonymous {
 	float: right;
 	background-color: white;
 	margin-right: 13px;
 }
-.anonymousImg{
+
+.anonymousImg {
 	width: 59px;
 }
-
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div id="container" class="community" style="margin-top: 25px;">
-	<sec:authentication property="principal" var="loginMember"/>
+	<sec:authentication property="principal" var="loginMember" />
 	<input type="hidden" id="test111" value="${loginMember.username}">
 	<div class="wrap title">
-		<h1>${memberId }
-		</h1>
-		
+		<h1>${memberId }</h1>
+
 	</div>
 	<div class="wrap articles">
 		<c:if test="${empty postDetail}">
@@ -303,85 +305,96 @@ color: black;
 		<c:if test="${not empty postDetail}">
 			<article>
 
-					<a class="article" >
-				  		<img class="picture large" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
-				  		<div class="profile">
-				  			<c:if test="${postDetail.anonymousCheck eq '1'}">
-					  			<h3 class="large" style="font-size: 13px" id="postAnonymous">익명</h3>
-					  		</c:if>
-					  		<c:if test="${postDetail.anonymousCheck ne '1'}">
-						  		<h3 class="large" style="font-size: 13px" id="postCreateId">${postDetail.memberId}</h3>
-					  		</c:if>
-						  	<time class="large" style="font-size: 12px">
-							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
-							  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm" />
-						  	</time>
-				  		</div>
-				  		<ul class="status">
-				  			<c:if test="${postDetail.memberId eq loginMember.username}">
-				  				<li style="margin-right: 5px;">
-				  					<button type="button" class="updateBtn" onclick="showInputForm()"
-				  						style="background: none;  color: black;  padding: 0;">
-				  						수정 | 
-				  					</button>
-				  				<li class="deleteBtn" ><button type="button" class="deleteBtn"  
-				  						style="background: none;  color: black;  padding: 0;">
-				  						삭제
-				  					</button>
-				  				</li>
-				  			</c:if>
-				  			
-				  			<c:if test="${postDetail.memberId ne loginMember.username}">
-					  			<li class="messagesend" style="margin-right: 5px;" id="openMessageBtn"  onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지 | </li>
-					  			<li class="abuse">신고</li>
-				  			</c:if>
-				  		</ul>
-					  	<hr>
-					  	<h1 class="large" style="font-size : 20px;">${postDetail.title}</h2> <br>
-					  	<input type="hidden" name="content" id="content" value="${postDetail.content}">
-					  	<c:if test="${postAttach != null }">
-					  		<c:if test="${postDetail.boardId eq '5'}">
-					  			<img 
-						  		src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
-						  		style="width: 747px;">
-							  	<p class="large">
-							  		<textarea id="batch_content" name="batch_content"></textarea>
-							  		
-							  	</p> <br>
-					  		</c:if>
-					  		<c:if test="${postDetail.boardId ne '5'}">
-						  		<img 
-							  		src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
-							  		style="width: 747px;">
-					  			<p class="large">${postDetail.content}</p> <br>
-					  		</c:if>
-						  	
-					  	</c:if>
-					  	<c:if test="${postAttach == null }">
-					  		<c:if test="${postDetail.boardId eq '5'}">
-							  	<p class="large">
-							  		<textarea id="batch_content" name="batch_content"></textarea>
-							  	</p> <br>
-					  		</c:if>
-					  		<c:if test="${postDetail.boardId ne '5'}">
-					  			<p class="large">${postDetail.content}</p> <br>
-					  		</c:if>
-					  	
-					  	</c:if>
-					  	
-					  	
-					  	<c:forEach items="${postDetail.tag}" var="tag">
-					  		<span class="tag">${tag}</span>
-					  	</c:forEach>
-					  	<ul class="status">
-					  		<%-- 좋아요 버튼 --%>
-					  		<li><img class="like" data-value="${postDetail.postId}" style="cursor: pointer;" src="${pageContext.request.contextPath}/resources/images/like.png"/></li>
-					  		<li class="vote" data-value="${postDetail.postId}" style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
-					  		<li><img src="${pageContext.request.contextPath}/resources/images/comment.png"/></li>
-					  		<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li> 
-					  	</ul>
-					  	<hr>
-					</a>
+				<a class="article"> <img class="picture large"
+					src="${pageContext.request.contextPath}/resources/images/usericon.png" />
+					<div class="profile">
+						<c:if test="${postDetail.anonymousCheck eq '1'}">
+							<h3 class="large" style="font-size: 13px" id="postAnonymous">익명</h3>
+						</c:if>
+						<c:if test="${postDetail.anonymousCheck ne '1'}">
+							<h3 class="large" style="font-size: 13px" id="postCreateId">${postDetail.memberId}</h3>
+						</c:if>
+						<time class="large" style="font-size: 12px">
+							<fmt:parseDate value="${postDetail.postCreatedAt}"
+								pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt" />
+							<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm" />
+						</time>
+					</div>
+					<ul class="status">
+						<c:if test="${postDetail.memberId eq loginMember.username}">
+							<li style="margin-right: 5px;">
+								<button type="button" class="updateBtn"
+									onclick="showInputForm()"
+									style="background: none; color: black; padding: 0;">
+									수정 |</button>
+							<li class="deleteBtn"><button type="button"
+									class="deleteBtn"
+									style="background: none; color: black; padding: 0;">
+									삭제</button></li>
+						</c:if>
+
+						<c:if test="${postDetail.memberId ne loginMember.username}">
+							<li class="messagesend" style="margin-right: 5px;"
+								id="openMessageBtn"
+								onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지
+								|</li>
+							<li class="abuse">신고</li>
+						</c:if>
+					</ul>
+					<hr>
+					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h2>
+						<br> <input type="hidden" name="content" id="content"
+							value="${postDetail.content}">
+						<c:if test="${postAttach != null }">
+							<c:if test="${postDetail.boardId eq '5'}">
+								<img
+									src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
+									style="width: 747px;">
+								<p class="large">
+									<textarea id="batch_content" name="batch_content"></textarea>
+
+								</p>
+								<br>
+							</c:if>
+							<c:if test="${postDetail.boardId ne '5'}">
+								<img
+									src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
+									style="width: 747px;">
+								<p class="large">${postDetail.content}</p>
+								<br>
+							</c:if>
+
+						</c:if>
+						<c:if test="${postAttach == null }">
+							<c:if test="${postDetail.boardId eq '5'}">
+								<p class="large">
+									<textarea id="batch_content" name="batch_content"></textarea>
+								</p>
+								<br>
+							</c:if>
+							<c:if test="${postDetail.boardId ne '5'}">
+								<p class="large">${postDetail.content}</p>
+								<br>
+							</c:if>
+
+						</c:if>
+
+
+						<c:forEach items="${postDetail.tag}" var="tag">
+							<span class="tag">${tag}</span>
+						</c:forEach>
+						<ul class="status">
+							<%-- 좋아요 버튼 --%>
+							<li><img class="like" data-value="${postDetail.postId}"
+								style="cursor: pointer;"
+								src="${pageContext.request.contextPath}/resources/images/like.png" /></li>
+							<li class="vote" data-value="${postDetail.postId}"
+								style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
+							<li><img
+								src="${pageContext.request.contextPath}/resources/images/comment.png" /></li>
+							<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li>
+						</ul>
+						<hr></a>
 			</article>
 		</c:if>
 		<div class="comments" style="display: block">
@@ -416,78 +429,94 @@ color: black;
 	<form:form name="loadCommentFrm"></form:form>
 	<form:form name="commentLikeFrm"></form:form>
 	<%-- 삭제 폼 --%>
-	<form:form action="${pageContext.request.contextPath}/board/boardDelete.do" name="boardDeleteFrm" method="post">
-		<input type="hidden" name="deletePostId" id="deletePostId" value="${postDetail.postId}"/>
-		<input type="hidden" name="postBoardLink" id="postBoardLink" value="${board.boardLink}"/>
+	<form:form
+		action="${pageContext.request.contextPath}/board/boardDelete.do"
+		name="boardDeleteFrm" method="post">
+		<input type="hidden" name="deletePostId" id="deletePostId"
+			value="${postDetail.postId}" />
+		<input type="hidden" name="postBoardLink" id="postBoardLink"
+			value="${board.boardLink}" />
 	</form:form>
-	
-	
-	
-	
+
+
+
+
 	<!-- 쪽지 모달 -->
 
 	<div id="messageContainer" class="modal">
 		<div class="message-content">
-			<form:form id="messageFrm" action="${pageContext.request.contextPath}/message/messageSend.do">
-	        	<div>
-	        		<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span>
-	        		<span class="close" id="closeMessageBtn">&times;</span>         
-	        	</div>
-	        	</br>
-	        	<sec:authentication property="principal" var="loginMember"/>
-	        	<div class="mb-3">
-	        		<label for="toInput" class="form-label">To</label>
-	        		<input type="text" id="toInput" value="" readonly>
-	        		<input type="hidden" id="receiveMember" value="" readonly>
-	        	</div>
-	        	</br></br>
-	        	<div class="mb-3">
-	                <label for="fromInput" class="form-label">From</label></br>
-	                 <input type="text" class="form-control" id="fromInput" value="${loginMember.memberId}" readonly>
-	        	</div>
-	        	</br></br>
-	        	<div class="mb-3">
-	                <label for="contentInput" class="form-label">Content</label>
-	                <textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
-	        	</div>
-	            <button id="sendMessageBtn">메시지 전송</button>
-	        </form:form>
+			<form:form id="messageFrm"
+				action="${pageContext.request.contextPath}/message/messageSend.do">
+				<div>
+					<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span> <span
+						class="close" id="closeMessageBtn">&times;</span>
+				</div>
+				</br>
+				<sec:authentication property="principal" var="loginMember" />
+
+				<script>
+				 const memberId = '<sec:authentication property="principal.username"/>';
+				  console.log(memberId);
+				</script>
+				<div class="mb-3">
+					<label for="toInput" class="form-label">To</label> <input
+						type="text" id="toInput" value="" readonly> <input
+						type="hidden" id="receiveMember" value="" readonly>
+				</div>
+				</br>
+				</br>
+				<div class="mb-3">
+					<label for="fromInput" class="form-label">From</label></br> <input
+						type="text" class="form-control" id="fromInput"
+						value="${loginMember.memberId}" readonly>
+				</div>
+				</br>
+				</br>
+				<div class="mb-3">
+					<label for="contentInput" class="form-label">Content</label>
+					<textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
+				</div>
+				<button id="sendMessageBtn">메시지 전송</button>
+			</form:form>
 		</div>
 	</div>
-	
+
 	<%-- 신고 모달 --%>
 	<div id="reportModal" class="modal">
-	  <div class="modal-content">
-	    <span class="close">&times;</span>
-	    <h2>신고하기</h2>
-	    <form:form 
-	    	id="reportForm"
-	    	name="reportForm"
-	    	action="${pageContext.request.contextPath}/board/postReport.do"
-	    	method="post"
-	    >
-	      <input type="hidden" name="reportPostId" id="reportPostId" value="${postDetail.postId}">
-	      <input type="hidden" name="reporterId" id="reporterId" value="${loginMember.username}">
-	      <input type="hidden" name="attackerId" id="attackerId" value="${postDetail.memberId}">
-	      <input type="hidden" id="reportType" name="reportType" value="">
-	      <label for="reportType">신고유형:</label>
-	      <select name="reportType_" id="reportType_" >
-					<option value="게시판 성격에 부적절함">게시판 성격에 부적절함</option>	      			
-					<option value="욕설/비하">욕설/비하</option>	      			
-					<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>	      			
-					<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>	      			
-					<option value="유출/사칭/사기">유출/사칭/사기</option>	      			
-					<option value="낚시/놀람/도배">낚시/놀람/도배</option>	      			
-					<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>	      			
-     	  </select>
-	      <label for="reportContent">신고내용:</label>
-	      <textarea id="reportContent" name="reportContent" rows="4" required></textarea>
-	      <button type="submit">신고 제출</button>
-	    </form:form>
-	  </div>
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>신고하기</h2>
+			<form:form id="reportForm" name="reportForm"
+				action="${pageContext.request.contextPath}/board/postReport.do"
+				method="post">
+				<input type="hidden" name="reportPostId" id="reportPostId"
+					value="${postDetail.postId}">
+				<input type="hidden" name="reporterId" id="reporterId"
+					value="${loginMember.username}">
+				<input type="hidden" name="attackerId" id="attackerId"
+					value="${postDetail.memberId}">
+				<input type="hidden" id="reportType" name="reportType" value="">
+				<label for="reportType">신고유형:</label>
+				<select name="reportType_" id="reportType_">
+					<option value="게시판 성격에 부적절함">게시판 성격에 부적절함</option>
+					<option value="욕설/비하">욕설/비하</option>
+					<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>
+					<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>
+					<option value="유출/사칭/사기">유출/사칭/사기</option>
+					<option value="낚시/놀람/도배">낚시/놀람/도배</option>
+					<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>
+				</select>
+				<label for="reportContent">신고내용:</label>
+				<textarea id="reportContent" name="reportContent" rows="4" required></textarea>
+				<button type="submit">신고 제출</button>
+			</form:form>
+		</div>
 	</div>
-	
+
 	<script>
+    // loginMember를 JSON 문자열로 변환하여 JavaScript 변수에 할당
+    const loginMemberJSON = '${fn:escapeXml(loginMember)}';
+    console.log(loginMemberJSON);
 	// 모달 요소와 모달을 트리거하는 버튼을 가져옵니다.
 	const modal = document.getElementById("reportModal");
 	const abuseButton = document.querySelector(".abuse");
@@ -496,9 +525,9 @@ color: black;
 	const closeBtn = modal.querySelector(".close");
 
 	// "신고" 버튼 클릭 시 모달을 보이도록 설정합니다.
-	abuseButton.addEventListener("click", () => {
-	  modal.style.display = "block";
-	});
+	//abuseButton.addEventListener("click", () => {
+	//  modal.style.display = "block";
+	//});
 
 	// 닫기 버튼 클릭 시 모달을 닫습니다.
 	closeBtn.addEventListener("click", () => {
@@ -1072,7 +1101,6 @@ color: black;
             method : "POST",
             dataType : "json",
             success(responseData) {
-                console.log(responseData);
                 const {available} = responseData;
                 
                 const star = document.querySelector('.bi');
@@ -1209,7 +1237,6 @@ color: black;
 	//댓글불러오기
 	function loadComment(){
 		const a =document.querySelector("#test111").value;
-		console.log(a);
 		const token = document.loadCommentFrm._csrf.value;
 		const currentURL = window.location.href;
 		const urlParams = new URLSearchParams(new URL(currentURL).search);
@@ -1225,6 +1252,7 @@ color: black;
 	    	},
 	    	method : "POST",
 	    	success(data){
+	    		console.log(data);
 	    		renderComments(data);
 	    		loadCommentLike();
 	    		
@@ -1234,14 +1262,28 @@ color: black;
 	}	
 	//댓글불러온걸토대로 댓글랜더.
 	function renderComments(comments) {
+		const postAuthor = "${postDetail.memberId}";
 		  const commentList = document.querySelector('#commentList');
 		    commentList.innerHTML = '';
 			
 		    // Loop through each comment and create a DOM element for it
 		    comments.forEach(comment => {
-		    	
-		    	if(comment.memberId !== '${memberId}'){
-		    		
+		    	if(comment.deleteCk ==1){
+		    		const commentElement = document.createElement('article');
+		 	        commentElement.className = 'parent';
+		 	        commentElement.setAttribute('data-commentid', comment.commentId);
+		 	       commentElement.innerHTML = `
+		 	        <p class="large" style="padding-left: 10px;padding-bottom: 5px;">\${comment.commentContent}</p>`
+		 	    		const separator = document.createElement('hr');
+			        separator.className = 'comment-separator';
+				 	        
+			        const childComments = comments.filter(childComment => childComment.commentRef === comment.commentId);
+			        renderChildComments(childComments, commentElement);
+			        commentElement.appendChild(separator);
+			        commentList.appendChild(commentElement);
+		    	}else{
+		    	const showAuthor = comment.memberId !==postAuthor; 	
+		    	const showAbuse = comment.memberId !== memberId;
 		    	const commentCreatedAt = comment.commentCreatedAt;
 		    	const formattedDate = commentCreatedAt.replace("T", " ");
 		    	const commentCreateds = formattedDate.slice(0, -3);
@@ -1256,13 +1298,13 @@ color: black;
 		 	        <h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
 		 	            <div style="display: flex; align-items: center;">
 		 	                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
-		 	                <span>\${comment.anonymousCheck ? '익명' : comment.memberId}</span>
+		 	                <span>\${comment.anonymousCheck ? '익명' : comment.memberId} \${showAuthor ? '' : '<author class="author">(작성자)</author>'}</span>
 		 	            </div>
 		 	        	<ul class="commentMenu">
+		                 	 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${comment.commentId}">삭제</li>`}
 		                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 		                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-		                 	<li class="messagesend">쪽지</li>
-		                 	<li class="abuse">신고</li>
+		                 	 \${showAbuse ? '<li class="abuse">신고</li>' : ''}
 		             	</ul>
 		             </h3>
 		             <hr>
@@ -1295,14 +1337,19 @@ color: black;
 	        commentList.appendChild(commentElement);
 		    };
 		    	}
+		    	
 		})
 	}	
 
 	function renderChildComments(childComments, parentCommentElement) {
-	    const childCommentsContainer = document.createElement('div');
+		const postAuthor = "${postDetail.memberId}";
+		const childCommentsContainer = document.createElement('div');
 	    childCommentsContainer.className = 'child-comments';
 	    
 	    childComments.forEach(childComment => {
+	    console.log(childComment.memberId);
+	    const showAuthor = childComment.memberId !==postAuthor; 	
+	    
 	    	const commentCreatedAt = childComment.commentCreatedAt;
 	    	const formattedDate = commentCreatedAt.replace("T", " ");
 	    	const commentCreateds = formattedDate.slice(0, -3);
@@ -1312,16 +1359,17 @@ color: black;
 	        childCommentElement.className = 'child';
 	        childCommentElement.setAttribute('data-commentid', childComment.commentId);
 	        
+	        const showAbuse = childComment.memberId !== memberId;
 	        childCommentElement.innerHTML = `
 	 	        <h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
 	 	            <div style="display: flex; align-items: center;">
 	 	                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
-	 	                <span>\${childComment.anonymousCheck ? '익명' : childComment.memberId}</span>
+	 	               <span>\${childComment.anonymousCheck ? '익명' : childComment.memberId} \${showAuthor ? '' : '<author class="author">(작성자)</author>'}</span>
 	 	            </div>
 	 	        	<ul class="commentMenu">
+	 	        		 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${childComment.commentId}">삭제</li>`}
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
-	                 	<li class="messagesend">쪽지</li>
-	                 	<li class="abuse">신고</li>
+	                 	 \${showAbuse ? '<li class="abuse">신고</li>' : ''}
 	             	</ul>
 	             </h3>
 	             <hr>
@@ -1373,6 +1421,7 @@ function loadCommentLike() {
 //익명 , 댓글제출버튼에 관한 기능
 let anonyCk = false;
 document.querySelector('#commnetContainer').addEventListener('click', (event) => {
+	console.log("클릭!")
   const clickedElement = event.target;
   const value = clickedElement.getAttribute('data-value');
   
@@ -1428,10 +1477,29 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	            });
 	        }
   }
-   
-  
+  if (clickedElement.classList.contains('deleteComment')){
+	  const commentId = clickedElement.getAttribute('data-commentid');
+	  console.log(commentId);
+	  deleteComment(commentId);
+  }
 });
-
+function deleteComment(commentId){
+	if(confirm('정말삭제하시겠습니까?')){
+		  $.ajax({
+		        url: "${pageContext.request.contextPath}/board/deleteComment.do",
+		        data: {
+		        	commentId:commentId
+		        },
+		        method: "GET",
+		        success(responseData) {
+		        	console.log(responseData);
+		        	loadComment();
+		        	
+		        }
+		    });
+	}
+	
+}
 
 function submitComment(adata){
 	const token = document.commentFrm._csrf.value;
@@ -1477,10 +1545,7 @@ function likeComment(){
                 dataType : "json",
                 success(responseData) {
                     const {available, likeCount} = responseData;
-                    console.log(responseData);
-                    console.log(likeCount);
                     const {commentLikeCount} = likeCount;
-                    console.log(commentId);
                     const commentlikeCountElements = document.querySelectorAll(`.likeCount[data-commentid="\${commentId}"]`);
                     const likeElements = document.querySelectorAll(`.commentLike[data-commentid="\${commentId}"]`);
                     if (available) {
@@ -1561,7 +1626,6 @@ function likeComment(){
 		 const toInput = document.getElementById("toInput");
 		 receiveId.value = messageReceiveId;  
 		 
-		 console.log(messageReceiveId, anonymousCheck);
 		 
 		 if(anonymousCheck != '1' || anonymousCheck == 'false'){
 		 	toInput.value = messageReceiveId;  

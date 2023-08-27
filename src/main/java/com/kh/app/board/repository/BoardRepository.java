@@ -182,4 +182,12 @@ public interface BoardRepository {
 
 	List<BoardListDto> jobSearchBoardFindAll();
 	
+	@Update ("update post_comment set comment_content = '삭제된 댓글입니다.', delete_ck = 1 where comment_id = #{commentId}" )
+	int deleteComment(int commentId);
+	@Select ("select count(*)from post_comment  where comment_ref= #{commentId}")
+	int checkRef(int commentId);
+	
+	@Delete ("delete from post_comment where comment_id =#{commentId}")
+	int deleteCommentId(int commentId);
+	
 }

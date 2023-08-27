@@ -248,7 +248,8 @@ CREATE TABLE post_comment (
    comment_content   varchar2(1000),
    comment_level   number   ,
    comment_ref   number   ,
-   comment_created_at   date   DEFAULT current_date
+   comment_created_at   date   DEFAULT current_date,
+   delete_ck number default 0
 );
 
 CREATE TABLE favorite (
@@ -898,7 +899,8 @@ alter table message_box add constraint CK_messagebox_read_check check (read_chec
 alter table message_box add constraint CK_messagebox_anonymous_check check (anonymous_check in ('y', 'n'));
 -- 익명으로 보낼건지 ?
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
--- 신고처리됐는지?
+-- 댓글삭제여부
+alter table post_comment add constraint ck_post_comment_delete_ck check (delete_ck in ('0','1'));
 
 --=================================
 --트리거
@@ -973,7 +975,16 @@ END;
 
 -- 삭제댓글 트리거
 CREATE OR REPLACE TRIGGER DELETE_COMMENT_TRIGGER
-AFTER delete ON post_comment
+AFTER update ON post_comment
+FOR EACH ROW
+BEGIN
+  insert into delete_comment 
+  values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at);
+END;
+/
+-- 댓글 트리거
+CREATE OR REPLACE TRIGGER UPDATE_COMMENT_TRIGGER
+AFTER update ON post_comment
 FOR EACH ROW
 BEGIN
   insert into delete_comment 
@@ -1196,7 +1207,7 @@ select * from report;
 --select * from quit_member;
 --select * from delete_post;
 --select * from delete_comment;
-select * from authority;
+--select * from authority;
 --select * from calendar;
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
@@ -1360,129 +1371,7 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
 
 
-update student set approve_request_date = sysdate where student_id = 'xogus';
-
-select 
-    p.*
-from
-    post p 
-where 
-    member_id ='eogh' and
-    ;
-    
- select * from post_content;   
- 
- 
-  
-  	select 
-  		p.post_id,
-  		p.member_id,
-	    p.title,
-	    p.post_created_at,
-	    p.tag,
-	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
-	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
-	    p.board_id,
-	    p.anonymous_check
-	from
-	    post p join post_content c
-	    	on
-	    p.post_id = c.post_id
-	where
-	    member_id = 'eogh'
-	order by
-		1 desc;
-  
-
- select post_id from post_comment where member_id = 'eogh' group by post_id;
-  select  *from post_comment;
-SELECT COUNT(*) FROM (SELECT COUNT(*) FROM post_comment WHERE member_id = 'eogh' GROUP BY post_id);
-select 
-  		p.post_id,
-  		p.member_id,
-	    p.title,
-	    p.post_created_at,
-	    p.tag,
-	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
-	    c.content,
-	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
-	    p.board_id,
-	    p.anonymous_check
-	from
-	    post p join post_content c
-	    	on
-	    p.post_id = c.post_id
-	where
-	   p.post_id in (select post_id from post_comment pq where member_id = 'eogh' group by post_id)
-	order by
-		 (SELECT MAX(pc.comment_created_at) FROM post_comment pc WHERE pc.post_id = p.post_id) DESC;
-select * from post_comment where member_id='eogh'  order by comment_created_at desc;
-
-select * from calendar;
-
-select m.member_name, m.member_phone, m.member_email, m.birthday, s.curriculum_id, c.class_id from member m join student s on m.member_id = s.student_id join curriculum c on s.curriculum_id = c.curriculum_id where c.class_id = '352';
-
-select * from post_comment where post_id =8;
-select * from comment_like;
-
-select * from member;
-select * from post_like;
-
-SELECT
-    v.vacation_id AS vacationId,
-    m.member_name AS memberName,
-    v.vacation_send_date,
-    v.vacation_start_date,
-    v.vacation_end_date,
-    m.birthday,
-    c.curriculum_start_at AS curriculumStartAt,
-    c.curriculum_end_at AS curriculumEndAt,
-    c.curriculum_name AS curriculumName,
-    c.class_id AS classId,
-    v.teacher_id,
-    t.member_name AS teacherName
-FROM
-    student s
-LEFT JOIN
-    member m ON s.student_id = m.member_id
-LEFT JOIN
-    curriculum c ON s.curriculum_id = c.curriculum_id
-LEFT JOIN
-    vacation v ON s.student_id = v.student_id
-LEFT JOIN
-    member t ON v.teacher_id = t.member_id
-WHERE
-    v.vacation_approve_check = '2';
-select * from vacation;
-select * from curriculum;
-
-insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
-
-update vacation set vacation_approve_check = '2', employee_id = null;
-
-select * from chat_room;
-select * from talker;
-select * from chat_message;
-select * from curriculum;
-select * from student;
-select * from member;
-select
-    t.chat_id,
-    t.student_id,
-    m.member_name student_name,
-    r.chat_type,
-    r.chat_date,
-    c.curriculum_name,
-    c.class_id,
-    s.student_type
-from 
-    talker t 
-        join chat_room r
-            on t.chat_id = r.chat_id
-        join student s
-            on t.student_id = s.student_id
-        join curriculum c
-            on s.curriculum_id = c.curriculum_id
-        join member m
-            on s.student_id = m.member_id;
+select count(*)from post_comment  where comment_ref= 230; 
+select * from delete_comment;
+select * from post_comment where comment_id = 243;
+select * from post;
