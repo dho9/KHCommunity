@@ -17,6 +17,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -107,7 +108,6 @@ public interface BoardRepository {
 
 	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds);
 	
-	@Select("  SELECT  pc.*, (SELECT COUNT(*) FROM comment_like cl WHERE cl.comment_id = pc.comment_id) AS like_count FROM post_comment pc where pc.post_id = #{postId} order by pc.comment_id asc ")
 	List<Comment> findByCommentByPostId(int postId);
 	
 	@Select("select * from comment_like where comment_id = #{commentId} and member_id = #{memberId}")
@@ -165,5 +165,21 @@ public interface BoardRepository {
 	int totalCountMycommentarticle(String memberId);
 
 	List<CommentLike> commentLikeCheck(int postId);
+
+
+	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
+	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+	int insertPostReport(PostReportDto postReport);
+
+	@Select("SELECT p.post_id, p.title, pc.content, b.board_name\r\n"
+			+ "FROM post p\r\n"
+			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
+			+ "left join board b on b.board_id = p.board_id\r\n"
+			+ "WHERE p.board_id = #{boardId}\r\n"
+			+ "ORDER BY p.post_created_at DESC\r\n"
+			+ "FETCH FIRST 3 ROWS ONLY")
+	List<PopularBoardDto> findThreePostByBoardId(int boardId);
+
+	List<BoardListDto> jobSearchBoardFindAll();
 	
 }

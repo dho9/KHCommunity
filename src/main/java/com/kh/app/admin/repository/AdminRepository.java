@@ -117,7 +117,7 @@ public interface AdminRepository {
 	@Insert("insert into authority values (#{memberId}, #{auth})")
 	int insertAuth(Authority auth);
 	
-	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)\r\n"
+	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attacker_id, report_send_date, report_check from report)\r\n"
 			+ "where  report_check = 'n' and (rownum between 1 and 6)")
 	List<AdminReportListDto> reportListSix();
 

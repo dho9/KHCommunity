@@ -7,6 +7,40 @@
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+textarea {
+  width: 100%;
+}
+
+
 li.vote commentvote{
 padding-bottom:10px;}
 div.child-comments{
@@ -293,7 +327,8 @@ color: black;
 				  				<li class="deleteBtn" ><button type="button" class="deleteBtn"  
 				  						style="background: none;  color: black;  padding: 0;">
 				  						삭제
-				  					</button></li>
+				  					</button>
+				  				</li>
 				  			</c:if>
 				  			
 				  			<c:if test="${postDetail.memberId ne loginMember.username}">
@@ -370,7 +405,6 @@ color: black;
 			</div>
 
 		</div>
-
 	</div>
 
 	<%-- 해시태그를 클릭했을 때의 폼 --%>
@@ -421,7 +455,77 @@ color: black;
 		</div>
 	</div>
 	
+	<%-- 신고 모달 --%>
+	<div id="reportModal" class="modal">
+	  <div class="modal-content">
+	    <span class="close">&times;</span>
+	    <h2>신고하기</h2>
+	    <form:form 
+	    	id="reportForm"
+	    	name="reportForm"
+	    	action="${pageContext.request.contextPath}/board/postReport.do"
+	    	method="post"
+	    >
+	      <input type="hidden" name="reportPostId" id="reportPostId" value="${postDetail.postId}">
+	      <input type="hidden" name="reporterId" id="reporterId" value="${loginMember.username}">
+	      <input type="hidden" name="attackerId" id="attackerId" value="${postDetail.memberId}">
+	      <input type="hidden" id="reportType" name="reportType" value="">
+	      <label for="reportType">신고유형:</label>
+	      <select name="reportType_" id="reportType_" >
+					<option value="게시판 성격에 부적절함">게시판 성격에 부적절함</option>	      			
+					<option value="욕설/비하">욕설/비하</option>	      			
+					<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>	      			
+					<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>	      			
+					<option value="유출/사칭/사기">유출/사칭/사기</option>	      			
+					<option value="낚시/놀람/도배">낚시/놀람/도배</option>	      			
+					<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>	      			
+     	  </select>
+	      <label for="reportContent">신고내용:</label>
+	      <textarea id="reportContent" name="reportContent" rows="4" required></textarea>
+	      <button type="submit">신고 제출</button>
+	    </form:form>
+	  </div>
+	</div>
+	
 	<script>
+	// 모달 요소와 모달을 트리거하는 버튼을 가져옵니다.
+	const modal = document.getElementById("reportModal");
+	const abuseButton = document.querySelector(".abuse");
+
+	// 모달 내부의 닫기 버튼 요소를 가져옵니다.
+	const closeBtn = modal.querySelector(".close");
+
+	// "신고" 버튼 클릭 시 모달을 보이도록 설정합니다.
+	abuseButton.addEventListener("click", () => {
+	  modal.style.display = "block";
+	});
+
+	// 닫기 버튼 클릭 시 모달을 닫습니다.
+	closeBtn.addEventListener("click", () => {
+	  modal.style.display = "none";
+	});
+
+	// 모달 외부를 클릭하면 모달을 닫습니다.
+	window.addEventListener("click", (event) => {
+	  if (event.target === modal) {
+	    modal.style.display = "none";
+	  }
+	});
+	
+	const reportType_ = document.querySelector("#reportType_");
+	const reportType = document.querySelector("#reportType");
+	if(reportType_ !== null && reportType !== null){
+		reportType_.addEventListener('change', (e) => {
+			reportType.value = reportType_.value;
+		});
+	}
+	
+	
+
+	  
+    // 신고 제출 후 모달을 닫습니다.
+    modal.style.display = "none";
+	
 	
 	// 글 수정
 	const updateBtn = document.querySelector(".updateBtn");
@@ -526,7 +630,7 @@ color: black;
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+		  	         
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
@@ -1068,7 +1172,7 @@ color: black;
 	// 공감(좋아요) 누르기
 	function like() {
 		document.querySelector('.vote').onclick = (e) => {
-			
+			console.log('!!!!!!!!!!!!!');
 			const token = document.tokenFrm._csrf.value;
 			
 			$.ajax({
