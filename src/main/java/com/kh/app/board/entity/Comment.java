@@ -25,4 +25,5 @@ public class Comment {
 	private boolean anonymousCheck;
 	private int likeCount;
 	private String memberName;
+	private int deleteCk; 
 }

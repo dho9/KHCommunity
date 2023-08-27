@@ -313,5 +313,20 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardListDto> jobSearchBoardFindAll() {
 		return boardRepository.jobSearchBoardFindAll();
 	}
+	@Override
+	public int deleteComment(int commentId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteComment(commentId);
+	}
+	@Override
+	public int checkRef(int commentId) {
+		// TODO Auto-generated method stub
+		return boardRepository.checkRef(commentId);
+	}
+	@Override
+	public int deleteCommentId(int commentId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteCommentId(commentId);
+	}
 }
 
