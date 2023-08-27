@@ -36,6 +36,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
@@ -600,22 +601,36 @@ public class BoardController {
         //log.debug("studentInfo = {}", studentInfo);
 		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("authority", principal.getAuthorities());
-         
+        
         return "/board/myClassBoardList";
 	}
 
 	@PostMapping("/myClassBoardList.do")
 	@ResponseBody
-	public List<BoardListDto> myClassBoardList(@RequestParam String tag) {
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag);
-		return myClassBoardList;
+	public ResponseEntity<?> myClassBoardList(@RequestParam(defaultValue = "1") int page, @RequestParam String tag) {
+		// 페이징
+		int limit = 8;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		// 게시글 전체 수
+		int totalCount = boardService.totalCountMyClassBoardByTag(tag);
+		
+		// totalPage 계산
+		int totalPages = (int) Math.ceil((double) totalCount / limit);
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag, params);
+		log.info("myClassBoardList ={}", myClassBoardList);
+		log.info("totalPages = {}", totalPages);
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("board", myClassBoardList, "currentPage", page, "totalPages", totalPages));
 	}
 
 	@GetMapping("/myClassBoardFindAll.do")
 	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
-		log.info("page = {}",page );
 		// 페이징
-		int limit = 3;
+		int limit = 8;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit
@@ -847,6 +862,23 @@ public class BoardController {
 	
 		return "삭제성공";
 		
+	}
+	
+	@GetMapping("/jobKorea.do")
+	public String jobKorea(@RequestParam(defaultValue = "1") int page, Model model) throws IOException {
+		int limit = 8;
+		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		
+		// 게시글 전체 수
+	    int totalCount = 100; // 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+	    // totalPage 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		
+		log.info("jobKoreaList={}", jobKoreaList);
+		model.addAttribute("jobKoreaList", jobKoreaList);
+		model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+		return "/board/jobSearchBoardList";
 	}
 	
 }

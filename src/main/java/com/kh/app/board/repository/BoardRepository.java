@@ -121,7 +121,7 @@ public interface BoardRepository {
 	
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag);
+	List<BoardListDto> myClassBoardFindByTag(String tag, RowBounds rowBounds);
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
@@ -181,6 +181,9 @@ public interface BoardRepository {
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
 	List<BoardListDto> jobSearchBoardFindAll();
+
+	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=11 and tag =#{tag}")
+	int totalCountMyClassBoardByTag(String tag);
 	
 	@Update ("update post_comment set comment_content = '삭제된 댓글입니다.', delete_ck = 1 where comment_id = #{commentId}" )
 	int deleteComment(int commentId);
