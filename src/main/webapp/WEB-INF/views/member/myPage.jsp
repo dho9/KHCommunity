@@ -415,7 +415,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	</div>	
 		
 </selction>
-
 <script>
 
 	window.onload=()=>{
