@@ -278,6 +278,7 @@ public class BoardController {
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
+		System.out.println(board);
 		model.addAttribute("postAttach",postAttach);
 	}
 

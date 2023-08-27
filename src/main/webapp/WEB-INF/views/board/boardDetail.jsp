@@ -7,6 +7,24 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
+.listCallBack{
+    display: block;
+    margin-top: 5px;
+    margin-left: 5px;
+    padding: 0 10px 0 25px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px solid #c62917;
+    border-radius: 3px;
+    color: #c62917;
+    font-size: 14px;
+    font-weight: bold;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 10px 10px;
+    cursor: pointer;
+    background-color: white;
+}
 .author{
 font-size:10px;}
 .modal {
@@ -293,9 +311,8 @@ button.updateBtn, button.deleteBtn {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div id="container" class="community" style="margin-top: 25px;">
 	<sec:authentication property="principal" var="loginMember" />
-	<input type="hidden" id="test111" value="${loginMember.username}">
 	<div class="wrap title">
-		<h1>${memberId }</h1>
+		<h1><a>${board.boardName}</a></h1>
 
 	</div>
 	<div class="wrap articles">
@@ -418,8 +435,9 @@ button.updateBtn, button.deleteBtn {
 			</div>
 
 		</div>
+		<button class="listCallBack"  onClick="location.href='${pageContext.request.contextPath}/board/${board.boardLink}.do'">글 목록</button>
+		
 	</div>
-
 	<%-- 해시태그를 클릭했을 때의 폼 --%>
 	<form name="tagFrm"
 		action="${pageContext.request.contextPath}/board/boardSearch.do">
@@ -1236,7 +1254,6 @@ button.updateBtn, button.deleteBtn {
 	
 	//댓글불러오기
 	function loadComment(){
-		const a =document.querySelector("#test111").value;
 		const token = document.loadCommentFrm._csrf.value;
 		const currentURL = window.location.href;
 		const urlParams = new URLSearchParams(new URL(currentURL).search);
