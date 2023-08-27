@@ -543,9 +543,9 @@ button.updateBtn, button.deleteBtn {
 	const closeBtn = modal.querySelector(".close");
 
 	// "신고" 버튼 클릭 시 모달을 보이도록 설정합니다.
-	//abuseButton.addEventListener("click", () => {
-	//  modal.style.display = "block";
-	//});
+	/* abuseButton.addEventListener("click", () => {
+	  modal.style.display = "block";
+	}); */
 
 	// 닫기 버튼 클릭 시 모달을 닫습니다.
 	closeBtn.addEventListener("click", () => {

@@ -2,18 +2,15 @@ package com.kh.app.member.repository;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.app.curriculum.entity.Curriculum;
-import com.kh.app.member.dto.AdminStudentListDto;
+import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.Member;
@@ -74,16 +71,26 @@ public interface MemberRepository {
 //	@Insert("insert into vacation values( seq_vacation_id.nextval, #{member.studentId}, #{member.vacationStartDate, jdbcType=DATE}, #{member.vacationEndDate, jdbcType=DATE}, #{member.teacherId}, #{member.employeeId}, #{member.vacationSendDate}, '1' )")
 	int insertVacationById(MemberDetails member);
 	
-	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', sysdate, '1' )")
-	@SelectKey(
-			before = false, 
-			keyProperty = "vacationId" , 
-			resultType = int.class,
-			statement = "select seq_vacation_id.currval from dual")
-	int insertVacation(StudentVacation vacation);
 	
-	  @Insert("insert into vacation_attachment values(seq_vacation_attach_id.nextval,  seq_vacation_id.nextval, #{vacationOriginalFilename}, #{vacationRenamedFilename})"
-	  ) int insertAttachment(StudentVacationAttachment attach);
+	  @Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', sysdate, '1' )")
+	  @SelectKey(before = false, 
+	  				keyProperty = "vacationId", 
+	  				resultType =int.class, 
+	  				statement = "select seq_vacation_id.currval from dual") 
+	  int insertVacation(StudentVacation vacation);
+	  
+	  @Insert("insert into vacation_attachment values(seq_vacation_attach_id.nextval, #{vacationId}, #{vacationOriginalFilename}, #{vacationRenamedFilename})")
+	  int insertAttachment(StudentVacationAttachment attach);
+	 
+
+	/*  @Insert("insert into vacation (vacation_id, student_id, vacation_start_date, vacation_end_date, teacher_id, vacation_send_date, vacation_approve_check)  values (seq_vacation_id.nextval, #{studentId}, #{vacationStartDate}, #{vacationEndDate}, #{teacherId}, sysdate, '1')")
+		@Options(useGeneratedKeys = true, keyProperty = "vacationId")
+		int insertVacation(StudentVacation vacation);
+
+		@Insert("insert into vacation_attachment (attachment_id, vacation_id, attachment_original_filename, attachment_renamed_filename) values (seq_vacation_attach_id.nextval, #{vacationId}, #{vacationOriginalFilename}, #{vacationRenamedFilename})")
+		int insertAttachment(StudentVacationAttachment attach);*/
+		
+	EmployeeInfoDto findByEmployeeInfo(String memberId);
 	 
 	
 		/*

@@ -68,28 +68,6 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/eclipse.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/dracula.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<sec:authorize access="hasAuthority('ADMIN')">
-	<script>
-	const memberId = '<sec:authentication property="principal.username"/>';
-	</script>
-	<script>
-		console.log('Hello stomp.js');
-		const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
-		const stompClient = Stomp.over(ws);
-	
-		stompClient.connect({}, (frame) => {
-			console.log('open : ', frame);
-			
-			// 구독신청 
-			stompClient.subscribe('/topic/chat', (message) => {
-				console.log('/topic/notice : ', message);
-				renderMessage(message);
-			});
-		});
-	</script>
-</sec:authorize>
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
     <body>
@@ -113,7 +91,7 @@
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do" style="text-decoration: none;">우리반</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/jobKorea.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
                 <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
