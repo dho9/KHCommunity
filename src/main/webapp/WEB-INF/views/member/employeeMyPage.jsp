@@ -93,10 +93,19 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	
 		<sec:authentication property="principal" var="loginMember"/>
 		<div id="info-container">
+			<c:if test="${employeeInfo.auth == 'TEACHER'}">
+				<h2><i class="bi bi-bookmark-heart-fill">
+				</i>&nbsp;${employeeInfo.employeeId}${employeeInfo.memberName }[${employeeInfo.auth}]</h2>
+				
+				<p>${employeeInfo.subject}/${employeeInfo.curriculumName} Class${employeeInfo.classId}  권한 :${employeeInfo.auth}</p>
+			</c:if>
 			
-			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${employeeInfo.employeeId}[${employeeInfo.jobCode}]</h2>
-			<p>${employeeInfo.memberName } </p>
-			<p>${employeeInfo.subject} Class${employeeInfo.classId}  권한 :${employeeInfo.auth}</p>
+			<c:if test="${employeeInfo.auth == 'ADMIN'}">
+				<h2><i class="bi bi-bookmark-heart-fill">
+				</i>&nbsp;${employeeInfo.memberName }[${employeeInfo.jobCode}]</h2>
+				<p>${employeeInfo.employeeId} 권한 :${employeeInfo.auth}</p>
+				<p></p>
+			</c:if>
 			
 			<a href="${pageContext.request.contextPath}/message/messageSend.do" style="text-decoration: none;">테스트용</a>
 		
@@ -167,7 +176,82 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		</div>
 		</div>	
 		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >
-		
+		<!-- 리스트시작 -->
+		 <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
+          <div class="card-header flex" id="todayIssueHeader">
+			    <div class="d-flex justify-content-between align-items-center" >
+			        <span class="mb-0" style="font-weight: 900;">수강생 휴가승인 목록 &nbsp;&nbsp;&nbsp;</span>
+			    </div>
+		  </div>
+          <div class="card-body" id="todayIssueBody">
+              <table class="table table-hover text-center">
+                  <thead>
+                      <tr>
+                         
+                          <th scope="col">ID</th>
+                          <th scope="col">이름</th>
+                          <th scope="col">승인 신청일</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  <c:if test="${studentInfo != null}">
+                  	<c:forEach items="${studentInfo}" var="studentInfo" varStatus="vs">
+                      <tr data-bs-toggle="modal" data-bs-target="#myModal" 
+                      	  data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" 
+                      	  data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" 
+                      	  data-student-file="${student.studentRenamedFilename}" data-handle="@mdo">
+                          <td>${vs.count}</td>
+                          <td>${studentInfo.studentId}</td>
+                          <td>${studentInfo.memberName}</td>
+                          <td>${student.approveRequestDate}</td>
+                          <td>${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}</td>
+                      </tr>
+                  	</c:forEach>
+                  </c:if>
+                  <c:if test="${students == null }">
+                  	<tr>
+                  		<td colspan="5">조회된 수강생이 없습니다.</td>
+                  	</tr>
+                  </c:if>
+                  </tbody>
+              </table>
+              <br>
+		    <!-- 페이지 이동 및 페이지 번호 표시 -->
+				<div class="d-flex justify-content-center">
+				    <nav aria-label="Page navigation">
+				        <ul class="pagination">
+				            <c:if test="${currentPage > 1}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentApprovementList.do?page=${currentPage - 1}" aria-label="Previous">
+				                        <span aria-hidden="true">&laquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				            
+				            <c:forEach var="pageNum" begin="1" end="${totalPages}">
+				                <c:choose>
+				                    <c:when test="${pageNum eq currentPage}">
+				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
+				                    </c:when>
+				                    <c:otherwise>
+				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentApprovementList.do?page=${pageNum}">${pageNum}</a></li>
+				                    </c:otherwise>
+				                </c:choose>
+				            </c:forEach>
+				            
+				            <c:if test="${currentPage < totalPages}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudenApprovementtList.do?page=${currentPage + 1}" aria-label="Next">
+				                        <span aria-hidden="true">&raquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				        </ul>
+				    </nav>
+				</div>
+			</div>
+      </div>
+		<!-- 리스트끝 -->
 			</div>
 			
 			</div>

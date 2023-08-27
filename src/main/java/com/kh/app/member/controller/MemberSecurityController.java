@@ -292,11 +292,6 @@ public class MemberSecurityController {
 		
 		
 	
-		log.info("ㅇㅇㅇㅇㅇㅇㅇㅇmember = {}", member);
-		log.info("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation11 = {}",_vacation);
-		log.info("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation.getVacationId() = {}", _vacation.getVacationId());
-		log.info("ㅇㅇㅇㅇㅇㅇㅇㅇ_vacation.getTeacherId()={}", "[" + _vacation.getTeacherId() + "]");
-	
 	    // 1. 새로운 저장 경로 지정
 	    ServletContext servletContext =  request.getServletContext();
 	    String resourcesPath = "/resources/images/vacationSubmitUpload/";
@@ -336,12 +331,7 @@ public class MemberSecurityController {
 				.attachments(attachments)
 				.build();
 		
-		log.info("ㅂㅂㅂㅂㅂㅂㅂvacation = {}", vacation);
 		int result = memberService.insertVacation(vacation);
-		log.info("dddddddddㅇㅇresult = {}", result);
-//		이거 들어가나 민희야?
-
-
 
 	    return "redirect:/member/myPage.do";
 	}
