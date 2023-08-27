@@ -44,10 +44,30 @@
 	      <th scope="col">작성일</th>
 	    </tr>
 	  </thead>
-	  <tbody></tbody>
+	  <tbody>
+	  	<c:if test="${empty myClassBoardList}">
+	  		<tr>
+	  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
+	  		</tr>
+	  	</c:if>
+	  	<c:if test="${not empty myClassBoardList}">
+		  	<c:forEach items="${myClassBoardList}" var="board">
+			  	<tr data-value="\${board.postId}">
+			      <th scope="row">${board.postId}</th>
+			      <td>${board.title}</td>
+			      <td>${board.memberName}</td>
+			      <td>
+			      	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+				  	<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd" />
+			      </td>
+			    </tr>
+		  	</c:forEach>
+	  	</c:if>
+	  </tbody>
 	</table>
 	
 	<!-- 페이지 이동 및 페이지 번호 표시 -->
+	<div class="d-flex justify-content-center" style="margin-top: 3%">
 	<ul class="pagination">
 	    <li class="page-item disabled">
 	      <a id="prev" class="page-link" href="#">이전</a>
@@ -57,7 +77,9 @@
 	      <a id="next" class="page-link" href="#">다음</a>
 	    </li>
     </ul>
+    </div>
 	</div>
+	
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
 	  <div class="modal-dialog" role="document">
@@ -126,19 +148,75 @@
 	  </div>
 	</div>
 	<form:form name="tokenFrm"></form:form>
-<script>
-//초기값 설정
-    let currentPage = 1;
-    let totalPages = 1; 
-
-    function rendermyClassBoardList(pageNumber) {
-        $.ajax({
-            url: "${pageContext.request.contextPath}/board/myClassBoardFindAll.do",
-            data: {
-                page: pageNumber // 페이지 번호 전달
-            },
-success(reponseData) {
-				
+	<script>
+	function renderPagination(currentPage, totalPages) {
+       const pagination = document.querySelector('.pagination');
+       pagination.innerHTML = ""; // 기존 페이지 바 내용 초기화
+	   if(totalPages != 0) {
+	       // 이전 페이지 링크
+	       const prevButton = document.createElement('li');
+	       prevButton.classList.add('page-item');
+	       if (currentPage === 1) {
+	           prevButton.classList.add('disabled');
+	       }
+	       const prevLink = document.createElement('a');
+	       prevLink.classList.add('page-link');
+	       prevLink.textContent = '이전';
+	       prevLink.setAttribute('href', '#');
+	       prevLink.addEventListener('click', () => {
+	           loadPage(currentPage - 1);
+	       });
+	       prevButton.appendChild(prevLink);
+	       pagination.appendChild(prevButton);
+	
+	       // 페이지 번호 링크
+	       for (let i = 1; i <= totalPages; i++) {
+	           const pageButton = document.createElement('li');
+	           pageButton.classList.add('page-item');
+	           if (i === currentPage) {
+	               pageButton.classList.add('active');
+	           }
+	           const pageLink = document.createElement('a');
+	           pageLink.classList.add('page-link');
+	           pageLink.textContent = i;
+	           pageLink.setAttribute('href', '#');
+	           pageLink.setAttribute('data-page', i);
+	           pageLink.addEventListener('click', (event) => {
+	               const clickedPage = event.target.getAttribute('data-page');
+	               if (clickedPage) {
+	                   loadPage(parseInt(clickedPage));
+	               }
+	           });
+	           pageButton.appendChild(pageLink);
+	           pagination.appendChild(pageButton);
+	       }
+	
+		       // 다음 페이지 링크
+		       const nextButton = document.createElement('li');
+		       nextButton.classList.add('page-item');
+		       if (currentPage === totalPages) {
+		           nextButton.classList.add('disabled');
+		       }
+		       const nextLink = document.createElement('a');
+		       nextLink.classList.add('page-link');
+		       nextLink.textContent = '다음';
+		       nextLink.setAttribute('href', '#');
+		       nextLink.addEventListener('click', () => {
+		    	   loadPage(currentPage + 1);
+		       });
+		       nextButton.appendChild(nextLink);
+		       pagination.appendChild(nextButton);
+		   
+	   		}
+	   }
+	
+	function rendermyClassBoardList(pageNumber) {
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/myClassBoardFindAll.do",
+			data : {
+				page : pageNumber // 페이지 번호 전달
+			},
+			success(reponseData) {
 				console.log(reponseData);
 				const {board, currentPage, totalPages} = reponseData;
 				console.log('sss'+board, currentPage, totalPages);
@@ -173,60 +251,176 @@ success(reponseData) {
 						window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
 					});
 				})
+				
 				renderPagination(currentPage, totalPages); // 페이지바 출력
 			}
 		});
 	}
-    function loadPage(pageNumber) {
+	
+	function loadPage(pageNumber) {
         rendermyClassBoardList(pageNumber);
         currentPage = pageNumber;
     }
-
+	
+	function renderPaginationByTag(currentPage, totalPages) {
+       const pagination = document.querySelector('.pagination');
+       pagination.innerHTML = ""; // 기존 페이지 바 내용 초기화
+       const btnValue = document.querySelector('.btn.btn-outline-success').value;
+	   if(totalPages != 0) {
+	       // 이전 페이지 링크
+	       const prevButton = document.createElement('li');
+	       prevButton.classList.add('page-item');
+	       if (currentPage === 1) {
+	           prevButton.classList.add('disabled');
+	       }
+	       const prevLink = document.createElement('a');
+	       prevLink.classList.add('page-link');
+	       prevLink.textContent = '이전';
+	       prevLink.setAttribute('href', '#');
+	       prevLink.addEventListener('click', () => {
+	    	   loadPageByTag(currentPage - 1, btnValue);
+	       });
+	       prevButton.appendChild(prevLink);
+	       pagination.appendChild(prevButton);
+	
+	       // 페이지 번호 링크
+	       for (let i = 1; i <= totalPages; i++) {
+	           const pageButton = document.createElement('li');
+	           pageButton.classList.add('page-item');
+	           if (i === currentPage) {
+	               pageButton.classList.add('active');
+	           }
+	           const pageLink = document.createElement('a');
+	           pageLink.classList.add('page-link');
+	           pageLink.textContent = i;
+	           pageLink.setAttribute('href', '#');
+	           pageLink.setAttribute('data-page', i);
+	           pageLink.addEventListener('click', (event) => {
+	               const clickedPage = event.target.getAttribute('data-page');
+	               if (clickedPage) {
+	            	   loadPageByTag(parseInt(clickedPage), btnValue);
+	               }
+	           });
+	           pageButton.appendChild(pageLink);
+	           pagination.appendChild(pageButton);
+	       }
+	
+		       // 다음 페이지 링크
+		       const nextButton = document.createElement('li');
+		       nextButton.classList.add('page-item');
+		       if (currentPage === totalPages) {
+		           nextButton.classList.add('disabled');
+		       }
+		       const nextLink = document.createElement('a');
+		       nextLink.classList.add('page-link');
+		       nextLink.textContent = '다음';
+		       nextLink.setAttribute('href', '#');
+		       nextLink.addEventListener('click', () => {
+		    	   loadPageByTag(currentPage + 1, btnValue);
+		       });
+		       nextButton.appendChild(nextLink);
+		       pagination.appendChild(nextButton);
+		   
+	   		}
+	   }
+	
+	function board (pageNumber, e) {
+		console.log('여기로 가는거지?')
+		const pagination = document.querySelector('.pagination');
+	    pagination.innerHTML = '';
+	    
+		document.querySelector('#allBtn').style.boxShadow = '';
+		document.querySelector('.btn.btn-outline-success').value = e;
+		const btnValue = document.querySelector('.btn.btn-outline-success').value;
+		const token = document.tokenFrm._csrf.value;
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/myClassBoardList.do",
+			method : "POST",
+			headers: {
+                "X-CSRF-TOKEN": token
+            },
+			data : {
+				page : pageNumber, // 페이지 번호 전달
+				tag : btnValue
+			},
+			success(reponseData) {
+				console.log(reponseData);
+				const {board, currentPage, totalPages} = reponseData;
+				console.log(board, currentPage, totalPages);
+				
+				const tbody = document.querySelector('tbody');
+				tbody.innerHTML = "";
+				
+				if(board.length == 0) {
+					tbody.innerHTML = `
+						<tr>
+				  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
+				  		</tr>
+					`;
+				}
+				else {
+					for(let i=0; i<board.length; i++) {
+						
+						const createdAt = formatDatetime(board[i].postCreatedAt)
+						tbody.innerHTML += `
+							<tr data-value="\${board[i].postId}">
+						      <th scope="row">\${board[i].postId}</th>
+						      <td>\${board[i].title}</td>
+						      <td>\${board[i].memberId}</td>
+						      <td>\${createdAt}</td>
+						    </tr>
+						`;
+					}
+				}
+				// 디테일 페이지로 넘기기
+				document.querySelectorAll('tbody tr').forEach((tr) => {
+					tr.addEventListener('click', () => {
+						const postId = tr.getAttribute('data-value');
+						if(postId != null)
+							window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
+					});
+				})
+				renderPaginationByTag(currentPage, totalPages); // 페이지바 출력
+			}
+		});
+	};
+	
+	function loadPageByTag(pageNumber, e) {
+		board(pageNumber, e);
+		currentPage = pageNumber;
+	}
+	
 	// onload되면 전체버튼 출력
 	document.addEventListener('DOMContentLoaded', () => {
-	loadPage(1);
-    const allBtn = document.querySelector('#allBtn');
-
-    const clickHandler = () => {
-        console.log('로드 확인용!');
-        allBtn.style.boxShadow = '0 0 0 0.2rem rgba(40, 167, 69, .5)';
-        // 여기에 클릭 이벤트 후 원하는 동작을 추가할 수 있습니다.
-
-        // 클릭 이벤트 후 이벤트 핸들러 제거
-        allBtn.removeEventListener('click', clickHandler);
-    };
-
-    allBtn.addEventListener('click', clickHandler);
-    allBtn.click(); // 초기 클릭 실행
-});
-
-    // 전체 버튼
-    document.querySelector('#allBtn').addEventListener('click', () => {
-        loadPage(1); // 전체 버튼 클릭 시 첫 번째 페이지 정보 가져오기
-    });
-
- // 공지사항 버튼
+		loadPage(1);
+		const allBtn = document.querySelector('#allBtn');
+	    const clickHandler = () => {
+	        allBtn.style.boxShadow = '0 0 0 0.2rem rgba(40, 167, 69, .5)';
+	        // 클릭 이벤트 후 이벤트 핸들러 제거
+	        allBtn.removeEventListener('click', clickHandler);
+	    };
+	    allBtn.addEventListener('click', clickHandler);
+	    allBtn.click(); // 초기 클릭 실행
+	});
+	// 전체 버튼
+	document.querySelector('#allBtn').addEventListener('click', () => {
+		loadPage(1);
+	});
+	// 공지사항 버튼
 	document.querySelector('#notice').addEventListener('click', () => {
-		board('공지사항');
+		loadPageByTag(1, '공지사항');
 	});
 	// 과제공유 버튼
 	document.querySelector('#sharing').addEventListener('click', () => {
-		board('과제공유');
+		loadPageByTag(1, '과제공유');
 	});
 	// 게시판 버튼
 	document.querySelector('#free').addEventListener('click', () => {
-		board('게시판');
+		loadPageByTag(1, '게시판');
 	});
-    
-    // 페이지 바 클릭 시 해당 페이지 정보 가져오기
-    document.querySelector('.pagination').addEventListener('click', (event) => {
-        const clickedPage = event.target.getAttribute('data-page');
-        if (clickedPage) {
-            loadPage(clickedPage);
-        }
-    });
-    
- // 날짜 포맷 yyyy/MM/dd
+	
+	// 날짜 포맷 yyyy/MM/dd
 	const formatDatetime = (millis) => {
 		const d = new Date(millis);
 	    const f = (n) => n.toString().padStart(2, "0");

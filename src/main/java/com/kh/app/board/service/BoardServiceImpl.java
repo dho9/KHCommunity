@@ -1,9 +1,15 @@
 package com.kh.app.board.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
-import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
@@ -214,8 +220,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardListDto> myClassBoardFindByTag(String tag) {
-		return boardRepository.myClassBoardFindByTag(tag);
+	public List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.myClassBoardFindByTag(tag, rowBounds);
 	}
 	
 	@Override
@@ -313,6 +324,12 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardListDto> jobSearchBoardFindAll() {
 		return boardRepository.jobSearchBoardFindAll();
 	}
+	
+	@Override
+	public int totalCountMyClassBoardByTag(String tag) {
+		return boardRepository.totalCountMyClassBoardByTag(tag);
+	}
+	
 	@Override
 	public int deleteComment(int commentId) {
 		// TODO Auto-generated method stub
@@ -323,10 +340,35 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.checkRef(commentId);
 	}
+	
 	@Override
 	public int deleteCommentId(int commentId) {
 		// TODO Auto-generated method stub
 		return boardRepository.deleteCommentId(commentId);
+	}
+	
+	private static String URL = "https://www.jobkorea.co.kr/Search/?stext=%EA%B0%9C%EB%B0%9C%EC%9E%90";
+	@Override
+	public List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException {
+		List<JobKorea> jobKoreaList = new ArrayList<>();
+		
+		Document document = Jsoup.connect(URL + "&page=" + page).get();
+	    Elements contents = document.select(".post");
+	    
+	    int startIndex = (page - 1) * limit;
+	    int endIndex = Math.min(startIndex + limit, contents.size());
+
+	    for (int i = startIndex; i < endIndex; i++) {
+	        Element content = contents.get(i);
+	        JobKorea jobKorea = JobKorea.builder()
+	                            .company(content.select(".post-list-corp .name").text())
+	                            .title(content.select(".post-list-info .title").text())
+	                            .option(content.select(".post-list-info .option").text())
+	                            .etc(content.select(".post-list-info .etc").text())
+	                            .build();
+	        jobKoreaList.add(jobKorea);
+	    }
+		return jobKoreaList;
 	}
 }
 
