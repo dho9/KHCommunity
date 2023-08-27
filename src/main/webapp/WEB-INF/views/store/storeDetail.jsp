@@ -284,11 +284,11 @@ geocoder.addressSearch('${store.address}', function(result, status) {
         title: '${store.storeName} 식권',
         description: '주소 : ${store.address} ',
         imageUrl:
-        	 '${pageContext.request.contextPath}/resources/images/store/맥주창고.jpg',
+        	 '${pageContext.request.contextPath}/resources/images/store/code.jpg',
 
         link: {
-          mobileWebUrl: 'https://developers.kakao.com',
-          webUrl: 'https://developers.kakao.com',
+          mobileWebUrl:  'http://localhost:8080/kh/resources/images/store/code.jpg',
+          webUrl:  'http://localhost:8080/kh/resources/images/store/code.jpg',
         },
       },
      
@@ -296,8 +296,8 @@ geocoder.addressSearch('${store.address}', function(result, status) {
         {
           title: '식권사용하기',
           link: {
-            mobileWebUrl: 'https://developers.kakao.com',
-            webUrl: 'https://developers.kakao.com',
+            mobileWebUrl: 'http://localhost:8080/kh/resources/images/store/code.jpg',
+            webUrl: 'http://localhost:8080/kh/resources/images/store/code.jpg',
           }
         },
         
