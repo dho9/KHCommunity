@@ -62,6 +62,11 @@
     width: 100px;
     height: 44px;
 }
+#prevBtn {
+	margin-left: 7%;
+    width: 105px;
+    height: 50px;
+}
 #post-div {
 	margin-top: -3%;
 }
@@ -78,6 +83,8 @@
 			<li style="margin-left: 3.5%;">[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
 		</ul>
 	</div>
+	
+	<button id="prevBtn" type="button" class="btn btn-outline-primary"><i class="bi bi-list"></i>글목록</button>
 	
 	<c:if test="${loginMember.memberId eq postDetail.memberId}">
 		<div id="updateAndDeleteBtn-div">
@@ -126,7 +133,7 @@
 						  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
 					  	</span>
 					  	<c:if test="${loginMember.memberId eq comment.memberId}">
-						  	<b id="deleteComment" style="float: right;">|&nbsp; 삭제</b>
+						  	<b id="deleteComment" data-value = "${comment.commentId}" style="float: right;">|&nbsp; 삭제</b>
 					  	</c:if>
 					  	<b id="childComment" style="float: right;">답글 &nbsp;</b>
 					  	<input type="hidden" name=commentId value="${comment.commentId}"/>
@@ -142,7 +149,7 @@
 							  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
 						  	</span>
 						  	<c:if test="${loginMember.memberId eq childComment.memberId}">
-							  	<b id="deleteComment" style="float: right;">&nbsp; 삭제</b>
+							  	<b id="deleteComment" data-value = "${childComment.commentId}" style="float: right;">&nbsp; 삭제</b>
 						  	</c:if>
 						  	<div style="margin-left: 21px;">${childComment.commentContent}</div>
 						  </li>
@@ -173,6 +180,31 @@
 	</form:form>
 	<form:form name="tokenFrm"></form:form>
 	<script>
+	// 댓글 삭제
+	document.querySelectorAll('#deleteComment').forEach((deleteBtn) => {
+		deleteBtn.addEventListener('click', (e) => {
+			if(confirm('정말 삭제하시겠습니까?')) {
+				console.log(e.target.dataset.value);
+				const postId = document.querySelector('input[name=postId]').value;
+				$.ajax({
+					url : "${pageContext.request.contextPath}/board/deleteComment.do",
+					data : {
+						commentId : e.target.dataset.value					
+					},
+					success(responseData) {
+						alert(responseData);
+						window.location.href="${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId;
+					}
+				});
+			}
+		});
+	});
+	
+	// 글목록
+	document.querySelector('#prevBtn').addEventListener('click', () => {
+		window.location.href="${pageContext.request.contextPath}/board/myClassBoardList.do";
+	});
+	
 	// 게시글 삭제
 	if(document.querySelector('#deleteBtn')) {
 		document.querySelector('#deleteBtn').addEventListener('click', () => {

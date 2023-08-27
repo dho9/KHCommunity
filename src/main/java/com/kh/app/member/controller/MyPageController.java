@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeInfoDto;
@@ -69,16 +70,21 @@ public class MyPageController {
 	
 	
 	
-	/*
-	 * @GetMapping("/employeeMyPage.do") public void employeeMyPage(Model
-	 * model, @AuthenticationPrincipal MemberDetails principal) throws Exception {
-	 * EmployeeInfoDto employeeInfo =
-	 * memberService.findByEmployeeInfo(principal.getMemberId());
-	 * 
-	 * // model.addAttribute("studentInfo", studentInfo);
-	 * 
-	 * }
-	 */
+	
+		 @GetMapping("/employeeMyPage.do") 
+		 public void employeeMyPage(Model model, 
+				 @AuthenticationPrincipal MemberDetails principal,
+				 @RequestParam(value = "classId", required = false) Integer classId,
+				 @RequestParam(value = "subject", required = false) String subject,
+				 @RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
+			
+			 EmployeeInfoDto employeeInfo =
+					 memberService.findByEmployeeInfo(principal.getMemberId());
+			 
+			  model.addAttribute("employeeInfo", employeeInfo);
+		  
+		 	}
+		 
 	
 
 }

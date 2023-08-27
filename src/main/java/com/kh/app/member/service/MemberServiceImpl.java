@@ -203,8 +203,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public EmployeeInfoDto findByEmployeeInfo(String memberId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return memberRepository.findByEmployeeInfo(memberId);
 	}
 
 

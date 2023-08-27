@@ -91,7 +91,7 @@
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do" style="text-decoration: none;">우리반</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/jobKorea.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
                 <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>

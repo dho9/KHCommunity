@@ -1,5 +1,6 @@
 package com.kh.app.board.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
@@ -88,7 +90,7 @@ public interface BoardService {
 
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag);
+	List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params);
 	
 	List<CommentLike> commentLikeCheckById(int postId, String memberId);
 
@@ -117,5 +119,15 @@ public interface BoardService {
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
 	List<BoardListDto> jobSearchBoardFindAll();
+
+	int totalCountMyClassBoardByTag(String tag);
+	
+	int deleteComment(int commentId);
+
+	int checkRef(int commentId);
+
+	int deleteCommentId(int commentId);
+
+	List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException;
 
 }
