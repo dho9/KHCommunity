@@ -1,3 +1,4 @@
+<%@page import="com.kh.app.member.dto.EmployeeInfoDto"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -92,13 +93,13 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	
 		<sec:authentication property="principal" var="loginMember"/>
 		<div id="info-container">
-			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${loginMember.name}</h2>
-			<p>${studentInfo.curriculumName }반 </p>
-			<p>${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
+			
+			<h2><i class="bi bi-bookmark-heart-fill"></i>&nbsp;${employeeInfo.employeeId}[${employeeInfo.jobCode}]</h2>
+			<p>${employeeInfo.memberName } </p>
+			<p>${employeeInfo.subject} Class${employeeInfo.classId}  권한 :${employeeInfo.auth}</p>
+			
 			<a href="${pageContext.request.contextPath}/message/messageSend.do" style="text-decoration: none;">테스트용</a>
-		</div>
-		<div id= "dDay">
-			<h1>D - ${Ddays}</h1>
+		
 		</div>
 	</div>
 	

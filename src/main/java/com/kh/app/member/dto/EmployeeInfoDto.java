@@ -14,8 +14,9 @@ import lombok.NoArgsConstructor;
 
 public class EmployeeInfoDto {
 	private String memberId;
+	private String employeeId;
 	private String memberName;
-	private int classId;
+	private Integer classId;
 	private String subject;
 	private String curriculumName;
 	private String auth;
