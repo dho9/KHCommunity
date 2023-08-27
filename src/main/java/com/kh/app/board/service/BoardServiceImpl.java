@@ -214,8 +214,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardListDto> myClassBoardFindByTag(String tag) {
-		return boardRepository.myClassBoardFindByTag(tag);
+	public List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.myClassBoardFindByTag(tag, rowBounds);
 	}
 	
 	@Override
@@ -312,6 +317,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardListDto> jobSearchBoardFindAll() {
 		return boardRepository.jobSearchBoardFindAll();
+	}
+	
+	@Override
+	public int totalCountMyClassBoardByTag(String tag) {
+		return boardRepository.totalCountMyClassBoardByTag(tag);
 	}
 }
 

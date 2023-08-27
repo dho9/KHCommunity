@@ -598,21 +598,36 @@ public class BoardController {
         //log.debug("studentInfo = {}", studentInfo);
 		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("authority", principal.getAuthorities());
-         
+        
         return "/board/myClassBoardList";
 	}
 
 	@PostMapping("/myClassBoardList.do")
 	@ResponseBody
-	public List<BoardListDto> myClassBoardList(@RequestParam String tag) {
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag);
-		return myClassBoardList;
+	public ResponseEntity<?> myClassBoardList(@RequestParam(defaultValue = "1") int page, @RequestParam String tag) {
+		// 페이징
+		int limit = 8;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		// 게시글 전체 수
+		int totalCount = boardService.totalCountMyClassBoardByTag(tag);
+		
+		// totalPage 계산
+		int totalPages = (int) Math.ceil((double) totalCount / limit);
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag, params);
+		log.info("myClassBoardList ={}", myClassBoardList);
+		log.info("totalPages = {}", totalPages);
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("board", myClassBoardList, "currentPage", page, "totalPages", totalPages));
 	}
 
 	@GetMapping("/myClassBoardFindAll.do")
 	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
 		// 페이징
-		int limit = 3;
+		int limit = 8;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit

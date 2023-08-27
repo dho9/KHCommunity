@@ -88,7 +88,7 @@ public interface BoardService {
 
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag);
+	List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params);
 	
 	List<CommentLike> commentLikeCheckById(int postId, String memberId);
 
@@ -117,5 +117,7 @@ public interface BoardService {
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
 	List<BoardListDto> jobSearchBoardFindAll();
+
+	int totalCountMyClassBoardByTag(String tag);
 
 }
