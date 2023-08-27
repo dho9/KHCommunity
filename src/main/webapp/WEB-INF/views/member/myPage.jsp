@@ -24,7 +24,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <style>
 @font-face {font-family: 'HakgyoansimWoojuR'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2'); font-weight: normal; font-style: normal;}
@@ -745,7 +746,7 @@ document.querySelector("#consultRequest").onclick = () => {
 		
 		// 구독신청 
 		stompClient.subscribe('/topic/chat', (message) => {
-			console.log('/topic/notice : ', message);
+			console.log('/topic/chat : ', message);
 			renderMessage(message);
 		});
 	});
@@ -767,8 +768,12 @@ document.querySelector("#consultRequest").onclick = () => {
             "X-CSRF-TOKEN": token
         },
 		success(responseData){
-			console.log("성공")
-			/* location.href="${pageContext.request.contextPath}/chat/chatConsultingRequest.do"; */
+			console.log("ChatId: ", responseData)
+			const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
+			if (newWindow) {
+                newWindow.focus();
+            }
+			/* location.href="${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData; */
 			
 		},
 		error(error) {
