@@ -255,12 +255,12 @@ color: black;
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div id="container" class="community" style="margin-top: 25px;">
-	<%-- principal을 변수 loginMember 저장 --%>
 	<sec:authentication property="principal" var="loginMember"/>
+	<input type="hidden" id="test111" value="${loginMember.username}">
 	<div class="wrap title">
-		<h1>
-			<a>${board.boardName}</a>
+		<h1>${memberId }
 		</h1>
+		
 	</div>
 	<div class="wrap articles">
 		<c:if test="${empty postDetail}">
@@ -1104,6 +1104,8 @@ color: black;
 	
 	//댓글불러오기
 	function loadComment(){
+		const a =document.querySelector("#test111").value;
+		console.log(a);
 		const token = document.loadCommentFrm._csrf.value;
 		const currentURL = window.location.href;
 		const urlParams = new URLSearchParams(new URL(currentURL).search);
@@ -1130,9 +1132,12 @@ color: black;
 	function renderComments(comments) {
 		  const commentList = document.querySelector('#commentList');
 		    commentList.innerHTML = '';
-
+			
 		    // Loop through each comment and create a DOM element for it
 		    comments.forEach(comment => {
+		    	
+		    	if(comment.memberId !== '${memberId}'){
+		    		
 		    	const commentCreatedAt = comment.commentCreatedAt;
 		    	const formattedDate = commentCreatedAt.replace("T", " ");
 		    	const commentCreateds = formattedDate.slice(0, -3);
@@ -1185,6 +1190,7 @@ color: black;
 	        commentElement.appendChild(separator);
 	        commentList.appendChild(commentElement);
 		    };
+		    	}
 		})
 	}	
 

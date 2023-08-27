@@ -558,11 +558,11 @@ public class BoardController {
 
 	@PostMapping("/loadComment.do")
 	@ResponseBody
-	public List<Comment> commentList(@RequestParam int postId){
+	public List<Comment> commentList(@RequestParam int postId, @AuthenticationPrincipal MemberDetails principal, Model model){
 		log.debug("idddddddddddd = {}",postId);
 		//		//log.debug("idddddddddddd = {}",postId);
 		List<Comment> comments = boardService.findByCommentByPostId(postId);
-		
+		model.addAttribute("memberId", principal.getMemberId());
 
 		return comments;
 
