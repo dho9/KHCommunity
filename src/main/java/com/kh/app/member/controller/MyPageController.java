@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
+import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 import com.kh.app.ticket.dto.TicketBuyDto;
@@ -76,13 +77,28 @@ public class MyPageController {
 				 @AuthenticationPrincipal MemberDetails principal,
 				 @RequestParam(value = "classId", required = false) Integer classId,
 				 @RequestParam(value = "subject", required = false) String subject,
+				 @RequestParam(value = "jobCode", required = false) String jobCode,
+				 @RequestParam(value = "employeeId", required = false) String employeeId,
 				 @RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
 			
-			 EmployeeInfoDto employeeInfo =
+			 List<EmployeeInfoDto> employeeInfo =
 					 memberService.findByEmployeeInfo(principal.getMemberId());
-			 
 			  model.addAttribute("employeeInfo", employeeInfo);
-		  
+			  log.info("★★employeeInfo = {} ",employeeInfo);
+		
+			  
+			  List<StudentVacationApproveDto> studentVacationApprove = 
+					  memberService.findAllVacationApproveList(principal.getMemberId());
+			  model.addAttribute("studentVacationApprove" , studentVacationApprove);
+			  log.info("★★★★studentVacationApprove = {}" , studentVacationApprove);
+			  
+			  LocalDate currentDate = LocalDate.now();
+		      model.addAttribute("currentDate", currentDate);
+		      
+		      log.info("currentDate = {}", currentDate);
+			  log.info("principal.getMemberId() = {}", principal.getMemberId());
+			  log.info("studentVacationApprove = {}", studentVacationApprove);
+			  
 		 	}
 		 
 	

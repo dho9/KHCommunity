@@ -11,6 +11,7 @@ import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
+import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
@@ -46,7 +47,9 @@ public interface MemberService extends UserDetailsService{
 
 	int insertVacation(StudentVacation vacation);
 
-	EmployeeInfoDto findByEmployeeInfo(String memberId);
+	List<EmployeeInfoDto> findByEmployeeInfo(String memberId);
+
+	List<StudentVacationApproveDto> findAllVacationApproveList(String memberId);
 
 
 	

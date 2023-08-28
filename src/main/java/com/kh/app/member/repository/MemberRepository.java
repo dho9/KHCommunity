@@ -13,6 +13,7 @@ import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
+import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
@@ -82,19 +83,9 @@ public interface MemberRepository {
 	  @Insert("insert into vacation_attachment values(seq_vacation_attach_id.nextval, #{vacationId}, #{vacationOriginalFilename}, #{vacationRenamedFilename})")
 	  int insertAttachment(StudentVacationAttachment attach);
 	 
+	List<EmployeeInfoDto> findByEmployeeInfo(String memberId);
 
-	/*  @Insert("insert into vacation (vacation_id, student_id, vacation_start_date, vacation_end_date, teacher_id, vacation_send_date, vacation_approve_check)  values (seq_vacation_id.nextval, #{studentId}, #{vacationStartDate}, #{vacationEndDate}, #{teacherId}, sysdate, '1')")
-		@Options(useGeneratedKeys = true, keyProperty = "vacationId")
-		int insertVacation(StudentVacation vacation);
-
-		@Insert("insert into vacation_attachment (attachment_id, vacation_id, attachment_original_filename, attachment_renamed_filename) values (seq_vacation_attach_id.nextval, #{vacationId}, #{vacationOriginalFilename}, #{vacationRenamedFilename})")
-		int insertAttachment(StudentVacationAttachment attach);*/
-		
-	EmployeeInfoDto findByEmployeeInfo(String memberId);
+	List<StudentVacationApproveDto> findAllVacationApproveList(String memberId);
 	 
 	
-		/*
-		 * INSERT INTO VACATION VALUES(SEQ_VACATION_ID.NEXTVAL,'',SYSDATE,SYSDATE, '',
-		 * '',SYSDATE,'');
-		 */
 }

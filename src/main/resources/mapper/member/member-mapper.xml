@@ -115,7 +115,8 @@
   
   <select id="findByEmployeeInfo" resultMap="findByEmployeeInfoMap">
  select 
- 	m.member_id, m.member_name, c.class_id, c.subject, c.curriculum_name, a.auth, e.job_code, e.employee_id
+ 	m.member_id, m.member_name, c.class_id, c.subject, c.curriculum_name, a.auth, 
+ 	e.job_code, e.employee_id, c.curriculum_start_at, c.curriculum_end_at
  from
  	 member m left outer join curriculum c  
  			on  c.teacher_id = m.member_id
@@ -123,7 +124,7 @@
 			on m.member_id = a.member_id 
 	 left outer join employee e 
 			on employee_id = m.member_id
- where m.member_id= #{memberId}
+ where m.member_id= #{memberId} 
 </select>
 
 <resultMap id="findByEmployeeInfoMap" type="EmployeeInfoDto">
@@ -135,7 +136,19 @@
       <result column="curriculum_name" property="curriculumName"/>
       <result column="auth" property="auth"/>
       <result column="job_code" property="jobCode"/>
+      <result column="curriculum_start_at" property="curriculumStartAt"/>
+      <result column="curriculum_end_at" property="curriculumEndAt"/>
   </resultMap>
   
   
+  
+  <select id="findAllVacationApproveList" >
+  select  
+ 	 	 m.member_name, v.vacation_id, v.student_id,  v.vacation_start_date, v.vacation_end_date, v.teacher_id, v.vacation_send_date,va.vacation_renamed_filename, v.vacation_approve_check
+  from vacation v join vacation_attachment va 
+		on v.vacation_id = va.vacation_id 
+				  join member m on m.member_id = v.student_id
+  where teacher_id = #{teacherId}
+  </select>
+
 </mapper>
