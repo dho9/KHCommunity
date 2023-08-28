@@ -219,6 +219,7 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
     });
 </script>
 </sec:authorize>
+<script>
 
 document.getElementById("logoutLink").addEventListener("click", function(event) {
 	memberLogoutFrm.submit();
