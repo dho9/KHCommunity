@@ -115,7 +115,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	<br/>
 	<div class="container">
 
-	<div class="container-md" style="border: 5px solid #c5d6dc; width: 470px; height:515px; font-size:50px">
+<!-- 	<div class="container-md" style="border: 5px solid #c5d6dc; width: 470px; height:515px; font-size:50px">
 		<div id="icons" class="container-fluid">
 		<div class="myPageIcon" id="myPageIcon1">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -174,7 +174,8 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 		</div>
 
 		</div>
-		</div>	
+		</div>	 -->
+		
 		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >
 		<!-- 리스트시작 -->
 		 <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
@@ -194,15 +195,15 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
                       </tr>
                   </thead>
                   <tbody>
-                  <c:if test="${studentInfo != null}">
-                  	<c:forEach items="${studentInfo}" var="studentInfo" varStatus="vs">
+                 <c:if test="${students != null}">
+                  	<c:forEach items="${students}" var="student" varStatus="vs">
                       <tr data-bs-toggle="modal" data-bs-target="#myModal" 
                       	  data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" 
                       	  data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" 
                       	  data-student-file="${student.studentRenamedFilename}" data-handle="@mdo">
                           <td>${vs.count}</td>
-                          <td>${studentInfo.studentId}</td>
-                          <td>${studentInfo.memberName}</td>
+                          <td>${student.studentId}</td>
+                          <td>${student.memberName}</td>
                           <td>${student.approveRequestDate}</td>
                           <td>${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}</td>
                       </tr>
