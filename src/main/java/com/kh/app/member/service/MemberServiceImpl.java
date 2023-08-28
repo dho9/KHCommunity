@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
@@ -25,7 +26,6 @@ import com.kh.app.member.entity.StudentVacation;
 import com.kh.app.member.entity.StudentVacationAttachment;
 import com.kh.app.member.repository.MemberRepository;
 import com.kh.app.ticket.dto.TicketBuyDto;
-import com.nimbusds.openid.connect.sdk.assurance.evidences.attachment.Attachment;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -207,7 +207,10 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findByEmployeeInfo(memberId);
 	}
 
-
+	@Override
+	public StudentDto findStudentType(String memberId) {
+		return memberRepository.findStudentType(memberId);
+	}
 
 	
 

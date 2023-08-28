@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
@@ -91,6 +92,9 @@ public interface MemberRepository {
 		int insertAttachment(StudentVacationAttachment attach);*/
 		
 	EmployeeInfoDto findByEmployeeInfo(String memberId);
+
+	@Select("select * from student s left join myclass m on s.curriculum_id = m.curriculum_id where student_id = #{memberId}")
+	StudentDto findStudentType(String memberId);
 	 
 	
 		/*
