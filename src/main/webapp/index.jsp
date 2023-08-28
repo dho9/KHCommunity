@@ -212,7 +212,7 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
             }
         });
     });
-    document.querySelector('.card').addEventListener('mouseout', (e) => {
+    document.querySelector('.myBoard').addEventListener('mouseout', (e) => {
         console.log(e);
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
