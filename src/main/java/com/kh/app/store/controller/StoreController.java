@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.app.store.dto.StoreDetailDto;
 import com.kh.app.store.entity.Store;
 import com.kh.app.store.service.StoreService;
 
@@ -38,8 +39,9 @@ public class StoreController {
 	}
 	@GetMapping("/storeDetail.do")
 	public void storeDetail(@RequestParam int id, Model model) {
-		Store store = storeService.findStoreById(id);
+		StoreDetailDto store = storeService.findStoreById(id);
 //		 log.debug("ticekt = {}", ticket);
+//		System.out.println(store);
 		model.addAttribute("store", store);
 		
 	}
