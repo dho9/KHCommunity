@@ -15,6 +15,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
+import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
@@ -333,6 +334,26 @@ public class AdminServiceImpl implements AdminService {
 	public int insertStore(String storeName, String postNumber, String address) {
 		return adminRepository.insertStore(storeName, postNumber, address);
 	}
+
+	@Override
+	public List<Report> findAllReports(Map<String, Object> params) {
+		return adminRepository.findAllReports(params);
+	}
+	
+	@Override
+	public int countAllReports() {
+		return adminRepository.countAllReports();
+	}
+	
+	@Override
+	public List<Report> findReportsByFilter(String reportType, Map<String, Object> params) {
+		return adminRepository.findReportsByFilter(reportType, params);
+	}
+	
+	@Override
+	public int countReportsByFilter(String reportType) {
+		return adminRepository.countReportsByFilter(reportType);
+	}
 	
 	@Override
 	public List<AdminChatListDto> findAllChat(Map<String, Object> params) {
@@ -354,4 +375,18 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.getChatMessagesByChatId(chatId);
 	}
 	
+	@Override
+	public int insertTicket(String storeName) {
+		return adminRepository.insertTicket(storeName);
+	}
+	
+	@Override
+	public int deleteReport(String reportId) {
+		return adminRepository.deleteReport(reportId);
+	}
+	
+	@Override
+	public int sendReportToStudent(String attackerId, String admin, String messageContent) {
+		return adminRepository.sendReportToStudent(attackerId, admin, messageContent);
+	}
 }
