@@ -199,12 +199,14 @@ public class BoardController {
 	 */
 	@GetMapping("/myBoards.do")
 	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
-		String memberId = principal.getMemberId();
-		List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
-		//log.debug("boards = {}", boards);
-		return ResponseEntity
-				.status(HttpStatus.OK)
-				.body(Map.of("boards", boards));
+			
+			String memberId = principal.getMemberId();
+			List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
+			//log.debug("boards = {}", boards);
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body(Map.of("boards", boards));
+		
 	}
 
 	/**
@@ -279,7 +281,7 @@ public class BoardController {
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
-		System.out.println(board);
+//		System.out.println(board);
 		model.addAttribute("postAttach",postAttach);
 	}
 
