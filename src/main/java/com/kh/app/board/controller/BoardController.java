@@ -607,9 +607,6 @@ public class BoardController {
 		result = boardService.updatePost(board);
 		result = boardService.updatePostContent(board);
 		
-		if(boardId == 11) {
-			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
-		}
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 	}
 	
@@ -802,19 +799,26 @@ public class BoardController {
 	}
 	
 	@GetMapping("/myClassBoardDetail.do")
-	public void myClassBoardDetail(@RequestParam int id, Model model) {
+	public void myClassBoardDetail(
+			@RequestParam int id,
+			@AuthenticationPrincipal MemberDetails principal,
+			@Valid StudentMypageInfoDto studentInfo,
+			Model model) {
 		BoardListDto postDetail = boardService.findById(id);
 //		log.info("postDetail = {}", postDetail);
-
 		PostAttachment postAttach = boardService.findAttachById(id);
 //		log.info("postAttach = {}", postAttach);
-		
 		List<Comment> comments = boardService.findByCommentByPostId(id);
 //		log.info("comments = {}", comments);
+		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+//	    log.info("studentInfo = {}", studentInfo);
 		
+		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("postAttach", postAttach);
 		model.addAttribute("comments", comments);
+		
+	
 	}
 	
 	@GetMapping("/fileDownload.do")
@@ -1063,9 +1067,63 @@ public class BoardController {
 			@RequestParam int boardId
 			) {
 		int result = boardService.deleteBoard(deletePostId); 
-		log.info("보드링크={}",postBoardLink);
-		log.info("포스트아이디={}",deletePostId);
-		return "redirect:/board/" + postBoardLink + ".do?boardId" + boardId;
+//		log.info("보드링크={}",postBoardLink);
+//		log.info("포스트아이디={}",deletePostId);
+		return "redirect:/board/" + postBoardLink + ".do?boardId=" + boardId;
+	}
+	
+	@PostMapping("/updateMyClassPost.do")
+	public String updateMyClassPost(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam int postId,
+			@RequestParam(required = false) String _tags,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+		
+		List<String> tags = _tags != null ? Arrays.asList(_tags.replace("[", "").replace("]", "").split(",")) : null; 
+		
+		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!={}", tags);
+		BoardCreateDto board = null;
+		int result = 0;
+		
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		if(files != null) {
+			
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.postId(postId)
+							.build();
+					
+					attachments.add(attach);
+				}
+			}
+		}
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments) 
+					.build();
+			
+		result = boardService.updatePost(board);
+		result = boardService.updatePostContent(board);
+		
+		return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
 	}
 }
 

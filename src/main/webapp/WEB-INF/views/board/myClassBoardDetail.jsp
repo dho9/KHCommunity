@@ -182,8 +182,8 @@
 	<form:form name="tokenFrm"></form:form>
 	<script>
 	// 댓글 삭제
-	document.querySelectorAll('#deleteComment').forEach((deleteBtn) => {
-		deleteBtn.addEventListener('click', (e) => {
+	document.querySelectorAll('#deleteComment').forEach((deleteComment) => {
+		deleteComment.addEventListener('click', (e) => {
 			if(confirm('정말 삭제하시겠습니까?')) {
 				console.log(e.target.dataset.value);
 				const postId = document.querySelector('input[name=postId]').value;
@@ -210,11 +210,10 @@
 	
 	// 게시글 삭제
 	if(document.querySelector('#deleteBtn')) {
-		if(confirm('게시글을 삭제하시겠습니까')) {
-			document.querySelector('#deleteBtn').addEventListener('click', () => {
+		document.querySelector('#deleteBtn').addEventListener('click', () => {
+			if(confirm('게시글을 삭제하시겠습니까'))
 				document.boardDeleteFrm.submit();
-			});
-		}
+		});
 	}
 	
 	// 게시글 수정
@@ -225,9 +224,10 @@
 			postDiv.innerHTML += `
 				<form:form 
 					name="updateFrm" method="POST"
-					action="${pageContext.request.contextPath}/board/updatePost.do">
+					action="${pageContext.request.contextPath}/board/updateMyClassPost.do">
 						<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}"/>
 				      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}"/>
+				      	<input type = "hidden" name="_tags" id="tags" value="${postDetail.tag}"/>
 						<div class="card border-primary mb-3">
 						  <div class="card-header">
 						  	<h3><input style="width: 80%;" name="title" value="${postDetail.title}"/></h3>

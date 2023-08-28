@@ -138,6 +138,30 @@
 	<div id="jangjun">
 	<sec:authentication property="principal" var="loginMember" />
 	<script>
-	
+	document.querySelector('#myClass').addEventListener('click', () => {
+		const _memberId = '<sec:authentication property="name"/>';
+ 	    const memberId = _memberId.replace(/&#64;/g, '@');
+	    if(_memberId === 'anonymousUser') {
+	        alert('로그인이 필요합니다.');
+	    }
+        else {
+	        $.ajax({
+	           url : "${pageContext.request.contextPath}/member/findStudentType.do",
+	           data : {
+	               memberId : memberId
+	           },
+	           success(responseData) {
+	               const {student} = responseData;
+	               const {curriculumId, studentType, boardId} = student;
+	               if(studentType != 's' || boardId == 0) {
+	                   alert('수강중인 학생만 이용가능합니다.');
+	               }
+	               else {
+	                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+	               }
+	           }
+	        });
+        }
+   });
 	</script>
 	
