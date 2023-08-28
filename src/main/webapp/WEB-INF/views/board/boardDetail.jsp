@@ -43,7 +43,8 @@ font-size:10px;}
 	margin: 15% auto;
 	padding: 20px;
 	border: 1px solid #888;
-	width: 50%;
+	width: 30%;
+	text-align: center;
 	position: relative;
 }
 
@@ -503,17 +504,24 @@ button.updateBtn, button.deleteBtn {
 	<div id="reportModal" class="modal">
 		<div class="modal-content">
 			<span class="close">&times;</span>
-			<h2>신고하기</h2>
+			<h2 style="margin-bottom: 10px">신고하기</h2>
 			<form:form id="reportForm" name="reportForm"
 				action="${pageContext.request.contextPath}/board/postReport.do"
 				method="post">
+				
 				<input type="hidden" name="reportPostId" id="reportPostId"
 					value="${postDetail.postId}">
+					
+				<input type="hidden" name="reportCommentId" id="reportCommentId">
+				
 				<input type="hidden" name="reporterId" id="reporterId"
 					value="${loginMember.username}">
+					
 				<input type="hidden" name="attackerId" id="attackerId"
 					value="${postDetail.memberId}">
+					
 				<input type="hidden" id="reportType" name="reportType" value="">
+				
 				<label for="reportType">신고유형:</label>
 				<select name="reportType_" id="reportType_">
 					<option value="게시판 성격에 부적절함">게시판 성격에 부적절함</option>
@@ -524,17 +532,14 @@ button.updateBtn, button.deleteBtn {
 					<option value="낚시/놀람/도배">낚시/놀람/도배</option>
 					<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>
 				</select>
-				<label for="reportContent">신고내용:</label>
-				<textarea id="reportContent" name="reportContent" rows="4" required></textarea>
-				<button type="submit">신고 제출</button>
+				<textarea id="reportContent" name="reportContent" rows="4" style = "height: 30%; width: 100%; margin-top: 15px; resize:none" placeholder="신고사유를 입력하세요~" required></textarea>
+				<button type="submit" style = "margin-top: 19px; width: 75px; height: 40px; background: none; border: solid 1px red; border-radius: 10px; font-weight: bold; color: red;">신고 제출</button>
 			</form:form>
 		</div>
 	</div>
 
 	<script>
-    // loginMember를 JSON 문자열로 변환하여 JavaScript 변수에 할당
-    const loginMemberJSON = '${fn:escapeXml(loginMember)}';
-    console.log(loginMemberJSON);
+    
 	// 모달 요소와 모달을 트리거하는 버튼을 가져옵니다.
 	const modal = document.getElementById("reportModal");
 	const abuseButton = document.querySelector(".abuse");
@@ -543,9 +548,11 @@ button.updateBtn, button.deleteBtn {
 	const closeBtn = modal.querySelector(".close");
 
 	// "신고" 버튼 클릭 시 모달을 보이도록 설정합니다.
-	/* abuseButton.addEventListener("click", () => {
-	  modal.style.display = "block";
-	}); */
+	if(abuseButton !== null){
+		abuseButton.addEventListener("click", () => {
+			  modal.style.display = "block";
+			});
+	}
 
 	// 닫기 버튼 클릭 시 모달을 닫습니다.
 	closeBtn.addEventListener("click", () => {
@@ -566,10 +573,6 @@ button.updateBtn, button.deleteBtn {
 			reportType.value = reportType_.value;
 		});
 	}
-	
-	
-
-	  
     // 신고 제출 후 모달을 닫습니다.
     modal.style.display = "none";
 	
@@ -1321,7 +1324,7 @@ button.updateBtn, button.deleteBtn {
 		                 	 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${comment.commentId}">삭제</li>`}
 		                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 		                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-		                 	 \${showAbuse ? '<li class="abuse">신고</li>' : ''}
+		                 	 \${showAbuse ? `<li class="abuse" data-commentid="\${comment.commentId}" data-writerid="\${comment.memberId}">신고</li>` : ''}
 		             	</ul>
 		             </h3>
 		             <hr>
@@ -1358,6 +1361,7 @@ button.updateBtn, button.deleteBtn {
 		})
 	}	
 
+	
 	function renderChildComments(childComments, parentCommentElement) {
 		const postAuthor = "${postDetail.memberId}";
 		const childCommentsContainer = document.createElement('div');
@@ -1384,9 +1388,9 @@ button.updateBtn, button.deleteBtn {
 	 	               <span>\${childComment.anonymousCheck ? '익명' : childComment.memberId} \${showAuthor ? '' : '<author class="author">(작성자)</author>'}</span>
 	 	            </div>
 	 	        	<ul class="commentMenu">
-	 	        		 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${childComment.commentId}">삭제</li>`}
+	 	        		 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${childComment.commentId}" >삭제</li>`}
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
-	                 	 \${showAbuse ? '<li class="abuse">신고</li>' : ''}
+	                 	 \${showAbuse ? `<li class="abuse" data-commentid="\${childComment.commentId}" data-writerid="\${childComment.memberId}">신고</li>` : ''}
 	             	</ul>
 	             </h3>
 	             <hr>
@@ -1434,13 +1438,12 @@ function loadCommentLike() {
     });
 }
 
-
-//익명 , 댓글제출버튼에 관한 기능
 let anonyCk = false;
 document.querySelector('#commnetContainer').addEventListener('click', (event) => {
 	console.log("클릭!")
   const clickedElement = event.target;
   const value = clickedElement.getAttribute('data-value');
+  
   
   const urlParams = new URLSearchParams(new URL(window.location.href).search);
   const postId = urlParams.get('id');
@@ -1498,6 +1501,18 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	  const commentId = clickedElement.getAttribute('data-commentid');
 	  console.log(commentId);
 	  deleteComment(commentId);
+  }
+  
+  if(clickedElement.classList.contains('abuse')){
+	  const reportCommentId = document.querySelector("#reportCommentId");
+	  const commentId = clickedElement.getAttribute('data-commentid');
+	  const writerId = clickedElement.getAttribute('data-writerid');
+	  const attackerId = document.querySelector("#attackerId");
+	  reportCommentId.value = commentId;
+	  attackerId.value =  writerId;
+	  modal.style.display = "block";
+	  
+	  
   }
 });
 function deleteComment(commentId){
