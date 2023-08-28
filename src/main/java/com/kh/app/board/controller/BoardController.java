@@ -24,6 +24,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -286,6 +287,7 @@ public class BoardController {
 		//log.debug("keyword = {}", keyword);
 		model.addAttribute("boards", boards);
 		model.addAttribute("keyword", keyword);
+		System.out.println(boards);
 		return "/board/boardListByKeyword";
 	}
 
@@ -632,48 +634,48 @@ public class BoardController {
 	}
 	
 	@PostMapping("/createComment.do")
-	public ResponseEntity<?> createCommnet(
-			CreateCommentDto _comment,@AuthenticationPrincipal MemberDetails member){
-		log.debug("commentttttttttttt={}", _comment);
-		
-		
-		
-				
-				
-		if(member !=null &&_comment.getCommentRef()!="" ) {//대댓글용
-			int ref = Integer.parseInt(_comment.getCommentRef()); 
-			Comment comment = Comment.builder()  
-					.postId(_comment.getPostId())
-					.boardId(_comment.getBoardId())
-					.memberId(member.getMemberId())
-					.commentContent(_comment.getCommentContent())
-					.commentLevel(2)
-					.commentRef(ref)
-					.anonymousCheck(_comment.isAnonymousCheck()).build();
-			int result = boardService.createComment(comment);
-			return ResponseEntity
-					.status(HttpStatus.OK).body(null);
-		}
-		if(member !=null &&_comment.getCommentRef()==""){ //댓글용
-			Comment comment = Comment.builder()  
-					.postId(_comment.getPostId())
-					.boardId(_comment.getBoardId())
-					.memberId(member.getMemberId())
-					.commentContent(_comment.getCommentContent())
-					.commentLevel(1)
-					.commentRef(0)
-					.anonymousCheck(_comment.isAnonymousCheck()).build();
-			int result = boardService.createComment(comment);
-			return ResponseEntity
-					.status(HttpStatus.OK).body(null);
-		}else {
-			return ResponseEntity
-					.status(HttpStatus.OK).body("댓글작성에 실패했습니다..");
-		}
-
-
+	public ResponseEntity<?> createComment(
+	        @Valid CreateCommentDto _comment, BindingResult bindingResult, @AuthenticationPrincipal MemberDetails member) {
+	    log.debug("commentttttttttttt={}", _comment);
+	    
+	    if (bindingResult.hasErrors()) { // 유효성 검사 에러가 있는 경우
+	        return ResponseEntity
+	                .status(HttpStatus.BAD_REQUEST)
+	                .body("댓글 또는 대댓글 내용이 유효하지 않습니다.");
+	    }
+	    
+	    if (member != null && _comment.getCommentRef() != null && !_comment.getCommentRef().isEmpty()) {
+	        // 대댓글용
+	        int ref = Integer.parseInt(_comment.getCommentRef()); 
+	        Comment comment = Comment.builder()
+	                .postId(_comment.getPostId())
+	                .boardId(_comment.getBoardId())
+	                .memberId(member.getMemberId())
+	                .commentContent(_comment.getCommentContent())
+	                .commentLevel(2)
+	                .commentRef(ref)
+	                .anonymousCheck(_comment.isAnonymousCheck()).build();
+	        int result = boardService.createComment(comment);
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body(null);
+	    } else if (member != null && (_comment.getCommentRef() == null || _comment.getCommentRef().isEmpty())) {
+	        // 댓글용
+	        Comment comment = Comment.builder()
+	                .postId(_comment.getPostId())
+	                .boardId(_comment.getBoardId())
+	                .memberId(member.getMemberId())
+	                .commentContent(_comment.getCommentContent())
+	                .commentLevel(1)
+	                .commentRef(0)
+	                .anonymousCheck(_comment.isAnonymousCheck()).build();
+	        int result = boardService.createComment(comment);
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body(null);
+	    } else {
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body("댓글 작성에 실패했습니다.");
+	    }
 	}
-
 
 
 
