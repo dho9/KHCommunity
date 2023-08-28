@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <script
@@ -29,16 +30,17 @@
 <style>
 @font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
 #top-container{width: 100%; height: 180px; background-color: royalblue; z-index: -10;}
-#side-container{background-color: white; width:250px;  margin: -6% 1% 0 15%; display: inline-block; border-radius: 20px; float: left;}
-#main-container{background-color: white; width:830px;  margin: -6% 15% 0 0%; display: inline-block; border-radius: 20px; float: right; box-shadow: 1px 1px 3px #cecece;}
+#side-container{background-color: white; width:250px;  margin: -6% 1% 0 20%; display: inline-block; border-radius: 20px; float: left;}
+#main-container{background-color: white; width:830px;  margin: -6% 20% 0 0%; display: inline-block; border-radius: 20px; float: right; box-shadow: 1px 1px 3px #cecece;}
 #profile-container{border-bottom: 1.5px solid #606060; width: 150px; height:150px; background-color: #e2e2e2; margin:10% auto; border: 0.5px solid #cecece; text-align: center; border-radius: 50%;}
 #profile{width: 70%; vertical-align: middle; display: inline-block; margin-top: 15%; opacity: 0.47;}
 #profileName{font-family: 'GmarketSansMedium'; font-size: 30px; font-weight: 500; margin-top: 10px; margin-bottom:10px; color: #4d4d4d;}
-#logoutBtn{font-family: 'GmarketSansMedium'; width: 80%; height: 45px; border-radius:30px; color: #606060; background-color: white; border: 1.5px solid #606060; display: inline-block; margin-bottom: 30px;}
+#logoutBtn{font-family: 'GmarketSansMedium'; width: 80%; height: 40px; border-radius:30px; color: #606060; background-color: white; border: 1.5px solid #606060; display: inline-block; margin-bottom: 17px;}
+#logoutBtn:hover {background-color: #606060; color: white;}
 #underProfile-container{width:90%; text-align: center; margin: 5% auto; border-bottom: 1px solid #cecece;}
 .myPageHr{color: #cecece; margin-top: -0.5rem; margin-bottom: 0.5rem; border: 0; border-top: 1px solid rgba(0,0,0,.8);}
 .mypageContent{width:90%; font-family: 'GmarketSansMedium'; margin: 40px 40px; color: #3c3c3c; padding: 20px 30px;; border: 0.5px solid #cecece; border-radius: 25px;}
-
+#myId{color:#606060; font-family: 'GmarketSansMedium';}
 
 /* 수강정보 css */
 p.classInfo{color:#606060;}
@@ -80,6 +82,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 /* 구매내역 css */
 #messageTbl td,tr,th{text-align: center;}
 
+
+/* 휴가신청 css */
+/* #vacationDiv .btn btn-primary {display: inline-block;} */
+
 </style>
 
 <section>
@@ -97,13 +103,13 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		
 		<div id="underProfile-container">
 			<h2 id="profileName">${loginMember.name}님</h2>
-			<p id="myId">${loginMember.username}<p/>
+			<p id="myId">(${loginMember.username})<p/>
 			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
 		<div id="mypageBtns">
-			<p class="mypageBtn" id="memberInfo"><i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보</a></p>
+			<p class="mypageBtn" id="memberInfo"><i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보</p>
 			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</a></p>
+			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</p>
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
@@ -116,6 +122,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			
 			<hr class="myPageHr"/>
 		</div>
+		<form:form name ="memberLogoutFrm" 
+        	action="${pageContext.request.contextPath}/member/memberLogout.do" 
+        	method="POST">
+		</form:form>
 	</div>
  
  	<!-- 메인 div 시작 -->
@@ -125,7 +135,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<span class="classInfo">나의 수강정보 &nbsp;&nbsp;&nbsp;</span>
 			<p class="classInfo">${studentInfo.curriculumName }반</p>
 			<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
-			<h2 class="classInfo">&nbsp;&nbsp;D - ${Ddays} 30</h2>
+			<h2 class="classInfo">&nbsp;&nbsp;
+			<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
+			<c:if test="${not fn:contains(Ddays, '-')}">D - ${Ddays}</c:if>
+			</h2>
 		</div>
 		
 		<!-- 나의 인증현황 div -->
@@ -178,7 +191,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<li class="page-item disabled" id="prevButton">
 						  <span class="page-link">Previous</span>
 						</li>
-						<li class="page-item" onclick="changePage(1)">
+						<li class="page-item" aria-current="page" onclick="changePage(1)">
 	                            <span class="page-link">1</span>
 	                        </li>
 						<li class="page-item" id="nextButton">
@@ -207,7 +220,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 								<td colspan="5" class="text-center">조회된 구매식권이 없습니다.</td>
 							
 							</tr>
-							</c:if>
+						</c:if>
 					 	<c:if test="${not empty studentTicketInfo}">
 							<c:forEach items="${studentTicketInfo}" var="studentTicketInfo" varStatus="vs">
 								<tr>
@@ -222,8 +235,51 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				</table>
 			</div>
 		</div>	
+		<!-- 휴가신청 -->
+		<div class="mypageContent">
+				<p class="infoTitles"><i class="bi bi-coin"></i> &nbsp;휴가신청</p>
+				<div class="myPageDivs" id="vacationDiv" >		
+					<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
+						enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
+					
+						<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
+						<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
+							 <br/>
+							 <tr>
+								<th> 휴가시작날짜 : </th>
+								<td>
+									<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
+								</td>
+							</tr>
+							<br/>
+						
+							<tr>
+								<th>휴가끝나는날짜 : </th>
+								<td>
+									<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
+								</td>
+							</tr>
+							
+							<br/>
+							<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
+						<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId}" readonly>
+						
+						<div class="input-group" style="padding:0px;">
+			  				<div class="custom-file">
+			    				<input type="file" class="fileInput" name="upFile" id="upFile" multiple>
+			    				<!-- <label class="custom-file-label" for="upFile">파일을 선택하세요</label> -->
+			  				</div>		  				
+						</div>
+						<label class="frmStyles" for="state">처리상황 &nbsp;: &nbsp;</label>
+						<span id="state" class="frmStyles"></span>
+						<br/>
+						<input type="submit"  class="btn btn-primary" value="저장" >
+					</form:form>
+				</div>
+			</div>	
+		
+		</div> 
 	
-	</div> 
 	<!-- 메인컨테이너 div끝 -->
 		
 		
@@ -425,7 +481,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		msgList(1);
 		certification();
 	};
-	
+	document.getElementById("logoutBtn").addEventListener("click", function(event) {
+		memberLogoutFrm.submit();
+	});
 	
 	// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
 	document.querySelector("#consultRequest").onclick = () => {
@@ -487,14 +545,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            	
 	                let html = ""; 
 	                responseData.forEach(function(message) {
-	                    console.log(message);
 	                    let readCk = ""
 						if(message.readCheck == 'y'){
 							readCk = `<i class="bi bi-envelope-paper-heart"></i>`;
 						}else{
 							readCk = `<i class="bi bi-envelope-heart"></i>`;
 						}
-	                    
 	                    html += `
 					        <tr>
 					            <td class="msgId">\${message.messageId}</td>
@@ -526,10 +582,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					        
 					        msgId = $(this).closest("tr").find(".msgId").html();
 					        $("#messageDetail").modal("show");
-					        updateReadCheck(readCheckValue, msgId);
+					        updateReadCheck(readCheckValue, msgId, page);
 					    });
 					    $("#editButton").click(function() {
-					    	deleteMsg(msgId);
+					    	deleteMsg(msgId, page);
 					    });
 					    $("#reportButton").click(function() {
 					    	reportMsg(msgId, sender);
@@ -581,7 +637,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            
 	            if(listSize ==0){
 	            	paginationHTML += `
-                        <li class="page-item" aria-current="page">
+                        <li class="page-item active" aria-current="page">
                             <span class="page-link" onclick="changePage(1)">1</span>
                         </li>
                     `;
@@ -634,7 +690,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	}
 	
 	// 쪽지 읽음 여부 업데이트
-	const updateReadCheck = (checked, msgId) =>{
+	const updateReadCheck = (checked, msgId, page) =>{
 		console.log(checked, msgId);
 		if(checked == 'n'){
 			$.ajax({
@@ -646,14 +702,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				method : "GET",
 				dataType : "json",
 				success(responseData){
-					msgList();
+					msgList(page);
 				}
 			});
 		}
 	};
 	
 	// 쪽지삭제
-	const deleteMsg = (msgId) =>{
+	const deleteMsg = (msgId, page) =>{
 		$.ajax({
 			url: "${pageContext.request.contextPath}/message/messageDelete.do",
 			data :{
@@ -662,7 +718,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			method : "GET",
 			dataType : "json",
 			success(responseData){
-				msgList();
+				msgList(page);
 				$('#messageDetail').modal('hide');
 			}
 		});
@@ -691,7 +747,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		}
 		
 
-	});
+	};
 	
 	// MH - 쪽지함 관련 기능 끝!	
 	
@@ -806,39 +862,40 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 </script>	
 
 <script>
+
 // 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
-document.querySelector("#consultRequest").onclick = () => {
-	const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
-	const stompClient = Stomp.over(ws);
-
-	stompClient.connect({}, (frame) => {
-		console.log('open : ', frame);
-		
-		// 구독신청 
-		stompClient.subscribe('/topic/chat', (message) => {
-			console.log('/topic/chat : ', message);
-			renderMessage(message);
+	document.querySelector("#consultRequest").onclick = () => {
+		const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
+		const stompClient = Stomp.over(ws);
+	
+		stompClient.connect({}, (frame) => {
+			console.log('open : ', frame);
+			
+			// 구독신청 
+			stompClient.subscribe('/topic/chat', (message) => {
+				console.log('/topic/chat : ', message);
+				renderMessage(message);
+			});
 		});
-	});
-
-	$.ajax({
-		type : "POST",
-		url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
-		data :{
-			memberId: loginMemberId
-		},
-		headers: {
-            "X-CSRF-TOKEN": token
-        },
-		success(responseData){
-			console.log("ChatId: ", responseData)
-			const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
-			if (newWindow) {
-                newWindow.focus();
-            }
-		}); 
+	
+		$.ajax({
+			type : "POST",
+			url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
+			data :{
+				memberId: loginMemberId
+			},
+			headers: {
+	            "X-CSRF-TOKEN": token
+	        },
+			success(responseData){
+				console.log("ChatId: ", responseData)
+				const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
+				if (newWindow) {
+	                newWindow.focus();
+	            }
+	        }
+		});
 	};
-};
 	
 </script>	
 

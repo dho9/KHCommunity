@@ -100,7 +100,6 @@ public class MessageContoller {
 		
 		int result= messageService.messageUpdate(checked, messageId);
 		log.debug("★★messageUpdate = {}", messageId);
-		
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("checked", checked));
 	}
 	

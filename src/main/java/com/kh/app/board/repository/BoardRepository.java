@@ -107,7 +107,7 @@ public interface BoardRepository {
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
-	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds);
+	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds, int boardId);
 	
 	List<Comment> findByCommentByPostId(int postId);
 	
@@ -122,7 +122,7 @@ public interface BoardRepository {
 	
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag, RowBounds rowBounds);
+	List<BoardListDto> myClassBoardFindByTag(String tag, RowBounds rowBounds, int boardId);
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
@@ -131,7 +131,7 @@ public interface BoardRepository {
 	        "VALUES (seq_comment_id.nextval, #{postId}, #{boardId}, #{memberId}, #{commentContent}, #{commentLevel}, #{commentRef}, #{anonymousCheck})")
 	int createComment(Comment comment);
 
-	int totalCountMyClassBoard();
+	int totalCountMyClassBoard(int boardId);
 	
 	@Delete("delete post where post_id = #{deletePostId}")
 	int deleteBoard(int deletePostId);
@@ -187,8 +187,8 @@ public interface BoardRepository {
 
 	List<BoardListDto> jobSearchBoardFindAll();
 
-	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=11 and tag =#{tag}")
-	int totalCountMyClassBoardByTag(String tag);
+	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=#{boardId} and tag =#{tag}")
+	int totalCountMyClassBoardByTag(String tag, int boardId);
 	
 	@Update ("update post_comment set comment_content = '삭제된 댓글입니다.', delete_ck = 1 where comment_id = #{commentId}" )
 	int deleteComment(int commentId);

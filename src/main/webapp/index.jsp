@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -54,9 +53,18 @@
                     <p class="school">${ loginMember.memberEmail}</p>
                     </sec:authorize>
                     <ul class="buttons">
-                  <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
-                  <li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
-                         <li><a href="#" id="logoutLink">로그아웃</a></li>                       
+  						<sec:authorize access="isAuthenticated()">
+	                    	<c:if test="${fn:contains(loginMember.authorities, 'STUDENT')}">
+		                 		<li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
+		                 	</c:if>
+		                 	<c:if test="${fn:contains(loginMember.authorities, 'TEACHER') || fn:contains(loginMember.authorities, 'ADMIN')}">
+		                 		<li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
+							</c:if>
+	                        <li><a href="#" id="logoutLink">로그아웃</a></li>    
+	                    </sec:authorize>  
+	                    <sec:authorize access="isAnonymous()">
+	                    	<li style="margin: 0 25%;"><a href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a></li>
+	                    </sec:authorize>                   
                     </ul>
                     <hr>
                 </form>
@@ -210,5 +218,6 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
 document.getElementById("logoutLink").addEventListener("click", function(event) {
 	memberLogoutFrm.submit();
 });
+
 </script>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
