@@ -759,4 +759,3 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/finalProject/
