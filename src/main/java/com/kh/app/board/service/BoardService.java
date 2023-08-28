@@ -74,9 +74,9 @@ public interface BoardService {
 
 	List<BoardListDto> noticeBoardFindAll();
 	
-	List<BoardListDto> myClassBoardFindAll(Map<String, Object> params);
+	List<BoardListDto> myClassBoardFindAll(Map<String, Object> params, int boardId);
 	
-	int totalCountMyClassBoard();
+	int totalCountMyClassBoard(int boardId);
 	
 	List<BoardListDto> myClassBoardFindAll();
 
@@ -90,7 +90,7 @@ public interface BoardService {
 
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params);
+	List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params, int boardId);
 	
 	List<CommentLike> commentLikeCheckById(int postId, String memberId);
 
@@ -120,7 +120,7 @@ public interface BoardService {
 
 	List<BoardListDto> jobSearchBoardFindAll();
 
-	int totalCountMyClassBoardByTag(String tag);
+	int totalCountMyClassBoardByTag(String tag, int boardId);
 	
 	int deleteComment(int commentId);
 

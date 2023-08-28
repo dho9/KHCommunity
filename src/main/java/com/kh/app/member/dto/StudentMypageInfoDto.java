@@ -13,4 +13,5 @@ public class StudentMypageInfoDto {
 	private int curriculumId;
 	private LocalDate curriculumEndAt;
 	private String teacherId;
+	private int boardId;
 }

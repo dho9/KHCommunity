@@ -12,6 +12,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -26,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -360,7 +362,7 @@ public class BoardController {
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
-
+		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!", boardId);
 		//log.debug("loginMember = {}", member);
 		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
 
@@ -598,7 +600,7 @@ public class BoardController {
 			Model model
 			) {
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-        //log.debug("studentInfo = {}", studentInfo);
+//        log.info("studentInfo = {}", studentInfo);
 		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("authority", principal.getAuthorities());
         
@@ -607,7 +609,7 @@ public class BoardController {
 
 	@PostMapping("/myClassBoardList.do")
 	@ResponseBody
-	public ResponseEntity<?> myClassBoardList(@RequestParam(defaultValue = "1") int page, @RequestParam String tag) {
+	public ResponseEntity<?> myClassBoardList(@RequestParam(defaultValue = "1") int page, @RequestParam String tag, @RequestParam int boardId) {
 		// 페이징
 		int limit = 8;
 		Map<String, Object> params = Map.of(
@@ -615,11 +617,11 @@ public class BoardController {
 				"limit", limit
 		);
 		// 게시글 전체 수
-		int totalCount = boardService.totalCountMyClassBoardByTag(tag);
+		int totalCount = boardService.totalCountMyClassBoardByTag(tag, boardId);
 		
 		// totalPage 계산
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag, params);
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag, params, boardId);
 		log.info("myClassBoardList ={}", myClassBoardList);
 		log.info("totalPages = {}", totalPages);
 		return ResponseEntity
@@ -628,7 +630,7 @@ public class BoardController {
 	}
 
 	@GetMapping("/myClassBoardFindAll.do")
-	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
+	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page, @RequestParam int boardId) {
 		// 페이징
 		int limit = 8;
 		Map<String, Object> params = Map.of(
@@ -636,11 +638,11 @@ public class BoardController {
 				"limit", limit
 		);
 		// 게시글 전체 수
-		int totalCount = boardService.totalCountMyClassBoard();
+		int totalCount = boardService.totalCountMyClassBoard(boardId);
 		
 		// totalPage 계산
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll(params);
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindAll(params, boardId);
 		
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -831,14 +833,15 @@ public class BoardController {
 		return "redirect:/board/boardDetail.do?id="+reportPostId;
 	}
 	
-	@GetMapping("/jobSearchBoardList.do")
-	public String jobSearchBoardList(Model model) {
-		List<BoardListDto> jobSearchBoardList = boardService.jobSearchBoardFindAll();
-
-		model.addAttribute("jobSearchBoardList", jobSearchBoardList);
-
-		return "/board/jobSearchBoardList";
-	} 
+	/*
+	 * @GetMapping("/jobSearchBoardList.do") public String jobSearchBoardList(Model
+	 * model) { List<BoardListDto> jobSearchBoardList =
+	 * boardService.jobSearchBoardFindAll();
+	 * 
+	 * model.addAttribute("jobSearchBoardList", jobSearchBoardList);
+	 * 
+	 * return "/board/jobSearchBoardList"; }
+	 */
 	
 	@GetMapping("/threePostByBoardId.do")
 	@ResponseBody
@@ -865,21 +868,93 @@ public class BoardController {
 	}
 	
 	@GetMapping("/jobKorea.do")
-	public String jobKorea(@RequestParam(defaultValue = "1") int page, Model model) throws IOException {
+	public String jobKorea(@RequestParam(name = "page", defaultValue = "1") int page, Model model) throws IOException {
 		int limit = 8;
 		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
 		
-		// 게시글 전체 수
-	    int totalCount = 100; // 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+	    int totalCount = 10;
+	    
 	    // totalPage 계산
 	    int totalPages = (int) Math.ceil((double) totalCount / limit);
-		
+	    
 		log.info("jobKoreaList={}", jobKoreaList);
 		model.addAttribute("jobKoreaList", jobKoreaList);
 		model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
+		model.addAttribute("totalPages", totalPages);
 		return "/board/jobSearchBoardList";
 	}
+	
+//	@PostMapping("/createMyClass.do")
+//	public String createMyClass(
+//			@RequestParam String title,
+//			@RequestParam String text,
+//			@RequestParam int boardId,
+//			@RequestParam(required = false) String grade,
+//			@RequestParam(required = false) boolean anonymousCheck,
+//			@RequestParam(required = false) String[] _tags,
+//			@AuthenticationPrincipal MemberDetails member,
+//			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
+//		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!", boardId);
+//		//log.debug("loginMember = {}", member);
+//		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+//
+//		// 1. 파일저장
+//		int result = 0;
+//		List<PostAttachment> attachments = new ArrayList<>(); 
+//		for(MultipartFile file : files) {
+//			if(!file.isEmpty()) {
+//				String originalFilename = file.getOriginalFilename();
+//				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+//				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+//				file.transferTo(destFile);	
+//
+//				PostAttachment attach = 
+//						PostAttachment.builder()
+//						.postOriginalFilename(originalFilename)
+//						.postRenamedFilename(renamedFilename)
+//						.boardId(boardId)
+//						.build();
+//
+//				attachments.add(attach);
+//			}
+//		}
+//			
+//			BoardCreateDto board = null;
+//			
+//			if(grade == null || grade.equals("")) {
+//				board = BoardCreateDto.builder()
+//						.title(title)
+//						.content(text)
+//						.boardId(boardId)
+//						.memberId(member.getMemberId())
+//						.tags(tags)
+//						.attachments(attachments)
+//						.anonymousCheck(anonymousCheck)
+//						.build();
+//				
+//			} else {
+//				String realGrade = " [평점 : " + grade + "]";
+//				board = BoardCreateDto.builder()
+//						.title(title + realGrade)
+//						.content(text)
+//						.boardId(boardId)
+//						.memberId(member.getMemberId())
+//						.tags(tags)
+//						.attachments(attachments)
+//						.anonymousCheck(anonymousCheck)
+//						.build();
+//			}
+//		
+//		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+//			result = boardService.insertBoardNofiles(board);
+//		}else {
+//			result = boardService.insertBoard(board);
+//		}
+//		result = boardService.insertPostContent(board);
+//		
+//		return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+//	}
 	
 }
 

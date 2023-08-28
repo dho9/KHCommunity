@@ -1209,7 +1209,13 @@ select * from report;
 --select * from delete_comment;
 --select * from authority;
 --select * from calendar;
+-- 현재 351반이 21번게시판을 사용중이고 2번수업 이끝나서  관리자가 초기화 한 후 5번 과정으로 update를 한 상황
+-- > 현재 21번게시판을 사용할수있는사람은 2번 커리큘럼을 가진 학생 강사만 들어올수있는상황 .
+-- > 이젠  21번게시판을 사용할수있는사람은 5번 커리큘럼을 가진 학생 강사만 들어올수있어야함.
 
+select * from myClass;
+select * from curriculum;
+select * from board;
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 

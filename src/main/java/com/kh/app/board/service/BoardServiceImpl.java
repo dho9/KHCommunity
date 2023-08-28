@@ -179,18 +179,18 @@ public class BoardServiceImpl implements BoardService {
 	
 
 	@Override
-	public List<BoardListDto> myClassBoardFindAll(Map<String, Object> params) {
+	public List<BoardListDto> myClassBoardFindAll(Map<String, Object> params, int boardId) {
 		int limit = (int) params.get("limit");
 		int page = (int) params.get("page");
 		int offset = (page - 1) * limit;
 		
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return boardRepository.myClassBoardFindAll(rowBounds);
+		return boardRepository.myClassBoardFindAll(rowBounds, boardId);
 	}
 	
 	@Override
-	public int totalCountMyClassBoard() {
-		return boardRepository.totalCountMyClassBoard();
+	public int totalCountMyClassBoard(int boardId) {
+		return boardRepository.totalCountMyClassBoard(boardId);
 	}
 
 	@Override
@@ -220,13 +220,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params) {
+	public List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params, int boardId) {
 		int limit = (int) params.get("limit");
 		int page = (int) params.get("page");
 		int offset = (page - 1) * limit;
 		
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return boardRepository.myClassBoardFindByTag(tag, rowBounds);
+		return boardRepository.myClassBoardFindByTag(tag, rowBounds, boardId);
 	}
 	
 	@Override
@@ -326,8 +326,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public int totalCountMyClassBoardByTag(String tag) {
-		return boardRepository.totalCountMyClassBoardByTag(tag);
+	public int totalCountMyClassBoardByTag(String tag, int boardId) {
+		return boardRepository.totalCountMyClassBoardByTag(tag, boardId);
 	}
 	
 	@Override
@@ -347,6 +347,7 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.deleteCommentId(commentId);
 	}
 	
+	private static String BASE_URL = "https://www.jobkorea.co.kr";
 	private static String URL = "https://www.jobkorea.co.kr/Search/?stext=%EA%B0%9C%EB%B0%9C%EC%9E%90";
 	@Override
 	public List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException {
@@ -360,15 +361,23 @@ public class BoardServiceImpl implements BoardService {
 
 	    for (int i = startIndex; i < endIndex; i++) {
 	        Element content = contents.get(i);
+	        
+	        String href = content.select(".post-list-corp .name").attr("href");
+	        String fullUrl = BASE_URL + href;
+	        
 	        JobKorea jobKorea = JobKorea.builder()
 	                            .company(content.select(".post-list-corp .name").text())
 	                            .title(content.select(".post-list-info .title").text())
 	                            .option(content.select(".post-list-info .option").text())
 	                            .etc(content.select(".post-list-info .etc").text())
+	                            .url(fullUrl)
 	                            .build();
+	        
 	        jobKoreaList.add(jobKorea);
 	    }
-		return jobKoreaList;
+	    
+	    return jobKoreaList;
 	}
+	
 }
 
