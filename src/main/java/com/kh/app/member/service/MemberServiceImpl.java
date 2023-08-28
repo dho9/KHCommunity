@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
@@ -202,9 +203,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public EmployeeInfoDto findByEmployeeInfo(String memberId) {
+	public List<EmployeeInfoDto> findByEmployeeInfo(String memberId) {
 		
 		return memberRepository.findByEmployeeInfo(memberId);
+	}
+
+	@Override
+	public EmployeeDto findEmployeeById(String memberId) {
+		// TODO Auto-generated method stub
+		return memberRepository.findEmployeeById(memberId);
 	}
 
 

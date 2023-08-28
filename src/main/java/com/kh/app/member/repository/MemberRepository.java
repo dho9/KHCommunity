@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
@@ -90,7 +91,9 @@ public interface MemberRepository {
 		@Insert("insert into vacation_attachment (attachment_id, vacation_id, attachment_original_filename, attachment_renamed_filename) values (seq_vacation_attach_id.nextval, #{vacationId}, #{vacationOriginalFilename}, #{vacationRenamedFilename})")
 		int insertAttachment(StudentVacationAttachment attach);*/
 		
-	EmployeeInfoDto findByEmployeeInfo(String memberId);
+	  List<EmployeeInfoDto> findByEmployeeInfo(String memberId);
+
+	  EmployeeDto findEmployeeById(String memberId);
 	 
 	
 		/*

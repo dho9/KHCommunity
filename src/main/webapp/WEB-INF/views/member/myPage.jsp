@@ -35,11 +35,12 @@
 #profile-container{border-bottom: 1.5px solid #606060; width: 150px; height:150px; background-color: #e2e2e2; margin:10% auto; border: 0.5px solid #cecece; text-align: center; border-radius: 50%;}
 #profile{width: 70%; vertical-align: middle; display: inline-block; margin-top: 15%; opacity: 0.47;}
 #profileName{font-family: 'GmarketSansMedium'; font-size: 30px; font-weight: 500; margin-top: 10px; margin-bottom:10px; color: #4d4d4d;}
-#logoutBtn{font-family: 'GmarketSansMedium'; width: 80%; height: 45px; border-radius:30px; color: #606060; background-color: white; border: 1.5px solid #606060; display: inline-block; margin-bottom: 30px;}
+#logoutBtn{font-family: 'GmarketSansMedium'; width: 80%; height: 40px; border-radius:30px; color: #606060; background-color: white; border: 1.5px solid #606060; display: inline-block; margin-bottom: 17px;}
+#logoutBtn:hover {background-color: #606060; color: white;}
 #underProfile-container{width:90%; text-align: center; margin: 5% auto; border-bottom: 1px solid #cecece;}
 .myPageHr{color: #cecece; margin-top: -0.5rem; margin-bottom: 0.5rem; border: 0; border-top: 1px solid rgba(0,0,0,.8);}
 .mypageContent{width:90%; font-family: 'GmarketSansMedium'; margin: 40px 40px; color: #3c3c3c; padding: 20px 30px;; border: 0.5px solid #cecece; border-radius: 25px;}
-
+#myId{color:#606060; font-family: 'GmarketSansMedium';}
 
 /* 수강정보 css */
 p.classInfo{color:#606060;}
@@ -98,7 +99,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		
 		<div id="underProfile-container">
 			<h2 id="profileName">${loginMember.name}님</h2>
-			<p id="myId">${loginMember.username}<p/>
+			<p id="myId">(${loginMember.username})<p/>
 			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
 		<div id="mypageBtns">
@@ -117,6 +118,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			
 			<hr class="myPageHr"/>
 		</div>
+		<form:form name ="memberLogoutFrm" 
+        	action="${pageContext.request.contextPath}/member/memberLogout.do" 
+        	method="POST">
+		</form:form>
 	</div>
  
  	<!-- 메인 div 시작 -->
@@ -126,7 +131,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<span class="classInfo">나의 수강정보 &nbsp;&nbsp;&nbsp;</span>
 			<p class="classInfo">${studentInfo.curriculumName }반</p>
 			<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
-			<h2 class="classInfo">&nbsp;&nbsp;D - ${Ddays} 30</h2>
+			<h2 class="classInfo">&nbsp;&nbsp;
+			<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
+			<c:if test="${not fn:contains(Ddays, '-')}">D - ${Ddays}</c:if>
+			</h2>
 		</div>
 		
 		<!-- 나의 인증현황 div -->
@@ -208,7 +216,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 								<td colspan="5" class="text-center">조회된 구매식권이 없습니다.</td>
 							
 							</tr>
-							</c:if>
+						</c:if>
 					 	<c:if test="${not empty studentTicketInfo}">
 							<c:forEach items="${studentTicketInfo}" var="studentTicketInfo" varStatus="vs">
 								<tr>
@@ -426,7 +434,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		msgList(1);
 		certification();
 	};
-	
+	document.getElementById("logoutBtn").addEventListener("click", function(event) {
+		memberLogoutFrm.submit();
+	});
 	
 	// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
 	document.querySelector("#consultRequest").onclick = () => {
