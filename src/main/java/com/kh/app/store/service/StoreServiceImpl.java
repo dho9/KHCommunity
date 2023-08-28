@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.app.store.dto.StoreDetailDto;
 import com.kh.app.store.entity.Store;
 import com.kh.app.store.repository.StoreRepository;
 
@@ -20,13 +21,14 @@ public class StoreServiceImpl implements StoreService {
 		return storeRepository.findAll();
 	}
 	@Override
-	public Store findStoreById(int id) {
+	public StoreDetailDto findStoreById(int id) {
 		// TODO Auto-generated method stub
-		return storeRepository.findTicektById(id);
+		return storeRepository.findStoreById(id);
 	}
+	
 	@Override
 	public int findStoreIdByName(String name) {
 		// TODO Auto-generated method stub
-		return storeRepository.findStoreIdByName(name);
+		 return storeRepository.findStoreIdByName(name);
 	}
 }
