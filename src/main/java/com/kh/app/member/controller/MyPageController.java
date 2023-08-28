@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
+import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 import com.kh.app.ticket.dto.TicketBuyDto;
@@ -38,7 +40,6 @@ public class MyPageController {
 		// 시작
 		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
-		log.debug("studentInfo = {}" , studentInfo);
 		// 식권정보 끝
 
 		// 식권정보 시작
@@ -49,6 +50,7 @@ public class MyPageController {
 		// Dday 시작
 		if (studentInfo.getCurriculumId() != 0) {
 			Curriculum curriculumDday = memberService.findByDdayInfo(studentInfo.getCurriculumId());
+			
 			model.addAttribute("curriculumDday", curriculumDday);
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -68,23 +70,38 @@ public class MyPageController {
 		// Dday 끝 }
 	}
 	
-	
-	
-	
 		 @GetMapping("/employeeMyPage.do") 
 		 public void employeeMyPage(Model model, 
 				 @AuthenticationPrincipal MemberDetails principal,
 				 @RequestParam(value = "classId", required = false) Integer classId,
 				 @RequestParam(value = "subject", required = false) String subject,
+				 @RequestParam(value = "jobCode", required = false) String jobCode,
+				 @RequestParam(value = "employeeId", required = false) String employeeId,
 				 @RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
 			
-			 EmployeeInfoDto employeeInfo =
+			 List<EmployeeInfoDto> employeeInfo =
 					 memberService.findByEmployeeInfo(principal.getMemberId());
-			 
 			  model.addAttribute("employeeInfo", employeeInfo);
-		  
+
+			  log.info("★★employeeInfo = {} ",employeeInfo);
+		
+			  
+			  List<StudentVacationApproveDto> studentVacationApprove = 
+					  memberService.findAllVacationApproveList(principal.getMemberId());
+			  model.addAttribute("studentVacationApprove" , studentVacationApprove);
+			  log.info("★★★★studentVacationApprove = {}" , studentVacationApprove);
+			  
+			  LocalDate currentDate = LocalDate.now();
+		      model.addAttribute("currentDate", currentDate);
+		      
+		      log.info("currentDate = {}", currentDate);
+			  log.info("principal.getMemberId() = {}", principal.getMemberId());
+			  log.info("studentVacationApprove = {}", studentVacationApprove);
+			  
+			  EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
+			  
+			  model.addAttribute("adminInfo", adminInfo);
 		 	}
-		 
-	
+
 
 }

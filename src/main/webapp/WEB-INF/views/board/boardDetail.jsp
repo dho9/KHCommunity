@@ -249,56 +249,70 @@ ul.commentMenu li {
 }
 
 #messageContainer {
-	display: none;
-	position: fixed;
-	z-index: 1;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+#sendMessageBtn {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 7% 40% 6% 35.3%;
+}
+#messageContainer button:hover {
+    background-color: #0056b3;
 }
 
+.msgModalInput,
+#messageContent{
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+}
 .message-content {
-	background-color: #fff;
-	margin: 10% auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 450px;
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 450px;
 }
 
 #closeMessageBtn {
-	color: #aaa;
-	float: right;
-	font-size: 28px;
-	font-weight: bold;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-#closeMessageBtn:hover, #closeMessageBtn:focus {
-	color: black;
-	text-decoration: none;
-	cursor: pointer;
+#closeMessageBtn:hover,
+#closeMessageBtn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-button.updateBtn, button.deleteBtn {
-	border: none;
-}
-
-#openMessageBtn {
-	background-color: white;
-	border: 0px;
-	color: black;
+button.updateBtn, button.deleteBtn{
+   border: none;
 }
 
 .message-content {
-	border-radius: 20px;
+   border-radius: 20px;
 }
 
 #openMessageBtn:hover {
-	cursor: pointer;
+   cursor: pointer;
 }
-
 .anonymous {
 	float: right;
 	background-color: white;
@@ -470,7 +484,7 @@ button.updateBtn, button.deleteBtn {
 					<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span> <span
 						class="close" id="closeMessageBtn">&times;</span>
 				</div>
-				</br>
+				<br/>
 				<sec:authentication property="principal" var="loginMember" />
 
 				<script>
@@ -478,25 +492,23 @@ button.updateBtn, button.deleteBtn {
 				  console.log(memberId);
 				</script>
 				<div class="mb-3">
-					<label for="toInput" class="form-label">To</label> <input
-						type="text" id="toInput" value="" readonly> <input
-						type="hidden" id="receiveMember" value="" readonly>
-				</div>
-				</br>
-				</br>
-				<div class="mb-3">
-					<label for="fromInput" class="form-label">From</label></br> <input
-						type="text" class="form-control" id="fromInput"
-						value="${loginMember.memberId}" readonly>
-				</div>
-				</br>
-				</br>
-				<div class="mb-3">
-					<label for="contentInput" class="form-label">Content</label>
-					<textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
-				</div>
-				<button id="sendMessageBtn">메시지 전송</button>
-			</form:form>
+                 <label for="toInput" class="form-label">To</label>
+                 <input type="text" id="toInput" value="" class="msgModalInput" readonly>
+                 <input type="hidden" id="receiveMember" value="" readonly>
+              </div>
+              <br/><br/>
+              <div class="mb-3">
+                   <label for="fromInput" class="form-label">From</label></br>
+                    <input type="text" class="form-control msgModalInput" id="fromInput" value="${loginMember.memberId}" readonly>
+              </div>
+              <br/><br/>
+              <div class="mb-3">
+                   <label for="contentInput" class="form-label">Content</label>
+                   <textarea id="messageContent" rows="3" placeholder="메시지 내용 입력"></textarea>
+              </div>
+               <button id="sendMessageBtn">메시지 전송</button>
+           </form:form>
+
 		</div>
 	</div>
 

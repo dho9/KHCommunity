@@ -18,7 +18,7 @@
     border-radius: 63px;
     height: 180%;
     width: 1365px;
-    margin-left: 20%;
+    margin-left: 14%;
     margin-top: 5%;
     background-color: #e9ecef;
 }
