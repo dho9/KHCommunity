@@ -94,6 +94,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	<div id= "top-container">
 	</div>
 	
+
 	<!-- 회원정보 및 버튼 div  -->
 	<div id= "side-container">
 		<div id="profile-container">	
@@ -111,6 +112,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<p id="myId">(${loginMember.username})<p/>
 			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
+
 		<div id="mypageBtns">
 			<p class="mypageBtn" id="memberInfo"><i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보</p>
 			<hr class="myPageHr"/>
@@ -184,6 +186,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</ul>
 				</div>
 			</div>
+
 			
 		</div>	
 
@@ -756,3 +759,4 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/finalProject/

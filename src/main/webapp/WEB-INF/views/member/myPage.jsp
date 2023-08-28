@@ -82,6 +82,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 /* 구매내역 css */
 #messageTbl td,tr,th{text-align: center;}
 
+
+/* 휴가신청 css */
+/* #vacationDiv .btn btn-primary {display: inline-block;} */
+
 </style>
 
 <section>
@@ -231,8 +235,51 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				</table>
 			</div>
 		</div>	
+		<!-- 휴가신청 -->
+		<div class="mypageContent">
+				<p class="infoTitles"><i class="bi bi-coin"></i> &nbsp;휴가신청</p>
+				<div class="myPageDivs" id="vacationDiv" >		
+					<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
+						enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
+					
+						<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
+						<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
+							 <br/>
+							 <tr>
+								<th> 휴가시작날짜 : </th>
+								<td>
+									<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
+								</td>
+							</tr>
+							<br/>
+						
+							<tr>
+								<th>휴가끝나는날짜 : </th>
+								<td>
+									<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
+								</td>
+							</tr>
+							
+							<br/>
+							<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
+						<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId}" readonly>
+						
+						<div class="input-group" style="padding:0px;">
+			  				<div class="custom-file">
+			    				<input type="file" class="fileInput" name="upFile" id="upFile" multiple>
+			    				<!-- <label class="custom-file-label" for="upFile">파일을 선택하세요</label> -->
+			  				</div>		  				
+						</div>
+						<label class="frmStyles" for="state">처리상황 &nbsp;: &nbsp;</label>
+						<span id="state" class="frmStyles"></span>
+						<br/>
+						<input type="submit"  class="btn btn-primary" value="저장" >
+					</form:form>
+				</div>
+			</div>	
+		
+		</div> 
 	
-	</div> 
 	<!-- 메인컨테이너 div끝 -->
 		
 		

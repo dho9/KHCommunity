@@ -20,6 +20,7 @@ import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
+import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
@@ -209,8 +210,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public List<StudentVacationApproveDto> findAllVacationApproveList(String memberId) {
+		return memberRepository.findAllVacationApproveList(memberId);
+	}
+
 	public EmployeeDto findEmployeeById(String memberId) {
-		// TODO Auto-generated method stub
 		return memberRepository.findEmployeeById(memberId);
 	}
 

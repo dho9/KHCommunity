@@ -54,6 +54,7 @@
   	</constructor>
   </resultMap> 
   -->
+ 
   <select id="loadUserByUsername" resultMap="memberAuthMap">
 	select
 	    *
@@ -166,4 +167,14 @@
   </resultMap>
   
   
+  
+  <select id="findAllVacationApproveList" >
+  select  
+ 	 	 m.member_name, v.vacation_id, v.student_id,  v.vacation_start_date, v.vacation_end_date, v.teacher_id, v.vacation_send_date,va.vacation_renamed_filename, v.vacation_approve_check
+  from vacation v join vacation_attachment va 
+		on v.vacation_id = va.vacation_id 
+				  join member m on m.member_id = v.student_id
+  where teacher_id = #{teacherId}
+  </select>
+
 </mapper>

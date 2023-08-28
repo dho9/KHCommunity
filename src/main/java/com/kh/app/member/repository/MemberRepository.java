@@ -15,6 +15,7 @@ import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
+import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.Student;
@@ -72,6 +73,13 @@ public interface MemberRepository {
 //	@Insert("insert into vacation values( seq_vacation_id.nextval, #{member.studentId}, #{member.vacationStartDate, jdbcType=DATE}, #{member.vacationEndDate, jdbcType=DATE}, #{member.teacherId}, #{member.employeeId}, #{member.vacationSendDate}, '1' )")
 	int insertVacationById(MemberDetails member);
 
+
+
+
+	List<StudentVacationApproveDto> findAllVacationApproveList(String memberId);
+	 
+	
+
 	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', sysdate, '1' )")
 	@SelectKey(before = false, keyProperty = "vacationId", resultType = int.class, statement = "select seq_vacation_id.currval from dual")
 	int insertVacation(StudentVacation vacation);
@@ -85,5 +93,6 @@ public interface MemberRepository {
 
 	@Select("select * from student s left join myclass m on s.curriculum_id = m.curriculum_id where student_id = #{memberId}")
 	StudentDto findStudentType(String memberId);
+
 
 }
