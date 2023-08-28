@@ -28,15 +28,19 @@
         			<div class="card" id="chat2">
          				<div class="card-header d-flex justify-content-between align-items-center p-3">
            					<h5 class="mb-0">Chat</h5>
-				        	<button type="button" class="btn btn-primary btn-sm" data-mdb-ripple-color="dark">Let's Chat App</button>
+           					<sec:authorize access="hasAuthority('ADMIN')">
+	           					<form:form name="quitChatFrm">
+					        		<button type="button" id="quitChat" class="btn btn-danger btn-sm" data-mdb-ripple-color="dark">채팅 마치기</button>
+	           					</form:form>
+           					</sec:authorize>
           				</div>
           				<div class="card-body" id="chatBody"data-mdb-perfect-scrollbar="true" style="position: relative; height: 600px; overflow-y:scroll;">
 
             				
           				</div>
-            			<form id="chat-form">
-	          				
-            			</form>
+            			<form:form id="chat-form" name="chatFrm">
+	          				<input type="hidden" name="loginMemberId" id="loginMemberId" value="${loginMember.username}">
+            			</form:form>
         			</div>
 
 				</div>
@@ -51,8 +55,11 @@
 	    const chatId = getChatIdFromQueryString(); // URL 쿼리 파라미터로부터 chatId 가져오기
 	
 	    const chatForm = document.getElementById('chat-form');
-	    chatForm.innerHTML = '<div class="card-footer text-muted d-flex justify-content-start align-items-center p-3" id="sendImgBox"><img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp" alt="avatar 3" style="width: 40px; height: 100%;"><input type="text" class="form-control form-control-lg" id="message-input" placeholder="Type message"><button>전송</button></div>';
-	    console.log(chatId);
+	    const sendMsgElement = document.createElement('div');
+	    sendMsgElement.innerHTML = '<div class="card-footer text-muted d-flex justify-content-start align-items-center p-3" id="sendImgBox"><img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp" alt="avatar 3" style="width: 40px; height: 100%;"><input type="text" class="form-control form-control-lg" id="message-input" placeholder="Type message"><button>전송</button></div>';
+	    chatForm.appendChild(sendMsgElement);
+	    
+	    
 	    // WebSocket 연결
 	    const stompClient = Stomp.over(new SockJS('/kh/ws'));
 	
@@ -66,42 +73,140 @@
 	
 	            // 수신한 메시지를 화면에 표시하는 함수 호출
 	            displayReceivedMessage(payload.message, payload.createdAt, payload.sender);
+	            displayReceivedQuitMsg(payload.quitMsg)
 	        });
+	        
+		    // 저장된 종료 메시지를 가져와서 복원
+	        const savedQuitMessage = localStorage.getItem('quitMessage');
+	        if (savedQuitMessage) {
+	            displayReceivedQuitMsg(savedQuitMessage);
+	        }
+
+	        // 저장된 `quitChat` 상태를 가져와서 복원
+	        const isQuitChatVisible = localStorage.getItem('quitChatVisible');
+	        if (isQuitChatVisible === 'false') {
+	            const quitChat = document.getElementById('quitChat');
+	            quitChat.style.display = 'none';
+	        }
+	        
+			// 채팅 입력 폼 전송 이벤트 리스너
+		    chatForm.addEventListener('submit', (e) => {
+		        e.preventDefault();
+		        const messageInput = document.getElementById('message-input');
+		        const message = messageInput.value;
+		        const createdAt =Date.now(); 
+		        
+		        // 메시지 전송 함수 호출
+		        sendMessage(stompClient, message, createdAt);
+		
+		        // 입력 필드 초기화
+		        messageInput.value = '';
+		    });
+			
+			// 채팅 마치기 클릭시 이벤트 리스너
+		    const quitChatBtn = document.getElementById('quitChat');
+            quitChatBtn.addEventListener('click', () => {
+                const inputText = prompt("채팅을 마칩니다. 상담 타입을 작성해주세요");
+                if (inputText) {
+                    // 사용자로부터 입력받은 텍스트를 서버로 전송하여 DB에 저장
+                    sendInputToServer(inputText);
+            		
+                    const quitMsg = "채팅이 종료되었습니다.";
+                    
+                    sendQuitMessage(stompClient, quitMsg)
+                    
+                 }
+                    
+            });
+			
 	    });
-	    
-		// 채팅 입력 폼 전송 이벤트 리스너
-	    chatForm.addEventListener('submit', (e) => {
-	        e.preventDefault();
-	        const messageInput = document.getElementById('message-input');
-	        const message = messageInput.value;
-	
-	        // 메시지 전송 함수 호출
-	        sendMessage(message);
-	
-	        // 입력 필드 초기화
-	        messageInput.value = '';
-	    });
-	    
 	});
 	
-	function sendMessage(message) {
+	function sendInputToServer(inputText) {
+        const chatId = getChatIdFromQueryString();
+        const quitChatFrm = document.forms.quitChatFrm;
+        const token = quitChatFrm._csrf.value;
+
+        $.ajax({
+            type: "POST",
+            url: "${pageContext.request.contextPath}/chat/updateChatTypeInChatRoom.do",
+            data: {
+                chatId,
+                inputText
+            },
+            headers: {
+                "X-CSRF-TOKEN": token
+            },
+            success: function(responseData) {
+                console.log("성공");
+                
+            },
+            error: function(error) {
+                console.error("에러", error);
+            }
+        });
+    }
+	
+	// 채팅 마치기 버튼을 눌렀을 때
+	function sendQuitMessage(stompClient, quitMsg) {
+		const chatId = getChatIdFromQueryString();
+		const topic = '/topic/chat/chatId='+chatId;
+	    const payload = {
+	        quitMsg
+	    };
+	    
+	    stompClient.send(topic, {}, JSON.stringify(payload));
+	}
+	
+	//수신한 메시지를 화면에 표시하는 함수
+	function displayReceivedQuitMsg(quitMsg) {
+		const messageContainer = document.getElementById('chatBody');
+    	const messageElement = document.createElement('div');
+    	messageElement.innerHTML = '<div class="text-center" style="color:darkgrey;">'+quitMsg+'</div>';
+    	messageContainer.appendChild(messageElement);
+    	const chatForm = document.getElementById('chat-form');
+    	chatForm.innerHTML = '<div class="card-footer text-muted d-flex justify-content-start align-items-center p-3" id="sendImgBox"><input type="text" class="form-control form-control-lg" id="message-input" placeholder="Type message" readonly></div>';
+    	
+    	const quitChat = document.getElementById('quitChat');
+    	quitChat.style.display = 'none';
+    	
+    	// 종료 메시지를 저장하고 종료 상태를 `localStorage`에 표시
+        localStorage.setItem('quitMessage', quitMsg);
+        localStorage.setItem('quitChatVisible', 'false');
+	}
+	
+	function sendMessage(stompClient, message, createdAt) {
 	    const chatId = getChatIdFromQueryString();
-	    const stompClient = Stomp.over(new SockJS('/kh/ws'));
 	    const memberId = '<sec:authentication property="principal.username"/>';
 	
-	    stompClient.connect({}, (frame) => {
-	        console.log('Connected: ' + frame);
+	    const topic = '/topic/chat/chatId='+chatId;
+	    const payload = {
+	        messageType: "CHAT_MESSAGE",
+	        chatroomId: chatId,
+	        sender: 'ADMIN', // 사용자 식별자 가져오기
+	        message: message,
+	        createdAt: createdAt
+	    };
 	
-	        const topic = '/topic/chat/chatId='+chatId;
-	        const payload = {
-	            messageType: "CHAT_MESSAGE",
-	            chatroomId: chatId,
-	            sender: 'ADMIN', // 사용자 식별자 가져오기
-	            message: message,
-	            createdAt: Date.now()
-	        };
-	
-	        stompClient.send(topic, {}, JSON.stringify(payload));
+	    stompClient.send(topic, {}, JSON.stringify(payload));
+	        
+	    const chatFrm = document.forms.chatFrm;
+	    const token = chatFrm._csrf.value;
+	        
+	    $.ajax({
+	    	type : "POST",
+	    	url: "${pageContext.request.contextPath}/chat/insertAdminChatMsg.do",
+	    	data :{
+	    		chatId,
+	    		message,
+	    		createdAt
+	    	},
+	    	headers: {
+	               "X-CSRF-TOKEN": token
+	        },
+	    	success(responseData){
+	    		console.log("성공")
+	    	}
 	    });
 	}
 	
@@ -118,10 +223,6 @@
 	    }
 	    messageContainer.appendChild(messageElement);
 	    
-	    /* const messageElement = document.createElement('div');
-	    messageElement.textContent = message;
-	
-	    messageContainer.appendChild(messageElement); */
 	}
 	
 	function getChatIdFromQueryString() {
@@ -137,8 +238,9 @@
 	    const chatId = getChatIdFromQueryString(); // URL 쿼리 파라미터로부터 chatId 가져오기
 	
 	    const chatForm = document.getElementById('chat-form');
-	    chatForm.innerHTML = '<div class="card-footer text-muted d-flex justify-content-start align-items-center p-3" id="sendImgBox"><img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp" alt="avatar 3" style="width: 40px; height: 100%;"><input type="text" class="form-control form-control-lg" id="message-input" placeholder="Type message"><button>전송</button></div>';
-	    
+	    const sendMsgElement = document.createElement('div');
+	    sendMsgElement.innerHTML = '<div class="card-footer text-muted d-flex justify-content-start align-items-center p-3" id="sendImgBox"><img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp" alt="avatar 3" style="width: 40px; height: 100%;"><input type="text" class="form-control form-control-lg" id="message-input" placeholder="Type message"><button>전송</button></div>';
+	    chatForm.appendChild(sendMsgElement);
 	    
 	    console.log(chatId);
 	    // WebSocket 연결
@@ -154,32 +256,49 @@
 	
 	            // 수신한 메시지를 화면에 표시하는 함수 호출
 	            displayReceivedMessage(payload.message, payload.createdAt, payload.sender);
+	            
+	            displayReceivedQuitMsg(payload.quitMsg)
 	        });
+	        
+	     	// 저장된 종료 메시지를 가져와서 복원
+	        const savedQuitMessage = localStorage.getItem('quitMessage');
+	        if (savedQuitMessage) {
+	            displayReceivedQuitMsg(savedQuitMessage);
+	        }
+
+	        // 저장된 `quitChat` 상태를 가져와서 복원
+	        const isQuitChatVisible = localStorage.getItem('quitChatVisible');
+	        /* if (isQuitChatVisible === 'false') {
+	            const quitChat = document.getElementById('quitChat');
+	            quitChat.style.display = 'none';
+	        } */
+	        
+			// 채팅 입력 폼 전송 이벤트 리스너
+		    chatForm.addEventListener('submit', (e) => {
+		        e.preventDefault();
+		        const messageInput = document.getElementById('message-input');
+		        const message = messageInput.value;
+				const createdAt =Date.now();			
+				
+		        // 메시지 전송 함수 호출
+		        sendMessage(stompClient, message, createdAt);
+		
+		        // 입력 필드 초기화
+		        messageInput.value = '';
+		        
+		    });
 	    });
 	    
-		// 채팅 입력 폼 전송 이벤트 리스너
-	    chatForm.addEventListener('submit', (e) => {
-	        e.preventDefault();
-	        const messageInput = document.getElementById('message-input');
-	        const message = messageInput.value;
-	
-	        // 메시지 전송 함수 호출
-	        sendMessage(message);
-	
-	        // 입력 필드 초기화
-	        messageInput.value = '';
-	    });
 	    
 	});
 	
-	function sendMessage(message) {
+	
+	// 채팅 전송 함수
+	function sendMessage(stompClient, message, createdAt) {
 	    const chatId = getChatIdFromQueryString();
-	    const stompClient = Stomp.over(new SockJS('/kh/ws'));
 	    const memberId = '<sec:authentication property="principal.username"/>';
 	
-	    stompClient.connect({}, (frame) => {
-	        console.log('Connected: ' + frame);
-	
+	   
 	        const topic = '/topic/chat/chatId='+chatId;
 	        const payload = {
 	            messageType: "CHAT_MESSAGE",
@@ -187,11 +306,33 @@
 	            
 	            sender: 'STUDENT', // 사용자 식별자 가져오기
 	            message: message,
-	            createdAt: Date.now()
+	            createdAt: createdAt
 	        };
 	
 	        stompClient.send(topic, {}, JSON.stringify(payload));
-	    });
+	        
+	        const chatFrm = document.forms.chatFrm;
+	        const token = chatFrm._csrf.value;
+	        
+	        console.log(token);
+	        
+	        $.ajax({
+	    		type : "POST",
+	    		url: "${pageContext.request.contextPath}/chat/insertStudentChatMsg.do",
+	    		data :{
+	    			chatId,
+	    			studentId: memberId,
+	    			message,
+	    			createdAt
+	    		},
+	    		headers: {
+	                "X-CSRF-TOKEN": token
+	            },
+	    		success(responseData){
+	    			console.log("성공")
+	    		}
+	    	});
+	    
 	}
 	
 	//수신한 메시지를 화면에 표시하는 함수
@@ -212,6 +353,19 @@
 	function getChatIdFromQueryString() {
 	    const urlParams = new URLSearchParams(window.location.search);
 	    return urlParams.get('chatId');
+	}
+	
+	function displayReceivedQuitMsg(quitMsg) {
+		const messageContainer = document.getElementById('chatBody');
+    	const messageElement = document.createElement('div');
+    	messageElement.innerHTML = '<div class="text-center" style="color:darkgrey;">'+quitMsg+'</div>';
+    	messageContainer.appendChild(messageElement);
+    	const chatForm = document.getElementById('chat-form');
+    	chatForm.innerHTML = '<div class="card-footer text-muted d-flex justify-content-start align-items-center p-3" id="sendImgBox"><input type="text" class="form-control form-control-lg" id="message-input" placeholder="Type message" readonly></div>';
+	    
+    	// 종료 메시지를 저장하고 종료 상태를 `localStorage`에 표시
+        localStorage.setItem('quitMessage', quitMsg);
+        localStorage.setItem('quitChatVisible', 'false');
 	}
 	
 	</script>
