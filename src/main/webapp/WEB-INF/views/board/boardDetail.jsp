@@ -509,6 +509,7 @@ button.updateBtn, button.deleteBtn {
 				method="post">
 				<input type="hidden" name="reportPostId" id="reportPostId"
 					value="${postDetail.postId}">
+				<input type="hidden" name="reportCommentId" id="reportCommentId">
 				<input type="hidden" name="reporterId" id="reporterId"
 					value="${loginMember.username}">
 				<input type="hidden" name="attackerId" id="attackerId"
@@ -532,9 +533,7 @@ button.updateBtn, button.deleteBtn {
 	</div>
 
 	<script>
-    // loginMember를 JSON 문자열로 변환하여 JavaScript 변수에 할당
-    const loginMemberJSON = '${fn:escapeXml(loginMember)}';
-    console.log(loginMemberJSON);
+    
 	// 모달 요소와 모달을 트리거하는 버튼을 가져옵니다.
 	const modal = document.getElementById("reportModal");
 	const abuseButton = document.querySelector(".abuse");
@@ -543,9 +542,11 @@ button.updateBtn, button.deleteBtn {
 	const closeBtn = modal.querySelector(".close");
 
 	// "신고" 버튼 클릭 시 모달을 보이도록 설정합니다.
-	/* abuseButton.addEventListener("click", () => {
-	  modal.style.display = "block";
-	}); */
+	if(abuseButton !== null){
+		abuseButton.addEventListener("click", () => {
+			  modal.style.display = "block";
+			});
+	}
 
 	// 닫기 버튼 클릭 시 모달을 닫습니다.
 	closeBtn.addEventListener("click", () => {
@@ -566,10 +567,6 @@ button.updateBtn, button.deleteBtn {
 			reportType.value = reportType_.value;
 		});
 	}
-	
-	
-
-	  
     // 신고 제출 후 모달을 닫습니다.
     modal.style.display = "none";
 	
@@ -1321,7 +1318,7 @@ button.updateBtn, button.deleteBtn {
 		                 	 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${comment.commentId}">삭제</li>`}
 		                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 		                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
-		                 	 \${showAbuse ? '<li class="abuse">신고</li>' : ''}
+		                 	 \${showAbuse ? `<li class="abuse" data-commentid="\${comment.commentId}" data-writerid="\${comment.memberId}">신고</li>` : ''}
 		             	</ul>
 		             </h3>
 		             <hr>
@@ -1358,6 +1355,7 @@ button.updateBtn, button.deleteBtn {
 		})
 	}	
 
+	
 	function renderChildComments(childComments, parentCommentElement) {
 		const postAuthor = "${postDetail.memberId}";
 		const childCommentsContainer = document.createElement('div');
@@ -1384,9 +1382,9 @@ button.updateBtn, button.deleteBtn {
 	 	               <span>\${childComment.anonymousCheck ? '익명' : childComment.memberId} \${showAuthor ? '' : '<author class="author">(작성자)</author>'}</span>
 	 	            </div>
 	 	        	<ul class="commentMenu">
-	 	        		 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${childComment.commentId}">삭제</li>`}
+	 	        		 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${childComment.commentId}" >삭제</li>`}
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
-	                 	 \${showAbuse ? '<li class="abuse">신고</li>' : ''}
+	                 	 \${showAbuse ? `<li class="abuse" data-commentid="\${childComment.commentId}" data-writerid="\${childComment.memberId}">신고</li>` : ''}
 	             	</ul>
 	             </h3>
 	             <hr>
@@ -1434,13 +1432,12 @@ function loadCommentLike() {
     });
 }
 
-
-//익명 , 댓글제출버튼에 관한 기능
 let anonyCk = false;
 document.querySelector('#commnetContainer').addEventListener('click', (event) => {
 	console.log("클릭!")
   const clickedElement = event.target;
   const value = clickedElement.getAttribute('data-value');
+  
   
   const urlParams = new URLSearchParams(new URL(window.location.href).search);
   const postId = urlParams.get('id');
@@ -1498,6 +1495,18 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
 	  const commentId = clickedElement.getAttribute('data-commentid');
 	  console.log(commentId);
 	  deleteComment(commentId);
+  }
+  
+  if(clickedElement.classList.contains('abuse')){
+	  const reportCommentId = document.querySelector("#reportCommentId");
+	  const commentId = clickedElement.getAttribute('data-commentid');
+	  const writerId = clickedElement.getAttribute('data-writerid');
+	  const attackerId = document.querySelector("#attackerId");
+	  reportCommentId.value = commentId;
+	  attackerId.value =  writerId;
+	  modal.style.display = "block";
+	  
+	  
   }
 });
 function deleteComment(commentId){

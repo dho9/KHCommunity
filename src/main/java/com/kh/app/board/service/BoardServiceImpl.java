@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
@@ -313,6 +314,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int insertPostReport(PostReportDto postReport) {
 		return boardRepository.insertPostReport(postReport);
+	}
+	
+	@Override
+	public int insertCommentReport(CommentReportDto commentReport) {
+		return boardRepository.insertCommentReport(commentReport);
 	}
 	
 	@Override

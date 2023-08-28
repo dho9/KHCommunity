@@ -7,6 +7,7 @@ import java.util.Map;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
@@ -129,5 +130,7 @@ public interface BoardService {
 	int deleteCommentId(int commentId);
 
 	List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException;
+
+	int insertCommentReport(CommentReportDto commentReport);
 
 }

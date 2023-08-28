@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
@@ -813,20 +813,40 @@ public class BoardController {
 	
 	@PostMapping("postReport.do")
 	public String postReport(
-			@RequestParam int reportPostId,
+			@RequestParam(required = false) int reportPostId,
+			@RequestParam(required = false) int reportCommentId,
 			@RequestParam String reporterId,
 			@RequestParam String attackerId,
 			@RequestParam String reportType,
 			@RequestParam String reportContent
 			) {
-		PostReportDto postReport = PostReportDto.builder()
-				.postId(reportPostId)
-				.reporterId(reporterId)
-				.attackerId(attackerId)
-				.reportType(reportType)
-				.reportContent(reportContent)
-				.build();
-		int result = boardService.insertPostReport(postReport);
+		int result = 0;
+		System.out.println("reportPostId = " + reportPostId);
+		System.out.println("reportCommentId = " + reportCommentId);
+		System.out.println("reporterId = " + reporterId);
+		System.out.println("attackerId = " + attackerId);
+		System.out.println("reportType = " + reportType);
+		System.out.println("reportContent = " + reportContent);
+		if((Integer)reportCommentId != null || (Integer)reportCommentId != Integer.parseInt("")) {
+			CommentReportDto commentReport = CommentReportDto.builder()
+					.commentId(reportCommentId)
+					.reporterId(reporterId)
+					.attackerId(attackerId)
+					.reportType(reportType)
+					.reportContent(reportContent)
+					.build();
+			result = boardService.insertCommentReport(commentReport);
+		}else {
+			PostReportDto postReport = PostReportDto.builder()
+					.postId(reportPostId)
+					.reporterId(reporterId)
+					.attackerId(attackerId)
+					.reportType(reportType)
+					.reportContent(reportContent)
+					.build();
+			result = boardService.insertPostReport(postReport);
+		}
+		
 		
 		return "redirect:/board/boardDetail.do?id="+reportPostId;
 	}
