@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequestMapping("/member")
 public class MemberSecurityController {
-
+	// 미루야~~~
 	@Autowired
 	private MemberService memberService;
 
