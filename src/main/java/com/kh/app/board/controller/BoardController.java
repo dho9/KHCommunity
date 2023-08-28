@@ -12,9 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -35,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
@@ -957,15 +955,26 @@ public class BoardController {
 		return "redirect:/board/boardDetail.do?id="+ reportPostId;
 	}
 	
-	/*
-	 * @GetMapping("/jobSearchBoardList.do") public String jobSearchBoardList(Model
-	 * model) { List<BoardListDto> jobSearchBoardList =
-	 * boardService.jobSearchBoardFindAll();
-	 * 
-	 * model.addAttribute("jobSearchBoardList", jobSearchBoardList);
-	 * 
-	 * return "/board/jobSearchBoardList"; }
-	 */
+	 @GetMapping("/jobSearchBoardList.do") 
+	 public String jobSearchBoardList(@RequestParam(name = "page", defaultValue = "1") int page, Model model) throws IOException { 
+	    int limit = 8;
+		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		
+		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+	    int totalCount = 10;
+	    
+	    // totalPage 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    log.info("jobKoreaList={}", jobKoreaList);
+	    Gson gson = new Gson();
+	    String jobKoreaListAsJson = gson.toJson(jobKoreaList);
+	    model.addAttribute("jobKoreaListAsJson", jobKoreaListAsJson);
+		model.addAttribute("jobKoreaList", jobKoreaList);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+	  
+		return "/board/jobSearchBoardList"; 
+	  }
 	
 	@GetMapping("/threePostByBoardId.do")
 	@ResponseBody
@@ -989,24 +998,6 @@ public class BoardController {
 	
 		return "삭제성공";
 		
-	}
-	
-	@GetMapping("/jobKorea.do")
-	public String jobKorea(@RequestParam(name = "page", defaultValue = "1") int page, Model model) throws IOException {
-		int limit = 8;
-		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
-		
-		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
-	    int totalCount = 10;
-	    
-	    // totalPage 계산
-	    int totalPages = (int) Math.ceil((double) totalCount / limit);
-	    
-		log.info("jobKoreaList={}", jobKoreaList);
-		model.addAttribute("jobKoreaList", jobKoreaList);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		return "/board/jobSearchBoardList";
 	}
 	
 	@PostMapping("/createMyClass.do")
@@ -1084,7 +1075,6 @@ public class BoardController {
 		
 		List<String> tags = _tags != null ? Arrays.asList(_tags.replace("[", "").replace("]", "").split(",")) : null; 
 		
-		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!={}", tags);
 		BoardCreateDto board = null;
 		int result = 0;
 		
