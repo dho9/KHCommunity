@@ -257,7 +257,7 @@ ul.commentMenu li {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 #sendMessageBtn {
     padding: 10px 20px;
@@ -291,7 +291,7 @@ ul.commentMenu li {
 #closeMessageBtn {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 50px;
     font-weight: bold;
 }
 
@@ -481,8 +481,8 @@ button.updateBtn, button.deleteBtn{
 			<form:form id="messageFrm"
 				action="${pageContext.request.contextPath}/message/messageSend.do">
 				<div>
-					<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span> <span
-						class="close" id="closeMessageBtn">&times;</span>
+					<span class="close-class" id="closeMessageBtn">&times;</span> <br/>
+					<span><i class="bi bi-send"></i>&nbsp;쪽지 보내기</span> 
 				</div>
 				<br/>
 				<sec:authentication property="principal" var="loginMember" />
@@ -1333,7 +1333,7 @@ button.updateBtn, button.deleteBtn{
 		 	                <span>\${comment.anonymousCheck ? '익명' : comment.memberId} \${showAuthor ? '' : '<author class="author">(작성자)</author>'}</span>
 		 	            </div>
 		 	        	<ul class="commentMenu">
-		                 	 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${comment.commentId}">삭제</li>`}
+		                 	 \${showAbuse ? `<li class="messagesend" onclick="messageSend('\${comment.memberId}', '\${comment.anonymousCheck}')">쪽지</li>` : `<li class="deleteComment" data-commentid="\${comment.commentId}">삭제</li>`}
 		                 	<li class="childcomment" data-commentid="\${comment.commentId}">대댓글</li>
 		                 	<li class="commentvote" data-commentid="\${comment.commentId}">공감</li>
 		                 	 \${showAbuse ? `<li class="abuse" data-commentid="\${comment.commentId}" data-writerid="\${comment.memberId}">신고</li>` : ''}
@@ -1400,7 +1400,7 @@ button.updateBtn, button.deleteBtn{
 	 	               <span>\${childComment.anonymousCheck ? '익명' : childComment.memberId} \${showAuthor ? '' : '<author class="author">(작성자)</author>'}</span>
 	 	            </div>
 	 	        	<ul class="commentMenu">
-	 	        		 \${showAbuse ? '<li class="messagesend">쪽지</li>' : `<li class="deleteComment" data-commentid="\${childComment.commentId}" >삭제</li>`}
+	 	        		 \${showAbuse ? `<li class="messagesend" onclick="messageSend('\${childComment.memberId}', '\${childComment.anonymousCheck}')">쪽지</li>` : `<li class="deleteComment" data-commentid="\${childComment.commentId}" >삭제</li>`}
 	                 	<li class="commentvote" data-commentid="\${childComment.commentId}">공감</li>
 	                 	 \${showAbuse ? `<li class="abuse" data-commentid="\${childComment.commentId}" data-writerid="\${childComment.memberId}">신고</li>` : ''}
 	             	</ul>
@@ -1691,6 +1691,7 @@ function likeComment(){
 		 closeMessageBtn.addEventListener("click", function() {
 		     messageContainer.style.display = "none";
 		 });
+
 		
 	};
 	
