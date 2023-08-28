@@ -43,7 +43,8 @@ font-size:10px;}
 	margin: 15% auto;
 	padding: 20px;
 	border: 1px solid #888;
-	width: 50%;
+	width: 30%;
+	text-align: center;
 	position: relative;
 }
 
@@ -503,18 +504,24 @@ button.updateBtn, button.deleteBtn {
 	<div id="reportModal" class="modal">
 		<div class="modal-content">
 			<span class="close">&times;</span>
-			<h2>신고하기</h2>
+			<h2 style="margin-bottom: 10px">신고하기</h2>
 			<form:form id="reportForm" name="reportForm"
 				action="${pageContext.request.contextPath}/board/postReport.do"
 				method="post">
+				
 				<input type="hidden" name="reportPostId" id="reportPostId"
 					value="${postDetail.postId}">
+					
 				<input type="hidden" name="reportCommentId" id="reportCommentId">
+				
 				<input type="hidden" name="reporterId" id="reporterId"
 					value="${loginMember.username}">
+					
 				<input type="hidden" name="attackerId" id="attackerId"
 					value="${postDetail.memberId}">
+					
 				<input type="hidden" id="reportType" name="reportType" value="">
+				
 				<label for="reportType">신고유형:</label>
 				<select name="reportType_" id="reportType_">
 					<option value="게시판 성격에 부적절함">게시판 성격에 부적절함</option>
@@ -525,9 +532,8 @@ button.updateBtn, button.deleteBtn {
 					<option value="낚시/놀람/도배">낚시/놀람/도배</option>
 					<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>
 				</select>
-				<label for="reportContent">신고내용:</label>
-				<textarea id="reportContent" name="reportContent" rows="4" required></textarea>
-				<button type="submit">신고 제출</button>
+				<textarea id="reportContent" name="reportContent" rows="4" style = "height: 30%; width: 100%; margin-top: 15px; resize:none" placeholder="신고사유를 입력하세요~" required></textarea>
+				<button type="submit" style = "margin-top: 19px; width: 75px; height: 40px; background: none; border: solid 1px red; border-radius: 10px; font-weight: bold; color: red;">신고 제출</button>
 			</form:form>
 		</div>
 	</div>

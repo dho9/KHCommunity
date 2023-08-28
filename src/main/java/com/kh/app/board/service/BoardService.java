@@ -26,23 +26,23 @@ public interface BoardService {
 
 	List<BoardSearchDto> findAllByMemberId(String memberId);
 	
-	List<BoardListDto> freeBoardFindAll();
+	List<BoardListDto> freeBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> marketBoardFindAll();
-
-	List<BoardListDto> sharingInformationBoardFindAll();
+	List<BoardListDto> marketBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> askCodeBoardFindAll();
+	List<BoardListDto> todayFoodBoardFindAll(Map<String, Object> params);
 
-	List<BoardListDto> graduateBoardFindAll();
-
-	List<BoardListDto> preStudentBoardFindAll();
+	List<BoardListDto> sharingInformationBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> employeeBoardFindAll();
+	List<BoardListDto> askCodeBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> todayFoodBoardFindAll();
+	List<BoardListDto> studyBoardFindAll(Map<String, Object> params);
 
-	List<BoardListDto> studyBoardFindAll();
+	List<BoardListDto> graduateBoardFindAll(Map<String, Object> params);
+
+	List<BoardListDto> preStudentBoardFindAll(Map<String, Object> params);
+	
+	List<BoardListDto> employeeBoardFindAll(Map<String, Object> params);
 
 	Favorite findFavoriteByMemberId(int boardId, String memberId);
 
@@ -132,5 +132,25 @@ public interface BoardService {
 	List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException;
 
 	int insertCommentReport(CommentReportDto commentReport);
+
+	int totalCountFreeBoard();
+
+	int totalCountMarketBoard();
+
+	int totalCountTodayFoodBoard();
+
+	int totalCountSharingInformationBoard();
+
+	int totalCountAskCodeBoard();
+
+	int totalCountStudyBoard();
+
+	int totalCountGraduateBoard();
+
+	int totalCountPreStudentBoard();
+
+	int totalCountEmployeeBoard();
+
+	
 
 }

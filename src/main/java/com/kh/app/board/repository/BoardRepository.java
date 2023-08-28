@@ -33,24 +33,24 @@ public interface BoardRepository {
 
 	List<BoardSearchDto> findAllByMemberId(String memberId);
 	
-	List<BoardListDto> freeBoardFindAll();
+	List<BoardListDto> freeBoardFindAll(RowBounds rowBounds);
 	
-	List<BoardListDto> marketBoardFindAll();
+	List<BoardListDto> marketBoardFindAll(RowBounds rowBounds);
 	
-	List<BoardListDto> todayFoodBoardFindAll();
+	List<BoardListDto> todayFoodBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> sharingInformationBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> askCodeBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> studyBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> graduateBoardFindAll(RowBounds rowBounds);
 
-	List<BoardListDto> preStudentBoardFindAll();
+	List<BoardListDto> preStudentBoardFindAll(RowBounds rowBounds);
 
-	List<BoardListDto> graduateBoardFindAll();
+	List<BoardListDto> employeeBoardFindAll(RowBounds rowBounds);
 	
-	List<BoardListDto> employeeBoardFindAll();
-	
-	List<BoardListDto> studyBoardFindAll();
-	
-	List<BoardListDto> sharingInformationBoardFindAll();
-
-	List<BoardListDto> askCodeBoardFindAll();
-
 	List<BoardListDto> myClassBoardFindAll();
 
 	@Select("select * from favorite where board_id = #{boardId} and member_id = #{memberId}")
@@ -197,6 +197,38 @@ public interface BoardRepository {
 	
 	@Delete ("delete from post_comment where comment_id =#{commentId}")
 	int deleteCommentId(int commentId);
+
+	@Select ("select count(*) from post where board_id=1")
+	int totalCountFreeBoard();
+
+	@Select ("select count(*) from post where board_id=2")
+	int totalCountMarketBoard();
+
+	@Select ("select count(*) from post where board_id=3")
+	int totalCountTodayFoodBoard();
+	
+	@Select ("select count(*) from post where board_id=4")
+	int totalCountSharingInformationBoard();
+
+	@Select ("select count(*) from post where board_id=5")
+	int totalCountAskCodeBoard();
+
+	@Select ("select count(*) from post where board_id=6")
+	int totalCountStudyBoard();
+
+	@Select ("select count(*) from post where board_id=7")
+	int totalCountGraduateBoard();
+
+	@Select ("select count(*) from post where board_id=8")
+	int totalCountPreStudentBoard();
+
+	@Select ("select count(*) from post where board_id=9")
+	int totalCountEmployeeBoard();
+
+	
+	
+
+	
 
 	
 	
