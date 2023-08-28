@@ -248,7 +248,8 @@ CREATE TABLE post_comment (
    comment_content   varchar2(1000),
    comment_level   number   ,
    comment_ref   number   ,
-   comment_created_at   date   DEFAULT current_date
+   comment_created_at   date   DEFAULT current_date,
+   delete_ck number default 0
 );
 
 CREATE TABLE favorite (
@@ -291,13 +292,14 @@ CREATE TABLE report (
 
 CREATE TABLE chat_room (
    chat_id   number      NOT NULL,
-   chat_date   date   DEFAULT current_date
+   chat_date   date   DEFAULT current_date,
+   chat_type varchar2(100) default null
 );
 
 CREATE TABLE talker (
    chat_id   number      NOT NULL,
    student_id   varchar2(20)      NOT NULL,
-   employee_id   varchar2(20)      NOT NULL
+   employee_id   varchar2(20)
 );
 
 CREATE TABLE chat_message (
@@ -367,13 +369,40 @@ update(
         post p join post_content pc 
             on
         p.post_id = pc.post_id 
-)p_pc
+) p_pc
 set
     p_pc.title = '수정제목',
     p_pc.content = '수정내용'
 where
     p_pc.post_id=1;
     
+MERGE INTO post p
+USING post_content pc ON (p.post_id = pc.post_id)
+WHEN MATCHED THEN
+UPDATE SET p.title = '수정제목', pc.content = '수정내용'
+WHERE p.post_id = 1;
+
+select * from post_content;
+
+MERGE INTO post p
+USING (
+    SELECT post_id, content
+    FROM post_content
+) pc ON (p.post_id = pc.post_id)
+WHEN MATCHED THEN
+    UPDATE SET p.title = '수정제목', pc.content = '수정내용'
+WHERE p.post_id = 1;
+
+UPDATE (
+    SELECT p.post_id, p.title, pc.content
+    FROM post p
+    JOIN post_content pc ON p.post_id = pc.post_id
+) merged
+SET merged.title = '수정제목',
+      merged.content = '수정내용'
+where
+    merged.post_id = 1;
+
 
 select * from post order by 1;
 
@@ -870,7 +899,8 @@ alter table message_box add constraint CK_messagebox_read_check check (read_chec
 alter table message_box add constraint CK_messagebox_anonymous_check check (anonymous_check in ('y', 'n'));
 -- 익명으로 보낼건지 ?
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
--- 신고처리됐는지?
+-- 댓글삭제여부
+alter table post_comment add constraint ck_post_comment_delete_ck check (delete_ck in ('0','1'));
 
 --=================================
 --트리거
@@ -945,7 +975,16 @@ END;
 
 -- 삭제댓글 트리거
 CREATE OR REPLACE TRIGGER DELETE_COMMENT_TRIGGER
-AFTER delete ON post_comment
+AFTER update ON post_comment
+FOR EACH ROW
+BEGIN
+  insert into delete_comment 
+  values(:OLD.comment_id, :OLD.post_id, :OLD.board_id, :OLD.member_id, :OLD.comment_content, :OLD.comment_level, :OLD.comment_ref, :OLD.comment_created_at);
+END;
+/
+-- 댓글 트리거
+CREATE OR REPLACE TRIGGER UPDATE_COMMENT_TRIGGER
+AFTER update ON post_comment
 FOR EACH ROW
 BEGIN
   insert into delete_comment 
@@ -1100,12 +1139,12 @@ VALUES (seq_message_id.NEXTVAL, 'alfn', 'alsgml', '예비생입니다. 자바공
 INSERT INTO report (report_id, post_id, comment_id, message_id, reporter_id, attaker_id, report_content, report_type, report_send_date, report_check)
 VALUES (seq_report_id.NEXTVAL, 1, NULL, NULL, 'alfn', 'gmlwls', '자유게시판인데 왜 이상한 글 을 올렸어요','욕설', current_date, 'n');
 
-
 -- chat_room
-INSERT INTO chat_room (chat_id, chat_date) VALUES (seq_chat_id.NEXTVAL, '23/08/14');
+INSERT INTO chat_room (chat_id, chat_date, chat_type) VALUES (seq_chat_id.NEXTVAL, '23/08/14', '교육원 등록 문의');
 
 -- talker
-INSERT INTO talker (chat_id, student_id, employee_id) VALUES (1, 'alfn', 'godwjd');
+INSERT INTO talker (chat_id, student_id, employee_id) VALUES (21, 'alfn', 'godwjd');
+
 -- chat_message
 INSERT INTO chat_message (chat_no,chat_id, member_id, chat_content) VALUES (seq_chat_message_no.nextval,1, 'alfn', '자바반 커리큐럼이 어떻게 되나요 ?');
 INSERT INTO chat_message (chat_no,chat_id, employee_id  , chat_content) VALUES ( seq_chat_message_no.nextval,1, 'godwjd', '안녕하세요 ?? 자바반 등록하려고 하시나요?');
@@ -1158,7 +1197,7 @@ delete from store where store_id = 3;
 --select * from post_like;
 --select * from comment_like;
 --select * from message_box;
---select * from report;
+select * from report;
 --select * from chat_room;
 --select * from talker;
 --select * from chat_message;
@@ -1170,7 +1209,6 @@ delete from store where store_id = 3;
 --select * from delete_comment;
 --select * from authority;
 --select * from calendar;
-
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
@@ -1383,3 +1421,9 @@ FROM report
 WHERE post_id IS NOT NULL
   AND comment_id IS NULL
   AND message_id IS NULL;
+
+select count(*)from post_comment  where comment_ref= 230; 
+select * from delete_comment;
+select * from post_comment where comment_id = 243;
+select * from post;
+

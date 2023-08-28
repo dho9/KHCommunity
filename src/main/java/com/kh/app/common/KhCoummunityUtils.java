@@ -20,4 +20,5 @@ public class KhCoummunityUtils {
 		return sdf.format(new Date()) + df.format(Math.random() * 1000) + ext;
 	}
 
+	
 }

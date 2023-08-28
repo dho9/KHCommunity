@@ -1,9 +1,15 @@
 package com.kh.app.board.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,9 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
-import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -213,12 +220,17 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardListDto> myClassBoardFindByTag(String tag) {
-		return boardRepository.myClassBoardFindByTag(tag);
+	public List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.myClassBoardFindByTag(tag, rowBounds);
 	}
 	
 	@Override
-	public List<CommentLike> CommentLikeCheckById(int postId, String memberId) {
+	public List<CommentLike> commentLikeCheckById(int postId, String memberId) {
 		// TODO Auto-generated method stub
 		return boardRepository.CommentLikeCheckById(postId,memberId);
 	}
@@ -240,6 +252,123 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardListDto> myClassBoardFindAll() {
 		return boardRepository.myClassBoardFindAll();
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updatePost(BoardCreateDto board) {
+		int result = 0;
+		result = boardRepository.updatePost(board);
+		
+		List<PostAttachment> attachments = board.getAttachments();
+		if(attachments != null && !attachments.isEmpty()) {
+			for(PostAttachment attach : attachments) {
+				attach.setPostId(board.getPostId());
+				result = boardRepository.deletePostAttach(attach);
+				result = boardRepository.insertPostAttach(attach);
+			}
+		}
+		
+		
+		return result;
+	}
+	
+	@Override
+	public int updatePostContent(BoardCreateDto board) {
+		return boardRepository.updatePostContent(board);
+	}
+	@Override
+	public List<BoardListDto> AllBoardFindMyarticle(String memberId, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.AllBoardFindMyarticle(memberId, rowBounds);
+	}
+	
+	@Override
+	public int totalCountMyarticle(String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.totalCountMyarticle(memberId);
+	}
+	@Override
+	public List<BoardListDto> AllBoardFindMycommentarticle(String memberId, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.AllBoardFindMycommentarticle(memberId,rowBounds);
+	}
+	@Override
+	public int totalCountMycommentarticle(String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.totalCountMycommentarticle(memberId);
+	}
+	@Override
+	public List<CommentLike> commentLikeCheck(int postId) {
+		// TODO Auto-generated method stub
+		return boardRepository.commentLikeCheck(postId);
+	}
+	
+	@Override
+	public int insertPostReport(PostReportDto postReport) {
+		return boardRepository.insertPostReport(postReport);
+	}
+	
+	@Override
+	public List<PopularBoardDto> findThreePostByBoardId(int boardId) {
+		return boardRepository.findThreePostByBoardId(boardId);
+	}
+	
+	@Override
+	public List<BoardListDto> jobSearchBoardFindAll() {
+		return boardRepository.jobSearchBoardFindAll();
+	}
+	
+	@Override
+	public int totalCountMyClassBoardByTag(String tag) {
+		return boardRepository.totalCountMyClassBoardByTag(tag);
+	}
+	
+	@Override
+	public int deleteComment(int commentId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteComment(commentId);
+	}
+	@Override
+	public int checkRef(int commentId) {
+		// TODO Auto-generated method stub
+		return boardRepository.checkRef(commentId);
+	}
+	
+	@Override
+	public int deleteCommentId(int commentId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteCommentId(commentId);
+	}
+	
+	private static String URL = "https://www.jobkorea.co.kr/Search/?stext=%EA%B0%9C%EB%B0%9C%EC%9E%90";
+	@Override
+	public List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException {
+		List<JobKorea> jobKoreaList = new ArrayList<>();
+		
+		Document document = Jsoup.connect(URL + "&page=" + page).get();
+	    Elements contents = document.select(".post");
+	    
+	    int startIndex = (page - 1) * limit;
+	    int endIndex = Math.min(startIndex + limit, contents.size());
+
+	    for (int i = startIndex; i < endIndex; i++) {
+	        Element content = contents.get(i);
+	        JobKorea jobKorea = JobKorea.builder()
+	                            .company(content.select(".post-list-corp .name").text())
+	                            .title(content.select(".post-list-info .title").text())
+	                            .option(content.select(".post-list-info .option").text())
+	                            .etc(content.select(".post-list-info .etc").text())
+	                            .build();
+	        jobKoreaList.add(jobKorea);
+	    }
+		return jobKoreaList;
 	}
 }
 

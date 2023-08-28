@@ -56,6 +56,8 @@ import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.curriculum.entity.Curriculum;
@@ -721,4 +723,38 @@ public class AdminController {
         return "redirect:/admin/adminStoreList.do"; // 예시 리다이렉트 URL
     }
 	
+	// 채팅목록 조회
+	@GetMapping("/adminChatList.do")
+	public void adminChatList(@RequestParam(defaultValue = "1") int page, Model model) {
+		// 페이징
+	    int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+	    model.addAttribute("currentPage", page);
+	    
+	    // 전체 학생 수를 가져온다.
+	    int totalChatListCount = adminService.getTotalCountOfChatList();
+
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalChatListCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+	    
+	    List<AdminChatListDto> adminChatList = adminService.findAllChat(params);
+	    
+	    List<ChatMessage> messages = null;
+	    
+	    // 각 채팅방마다 메시지 목록을 조회하여 설정
+	    for (AdminChatListDto chat : adminChatList) {
+	    	int chatId = chat.getChatId();
+	        messages = adminService.getChatMessagesByChatId(chatId);
+	        chat.setChatMessage(messages);
+	        System.out.println("messages = " + messages);
+	    }
+	    model.addAttribute("messages", messages);
+	    model.addAttribute("adminChatList", adminChatList);
+	    
+	}
  }

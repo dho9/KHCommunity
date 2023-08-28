@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.store.entity.Store;
+import com.kh.app.ticket.dto.TicketBuyDto;
 import com.kh.app.ticket.entity.TicketOrder;
 
 @Mapper
@@ -21,6 +22,9 @@ public interface TicketRepository {
 			+ " (order_id, member_id, store_id, ticket_id,amount,total_price) values"
 			+ "(#{orderId},#{memberId},#{storeId},#{ticketId},#{amount}, #{totalPrice})")
 	int createOrder(TicketOrder order);
+	
+	@Select ("select * from ticket_order where orderId = #{orderId} and amount = #{amount} and total_price= #{totalPrice} ")
+	TicketBuyDto checkOreder(TicketBuyDto _order);
 
 
 }

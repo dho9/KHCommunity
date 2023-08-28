@@ -22,6 +22,8 @@ import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
@@ -116,7 +118,7 @@ public interface AdminRepository {
 	@Insert("insert into authority values (#{memberId}, #{auth})")
 	int insertAuth(Authority auth);
 	
-	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attaker_id, report_send_date, report_check from report)\r\n"
+	@Select("select * from (select rownum, report_id, post_id, comment_id, message_id, reporter_id, report_content, attacker_id, report_send_date, report_check from report)\r\n"
 			+ "where  report_check = 'n' and (rownum between 1 and 6)")
 	List<AdminReportListDto> reportListSix();
 
@@ -261,6 +263,34 @@ public interface AdminRepository {
 
 	@Select("select count(*) from report")
 	int countReportsByFilter(String reportType);
+	@Select("select\r\n"
+			+ "    t.chat_id,\r\n"
+			+ "    t.student_id,\r\n"
+			+ "    m.member_name student_name,\r\n"
+			+ "    r.chat_type,\r\n"
+			+ "    r.chat_date,\r\n"
+			+ "    c.curriculum_name,\r\n"
+			+ "    c.class_id,\r\n"
+			+ "    s.student_type\r\n"
+			+ "from \r\n"
+			+ "    talker t \r\n"
+			+ "        join chat_room r\r\n"
+			+ "            on t.chat_id = r.chat_id\r\n"
+			+ "        join student s\r\n"
+			+ "            on t.student_id = s.student_id\r\n"
+			+ "        join curriculum c\r\n"
+			+ "            on s.curriculum_id = c.curriculum_id\r\n"
+			+ "        join member m\r\n"
+			+ "            on s.student_id = m.member_id")
+	List<AdminChatListDto> findAllChat(Map<String, Object> params);
+
+	List<AdminChatListDto> findAllChat(RowBounds rowBounds);
+
+	@Select("select count(*) from chat_room")
+	int getTotalCountOfChatList();
+
+	@Select("select * from chat_message where chat_id = #{chatId} order by chat_no")
+	List<ChatMessage> getChatMessagesByChatId(int chatId);
 
 
 }

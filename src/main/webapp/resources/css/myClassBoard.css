@@ -1,0 +1,58 @@
+.myClassBoard-title, .myClassBoard-subTitle {
+	text-align: center;
+}
+.myClassBoard-title .title {
+	font-weight: bold;
+    font-size: 49px;
+    margin-top: 7%;
+    margin-left: 3%;
+}
+.myClassBoard-title p {
+    font-size: 18px;
+    color: #444444e3;
+    padding-top: 16px;
+    font-weight: 600;
+    margin-left: 2%;
+}
+.myClassBoard-subTitle ul {
+	margin-top: 2%;
+    font-weight: 500;
+}
+.input-group-prepend {
+	cursor: pointer;
+}
+#myClassBoard-div {
+    border: 4px solid #007bff;
+    border-radius: 63px;
+    height: 105%;
+    width: 1365px;
+    margin-top: 5%;
+    margin-left: 20%;
+}
+#writePost {
+    margin-left: 87%;
+    width: 105px;
+    height: 51px;
+    margin-top: 55px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 11px;
+}
+table {
+	margin-left: 27px;
+    margin-top: 3%;
+}
+#button-div {
+	text-align: center;
+	margin-top: -9%;
+}
+.btn.btn-outline-success {
+	width: 205px;
+    height: 60px;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border: 2px solid;
+    margin-left: 7px;
+    margin-top: 5%;
+}

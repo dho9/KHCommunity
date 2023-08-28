@@ -1,21 +1,24 @@
 package com.kh.app.board.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,8 +36,10 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -42,7 +48,7 @@ import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.common.HelloSpringUtils;
-import com.kh.app.member.dto.AdminStudentListDto;
+import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 
@@ -63,6 +69,12 @@ public class BoardController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private ResourceLoader resourceLoader;
+	
+	@Value("${spring.servlet.multipart.location}")
+	private String multipartLocation;
 
 	@GetMapping("/freeBoardList.do")
 	public String freeBoardList(Model model) {
@@ -267,7 +279,7 @@ public class BoardController {
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
-		System.out.println("board = " + board);
+		System.out.println(board);
 		model.addAttribute("postAttach",postAttach);
 	}
 
@@ -343,7 +355,7 @@ public class BoardController {
 			@RequestParam String title,
 			@RequestParam String text,
 			@RequestParam int boardId,
-			@RequestParam String grade,
+			@RequestParam(required = false) String grade,
 			@RequestParam(required = false) boolean anonymousCheck,
 			@RequestParam(required = false) String[] _tags,
 			@AuthenticationPrincipal MemberDetails member,
@@ -374,7 +386,6 @@ public class BoardController {
 		}
 			
 			BoardCreateDto board = null;
-			log.debug("gradddeeeeededeed={}",grade);
 			
 			if(grade == null || grade.equals("")) {
 				board = BoardCreateDto.builder()
@@ -407,9 +418,101 @@ public class BoardController {
 		}
 		result = boardService.insertPostContent(board);
 		
+		if(board.getBoardId() == 11) {
+			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+		}
+		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 
 	}
+	
+	/**
+	 * 글 수정
+	 * @param title
+	 * @param text
+	 * @param boardId
+	 * @param grade
+	 * @param anonymousCheck
+	 * @param _tags
+	 * @param member
+	 * @param files
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@PostMapping("/updatePost.do")
+	public String updatePost(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam int postId,
+			@RequestParam(required = false) String grade,
+			@RequestParam(required = false) boolean anonymousCheck,
+			@RequestParam(required = false) String[] _tags,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+		
+		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+		BoardCreateDto board = null;
+		int result = 0;
+		
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		if(files != null) {
+			
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.postId(postId)
+							.build();
+					
+					attachments.add(attach);
+				}
+			}
+		}
+		
+		if(grade == null || grade.equals("")) {
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments) 
+					.anonymousCheck(anonymousCheck)
+					.build();
+			
+		} else {
+			String realGrade = " [평점 : " + grade + "]";
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title + realGrade)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments)
+					.anonymousCheck(anonymousCheck)
+					.build();
+		}
+		result = boardService.updatePost(board);
+		result = boardService.updatePostContent(board);
+		
+		if(boardId == 11) {
+			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+		}
+		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
+	}
+	
 
 
 	@GetMapping("/popularPost.do")
@@ -478,11 +581,11 @@ public class BoardController {
 
 	@PostMapping("/loadComment.do")
 	@ResponseBody
-	public List<Comment> commentList(@RequestParam int postId){
+	public List<Comment> commentList(@RequestParam int postId, @AuthenticationPrincipal MemberDetails principal, Model model){
 		log.debug("idddddddddddd = {}",postId);
 		//		//log.debug("idddddddddddd = {}",postId);
 		List<Comment> comments = boardService.findByCommentByPostId(postId);
-		
+		model.addAttribute("memberId", principal.getMemberId());
 
 		return comments;
 
@@ -491,28 +594,43 @@ public class BoardController {
 	@GetMapping("/myClassBoardList.do")
 	public String myClassBoardList(
 			@AuthenticationPrincipal MemberDetails principal,
-			@Valid AdminStudentListDto studentInfo,
+			@Valid StudentMypageInfoDto studentInfo,
 			Model model
 			) {
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
         //log.debug("studentInfo = {}", studentInfo);
 		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("authority", principal.getAuthorities());
-         
+        
         return "/board/myClassBoardList";
 	}
 
 	@PostMapping("/myClassBoardList.do")
 	@ResponseBody
-	public List<BoardListDto> myClassBoardList(@RequestParam String tag) {
-		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag);
-		return myClassBoardList;
+	public ResponseEntity<?> myClassBoardList(@RequestParam(defaultValue = "1") int page, @RequestParam String tag) {
+		// 페이징
+		int limit = 8;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		// 게시글 전체 수
+		int totalCount = boardService.totalCountMyClassBoardByTag(tag);
+		
+		// totalPage 계산
+		int totalPages = (int) Math.ceil((double) totalCount / limit);
+		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag, params);
+		log.info("myClassBoardList ={}", myClassBoardList);
+		log.info("totalPages = {}", totalPages);
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("board", myClassBoardList, "currentPage", page, "totalPages", totalPages));
 	}
 
 	@GetMapping("/myClassBoardFindAll.do")
 	public ResponseEntity<?> myClassBoardFindAll(@RequestParam(defaultValue = "1") int page) {
 		// 페이징
-		int limit = 2;
+		int limit = 8;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit
@@ -535,11 +653,12 @@ public class BoardController {
 	public ResponseEntity<?> isCommentLike(@AuthenticationPrincipal MemberDetails principal, @RequestParam String _postId) {
 		String memberId = principal.getMemberId();
 		int postId = Integer.parseInt(_postId);
-		List<CommentLike> commentLike = boardService.CommentLikeCheckById(postId, memberId);
-
+		List<CommentLike> commentLike = boardService.commentLikeCheckById(postId, memberId);
+		
+		List<Comment> commentLikeCheck = boardService.findByCommentByPostId(postId);
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(Map.of("commentLike", commentLike));
+				.body(Map.of("commentLike", commentLike,"commentLikeCheck",commentLikeCheck));
 	}
 
 	@PostMapping("/commentLike.do")
@@ -580,6 +699,186 @@ public class BoardController {
 		log.debug("보드링크={}",postBoardLink);
 		log.debug("포스트아이디={}",deletePostId);
 		return "redirect:/board/" + postBoardLink + ".do";
+	}
+	
+	@GetMapping("/myClassBoardDetail.do")
+	public void myClassBoardDetail(@RequestParam int id, Model model) {
+		BoardListDto postDetail = boardService.findById(id);
+		log.debug("postDetail = {}", postDetail);
+
+		PostAttachment postAttach = boardService.findAttachById(id);
+		log.debug("postAttach = {}", postAttach);
+		
+		List<Comment> comments = boardService.findByCommentByPostId(id);
+		log.debug("comments = {}", comments);
+		
+		model.addAttribute("postDetail", postDetail);
+		model.addAttribute("postAttach", postAttach);
+		model.addAttribute("comments", comments);
+	}
+	
+	@GetMapping("/fileDownload.do")
+	@ResponseBody
+	public Resource fileDownload(@RequestParam int id, HttpServletResponse response) throws FileNotFoundException {
+		PostAttachment attach = boardService.findAttachById(id);
+//		log.debug("attach = {}, ", attach);
+//		log.debug("multipartLocation = {}", multipartLocation);
+		
+		File downFile = new File(multipartLocation, attach.getPostRenamedFilename());
+		
+		if(!downFile.exists())
+			throw new FileNotFoundException(attach.getPostRenamedFilename());
+		String location = "file:" + downFile;
+		Resource resource = resourceLoader.getResource(location);
+		
+		response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+		String filename = URLEncoder.encode(attach.getPostOriginalFilename());
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+		return resource;
+	}
+	
+	@GetMapping("myarticle.do")
+	public String myarticle(@AuthenticationPrincipal MemberDetails principal, Model model,@RequestParam(defaultValue = "1") int page) {
+//		log.debug("myarticleList={}",myarticleList);
+		   int limit = 6;
+			Map<String, Object> params = Map.of(
+					"page", page,
+					"limit", limit
+			);
+			List<BoardListDto> myarticleList = boardService.AllBoardFindMyarticle(principal.getMemberId(),params);
+			
+		    int totalCount = boardService.totalCountMyarticle(principal.getMemberId());
+
+		    // total학생 계산
+		    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		    model.addAttribute("totalPages", totalPages);
+			
+			model.addAttribute("myarticle",myarticleList);
+			
+		return "/board/myarticle";
+	}
+	
+	@GetMapping("mycommentarticle.do")
+	public String mycommentarticle(@AuthenticationPrincipal MemberDetails principal, Model model,@RequestParam(defaultValue = "1") int page) {
+//		log.debug("myarticleList={}",myarticleList);
+		   int limit = 6;
+			Map<String, Object> params = Map.of(
+					"page", page,
+					"limit", limit
+			);
+			List<BoardListDto> mycommentarticle = boardService.AllBoardFindMycommentarticle(principal.getMemberId(),params);
+			log.debug("sdsdsdsdsdsdsd={}",mycommentarticle);
+		    int totalCount = boardService.totalCountMycommentarticle(principal.getMemberId());
+		    log.debug("토탈카운트에요.={}",totalCount);
+		    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		    model.addAttribute("totalPages", totalPages);
+			model.addAttribute("comment",mycommentarticle);
+			
+		return "/board/mycommentarticle";
+	}
+	
+	@PostMapping("/createMyClassBoardComment.do")
+	public String createMyClassBoardComment(CreateCommentDto _comment, @AuthenticationPrincipal MemberDetails member, Model model) {
+		log.debug("_comment = {}", _comment);
+		if(member != null &&_comment.getCommentRef()==""){ //댓글용
+			Comment comment = Comment.builder()  
+					.postId(_comment.getPostId())
+					.boardId(_comment.getBoardId())
+					.memberId(member.getMemberId())
+					.commentContent(_comment.getCommentContent())
+					.commentLevel(1)
+					.commentRef(0)
+					.anonymousCheck(_comment.isAnonymousCheck()).build();
+			int result = boardService.createComment(comment);
+		}
+		
+		if(member != null &&_comment.getCommentRef()!="" ) {//대댓글용
+			int ref = Integer.parseInt(_comment.getCommentRef()); 
+			Comment comment = Comment.builder()  
+					.postId(_comment.getPostId())
+					.boardId(_comment.getBoardId())
+					.memberId(member.getMemberId())
+					.commentContent(_comment.getCommentContent())
+					.commentLevel(2)
+					.commentRef(ref)
+					.anonymousCheck(_comment.isAnonymousCheck()).build();
+			int result = boardService.createComment(comment);
+		}
+		
+		List<Comment> comments = boardService.findByCommentByPostId(_comment.getPostId());
+		model.addAttribute("comments", comments);
+		
+		return "redirect:/board/myClassBoardDetail.do?id=" + _comment.getPostId();
+	}
+	
+	@PostMapping("postReport.do")
+	public String postReport(
+			@RequestParam int reportPostId,
+			@RequestParam String reporterId,
+			@RequestParam String attackerId,
+			@RequestParam String reportType,
+			@RequestParam String reportContent
+			) {
+		PostReportDto postReport = PostReportDto.builder()
+				.postId(reportPostId)
+				.reporterId(reporterId)
+				.attackerId(attackerId)
+				.reportType(reportType)
+				.reportContent(reportContent)
+				.build();
+		int result = boardService.insertPostReport(postReport);
+		
+		return "redirect:/board/boardDetail.do?id="+reportPostId;
+	}
+	
+	@GetMapping("/jobSearchBoardList.do")
+	public String jobSearchBoardList(Model model) {
+		List<BoardListDto> jobSearchBoardList = boardService.jobSearchBoardFindAll();
+
+		model.addAttribute("jobSearchBoardList", jobSearchBoardList);
+
+		return "/board/jobSearchBoardList";
+	} 
+	
+	@GetMapping("/threePostByBoardId.do")
+	@ResponseBody
+	public List<PopularBoardDto> threePostByBoardId(@RequestParam int boardId) {
+		List<PopularBoardDto> post = boardService.findThreePostByBoardId(boardId);
+		log.debug("post = {}", post);
+		return post;
+	}
+	
+	@GetMapping("/deleteComment.do")
+	@ResponseBody
+	public String deleteComment(@RequestParam int commentId) {
+		
+		int ckRef = boardService.checkRef(commentId);
+		if(ckRef>0) {
+			
+			int result = boardService.deleteComment(commentId);
+		}else {
+			int result = boardService.deleteCommentId(commentId);
+		}
+	
+		return "삭제성공";
+		
+	}
+	
+	@GetMapping("/jobKorea.do")
+	public String jobKorea(@RequestParam(defaultValue = "1") int page, Model model) throws IOException {
+		int limit = 8;
+		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		
+		// 게시글 전체 수
+	    int totalCount = 100; // 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+	    // totalPage 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+		
+		log.info("jobKoreaList={}", jobKoreaList);
+		model.addAttribute("jobKoreaList", jobKoreaList);
+		model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+		return "/board/jobSearchBoardList";
 	}
 	
 }

@@ -1,13 +1,10 @@
 package com.kh.app.member.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.curriculum.entity.Curriculum;
-import com.kh.app.member.dto.AdminStudentListDto;
+import com.kh.app.member.dto.EmployeeInfoDto;
+import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 import com.kh.app.ticket.dto.TicketBuyDto;
@@ -37,11 +36,9 @@ public class MyPageController {
 	@GetMapping("/myPage.do")
 	public void myPage(Model model, @AuthenticationPrincipal MemberDetails principal) throws Exception {
 		// 시작
-		AdminStudentListDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-		log.debug(principal.getMemberId());
+		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
-		log.debug("★★★studentInfo = {}", studentInfo);
-		log.debug("★★★studentInfo.getCurriculumId() = {}", studentInfo.getCurriculumId());
+		log.debug("studentInfo = {}" , studentInfo);
 		// 식권정보 끝
 
 		// 식권정보 시작
@@ -52,7 +49,6 @@ public class MyPageController {
 		// Dday 시작
 		if (studentInfo.getCurriculumId() != 0) {
 			Curriculum curriculumDday = memberService.findByDdayInfo(studentInfo.getCurriculumId());
-			log.debug("★★★curriculumDday = {}", curriculumDday);
 			model.addAttribute("curriculumDday", curriculumDday);
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -71,5 +67,24 @@ public class MyPageController {
 		}
 		// Dday 끝 }
 	}
+	
+	
+	
+	
+		 @GetMapping("/employeeMyPage.do") 
+		 public void employeeMyPage(Model model, 
+				 @AuthenticationPrincipal MemberDetails principal,
+				 @RequestParam(value = "classId", required = false) Integer classId,
+				 @RequestParam(value = "subject", required = false) String subject,
+				 @RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
+			
+			 EmployeeInfoDto employeeInfo =
+					 memberService.findByEmployeeInfo(principal.getMemberId());
+			 
+			  model.addAttribute("employeeInfo", employeeInfo);
+		  
+		 	}
+		 
+	
 
 }

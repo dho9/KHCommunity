@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.app.board.dto.BoardCreateDto;
@@ -16,6 +17,7 @@ import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -106,7 +108,6 @@ public interface BoardRepository {
 
 	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds);
 	
-	@Select("  SELECT  pc.*, (SELECT COUNT(*) FROM comment_like cl WHERE cl.comment_id = pc.comment_id) AS like_count FROM post_comment pc where pc.post_id = #{postId} order by pc.comment_id asc ")
 	List<Comment> findByCommentByPostId(int postId);
 	
 	@Select("select * from comment_like where comment_id = #{commentId} and member_id = #{memberId}")
@@ -120,7 +121,7 @@ public interface BoardRepository {
 	
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag);
+	List<BoardListDto> myClassBoardFindByTag(String tag, RowBounds rowBounds);
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
@@ -141,5 +142,55 @@ public interface BoardRepository {
 			+ "ORDER BY p.post_created_at DESC\r\n"
 			+ "FETCH FIRST 3 ROWS ONLY")
 	List<NoticeBoardDto> findThreeNotice();
+
+	@Update("update post set title = #{title}, tag = #{tags, typeHandler=stringListTypeHandler}, anonymous_check = #{anonymousCheck} where post_id = #{postId}")
+	int updatePost(BoardCreateDto board);
+	
+	@Update("update post_content set content = #{content} where post_id = #{postId}")
+	int updatePostContent(BoardCreateDto board);
+
+	@Delete("delete post_attachment where post_id = #{postId}")
+	int deletePostAttach(PostAttachment attach);
+	
+	
+	List<BoardListDto> AllBoardFindMyarticle(String memberId, RowBounds rowBounds);
+
+	@Select("select count(*) from post where member_id= #{memberId}")
+	int totalCountMyarticle(String memberId);
+	
+	
+	List<BoardListDto> AllBoardFindMycommentarticle(String memberId, RowBounds rowBounds);
+	
+	@Select("SELECT COUNT(*) FROM (SELECT COUNT(*) FROM post_comment WHERE member_id = #{memberId} GROUP BY post_id)")
+	int totalCountMycommentarticle(String memberId);
+
+	List<CommentLike> commentLikeCheck(int postId);
+
+
+	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
+	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+	int insertPostReport(PostReportDto postReport);
+
+	@Select("SELECT p.post_id, p.title, pc.content, b.board_name\r\n"
+			+ "FROM post p\r\n"
+			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
+			+ "left join board b on b.board_id = p.board_id\r\n"
+			+ "WHERE p.board_id = #{boardId}\r\n"
+			+ "ORDER BY p.post_created_at DESC\r\n"
+			+ "FETCH FIRST 3 ROWS ONLY")
+	List<PopularBoardDto> findThreePostByBoardId(int boardId);
+
+	List<BoardListDto> jobSearchBoardFindAll();
+
+	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=11 and tag =#{tag}")
+	int totalCountMyClassBoardByTag(String tag);
+	
+	@Update ("update post_comment set comment_content = '삭제된 댓글입니다.', delete_ck = 1 where comment_id = #{commentId}" )
+	int deleteComment(int commentId);
+	@Select ("select count(*)from post_comment  where comment_ref= #{commentId}")
+	int checkRef(int commentId);
+	
+	@Delete ("delete from post_comment where comment_id =#{commentId}")
+	int deleteCommentId(int commentId);
 	
 }

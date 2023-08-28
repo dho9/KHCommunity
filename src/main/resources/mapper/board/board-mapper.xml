@@ -280,11 +280,13 @@
 	    c.content,
 	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
 	    p.board_id,
-	    p.anonymous_check
+	    p.anonymous_check,
+	    m.member_name
 	from
 	    post p join post_content c
-	    	on
-	    p.post_id = c.post_id
+	    	on p.post_id = c.post_id
+	    left join member m
+            on p.member_id = m.member_id
 	where
 	    p.board_id=11
 	order by
@@ -302,11 +304,13 @@
 	    c.content,
 	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
   		p.board_id,
-  		p.anonymous_check
+  		p.anonymous_check,
+        m.member_name
 	from
 	    post p join post_content c
-	    	on
-	    p.post_id = c.post_id
+	    	on p.post_id = c.post_id
+        left join member m
+            on p.member_id = m.member_id
 	where
 	    p.post_id=#{id}
 	</select>
@@ -332,6 +336,28 @@
 		order by
 			1 desc
 	</select>
+	
+	<select id="jobSearchBoardFindAll" resultType="boardListDto">
+  	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    p.board_id=12
+	order by
+		1 desc
+  </select>
   <resultMap type="boardListDto" id="boardListDtoMap">
   	<id column="post_id" property="postId"/>
   	<result column="member_id" property="memberId"/>
@@ -342,6 +368,7 @@
   	<result column="comment_count" property="commentCount"/>
   	<result column="board_id" property="boardId"/>
   	<result column="anonymous_check" property="anonymousCheck"/>
+  	<result column="member_name" property="memberName"/>
   </resultMap>
   
   <select id="totalCountMyClassBoard" resultType="int">
@@ -401,6 +428,15 @@ FETCH FIRST 5 ROWS ONLY
   	<result column="board_link" property="boardLink"/>
   </resultMap>
   
+  <resultMap type="postReportDto" id="insertPostReport">
+  	<id column="report_id" property="reportId"/>
+  	<result column="post_id" property="postId"/>
+  	<result column="reporter_id" property="reporterId"/>
+  	<result column="attacker_id" property="attackerId"/>
+  	<result column="report_content" property="reportContent"/>
+  	<result column="report_type" property="reportType"/>
+  </resultMap>
+  
     <select id="findCommentLikeCount" resultType="commentLike">
   	select
 	    count(*) comment_like_count
@@ -413,5 +449,74 @@ FETCH FIRST 5 ROWS ONLY
   	<result column="comment_like_count" property="commentLikeCount"/>
   </resultMap>
   
+  <select id="findByCommentByPostId" resultType="comment">
+  	SELECT 
+	    pc.*,
+	    (SELECT COUNT(*) FROM comment_like cl WHERE cl.comment_id = pc.comment_id) AS like_count,
+	    m.member_name
+	FROM
+	    post_comment pc left join member m
+	    on pc.member_id = m.member_id
+	where
+		pc.post_id = #{postId}
+	order by
+		pc.comment_id asc
+  </select>
+  <resultMap type="comment" id="findByCommentByPostId">
+  	<id column="comment_id" property="commentId"/>
+  	<result column="post_id" property="postId"/>
+  	<result column="board_id" property="boardId"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="comment_content" property="commentContent"/>
+  	<result column="comment_level" property="commentLevel"/>
+  	<result column="comment_ref" property="commentRef"/>
+  	<result column="comment_created_at" property="commentCreatedAt"/>
+  	<result column="anonymous_check" property="anonymousCheck"/>
+  	<result column="like_count" property="likeCount"/>
+  	<result column="member_name" property="memberName"/>
+  	<result column="delete_ck" property="deleteCk"/>
+  </resultMap>
+    <select id="AllBoardFindMyarticle" resultType="boardListDto">
+  	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	    member_id = #{memberId}
+	order by
+		1 desc
+  </select>
+  <select id="AllBoardFindMycommentarticle" resultType="boardListDto">
+  select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+	    p.board_id,
+	    p.anonymous_check
+	from
+	    post p join post_content c
+	    	on
+	    p.post_id = c.post_id
+	where
+	   p.post_id in (select post_id from post_comment where member_id = #{memberId} group by post_id)
+	order by
+		 (SELECT MAX(pc.comment_created_at) FROM post_comment pc WHERE pc.post_id = p.post_id) DESC
+  </select>
   
 </mapper>

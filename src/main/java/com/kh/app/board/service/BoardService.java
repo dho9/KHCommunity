@@ -1,5 +1,6 @@
 package com.kh.app.board.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -7,8 +8,10 @@ import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
+import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -87,14 +90,44 @@ public interface BoardService {
 
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag);
+	List<BoardListDto> myClassBoardFindByTag(String tag, Map<String, Object> params);
 	
-	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
+	List<CommentLike> commentLikeCheckById(int postId, String memberId);
 
 	int deleteBoard(int deletePostId);
 	
 	int createComment(Comment comment);
 	
 	List<NoticeBoardDto> findThreeNotice();
+
+	int updatePost(BoardCreateDto board);
+
+	int updatePostContent(BoardCreateDto board);
+	
+	List<BoardListDto> AllBoardFindMyarticle(String memberId, Map<String, Object> params);
+
+	int totalCountMyarticle(String memberId);
+
+	List<BoardListDto> AllBoardFindMycommentarticle(String memberId, Map<String, Object> params);
+
+	int totalCountMycommentarticle(String memberId);
+
+	List<CommentLike> commentLikeCheck(int postId);
+
+	int insertPostReport(PostReportDto postReport);
+
+	List<PopularBoardDto> findThreePostByBoardId(int boardId);
+
+	List<BoardListDto> jobSearchBoardFindAll();
+
+	int totalCountMyClassBoardByTag(String tag);
+	
+	int deleteComment(int commentId);
+
+	int checkRef(int commentId);
+
+	int deleteCommentId(int commentId);
+
+	List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException;
 
 }

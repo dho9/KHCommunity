@@ -20,6 +20,8 @@ import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.entity.PostAttachment;
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
@@ -352,4 +354,25 @@ public class AdminServiceImpl implements AdminService {
 	public int countReportsByFilter(String reportType) {
 		return adminRepository.countReportsByFilter(reportType);
 	}
+	
+	@Override
+	public List<AdminChatListDto> findAllChat(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return adminRepository.findAllChat(rowBounds);
+	}
+	
+	@Override
+	public int getTotalCountOfChatList() {
+		return adminRepository.getTotalCountOfChatList();
+	}
+	
+	@Override
+	public List<ChatMessage> getChatMessagesByChatId(int chatId) {
+		return adminRepository.getChatMessagesByChatId(chatId);
+	}
+	
 }

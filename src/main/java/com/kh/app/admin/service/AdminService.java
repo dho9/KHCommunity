@@ -15,6 +15,8 @@ import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.curriculum.entity.Curriculum;
@@ -142,6 +144,12 @@ public interface AdminService {
 	List<Report> findReportsByFilter(String reportType, Map<String, Object> params);
 
 	int countReportsByFilter(String reportType);
+	
+	List<AdminChatListDto> findAllChat(Map<String, Object> params);
+
+	int getTotalCountOfChatList();
+
+	List<ChatMessage> getChatMessagesByChatId(int chatId);
 
 
 

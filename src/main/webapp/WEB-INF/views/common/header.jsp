@@ -18,7 +18,6 @@
 }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <!DOCTYPE html>
@@ -48,6 +47,7 @@
     <link type="text/css" href="/css/container.community.css" rel="stylesheet"> 
     --%>
     <link href="/favicon.ico" rel="shortcut icon">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <c:if test="${not empty message }">
 	<script>
@@ -78,9 +78,11 @@
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account">
-            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:50px;">
-            		관리자페이지
-            	</a>
+            	<sec:authorize access="hasAuthority('ADMIN')">
+	            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:60px; font-size: 1px;">
+	            		관리자페이지
+	            	</a>
+            	</sec:authorize>
                <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="로그인" class="icon message">로그인</a>
                <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="회원가입" class="icon my">회원가입</a>
 
@@ -89,7 +91,7 @@
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/myClassBoardList.do" style="text-decoration: none;">우리반</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/jobKorea.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
                 <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>

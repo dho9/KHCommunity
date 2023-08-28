@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,13 +12,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.css" />
     <link rel="stylesheet" href="https://naver.github.io/billboard.js/release/latest/dist/theme/datalab.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/chat.css" />
     <title>KH Time AdminPage</title>
     <script src="${pageContext.request.contextPath}/resources/js/jquery-3.7.0.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://naver.github.io/billboard.js/release/latest/dist/billboard.pkgd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <sec:authorize access="hasAuthority('ADMIN')">
+		<script>
+		const memberId = '<sec:authentication property="principal.username"/>';
+		</script>
+		<script>
+			console.log('Hello stomp.js');
+			const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
+			const stompClient = Stomp.over(ws);
+		
+			stompClient.connect({}, (frame) => {
+				console.log('open : ', frame);
+				
+				// 구독신청 
+				stompClient.subscribe('/topic/admin', (message) => {
+					console.log('/topic/admin : ', message);
+					renderMessage(message);
+				});
+			});
+			
+			// /topic/admin으로 알림을 보내면 실행되는 함수
+			const renderMessage = (message) => {
+				const {chatId, content, createdAt} = JSON.parse(message.body);
+				console.log(chatId, content, createdAt);
+				
+				const $liveToast = $("#liveToast");
+				$liveToast.find(".toast-text").html(content);
+				const acceptButton = $("<button>").attr({
+			        type: "button",
+			        class: "btn btn-primary btn-sm"
+			    }).text("수락").click(() => {
+			        const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + chatId, '_blank');
+			        if (newWindow) {
+			            newWindow.focus();
+			        }
+			    });
+				$liveToast.find(".border-top").html(acceptButton);
+				
+				const toastBootstrap = bootstrap.Toast.getOrCreateInstance($liveToast);
+				toastBootstrap.show()
+			}
+			
+			
+		</script>
+</sec:authorize>
   </head>
   <body>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+  		<div id="liveToast" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
+    		<div class="toast-header">
+      		<img style="width:60px;" src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" class="rounded me-2">
+      			<strong class="me-auto">KH TIME 알림</strong>
+      			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    		</div>
+    		<div class="toast-body">
+      			<div class="toast-text">
+      			
+      			</div>
+      			<div class="mt-2 pt-2 border-top">
+     				
+    			</div>
+    		</div>
+  		</div>
+	</div>
     <section class="mainSection">
       <div class="leftBar">
         <div class="logo">
@@ -193,3 +257,5 @@
           </div>
         </nav>
       </section>
+      
+      
