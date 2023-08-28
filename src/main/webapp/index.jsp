@@ -220,7 +220,7 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
             }
         });
     });
-    document.querySelector('.card').addEventListener('mouseout', (e) => {
+    document.querySelector('.myBoard').addEventListener('mouseout', (e) => {
         console.log(e);
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
@@ -228,8 +228,10 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
 </script>
 </sec:authorize>
 <script>
+
 document.getElementById("logoutLink").addEventListener("click", function(event) {
 	memberLogoutFrm.submit();
 });
+
 </script>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>

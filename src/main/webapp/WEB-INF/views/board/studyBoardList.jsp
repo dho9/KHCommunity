@@ -6,6 +6,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a.article{
+color: black;
+}
 .anonymous{
 	float: right;
 	background-color: white;
@@ -14,12 +17,30 @@
 .anonymousImg{
 	width: 59px;
 }
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination ul {
+  display: inline-block;
+  padding: 0;
+}
+
+.pagination ul li {
+  display: inline;
+  margin: 0 5px;
+}
+
+.pagination ul li.active a {
+  font-weight: bold;
+}
 </style>
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
 			<a>스터디</a>
-			<i class="bi bi-star" data-value="${freeBoardLists[0].boardId}"></i>
+			<i class="bi bi-star" data-value="${studyBoardList[0].boardId}"></i>
 		</h1>
 	</div>
 	<div class="wrap articles">
@@ -64,6 +85,28 @@
 					</a>
 				</c:forEach>
 			</article>
+			<div class="pagination">
+		        <ul>
+		          <c:if test="${currentPage > 1}">
+		            <li><a href="${pageContext.request.contextPath}/board/studyBoardList.do?page=${currentPage - 1}" >&laquo;</a></li>
+		          </c:if>
+		
+		          <c:forEach var="pageNum" begin="1" end="${totalPages}">
+		            <c:choose>
+		              <c:when test="${pageNum eq currentPage}">
+		                <li class="active"><a href="#">${pageNum}</a></li>
+		              </c:when>
+		              <c:otherwise>
+		                <li><a href="${pageContext.request.contextPath}/board/studyBoardList.do?page=${pageNum}">${pageNum}</a></li>
+		              </c:otherwise>
+		            </c:choose>
+		          </c:forEach>
+		
+		          <c:if test="${currentPage < totalPages}">
+		            <li><a href="${pageContext.request.contextPath}/board/studyBoardList.do?page=${currentPage + 1}" ></a></li>
+		          </c:if>
+		        </ul>
+	      </div>
 		</c:if>
 	</div>
     <form:form name="tokenFrm"></form:form>
