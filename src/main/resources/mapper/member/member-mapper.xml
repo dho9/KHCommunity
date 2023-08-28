@@ -54,6 +54,7 @@
   	</constructor>
   </resultMap> 
   -->
+ 
   <select id="loadUserByUsername" resultMap="memberAuthMap">
 	select
 	    *

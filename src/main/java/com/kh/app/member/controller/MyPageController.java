@@ -37,6 +37,8 @@ public class MyPageController {
 	public void myPage(Model model, @AuthenticationPrincipal MemberDetails principal) throws Exception {
 		// 시작
 		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+		log.debug("principal.getMemberId() = {}" , principal.getMemberId());
+		
 		model.addAttribute("studentInfo", studentInfo);
 		log.debug("studentInfo = {}" , studentInfo);
 		// 식권정보 끝
@@ -45,10 +47,11 @@ public class MyPageController {
 		List<TicketBuyDto> studentTicketInfo = memberService.findByTicketInfo(principal.getMemberId());
 		model.addAttribute("studentTicketInfo", studentTicketInfo);
 		// 식권정보 끝
-
+		System.out.println(studentInfo);
 		// Dday 시작
 		if (studentInfo.getCurriculumId() != 0) {
 			Curriculum curriculumDday = memberService.findByDdayInfo(studentInfo.getCurriculumId());
+			
 			model.addAttribute("curriculumDday", curriculumDday);
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

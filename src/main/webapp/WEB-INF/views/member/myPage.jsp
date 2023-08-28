@@ -224,6 +224,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		</div>	
 	
 	</div> 
+	
+	
 	<!-- 메인컨테이너 div끝 -->
 		
 		
@@ -691,7 +693,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		}
 		
 
-	});
+	};
 	
 	// MH - 쪽지함 관련 기능 끝!	
 	
