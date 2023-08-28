@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
@@ -44,39 +45,130 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardSearchDto> findAllByMemberId(String memberId) {
 		return boardRepository.findAllByMemberId(memberId);
 	}
-
-	public List<BoardListDto> freeBoardFindAll() {
-		return boardRepository.freeBoardFindAll();
-	}
-
-	@Override
-	public List<BoardListDto> marketBoardFindAll() {
-		return boardRepository.marketBoardFindAll();
+	
+	public List<BoardListDto> freeBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.freeBoardFindAll(rowBounds);
 	}
 	
 	@Override
-	public List<BoardListDto> todayFoodBoardFindAll() {
-		return boardRepository.todayFoodBoardFindAll();
-	}
-	
-	@Override
-	public List<BoardListDto> askCodeBoardFindAll() {
-		return boardRepository.askCodeBoardFindAll();
-	}
-	
-	@Override
-	public List<BoardListDto> studyBoardFindAll() {
-		return boardRepository.studyBoardFindAll();
-	}
-	
-	@Override
-	public List<BoardListDto> preStudentBoardFindAll() {
-		return boardRepository.preStudentBoardFindAll();
+	public int totalCountFreeBoard() {
+		return boardRepository.totalCountFreeBoard();
 	}
 
 	@Override
-	public List<BoardListDto> graduateBoardFindAll() {
-		return boardRepository.graduateBoardFindAll();
+	public List<BoardListDto> marketBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.marketBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountMarketBoard() {
+		return boardRepository.totalCountMarketBoard();
+	}
+	
+	@Override
+	public List<BoardListDto> todayFoodBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.todayFoodBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountTodayFoodBoard() {
+		return boardRepository.totalCountTodayFoodBoard();
+	}
+	
+	@Override
+	public List<BoardListDto> sharingInformationBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.sharingInformationBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountSharingInformationBoard() {
+		return boardRepository.totalCountSharingInformationBoard();
+	}
+	
+	@Override
+	public List<BoardListDto> askCodeBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.askCodeBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountAskCodeBoard() {
+		return boardRepository.totalCountAskCodeBoard();
+	}
+	
+	@Override
+	public List<BoardListDto> studyBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.studyBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountStudyBoard() {
+		return boardRepository.totalCountStudyBoard();
+	}
+	
+	@Override
+	public List<BoardListDto> graduateBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.graduateBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountGraduateBoard() {
+		return boardRepository.totalCountGraduateBoard();
+	}
+	
+	@Override
+	public List<BoardListDto> preStudentBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.preStudentBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountPreStudentBoard() {
+		return boardRepository.totalCountPreStudentBoard();
+	}
+	
+	@Override
+	public List<BoardListDto> employeeBoardFindAll(Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return boardRepository.employeeBoardFindAll(rowBounds);
+	}
+	
+	@Override
+	public int totalCountEmployeeBoard() {
+		return boardRepository.totalCountEmployeeBoard();
 	}
 
 	@Override
@@ -88,10 +180,6 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findById(id);
 	}
 
-	@Override
-	public List<BoardListDto> employeeBoardFindAll() {
-		return boardRepository.employeeBoardFindAll();
-	}
 	
 	@Override
 	public List<BoardListDto> noticeBoardFindAll() {
@@ -171,12 +259,6 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findAttachById(id);
 	}
 
-	@Override
-	public List<BoardListDto> sharingInformationBoardFindAll() {
-		return boardRepository.sharingInformationBoardFindAll();
-	}
-	
-	
 
 	@Override
 	public List<BoardListDto> myClassBoardFindAll(Map<String, Object> params, int boardId) {
@@ -277,6 +359,7 @@ public class BoardServiceImpl implements BoardService {
 	public int updatePostContent(BoardCreateDto board) {
 		return boardRepository.updatePostContent(board);
 	}
+	
 	@Override
 	public List<BoardListDto> AllBoardFindMyarticle(String memberId, Map<String, Object> params) {
 		int limit = (int) params.get("limit");
@@ -313,6 +396,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int insertPostReport(PostReportDto postReport) {
 		return boardRepository.insertPostReport(postReport);
+	}
+	
+	@Override
+	public int insertCommentReport(CommentReportDto commentReport) {
+		return boardRepository.insertCommentReport(commentReport);
 	}
 	
 	@Override

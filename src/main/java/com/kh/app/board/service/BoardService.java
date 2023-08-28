@@ -7,6 +7,7 @@ import java.util.Map;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
@@ -25,23 +26,23 @@ public interface BoardService {
 
 	List<BoardSearchDto> findAllByMemberId(String memberId);
 	
-	List<BoardListDto> freeBoardFindAll();
+	List<BoardListDto> freeBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> marketBoardFindAll();
-
-	List<BoardListDto> sharingInformationBoardFindAll();
+	List<BoardListDto> marketBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> askCodeBoardFindAll();
+	List<BoardListDto> todayFoodBoardFindAll(Map<String, Object> params);
 
-	List<BoardListDto> graduateBoardFindAll();
-
-	List<BoardListDto> preStudentBoardFindAll();
+	List<BoardListDto> sharingInformationBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> employeeBoardFindAll();
+	List<BoardListDto> askCodeBoardFindAll(Map<String, Object> params);
 	
-	List<BoardListDto> todayFoodBoardFindAll();
+	List<BoardListDto> studyBoardFindAll(Map<String, Object> params);
 
-	List<BoardListDto> studyBoardFindAll();
+	List<BoardListDto> graduateBoardFindAll(Map<String, Object> params);
+
+	List<BoardListDto> preStudentBoardFindAll(Map<String, Object> params);
+	
+	List<BoardListDto> employeeBoardFindAll(Map<String, Object> params);
 
 	Favorite findFavoriteByMemberId(int boardId, String memberId);
 
@@ -129,5 +130,27 @@ public interface BoardService {
 	int deleteCommentId(int commentId);
 
 	List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException;
+
+	int insertCommentReport(CommentReportDto commentReport);
+
+	int totalCountFreeBoard();
+
+	int totalCountMarketBoard();
+
+	int totalCountTodayFoodBoard();
+
+	int totalCountSharingInformationBoard();
+
+	int totalCountAskCodeBoard();
+
+	int totalCountStudyBoard();
+
+	int totalCountGraduateBoard();
+
+	int totalCountPreStudentBoard();
+
+	int totalCountEmployeeBoard();
+
+	
 
 }

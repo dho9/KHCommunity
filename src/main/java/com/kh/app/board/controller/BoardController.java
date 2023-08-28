@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
@@ -77,21 +78,43 @@ public class BoardController {
 	
 	@Value("${spring.servlet.multipart.location}")
 	private String multipartLocation;
-
+	
 	@GetMapping("/freeBoardList.do")
-	public String freeBoardList(Model model) {
-		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll();
-		//log.debug("freeBoardLists = {}", freeBoardLists);
+	public String freeBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll(params);
+		
+	    int totalCount = boardService.totalCountFreeBoard();
 
-		model.addAttribute("freeBoardLists", freeBoardLists);
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
 
+	    model.addAttribute("freeBoardLists", freeBoardLists);
+	    model.addAttribute("totalPages", totalPages);
+	    
 		return "/board/freeBoardList";
 	}
 
 	@GetMapping("/marketBoardList.do")
-	public String marketBoardList(Model model) {
-		List<BoardListDto> marketBoardLists = boardService.marketBoardFindAll();
-		log.debug("marketBoardLists = {}", marketBoardLists);
+	public String marketBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		List<BoardListDto> marketBoardLists = boardService.marketBoardFindAll(params);
+		
+		int totalCount = boardService.totalCountMarketBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("marketBoardLists", marketBoardLists);
 
@@ -99,9 +122,20 @@ public class BoardController {
 	}
 
 	@GetMapping("/todayFoodBoardList.do")
-	public String todayFoodBoardList(Model model) {
-		List<BoardListDto> todayFoodBoardList = boardService.todayFoodBoardFindAll();
-        log.debug("todayFoodBoardList = {}", todayFoodBoardList);
+	public String todayFoodBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		List<BoardListDto> todayFoodBoardList = boardService.todayFoodBoardFindAll(params);
+		
+		int totalCount = boardService.totalCountTodayFoodBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
         
         model.addAttribute("todayFoodBoardList", todayFoodBoardList);
         
@@ -109,9 +143,19 @@ public class BoardController {
 	}
 
 	@GetMapping("/sharingInformationBoardList.do")
-	public String sharingInformationBoardList(Model model) {
-		List<BoardListDto> sharingInformationBoardList = boardService.sharingInformationBoardFindAll();
-		//log.debug("sharingInformationBoardList = {}", sharingInformationBoardList);
+	public String sharingInformationBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		List<BoardListDto> sharingInformationBoardList = boardService.sharingInformationBoardFindAll(params);
+		int totalCount = boardService.totalCountSharingInformationBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("sharingInformationBoardList", sharingInformationBoardList);
 
@@ -119,9 +163,20 @@ public class BoardController {
 	}
 
 	@GetMapping("/askCodeBoardList.do")
-	public String askCodeBoardList(Model model) {
-		List<BoardListDto> askCodeBoardList = boardService.askCodeBoardFindAll();
-		log.debug("askCodeBoardList = {}", askCodeBoardList);
+	public String askCodeBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		List<BoardListDto> askCodeBoardList = boardService.askCodeBoardFindAll(params);
+		
+		int totalCount = boardService.totalCountAskCodeBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+
 
 		model.addAttribute("askCodeBoardList", askCodeBoardList);
 
@@ -129,39 +184,82 @@ public class BoardController {
 	}
 
 	@GetMapping("/studyBoardList.do")
-	public String studyBoardList(Model model) {
-		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll();
-        log.debug("studyBoardList = {}", studyBoardList);
+	public String studyBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll(params);
+		
+		int totalCount = boardService.totalCountStudyBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+
         
         model.addAttribute("studyBoardList", studyBoardList);
         
         return "/board/studyBoardList";
 	}
 
+	@GetMapping("/graduateBoardList.do")
+	public String graduateBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		List<BoardListDto> graduateBoardList = boardService.graduateBoardFindAll(params);
+		
+		int totalCount = boardService.totalCountGraduateBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+
+		model.addAttribute("graduateBoardList", graduateBoardList);
+
+		return "/board/graduateBoardList";
+	}
+	
 	@GetMapping("/preStudentBoardList.do")
-	public String preStudentBoardList(Model model) {
-		List<BoardListDto> preStudentBoardList = boardService.preStudentBoardFindAll();
-		//log.debug("preStudentBoardList = {}", preStudentBoardList);
+	public String preStudentBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		List<BoardListDto> preStudentBoardList = boardService.preStudentBoardFindAll(params);
+		
+		int totalCount = boardService.totalCountPreStudentBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("preStudentBoardList", preStudentBoardList);
 
 		return "/board/preStudentBoardList";
 	}
 
-	@GetMapping("/graduateBoardList.do")
-	public String graduateBoardList(Model model) {
-		List<BoardListDto> graduateBoardList = boardService.graduateBoardFindAll();
-		//log.debug("graduateBoardList = {}", graduateBoardList);
-
-		model.addAttribute("graduateBoardList", graduateBoardList);
-
-		return "/board/graduateBoardList";
-	}
 
 	@GetMapping("/employeeBoardList.do")
-	public String employeeBoardList(Model model) {
-		List<BoardListDto> employeeBoardList = boardService.employeeBoardFindAll();
-		//log.debug("employeeBoardList = {}", employeeBoardList);
+	public String employeeBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+		int limit = 6;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		List<BoardListDto> employeeBoardList = boardService.employeeBoardFindAll(params);
+		
+		int totalCount = boardService.totalCountEmployeeBoard();
+		
+		// totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    model.addAttribute("totalPages", totalPages);
+
 
 		model.addAttribute("employeeBoardList", employeeBoardList);
 
@@ -201,12 +299,14 @@ public class BoardController {
 	 */
 	@GetMapping("/myBoards.do")
 	public ResponseEntity<?> myBoards(@AuthenticationPrincipal MemberDetails principal) {
-		String memberId = principal.getMemberId();
-		List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
-		//log.debug("boards = {}", boards);
-		return ResponseEntity
-				.status(HttpStatus.OK)
-				.body(Map.of("boards", boards));
+			
+			String memberId = principal.getMemberId();
+			List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
+			//log.debug("boards = {}", boards);
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body(Map.of("boards", boards));
+		
 	}
 
 	/**
@@ -281,7 +381,7 @@ public class BoardController {
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
-		System.out.println(board);
+//		System.out.println(board);
 		model.addAttribute("postAttach",postAttach);
 	}
 
@@ -815,22 +915,44 @@ public class BoardController {
 	
 	@PostMapping("postReport.do")
 	public String postReport(
-			@RequestParam int reportPostId,
+			@RequestParam(required = false) int reportPostId,
+			@RequestParam(required = false, defaultValue = "0") int reportCommentId,
 			@RequestParam String reporterId,
 			@RequestParam String attackerId,
 			@RequestParam String reportType,
 			@RequestParam String reportContent
 			) {
-		PostReportDto postReport = PostReportDto.builder()
-				.postId(reportPostId)
-				.reporterId(reporterId)
-				.attackerId(attackerId)
-				.reportType(reportType)
-				.reportContent(reportContent)
-				.build();
-		int result = boardService.insertPostReport(postReport);
+		int result = 0;
+		System.out.println("reportPostId = " + reportPostId);
+		System.out.println("reportCommentId = " + reportCommentId);
+		System.out.println("reporterId = " + reporterId);
+		System.out.println("attackerId = " + attackerId);
+		System.out.println("reportType = " + reportType);
+		System.out.println("reportContent = " + reportContent);
 		
-		return "redirect:/board/boardDetail.do?id="+reportPostId;
+		
+		if(reportCommentId != 0) {
+			CommentReportDto commentReport = CommentReportDto.builder()
+					.commentId(reportCommentId)
+					.reporterId(reporterId)
+					.attackerId(attackerId)
+					.reportType(reportType)
+					.reportContent(reportContent)
+					.build();
+			result = boardService.insertCommentReport(commentReport);
+		}else {
+			PostReportDto postReport = PostReportDto.builder()
+					.postId(reportPostId)
+					.reporterId(reporterId)
+					.attackerId(attackerId)
+					.reportType(reportType)
+					.reportContent(reportContent)
+					.build();
+			result = boardService.insertPostReport(postReport);
+		}
+		
+		
+		return "redirect:/board/boardDetail.do?id="+ reportPostId;
 	}
 	
 	/*

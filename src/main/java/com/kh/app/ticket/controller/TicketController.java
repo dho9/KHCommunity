@@ -1,5 +1,7 @@
 package com.kh.app.ticket.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,11 +72,20 @@ public class TicketController {
 	
 	@PostMapping("checkPaymentValidity.do")
 	@ResponseBody
-	public String checkPaymentValidity (@RequestBody TicketBuyDto _order) {
+	public ResponseEntity<?> checkPaymentValidity (@RequestBody TicketBuyDto _order) {
 //		System.out.println(_order);//TicketBuyDto(orderId=IMP961, memberId=eogh, storename=맥주창고, amount=1, totalPrice=3000)
 		TicketBuyDto order =  ticketService.checkOreder(_order);
-		
-		return null;
+		if(order !=null) {
+			
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body(Map.of("isValid", true, "order", order));
+		}
+		else {
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body(Map.of("isValid", false, "order", order));
+		}
 	}
 		
 }
