@@ -23,8 +23,8 @@ public interface TicketRepository {
 			+ "(#{orderId},#{memberId},#{storeId},#{ticketId},#{amount}, #{totalPrice})")
 	int createOrder(TicketOrder order);
 	
-	@Select ("select * from ticket_order where orderId = #{orderId} and amount = #{amount} and total_price= #{totalPrice} ")
+	@Select ("select * from ticket_order where order_id = #{orderId} and amount = #{amount} and total_price= #{totalPrice} ")
 	TicketBuyDto checkOreder(TicketBuyDto _order);
 
-
+	
 }

@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -54,22 +53,35 @@
                     <p class="school">${ loginMember.memberEmail}</p>
                     </sec:authorize>
                     <ul class="buttons">
-                  <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
-                  <li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
-                         <li><a href="#" id="logoutLink">로그아웃</a></li>                       
+  						<sec:authorize access="isAuthenticated()">
+	                    	<c:if test="${fn:contains(loginMember.authorities, 'STUDENT')}">
+		                 		<li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
+		                 	</c:if>
+		                 	<c:if test="${fn:contains(loginMember.authorities, 'TEACHER') || fn:contains(loginMember.authorities, 'ADMIN')}">
+		                 		<li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
+							</c:if>
+	                        <li><a href="#" id="logoutLink">로그아웃</a></li>    
+	                    </sec:authorize>  
+	                    <sec:authorize access="isAnonymous()">
+	                    	<li style="margin: 0 25%;"><a href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a></li>
+	                    </sec:authorize>                   
                     </ul>
                     <hr>
                 </form>
             </div>
+            <sec:authorize access="isAuthenticated()">
             <div class="card">
                 <div class="menus">
                     <a href="${pageContext.request.contextPath}/board/myarticle.do" class="myarticle">내가 쓴 글</a>
                     <a href="${pageContext.request.contextPath}/board/mycommentarticle.do" class="mycommentarticle">댓글 단 글</a>
+                   
                     <a class="myBoard" id="myBoard">즐겨찾기</a>
                     <div class="favorite"></div>
+                   
                     <hr>
                 </div>
             </div>
+             </sec:authorize>
             <div class="card">
                 <div class="banner">
                     <a
@@ -116,20 +128,6 @@
                 </div>
             </div>
             <div class="card">
-                <div class="board" id="myClassBoardContainer">
-                    <h3>
-                        <a href="${pageContext.request.contextPath}/board/myClassBoardList.do">우리반게시판</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="card">
-                <div class="board" id="jobSearchBoardContainer">
-                    <h3>
-                        <a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do">취업정보게시판</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="card">
                 <div class="board" id="sharingInformationBoardContainer">
                     <h3>
                         <a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do">정보게시판</a>
@@ -159,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	loadThreePostByBoardId(5, "askCodeBoardContainer");
 	loadThreePostByBoardId(7, "graduateBoardContainer");
 	loadThreePostByBoardId(8, "preStudentBoardContainer");
-	loadThreePostByBoardId(11, "myClassBoardContainer");
-	loadThreePostByBoardId(12, "jobSearchBoardContainer");
+	//loadThreePostByBoardId(11, "myClassBoardContainer");
+	//loadThreePostByBoardId(12, "jobSearchBoardContainer");
 });
 
 async function loadThreePostByBoardId(boardId, boardContainer) {
@@ -179,42 +177,47 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
         container.append(postHTML);
     }
 }
-// 즐겨찾기
-document.querySelector('#myBoard').addEventListener('mouseover', () => {
-    $.ajax({
-        url: "${pageContext.request.contextPath}/board/myBoards.do",
-        method: "GET",
-        dataType: "json",
-        success(responseData) {
-            const favorite = document.querySelector(".favorite");
+</script>
+<sec:authorize access="isAuthenticated()">
+<script>
+    document.querySelector('#myBoard').addEventListener('mouseover', () => {
+        $.ajax({
+            url: "${pageContext.request.contextPath}/board/myBoards.do",
+            method: "GET",
+            dataType: "json",
+            success(responseData) {
+                const favorite = document.querySelector(".favorite");
 
-            let html = "";
-            for (const board of responseData.boards) {
-                const {boardName, boardId, boardLink} = board;
-                html += `
-                    <a class="accordion" href="${pageContext.request.contextPath}/board/\${boardLink}.do">\${boardName}</a>
-                `;
+                let html = "";
+                for (const board of responseData.boards) {
+                    const {boardName, boardId, boardLink} = board;
+                    html += `
+                        <a class="accordion" href="${pageContext.request.contextPath}/board/\${boardLink}.do">\${boardName}</a>
+                    `;
+                }
+
+                favorite.innerHTML = html;
+
+                const accordions = document.querySelectorAll('.accordion');
+                for (const accordion of accordions) {
+                    accordion.classList.toggle('active');
+                    favorite.style.display = "block";
+                }
             }
-
-            favorite.innerHTML = html;
-
-			const accordions = document.querySelectorAll('.accordion');
-            for (const accordion of accordions) {
-				accordion.classList.toggle('active');
-				favorite.style.display = "block";
-            }
-        }
+        });
     });
-});
-document.querySelector('.card').addEventListener('mouseout', (e) => {
-	console.log(e);
-    const favorite = document.querySelector(".favorite");
-    favorite.style.display = "none";
-});
-
+    document.querySelector('.favorite').addEventListener('mouseout', (e) => {
+        console.log(e+'ㅋㅋㅋㅋ');
+        const favorite = document.querySelector(".favorite");
+        favorite.style.display = "none";
+    });
+</script>
+</sec:authorize>
+<script>
 
 document.getElementById("logoutLink").addEventListener("click", function(event) {
 	memberLogoutFrm.submit();
 });
+
 </script>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>

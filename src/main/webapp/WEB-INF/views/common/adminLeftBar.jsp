@@ -274,6 +274,12 @@
           </span>
           <a href="${pageContext.request.contextPath}/admin/reportList.do">신고 관리</a>
         </div>
+        <div class="reportManagement">
+          <span>
+           🍜
+          </span>
+          <a href="${pageContext.request.contextPath}/admin/adminStoreList.do">우리반게시판 관리</a>
+        </div>
         <hr>
         
         <div class="reportManagement">

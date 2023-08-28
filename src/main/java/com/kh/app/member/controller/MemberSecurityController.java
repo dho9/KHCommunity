@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequestMapping("/member")
 public class MemberSecurityController {
-	// 미루야~~~
+	
 	@Autowired
 	private MemberService memberService;
 
@@ -335,6 +335,15 @@ public class MemberSecurityController {
 
 	    return "redirect:/member/myPage.do";
 	}
+	
+	@GetMapping("/findStudentType.do")
+	@ResponseBody
+	public ResponseEntity<?> findStudentType(@RequestParam String memberId) {
+		StudentDto student = memberService.findStudentType(memberId);
+//		log.info("student={}", student);
+	
+		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student));
+	} 
 
 }
 

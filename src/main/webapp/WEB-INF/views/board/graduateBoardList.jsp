@@ -5,6 +5,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a.article{
+color: black;
+}
 .anonymous{
 	float: right;
 	background-color: white;
@@ -12,6 +15,24 @@
 }
 .anonymousImg{
 	width: 59px;
+}
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination ul {
+  display: inline-block;
+  padding: 0;
+}
+
+.pagination ul li {
+  display: inline;
+  margin: 0 5px;
+}
+
+.pagination ul li.active a {
+  font-weight: bold;
 }
 </style>
 
@@ -44,7 +65,7 @@
 					  		<h3 class="medium">${board.memberId}</h3>
 				  		</c:if>
 					  	<time class="medium">
-						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 						  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
 					  	</time>
 					  	<hr>
@@ -63,6 +84,28 @@
 					</a>
 				</c:forEach>
 			</article>
+			<div class="pagination">
+		        <ul>
+		          <c:if test="${currentPage > 1}">
+		            <li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do?page=${currentPage - 1}" >&laquo;</a></li>
+		          </c:if>
+		
+		          <c:forEach var="pageNum" begin="1" end="${totalPages}">
+		            <c:choose>
+		              <c:when test="${pageNum eq currentPage}">
+		                <li class="active"><a href="#">${pageNum}</a></li>
+		              </c:when>
+		              <c:otherwise>
+		                <li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do?page=${pageNum}">${pageNum}</a></li>
+		              </c:otherwise>
+		            </c:choose>
+		          </c:forEach>
+		
+		          <c:if test="${currentPage < totalPages}">
+		            <li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do?page=${currentPage + 1}" ></a></li>
+		          </c:if>
+		        </ul>
+	      </div>
 		</c:if>
 	</div>
 	<form:form name="tokenFrm"></form:form>

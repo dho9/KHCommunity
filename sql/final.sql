@@ -447,6 +447,19 @@ create table calendar(
     member_id varchar2(50)
 );
 
+CREATE TABLE myclass (
+    board_id NUMBER,
+    curriculum_id NUMBER,
+    PRIMARY KEY (board_id, curriculum_id),
+    FOREIGN KEY (board_id) REFERENCES board(board_id),
+    FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
+);
+select * from myclass;
+
+select * from post where board_id = 22;
+update myclass set curriculum_id = 21 where board_id = 22;
+insert into myclass values (28, 6);
+select * from curriculum;
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);
 ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
@@ -1178,37 +1191,39 @@ delete from member where member_id = 'admin';
 
 delete from store where store_id = 3;
 
---select * from post_attachment;
---select * from member;
---select * from student;
---select * from student_attachment;
---select * from class;
---select * from curriculum;
---select * from teacher;
---select * from employee;
---select * from scheduler;
---select * from vacation;
---select * from board order by 1;
---select * from post order by 1;
---delete post where post_id = 42;
---select * from post_content order by 1;
---select * from post_comment;
---select * from favorite;
---select * from post_like;
---select * from comment_like;
---select * from message_box;
+select * from post_attachment;
+select * from member;
+select * from student;
+select * from student_attachment;
+select * from class;
+select * from curriculum;
+select * from teacher;
+select * from employee;
+select * from scheduler;
+select * from vacation;
+select * from vacation_attachment;
+select * from board order by 1;
+select * from post order by 1;
+delete post where post_id = 42;
+select * from post_content order by 1;
+select * from post_comment;
+select * from favorite;
+select * from post_like;
+select * from comment_like;
+select * from message_box;
 select * from report;
---select * from chat_room;
---select * from talker;
---select * from chat_message;
---select * from store;
---select * from ticket;
---select * from ticket_order;
---select * from quit_member;
---select * from delete_post;
---select * from delete_comment;
---select * from authority;
---select * from calendar;
+select * from chat_room;
+select * from talker;
+select * from chat_message;
+select * from store;
+select * from ticket;
+select * from ticket_order;
+select * from quit_member;
+select * from delete_post;
+select * from delete_comment;
+select * from authority;
+select * from calendar;
+
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
@@ -1216,7 +1231,6 @@ VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n'
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n', 'n', 'y');
-
 
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
@@ -1371,7 +1385,59 @@ to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
 delete talker where chat_id between 43 and 74;
 
+
+update student set approve_request_date = sysdate where student_id = 'xogus';
+
+select * from calendar;
+
+select m.member_name, m.member_phone, m.member_email, m.birthday, s.curriculum_id, c.class_id from member m join student s on m.member_id = s.student_id join curriculum c on s.curriculum_id = c.curriculum_id where c.class_id = '352';
+
+select * from post_comment where post_id =8;
+select * from comment_like;
+
+select * from member;
+select * from post_like;
+
+SELECT
+    v.vacation_id AS vacationId,
+    m.member_name AS memberName,
+    v.vacation_send_date,
+    v.vacation_start_date,
+    v.vacation_end_date,
+    m.birthday,
+    c.curriculum_start_at AS curriculumStartAt,
+    c.curriculum_end_at AS curriculumEndAt,
+    c.curriculum_name AS curriculumName,
+    c.class_id AS classId,
+    v.teacher_id,
+    t.member_name AS teacherName
+FROM
+    student s
+LEFT JOIN
+    member m ON s.student_id = m.member_id
+LEFT JOIN
+    curriculum c ON s.curriculum_id = c.curriculum_id
+LEFT JOIN
+    vacation v ON s.student_id = v.student_id
+LEFT JOIN
+    member t ON v.teacher_id = t.member_id
+WHERE
+    v.vacation_approve_check = '2';
+select * from vacation;
+select * from curriculum;
+
+insert into vacation (vacation_id, student_id, teacher_id, employee_id, vacation_send_date, vacation_approve_check, vacation_start_date, vacation_end_date) values(seq_vacation_id.nextval, 'khendev23', 'ehdgus', null, sysdate, '2', '23/08/27', '23/08/28');
+
+update vacation set vacation_approve_check = '2', employee_id = null;
+
+SELECT *
+FROM report
+WHERE post_id IS NOT NULL
+  AND comment_id IS NULL
+  AND message_id IS NULL;
+
 select count(*)from post_comment  where comment_ref= 230; 
 select * from delete_comment;
 select * from post_comment where comment_id = 243;
 select * from post;
+

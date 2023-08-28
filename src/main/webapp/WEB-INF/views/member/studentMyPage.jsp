@@ -462,7 +462,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 						
 						<br/>
 						<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
-					<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId} " readonly>
+					<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId}" readonly>
 					
 					<div class="input-group" style="padding:0px;">
 		  				<div class="custom-file">

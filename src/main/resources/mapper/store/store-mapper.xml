@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.app.store.repository.StoreRepository">
+	
+	<select id="findStoreById" resultMap="findStoreById">
+		select s.*, 
+			(select price from ticket t where t.store_id = s.store_id) price 
+		from store s 
+		where store_id = #{id}
+	</select>
+	<resultMap type="storeDetailDto" id="findStoreById">
+  	<id column="store_id" property="storeId"/>
+  	<result column="store_name" property="storeName"/>
+  	<result column="post_number" property="postNumber"/>
+  	<result column="address" property="address"/>
+  	<result column="store_type" property="storeType"/>
+  	<result column="price" property="price"/>
+	</resultMap>
+</mapper>
