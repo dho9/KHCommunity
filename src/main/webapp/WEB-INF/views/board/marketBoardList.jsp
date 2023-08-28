@@ -37,7 +37,7 @@
 	<div class="wrap title">
 		<h1>
 			<a>장터게시판</a>
-			<i class="bi bi-star" data-value="${freeBoardLists[0].boardId}"></i>
+			<i class="bi bi-star" data-value="${marketBoardLists[0].boardId}"></i>
 		</h1>
 	</div>
 	<div class="wrap articles">
