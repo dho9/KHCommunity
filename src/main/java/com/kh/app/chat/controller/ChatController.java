@@ -30,7 +30,7 @@ public class ChatController {
 	@ResponseBody
 	public int chatConsultingRequest(@RequestParam(value = "memberId", required=false) String memberId) {
 		
-		System.out.println(memberId);
+//		System.out.println(memberId);
 		
 		int chatId = chatService.insertNewChatRoom(memberId);
 		

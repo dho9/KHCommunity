@@ -61,15 +61,19 @@
                     <hr>
                 </form>
             </div>
+            <sec:authorize access="isAuthenticated()">
             <div class="card">
                 <div class="menus">
                     <a href="${pageContext.request.contextPath}/board/myarticle.do" class="myarticle">내가 쓴 글</a>
                     <a href="${pageContext.request.contextPath}/board/mycommentarticle.do" class="mycommentarticle">댓글 단 글</a>
+                   
                     <a class="myBoard" id="myBoard">즐겨찾기</a>
                     <div class="favorite"></div>
+                   
                     <hr>
                 </div>
             </div>
+             </sec:authorize>
             <div class="card">
                 <div class="banner">
                     <a
@@ -179,39 +183,42 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
         container.append(postHTML);
     }
 }
-// 즐겨찾기
-document.querySelector('#myBoard').addEventListener('mouseover', () => {
-    $.ajax({
-        url: "${pageContext.request.contextPath}/board/myBoards.do",
-        method: "GET",
-        dataType: "json",
-        success(responseData) {
-            const favorite = document.querySelector(".favorite");
+</script>
+<sec:authorize access="isAuthenticated()">
+<script>
+    document.querySelector('#myBoard').addEventListener('mouseover', () => {
+        $.ajax({
+            url: "${pageContext.request.contextPath}/board/myBoards.do",
+            method: "GET",
+            dataType: "json",
+            success(responseData) {
+                const favorite = document.querySelector(".favorite");
 
-            let html = "";
-            for (const board of responseData.boards) {
-                const {boardName, boardId, boardLink} = board;
-                html += `
-                    <a class="accordion" href="${pageContext.request.contextPath}/board/\${boardLink}.do">\${boardName}</a>
-                `;
+                let html = "";
+                for (const board of responseData.boards) {
+                    const {boardName, boardId, boardLink} = board;
+                    html += `
+                        <a class="accordion" href="${pageContext.request.contextPath}/board/\${boardLink}.do">\${boardName}</a>
+                    `;
+                }
+
+                favorite.innerHTML = html;
+
+                const accordions = document.querySelectorAll('.accordion');
+                for (const accordion of accordions) {
+                    accordion.classList.toggle('active');
+                    favorite.style.display = "block";
+                }
             }
-
-            favorite.innerHTML = html;
-
-			const accordions = document.querySelectorAll('.accordion');
-            for (const accordion of accordions) {
-				accordion.classList.toggle('active');
-				favorite.style.display = "block";
-            }
-        }
+        });
     });
-});
-document.querySelector('.card').addEventListener('mouseout', (e) => {
-	console.log(e);
-    const favorite = document.querySelector(".favorite");
-    favorite.style.display = "none";
-});
-
+    document.querySelector('.card').addEventListener('mouseout', (e) => {
+        console.log(e);
+        const favorite = document.querySelector(".favorite");
+        favorite.style.display = "none";
+    });
+</script>
+</sec:authorize>
 
 document.getElementById("logoutLink").addEventListener("click", function(event) {
 	memberLogoutFrm.submit();
