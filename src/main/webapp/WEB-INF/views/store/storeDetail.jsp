@@ -69,7 +69,7 @@ div.container {
 						<dt class="col-sm-3">분류</dt>
 						<dd class="col-sm-9">${store.storeType}</dd>
 						<dt class="col-sm-3 ">식권 가격</dt>
-						<dd class="col-sm-9 ">3000</dd>
+						<dd class="col-sm-9 ">${store.price }</dd>
 						<dt class="col-sm-3">사진</dt>
 						<dd class="col-sm-9">
 							<img
@@ -131,9 +131,6 @@ div.container {
 		</div>
 		<script type="text/javascript"
 			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=29e3b1a49b48d90cc80318415174bdca&libraries=services"></script>
-		<script type="text/javascript" src="./CryptoJS/rollups/hmac-sha256.js"></script>
-		<script type="text/javascript"
-			src="./CryptoJS/components/enc-base64.js"></script>
 	</div>
 </div>
 
@@ -221,7 +218,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                     pg : 'kakaopay',
                     merchant_uid: "IMP" + makeMerchantUid, 
                     name : '${store.storeName}',
-                    amount : quantity * 3000, // 식권 가격 * 수량
+                    amount : quantity * '${store.price}', // 식권 가격 * 수량
                     buyer_name : '아임포트 기술지원팀',
                     quantity : quantity
                 }, function (rsp) { // callback
@@ -251,6 +248,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                     totalPrice : totalAmount
                     
                 };
+                const ckTotalPrice = totalAmount;
                 console.log(requestData);
                 jQuery.ajax({
                     url: '${pageContext.request.contextPath}/ticket/buyTicket.do',
@@ -272,9 +270,14 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                            success: function(validationData) {
                                console.log("Payment validity checked:", validationData);
                                if (validationData.isValid) {
-                                   alert("결제가 유효합니다.");
+                            	  const {order} = validationData;
+                            	  console.log(order.totalPrice);
+                            	   if(ckTotalPrice === order.totalPrice){
+                            		   
+                                   alert("결제가 성공했습니다..");
                                    document.getElementById('create-kakao-link-btn').style.display = 'block';
                                    document.getElementById('create-kakao-link-btn').click();
+                            	   }
                                } else {
                                    alert("결제 유효성 검사에 실패했습니다.");
                                }
