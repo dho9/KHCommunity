@@ -5,6 +5,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a.article{
+color: black;
+}
 .anonymous{
 	float: right;
 	background-color: white;
