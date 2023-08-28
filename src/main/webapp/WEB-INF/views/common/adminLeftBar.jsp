@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,14 +49,46 @@
 				$liveToast.find(".toast-text").html(content);
 				const acceptButton = $("<button>").attr({
 			        type: "button",
-			        class: "btn btn-primary btn-sm"
-			    }).text("수락").click(() => {
-			        const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + chatId, '_blank');
-			        if (newWindow) {
-			            newWindow.focus();
-			        }
-			    });
-				$liveToast.find(".border-top").html(acceptButton);
+			        class: "btn btn-primary btn-sm",
+			        id:"chatApproveBtn",
+			        "data-chatid": chatId
+			    }).text("수락");
+				$liveToast.find("#chatApproveFrm").append(acceptButton);
+				
+				$("#chatApproveBtn").click(function() {
+			          const chatId = $(this).attr("data-chatid");
+			          const chatApproveFrm = document.chatApproveFrm;
+			          const token = chatApproveFrm._csrf.value;
+					  
+			          console.log(chatId);
+			          
+			          $.ajax({
+			              type: "POST",
+			              url: "${pageContext.request.contextPath}/chat/updateAdminTalker.do",
+			              data: {
+			                  chatId
+			              },
+			              headers: {
+			                  "X-CSRF-TOKEN": token
+			              },
+			              success: function(responseData) {
+			                  console.log("성공", responseData);
+
+			                  // 새 창 열기
+			                  const newWindow = window.open(
+			                      "${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + chatId,
+			                      '_blank'
+			                  );
+
+			                  if (newWindow) {
+			                      newWindow.focus();
+			                  }
+			              },
+			              error: function(error) {
+			                  console.error("에러", error);
+			              }
+			          });
+			      });
 				
 				const toastBootstrap = bootstrap.Toast.getOrCreateInstance($liveToast);
 				toastBootstrap.show()
@@ -78,7 +111,9 @@
       			
       			</div>
       			<div class="mt-2 pt-2 border-top">
-     				
+     				<form:form id="chatApproveFrm" name="chatApproveFrm">
+     					
+     				</form:form>
     			</div>
     		</div>
   		</div>
@@ -257,5 +292,7 @@
           </div>
         </nav>
       </section>
+      <script>
       
+      </script>
       

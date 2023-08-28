@@ -65,7 +65,7 @@
 				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
 				                    </c:when>
 				                    <c:otherwise>
-				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/adminCourseList.do?page=${pageNum}">${pageNum}</a></li>
+				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/adminChatList.do?page=${pageNum}">${pageNum}</a></li>
 				                    </c:otherwise>
 				                </c:choose>
 				            </c:forEach>
