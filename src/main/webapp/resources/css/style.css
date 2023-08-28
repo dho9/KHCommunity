@@ -453,6 +453,7 @@ aside>form.select>select {
 aside>form.select>select:focus {
 	outline: none;
 }
+div#bottom{margin-top:60px;}
 
 aside>div.title>h1 {
 	color: #262626;
@@ -1122,6 +1123,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 
 	/*** mobile bottom ***/
 	#bottom {
+		
 		margin-bottom: 10px;
 	}
 }
@@ -1491,10 +1493,9 @@ input[name=_tags] {
 	font-weight: bold;
 }
 
-#container>div.articles>article h2 {
-	color: #292929;
+span.tag{
+	    color: darkcyan;
 }
-
 .bold {
 	font-weight: bold !important;
 }

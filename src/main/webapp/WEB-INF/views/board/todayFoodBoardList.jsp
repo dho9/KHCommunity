@@ -6,6 +6,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a.article{
+color: black;
+}
+h2.medium.bold{
+color: chocolate;}
 .anonymous{
 	float: right;
 	background-color: white;
