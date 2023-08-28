@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <script
@@ -29,8 +30,8 @@
 <style>
 @font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
 #top-container{width: 100%; height: 180px; background-color: royalblue; z-index: -10;}
-#side-container{background-color: white; width:250px;  margin: -6% 1% 0 15%; display: inline-block; border-radius: 20px; float: left;}
-#main-container{background-color: white; width:830px;  margin: -6% 15% 0 0%; display: inline-block; border-radius: 20px; float: right; box-shadow: 1px 1px 3px #cecece;}
+#side-container{background-color: white; width:250px;  margin: -6% 1% 0 20%; display: inline-block; border-radius: 20px; float: left;}
+#main-container{background-color: white; width:830px;  margin: -6% 20% 0 0%; display: inline-block; border-radius: 20px; float: right; box-shadow: 1px 1px 3px #cecece;}
 #profile-container{border-bottom: 1.5px solid #606060; width: 150px; height:150px; background-color: #e2e2e2; margin:10% auto; border: 0.5px solid #cecece; text-align: center; border-radius: 50%;}
 #profile{width: 70%; vertical-align: middle; display: inline-block; margin-top: 15%; opacity: 0.47;}
 #profileName{font-family: 'GmarketSansMedium'; font-size: 30px; font-weight: 500; margin-top: 10px; margin-bottom:10px; color: #4d4d4d;}
@@ -101,9 +102,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
 		<div id="mypageBtns">
-			<p class="mypageBtn" id="memberInfo"><i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보</a></p>
+			<p class="mypageBtn" id="memberInfo"><i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보</p>
 			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</a></p>
+			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</p>
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
@@ -178,7 +179,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<li class="page-item disabled" id="prevButton">
 						  <span class="page-link">Previous</span>
 						</li>
-						<li class="page-item" onclick="changePage(1)">
+						<li class="page-item" aria-current="page" onclick="changePage(1)">
 	                            <span class="page-link">1</span>
 	                        </li>
 						<li class="page-item" id="nextButton">
@@ -487,14 +488,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            	
 	                let html = ""; 
 	                responseData.forEach(function(message) {
-	                    console.log(message);
 	                    let readCk = ""
 						if(message.readCheck == 'y'){
 							readCk = `<i class="bi bi-envelope-paper-heart"></i>`;
 						}else{
 							readCk = `<i class="bi bi-envelope-heart"></i>`;
 						}
-	                    
 	                    html += `
 					        <tr>
 					            <td class="msgId">\${message.messageId}</td>
@@ -526,10 +525,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					        
 					        msgId = $(this).closest("tr").find(".msgId").html();
 					        $("#messageDetail").modal("show");
-					        updateReadCheck(readCheckValue, msgId);
+					        updateReadCheck(readCheckValue, msgId, page);
 					    });
 					    $("#editButton").click(function() {
-					    	deleteMsg(msgId);
+					    	deleteMsg(msgId, page);
 					    });
 					    $("#reportButton").click(function() {
 					    	reportMsg(msgId, sender);
@@ -581,7 +580,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            
 	            if(listSize ==0){
 	            	paginationHTML += `
-                        <li class="page-item" aria-current="page">
+                        <li class="page-item active" aria-current="page">
                             <span class="page-link" onclick="changePage(1)">1</span>
                         </li>
                     `;
@@ -634,7 +633,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	}
 	
 	// 쪽지 읽음 여부 업데이트
-	const updateReadCheck = (checked, msgId) =>{
+	const updateReadCheck = (checked, msgId, page) =>{
 		console.log(checked, msgId);
 		if(checked == 'n'){
 			$.ajax({
@@ -646,14 +645,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				method : "GET",
 				dataType : "json",
 				success(responseData){
-					msgList();
+					msgList(page);
 				}
 			});
 		}
 	};
 	
 	// 쪽지삭제
-	const deleteMsg = (msgId) =>{
+	const deleteMsg = (msgId, page) =>{
 		$.ajax({
 			url: "${pageContext.request.contextPath}/message/messageDelete.do",
 			data :{
@@ -662,7 +661,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			method : "GET",
 			dataType : "json",
 			success(responseData){
-				msgList();
+				msgList(page);
 				$('#messageDetail').modal('hide');
 			}
 		});
@@ -691,7 +690,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		}
 		
 
-	});
+	};
 	
 	// MH - 쪽지함 관련 기능 끝!	
 	
@@ -806,39 +805,40 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 </script>	
 
 <script>
+
 // 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
-document.querySelector("#consultRequest").onclick = () => {
-	const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
-	const stompClient = Stomp.over(ws);
-
-	stompClient.connect({}, (frame) => {
-		console.log('open : ', frame);
-		
-		// 구독신청 
-		stompClient.subscribe('/topic/chat', (message) => {
-			console.log('/topic/chat : ', message);
-			renderMessage(message);
+	document.querySelector("#consultRequest").onclick = () => {
+		const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
+		const stompClient = Stomp.over(ws);
+	
+		stompClient.connect({}, (frame) => {
+			console.log('open : ', frame);
+			
+			// 구독신청 
+			stompClient.subscribe('/topic/chat', (message) => {
+				console.log('/topic/chat : ', message);
+				renderMessage(message);
+			});
 		});
-	});
-
-	$.ajax({
-		type : "POST",
-		url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
-		data :{
-			memberId: loginMemberId
-		},
-		headers: {
-            "X-CSRF-TOKEN": token
-        },
-		success(responseData){
-			console.log("ChatId: ", responseData)
-			const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
-			if (newWindow) {
-                newWindow.focus();
-            }
-		}); 
+	
+		$.ajax({
+			type : "POST",
+			url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
+			data :{
+				memberId: loginMemberId
+			},
+			headers: {
+	            "X-CSRF-TOKEN": token
+	        },
+			success(responseData){
+				console.log("ChatId: ", responseData)
+				const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
+				if (newWindow) {
+	                newWindow.focus();
+	            }
+	        }
+		});
 	};
-};
 	
 </script>	
 
