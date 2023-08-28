@@ -11,6 +11,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
+import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
@@ -136,11 +137,25 @@ public interface AdminService {
 
 	int insertStore(String storeName, String postNumber, String address);
 
+	List<Report> findAllReports(Map<String, Object> params);
+
+	int countAllReports();
+
+	List<Report> findReportsByFilter(String reportType, Map<String, Object> params);
+
+	int countReportsByFilter(String reportType);
+	
 	List<AdminChatListDto> findAllChat(Map<String, Object> params);
 
 	int getTotalCountOfChatList();
 
 	List<ChatMessage> getChatMessagesByChatId(int chatId);
+
+	int insertTicket(String storeName);
+
+	int deleteReport(String reportId);
+
+	int sendReportToStudent(String attackerId, String admin, String messageContent);
 
 
 

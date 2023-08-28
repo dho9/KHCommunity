@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
@@ -69,9 +70,6 @@ public class MyPageController {
 		// Dday 끝 }
 	}
 	
-	
-	
-	
 		 @GetMapping("/employeeMyPage.do") 
 		 public void employeeMyPage(Model model, 
 				 @AuthenticationPrincipal MemberDetails principal,
@@ -84,6 +82,7 @@ public class MyPageController {
 			 List<EmployeeInfoDto> employeeInfo =
 					 memberService.findByEmployeeInfo(principal.getMemberId());
 			  model.addAttribute("employeeInfo", employeeInfo);
+
 			  log.info("★★employeeInfo = {} ",employeeInfo);
 		
 			  
@@ -99,8 +98,10 @@ public class MyPageController {
 			  log.info("principal.getMemberId() = {}", principal.getMemberId());
 			  log.info("studentVacationApprove = {}", studentVacationApprove);
 			  
+			  EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
+			  
+			  model.addAttribute("adminInfo", adminInfo);
 		 	}
-		 
-	
+
 
 }

@@ -44,6 +44,7 @@ import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
+import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
@@ -378,6 +379,17 @@ public class AdminController {
 		return "redirect:/admin/adminStudentList.do";
 	}
 
+	// 피신고자에게 주의조치 보내고 report테이블에서 해당 행 삭제
+	@PostMapping("/sendReport.do")
+	public String sendReport(@RequestParam String reportId, @RequestParam String attackerId, @Valid MessageBox message, @RequestParam String messageContent) {
+		String admin = "admin";
+		// message_box에 주의조치 메세지전송
+		int result = adminService.sendReportToStudent(attackerId, admin, messageContent);
+		// 해당 신고내역 report에서 삭제
+		int result1 = adminService.deleteReport(reportId);
+		return "redirect:/admin/reportList.do";
+	}
+	
 	// 수강생 승인 목록 조회 - 유성근
 	@GetMapping("/adminStudentApprovementList.do")
 	public void adminStudentApprovementList(Model model, @RequestParam(defaultValue = "1") int page) {
@@ -445,6 +457,39 @@ public class AdminController {
 		int result = adminService.deleteAdminMember(employee);
 		
 		return "redirect:/admin/employeeList.do";
+	}
+	
+	@GetMapping("/reportList.do")
+	public void reportList(Model model,
+			@RequestParam(value = "reportType", required = false) String _reportType, 
+			@RequestParam(defaultValue = "1") int page) {
+		// 페이징
+		int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+		if (_reportType != null) {
+			String reportType = _reportType;
+			// checkbox 선택했을때, 해당 신고내역 불러오기
+			
+			List<Report> reports = adminService.findReportsByFilter(reportType, params);
+			int totalCount = adminService.countReportsByFilter(reportType);
+			int totalPages = (int) Math.ceil((double) totalCount / limit);
+			model.addAttribute("reports", reports);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", totalPages);
+		}else {
+			// 아무것도 선택안됐을때, 모든 신고내역 불러오기
+			List<Report> reports = adminService.findAllReports(params);
+			int totalCount = adminService.countAllReports();
+			int totalPages = (int) Math.ceil((double) totalCount / limit);
+			model.addAttribute("reports", reports);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", totalPages);
+		}
+		
 	}
 	
 	@GetMapping("/teacherList.do")
@@ -667,7 +712,8 @@ public class AdminController {
 		String storeName = store.getStoreName();
 		String postNumber = store.getPostNumber();
 		String address = store.getAddress();
-		
+		int id = store.getStoreId();
+		log.debug("id = {}", id);
 		 // 1. 새로운 저장 경로 지정
 	    ServletContext servletContext =  request.getServletContext();
 	    String resourcesPath = "/resources/images/store/";
@@ -684,8 +730,12 @@ public class AdminController {
 
 	        file.transferTo(destFile);
 	    }
-
+	    
+	    // store테이블 insert
 	    int result = adminService.insertStore(storeName, postNumber, address);
+	    
+	    // ticket테이블 insert
+	    int result1 = adminService.insertTicket(storeName);
         return "redirect:/admin/adminStoreList.do"; // 예시 리다이렉트 URL
     }
 	
@@ -717,7 +767,7 @@ public class AdminController {
 	    	int chatId = chat.getChatId();
 	        messages = adminService.getChatMessagesByChatId(chatId);
 	        chat.setChatMessage(messages);
-	        System.out.println("messages = " + messages);
+//	        System.out.println("messages = " + messages);
 	    }
 	    model.addAttribute("messages", messages);
 	    model.addAttribute("adminChatList", adminChatList);

@@ -17,6 +17,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.report.dto.AdminReportListDto;
+import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
@@ -252,6 +253,16 @@ public interface AdminRepository {
 	@Insert("insert into store values (seq_store_id.nextval, #{storeName}, #{postNumber}, #{address}, '음식점')")
 	int insertStore(String storeName, String postNumber, String address);
 
+	@Select("select * from report order by report_send_date")
+	List<Report> findAllReports(Map<String, Object> params);
+
+	@Select("select count(*) from report")
+	int countAllReports();
+
+	List<Report> findReportsByFilter(String reportType, Map<String, Object> params);
+
+	@Select("select count(*) from report")
+	int countReportsByFilter(String reportType);
 	@Select("select\r\n"
 			+ "    t.chat_id,\r\n"
 			+ "    t.student_id,\r\n"
@@ -281,5 +292,19 @@ public interface AdminRepository {
 	@Select("select * from chat_message where chat_id = #{chatId} order by chat_no")
 	List<ChatMessage> getChatMessagesByChatId(int chatId);
 
+	@Insert("INSERT INTO ticket (ticket_id, store_id, price)\r\n"
+			+ "VALUES (\r\n"
+			+ "   seq_ticket_id.NEXTVAL,\r\n"
+			+ "   (SELECT store_id FROM store WHERE store_name = #{storeName}),\r\n"
+			+ "   5900\r\n"
+			+ ")")
+	int insertTicket(String storeName);
 
+	@Delete("delete from report where report_Id = #{reportId}")
+	int deleteReport(String reportId);
+
+	@Insert("insert into message_box values(seq_message_id.nextval, #{admin}, #{attackerId}, #{messageContent}, default, default, 'n')")
+	int sendReportToStudent(String attackerId, String admin, String messageContent);
+
+	
 }

@@ -18,7 +18,7 @@ public class Report {
 	public int commentId;
 	public int messageId;
 	public String reporterId;
-	public String attakerId;
+	public String attackerId;
 	public String reportContent;
 	public String reportType;
 	public LocalDate reportSendDate;

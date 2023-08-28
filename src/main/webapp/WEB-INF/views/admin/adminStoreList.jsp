@@ -66,7 +66,6 @@
                           우편번호 : <input type="text" name="postNumber" id="modalPostNumber" readonly> <br>
                           주소 : <input type="text" name="address" id="modalAddress" style="width:700px" readonly>
                           <hr>
-                          <button class="btn btn-danger" type="button" id="btnBan" style="float:right;">식당 삭제</button> 
                           <br>
                       </form:form>
                    	  </div>

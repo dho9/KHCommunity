@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-
 public class EmployeeInfoDto {
+
 	private String memberId;
 	private String memberName;
 	private String classId;
@@ -25,3 +25,4 @@ public class EmployeeInfoDto {
 	private LocalDate curriculumEndAt;
 	
 }
+
