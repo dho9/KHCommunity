@@ -522,10 +522,6 @@ public class BoardController {
 		}
 		result = boardService.insertPostContent(board);
 		
-		if(board.getBoardId() == 11) {
-			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
-		}
-		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 
 	}
@@ -808,13 +804,13 @@ public class BoardController {
 	@GetMapping("/myClassBoardDetail.do")
 	public void myClassBoardDetail(@RequestParam int id, Model model) {
 		BoardListDto postDetail = boardService.findById(id);
-		log.debug("postDetail = {}", postDetail);
+//		log.info("postDetail = {}", postDetail);
 
 		PostAttachment postAttach = boardService.findAttachById(id);
-		log.debug("postAttach = {}", postAttach);
+//		log.info("postAttach = {}", postAttach);
 		
 		List<Comment> comments = boardService.findByCommentByPostId(id);
-		log.debug("comments = {}", comments);
+//		log.info("comments = {}", comments);
 		
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("postAttach", postAttach);
@@ -1009,76 +1005,67 @@ public class BoardController {
 		return "/board/jobSearchBoardList";
 	}
 	
-//	@PostMapping("/createMyClass.do")
-//	public String createMyClass(
-//			@RequestParam String title,
-//			@RequestParam String text,
-//			@RequestParam int boardId,
-//			@RequestParam(required = false) String grade,
-//			@RequestParam(required = false) boolean anonymousCheck,
-//			@RequestParam(required = false) String[] _tags,
-//			@AuthenticationPrincipal MemberDetails member,
-//			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
-//		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!", boardId);
-//		//log.debug("loginMember = {}", member);
-//		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
-//
-//		// 1. 파일저장
-//		int result = 0;
-//		List<PostAttachment> attachments = new ArrayList<>(); 
-//		for(MultipartFile file : files) {
-//			if(!file.isEmpty()) {
-//				String originalFilename = file.getOriginalFilename();
-//				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-//				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-//				file.transferTo(destFile);	
-//
-//				PostAttachment attach = 
-//						PostAttachment.builder()
-//						.postOriginalFilename(originalFilename)
-//						.postRenamedFilename(renamedFilename)
-//						.boardId(boardId)
-//						.build();
-//
-//				attachments.add(attach);
-//			}
-//		}
-//			
-//			BoardCreateDto board = null;
-//			
-//			if(grade == null || grade.equals("")) {
-//				board = BoardCreateDto.builder()
-//						.title(title)
-//						.content(text)
-//						.boardId(boardId)
-//						.memberId(member.getMemberId())
-//						.tags(tags)
-//						.attachments(attachments)
-//						.anonymousCheck(anonymousCheck)
-//						.build();
-//				
-//			} else {
-//				String realGrade = " [평점 : " + grade + "]";
-//				board = BoardCreateDto.builder()
-//						.title(title + realGrade)
-//						.content(text)
-//						.boardId(boardId)
-//						.memberId(member.getMemberId())
-//						.tags(tags)
-//						.attachments(attachments)
-//						.anonymousCheck(anonymousCheck)
-//						.build();
-//			}
-//		
-//		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
-//			result = boardService.insertBoardNofiles(board);
-//		}else {
-//			result = boardService.insertBoard(board);
-//		}
-//		result = boardService.insertPostContent(board);
-//		
-//		return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
-//	}
+	@PostMapping("/createMyClass.do")
+	public String createMyClass(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam(required = false) String[] _tags,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
+//		log.info("loginMember = {}", member);
+		List<String> tags = _tags != null ? Arrays.asList(_tags) : null;
+		
+		// 1. 파일저장
+		int result = 0;
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		for(MultipartFile file : files) {
+			if(!file.isEmpty()) {
+				String originalFilename = file.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				file.transferTo(destFile);	
+
+				PostAttachment attach = 
+						PostAttachment.builder()
+						.postOriginalFilename(originalFilename)
+						.postRenamedFilename(renamedFilename)
+						.boardId(boardId)
+						.build();
+
+				attachments.add(attach);
+			}
+		}
+			
+		BoardCreateDto board = BoardCreateDto.builder()
+								.title(title)
+								.content(text)
+								.boardId(boardId)
+								.memberId(member.getMemberId())
+								.attachments(attachments)
+								.tags(tags)
+								.build();
+		log.info("board = {}", board);
+		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+			result = boardService.insertBoardNofiles(board);
+		}else {
+			result = boardService.insertBoard(board);
+		}
+		result = boardService.insertPostContent(board);
+		
+		return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+	}
 	
+	@PostMapping("/deleteMyClassPost.do") 
+	public String deleteMyClassPost (
+			@RequestParam int deletePostId,
+			@RequestParam String postBoardLink,
+			@RequestParam int boardId
+			) {
+		int result = boardService.deleteBoard(deletePostId); 
+		log.info("보드링크={}",postBoardLink);
+		log.info("포스트아이디={}",deletePostId);
+		return "redirect:/board/" + postBoardLink + ".do?boardId" + boardId;
+	}
 }
 

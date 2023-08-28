@@ -136,4 +136,8 @@
 		</div>
 	</div>
 	<div id="jangjun">
+	<sec:authentication property="principal" var="loginMember" />
+	<script>
+	
+	</script>
 	

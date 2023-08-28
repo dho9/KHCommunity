@@ -84,7 +84,7 @@
 		</ul>
 	</div>
 	
-	<button id="prevBtn" type="button" class="btn btn-outline-primary"><i class="bi bi-list"></i>글목록</button>
+	<button id="prevBtn" type="button" class="btn btn-outline-primary" value="${postDetail.boardId}"><i class="bi bi-list"></i>글목록</button>
 	
 	<c:if test="${loginMember.memberId eq postDetail.memberId}">
 		<div id="updateAndDeleteBtn-div">
@@ -99,7 +99,7 @@
 		  <div class="card-header">
 		  	<h3>${postDetail.title}</h3>
 		  	<h5>${postDetail.memberName} | 
-			  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+			  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 				<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
 			</h5>
 		  </div>
@@ -161,8 +161,9 @@
 		</c:if>
 	</div>
 	<!-- 삭제 폼 -->
-	<form:form action="${pageContext.request.contextPath}/board/boardDelete.do" name="boardDeleteFrm" method="POST">
+	<form:form action="${pageContext.request.contextPath}/board/deleteMyClassPost.do" name="boardDeleteFrm" method="POST">
 		<input type="hidden" name="deletePostId" id="deletePostId" value="${postDetail.postId}"/>
+		<input type="hidden" name="boardId" id="deleteBoardId" value="${postDetail.boardId}"/>
 		<input type="hidden" name="postBoardLink" id="postBoardLink" value="myClassBoardList"/>
 	</form:form>
 	
@@ -201,15 +202,19 @@
 	});
 	
 	// 글목록
-	document.querySelector('#prevBtn').addEventListener('click', () => {
-		window.location.href="${pageContext.request.contextPath}/board/myClassBoardList.do";
+	document.querySelector('#prevBtn').addEventListener('click', (e) => {
+		/* console.log(e.target.getAttribute('value')); */
+		const boardId = e.target.getAttribute('value');
+		window.location.href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
 	});
 	
 	// 게시글 삭제
 	if(document.querySelector('#deleteBtn')) {
-		document.querySelector('#deleteBtn').addEventListener('click', () => {
-			document.boardDeleteFrm.submit();
-		});
+		if(confirm('게시글을 삭제하시겠습니까')) {
+			document.querySelector('#deleteBtn').addEventListener('click', () => {
+				document.boardDeleteFrm.submit();
+			});
+		}
 	}
 	
 	// 게시글 수정
@@ -227,7 +232,7 @@
 						  <div class="card-header">
 						  	<h3><input style="width: 80%;" name="title" value="${postDetail.title}"/></h3>
 						  	<h5>${postDetail.memberName} | 
-							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+							  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 								<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
 							</h5>
 						  </div>
