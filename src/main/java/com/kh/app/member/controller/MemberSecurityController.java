@@ -335,6 +335,15 @@ public class MemberSecurityController {
 
 	    return "redirect:/member/myPage.do";
 	}
+	
+	@GetMapping("/findStudentType.do")
+	@ResponseBody
+	public ResponseEntity<?> findStudentType(@RequestParam String memberId) {
+		StudentDto student = memberService.findStudentType(memberId);
+//		log.info("student={}", student);
+	
+		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student));
+	} 
 
 }
 

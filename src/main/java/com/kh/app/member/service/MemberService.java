@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
+import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
@@ -46,9 +47,7 @@ public interface MemberService extends UserDetailsService{
 
 	EmployeeDto findEmployeeById(String memberId);
 
-
-	
-
+	StudentDto findStudentType(String memberId);
 
 
 }

@@ -44,26 +44,7 @@
 	      <th scope="col">작성일</th>
 	    </tr>
 	  </thead>
-	  <tbody>
-	  	<c:if test="${empty myClassBoardList}">
-	  		<tr>
-	  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
-	  		</tr>
-	  	</c:if>
-	  	<c:if test="${not empty myClassBoardList}">
-		  	<c:forEach items="${myClassBoardList}" var="board">
-			  	<tr data-value="\${board.postId}">
-			      <th scope="row">${board.postId}</th>
-			      <td>${board.title}</td>
-			      <td>${board.memberName}</td>
-			      <td>
-			      	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
-				  	<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd" />
-			      </td>
-			    </tr>
-		  	</c:forEach>
-	  	</c:if>
-	  </tbody>
+	  <tbody></tbody>
 	</table>
 	
 	<!-- 페이지 이동 및 페이지 번호 표시 -->
@@ -83,7 +64,7 @@
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
 	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
+	    <div class="modal-content vw-300">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">게시글 작성</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -92,7 +73,7 @@
 	      </div>
 	      <div class="modal-body" style="height: 700px;">
 	      	<form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="POST" enctype="multipart/form-data" style="height: 550px;">
-		      	<input type = "hidden" name="boardId" id="boardId" value="11">
+		      	<input type = "hidden" name="boardId" id="boardId" value="${studentInfo.boardId}">
 		      	<div class="input-group mb-3">
 				  <div class="input-group-prepend">
 				    <input style="width: 105px; height: 43px; background-color: #a6a6a6;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="게시판"/>
@@ -211,9 +192,14 @@
 	   }
 	
 	function rendermyClassBoardList(pageNumber) {
+		const currentURL = window.location.href;
+		const urlParams = new URLSearchParams(new URL(currentURL).search);
+		const boardId = urlParams.get('boardId');
+		
 		$.ajax({
 			url : "${pageContext.request.contextPath}/board/myClassBoardFindAll.do",
 			data : {
+				boardId : boardId,
 				page : pageNumber // 페이지 번호 전달
 			},
 			success(reponseData) {
@@ -334,6 +320,10 @@
 		const btnValue = document.querySelector('.btn.btn-outline-success').value;
 		const token = document.tokenFrm._csrf.value;
 		
+		const currentURL = window.location.href;
+		const urlParams = new URLSearchParams(new URL(currentURL).search);
+		const boardId = urlParams.get('boardId');
+		
 		$.ajax({
 			url : "${pageContext.request.contextPath}/board/myClassBoardList.do",
 			method : "POST",
@@ -341,6 +331,7 @@
                 "X-CSRF-TOKEN": token
             },
 			data : {
+				boardId : boardId,
 				page : pageNumber, // 페이지 번호 전달
 				tag : btnValue
 			},

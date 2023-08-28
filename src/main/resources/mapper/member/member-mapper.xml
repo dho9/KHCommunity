@@ -95,6 +95,8 @@
 	    on c.teacher_id = mt.member_id
 	  where m.member_id = #{studentId}
 	</select>
+  
+
 
  <resultMap id="findByMemberInfoMap" type="StudentMypageInfoDto">
       <id column="member_id" property="studentId"/>
@@ -104,6 +106,7 @@
       <result column="curriculum_end_at" property="curriculumEndAt"/>
       <result column="curriculum_id" property="curriculumId"/>
       <result column="teacher_id" property="teacherId"/>
+      <result column="board_id" property="boardId"/>
      
     <!--   <collection property="authorities"
                   ofType="simpleGrantedAuthority">
