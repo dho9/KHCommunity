@@ -379,6 +379,17 @@ public class AdminController {
 		return "redirect:/admin/adminStudentList.do";
 	}
 
+	// 피신고자에게 주의조치 보내고 report테이블에서 해당 행 삭제
+	@PostMapping("/sendReport.do")
+	public String sendReport(@RequestParam String reportId, @RequestParam String attackerId, @Valid MessageBox message, @RequestParam String messageContent) {
+		String admin = "admin";
+		// message_box에 주의조치 메세지전송
+		int result = adminService.sendReportToStudent(attackerId, admin, messageContent);
+		// 해당 신고내역 report에서 삭제
+		int result1 = adminService.deleteReport(reportId);
+		return "redirect:/admin/reportList.do";
+	}
+	
 	// 수강생 승인 목록 조회 - 유성근
 	@GetMapping("/adminStudentApprovementList.do")
 	public void adminStudentApprovementList(Model model, @RequestParam(defaultValue = "1") int page) {
@@ -701,7 +712,8 @@ public class AdminController {
 		String storeName = store.getStoreName();
 		String postNumber = store.getPostNumber();
 		String address = store.getAddress();
-		
+		int id = store.getStoreId();
+		log.debug("id = {}", id);
 		 // 1. 새로운 저장 경로 지정
 	    ServletContext servletContext =  request.getServletContext();
 	    String resourcesPath = "/resources/images/store/";
@@ -718,8 +730,12 @@ public class AdminController {
 
 	        file.transferTo(destFile);
 	    }
-
+	    
+	    // store테이블 insert
 	    int result = adminService.insertStore(storeName, postNumber, address);
+	    
+	    // ticket테이블 insert
+	    int result1 = adminService.insertTicket(storeName);
         return "redirect:/admin/adminStoreList.do"; // 예시 리다이렉트 URL
     }
 	

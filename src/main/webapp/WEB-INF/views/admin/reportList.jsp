@@ -48,17 +48,19 @@
                   	<c:forEach items="${reports}" var="report" varStatus="vs">
                       <tr data-bs-toggle="modal" data-bs-target="#myModal" 
                       data-row-id="${vs.count}" 
+                      data-reportId="${report.reportId}"
                       data-reporterId="${report.reporterId}" 
                       data-reportContent="${report.reportContent}" 
+                      data-attackerId="${report.attackerId}" 
                       data-handle="@mdo">
                           <td>${(currentPage-1) * 10 + vs.index + 1}</td>
                           <td>${report.reporterId}</td>
-                          <td>${report.attakerId}</td>
+                          <td>${report.attackerId}</td>
                           <td>${report.reportType}</td>
                           <td>${report.reportSendDate}</td>
                           <td>
                             <button id="messageButton" type="button" style="border: 0; background-color: transparent;" class="open-modal-button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
-				                    data-employee-id="${employee.memberId}" data-employee-name="${employee.memberName}">
+				                    data-attackerId="${report.attackerId}">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
                               </svg>
@@ -132,11 +134,12 @@
 	                <h5 class="modal-title" id="sendMessageModalLabel">쪽지 보내기</h5>
 	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
-	            <form:form method="POST" action="${pageContext.request.contextPath}/admin/adminSendMessage.do">
+	            <form:form method="POST" action="${pageContext.request.contextPath}/admin/sendReport.do">
 	            	<div class="modal-body">
 		            <!-- 모달 내용 -->
 		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
-		                <input name="receiveId" id="receiveEmployee" readonly>
+		                <input name="attackerId" id="receiveAttackerId" readonly>
+		                <input type="hidden" name="reportId" id="reportId"/>
 		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
 		            </div>
 	            	<div class="modal-footer">
@@ -157,20 +160,23 @@
             const rowId = row.getAttribute("data-row-id");
             const reporterId = row.getAttribute("data-reporterId");
             const reportContent = row.getAttribute("data-reportContent");
+            const reportId = row.getAttribute("data-reportId");
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
             document.getElementById("modalReporterId").value = reporterId;
             document.getElementById("modalReportContent").value = reportContent;
+            document.getElementById("reportId").value = reportId;  
+               console.log(reportId); // 확인을 위해 로그 출력
           });
         });
-    
 		const sendButton = document.querySelectorAll("#messageButton");
         sendButton.forEach((e) => {
            e.addEventListener("click", function () {
-                const receiveId = e.getAttribute("data-employee-id");
-                document.getElementById("receiveEmployee").value = receiveId;                  
+        	   const receiveId = e.getAttribute("data-attackerId");
+               document.getElementById("receiveAttackerId").value = receiveId;
            })
         });
+    
       });
     </script>
     <footer></footer>

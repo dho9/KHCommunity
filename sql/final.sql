@@ -447,6 +447,19 @@ create table calendar(
     member_id varchar2(50)
 );
 
+CREATE TABLE myclass (
+    board_id NUMBER,
+    curriculum_id NUMBER,
+    PRIMARY KEY (board_id, curriculum_id),
+    FOREIGN KEY (board_id) REFERENCES board(board_id),
+    FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
+);
+select * from myclass;
+
+select * from post where board_id = 22;
+update myclass set curriculum_id = 21 where board_id = 22;
+insert into myclass values (28, 6);
+select * from curriculum;
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);
 ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
@@ -1210,13 +1223,13 @@ select * from report;
 --select * from authority;
 --select * from calendar;
 
+
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
 
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n', 'n', 'y');
-
 
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');

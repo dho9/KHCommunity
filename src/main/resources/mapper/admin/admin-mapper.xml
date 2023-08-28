@@ -201,6 +201,7 @@
             AND message_id IS NOT NULL
         </if>
     </where>
+    order by report_send_date
 </select>
 
 </mapper>

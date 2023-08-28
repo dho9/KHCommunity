@@ -375,4 +375,18 @@ public class AdminServiceImpl implements AdminService {
 		return adminRepository.getChatMessagesByChatId(chatId);
 	}
 	
+	@Override
+	public int insertTicket(String storeName) {
+		return adminRepository.insertTicket(storeName);
+	}
+	
+	@Override
+	public int deleteReport(String reportId) {
+		return adminRepository.deleteReport(reportId);
+	}
+	
+	@Override
+	public int sendReportToStudent(String attackerId, String admin, String messageContent) {
+		return adminRepository.sendReportToStudent(attackerId, admin, messageContent);
+	}
 }

@@ -151,6 +151,12 @@ public interface AdminService {
 
 	List<ChatMessage> getChatMessagesByChatId(int chatId);
 
+	int insertTicket(String storeName);
+
+	int deleteReport(String reportId);
+
+	int sendReportToStudent(String attackerId, String admin, String messageContent);
+
 
 
 
