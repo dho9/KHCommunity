@@ -2,8 +2,8 @@
 	pageEncoding="UTF-8"%>
 <div class="rightside">
 	<form action="${pageContext.request.contextPath}/board/boardSearch.do"
-		class="search">
-		<input type="text" name="keyword" placeholder="전체 게시판의 글을 검색하세요!"
+		class="search" onsubmit="return  validateSearchForm()">
+		<input type="text" id="keyword" name="keyword" placeholder="전체 게시판의 글을 검색하세요!"
 			class="text" />
 	</form>
 	 <div class="card">
@@ -65,6 +65,18 @@ async function loadNoticeBoards() {
         </a>`;
         container.append(postHTML);
     }
+}
+
+function validateSearchForm() {
+    const keywordInput = document.querySelector("#keyword");
+    const keywordValue = keywordInput.value.trim();
+
+    if (keywordValue === "") {
+        alert("검색어를 입력하세요.");
+        return false; // 폼 제출 중단
+    }
+
+    return true; // 폼 제출 허용
 }
 </script>
 

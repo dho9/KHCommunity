@@ -128,20 +128,6 @@
                 </div>
             </div>
             <div class="card">
-                <div class="board" id="myClassBoardContainer">
-                    <h3>
-                        <a href="${pageContext.request.contextPath}/board/myClassBoardList.do">우리반게시판</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="card">
-                <div class="board" id="jobSearchBoardContainer">
-                    <h3>
-                        <a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do">취업정보게시판</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="card">
                 <div class="board" id="sharingInformationBoardContainer">
                     <h3>
                         <a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do">정보게시판</a>
@@ -171,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	loadThreePostByBoardId(5, "askCodeBoardContainer");
 	loadThreePostByBoardId(7, "graduateBoardContainer");
 	loadThreePostByBoardId(8, "preStudentBoardContainer");
-	loadThreePostByBoardId(11, "myClassBoardContainer");
-	loadThreePostByBoardId(12, "jobSearchBoardContainer");
+	//loadThreePostByBoardId(11, "myClassBoardContainer");
+	//loadThreePostByBoardId(12, "jobSearchBoardContainer");
 });
 
 async function loadThreePostByBoardId(boardId, boardContainer) {
@@ -220,8 +206,8 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
             }
         });
     });
-    document.querySelector('.myBoard').addEventListener('mouseout', (e) => {
-        console.log(e);
+    document.querySelector('.favorite').addEventListener('mouseout', (e) => {
+        console.log(e+'ㅋㅋㅋㅋ');
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
     });

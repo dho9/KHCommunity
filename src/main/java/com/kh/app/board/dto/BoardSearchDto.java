@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 public class BoardSearchDto extends Post {
 	private String boardName;
 	private String content;

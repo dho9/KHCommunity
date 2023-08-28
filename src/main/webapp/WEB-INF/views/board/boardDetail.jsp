@@ -1475,22 +1475,33 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
   if (clickedElement.classList.contains('submit')){// 제출버튼시
   	const parentCommentId = clickedElement.getAttribute('data-parentcommentid'); // 대댓글의 부모 댓글 ID
   	const commentContentInput = clickedElement.closest('.writecomment').querySelector('input[name="text"]');
+  	const commentContent = document.querySelector("#commentText").value;
+  
   	if(value==1){//댓글
-  		 
+  		if(commentContent ===""){
+  	  		alert("댓글내용을 작성해주세요.");
+  	  	return; 
+  	  	}
   		 const postData = {
   	                postId: postId,
   	                boardId: ${board.boardId},
-  	                commentContent : document.querySelector("#commentText").value,
+  	                commentContent : commentContent,
   	                anonymousCheck: anonyCk,
   	                commentRef: null
   	            };
   		 submitComment(postData);
+  		 
   	 }else{
   		 //대댓글
+  		 const childComment= commentContentInput.value;
+  		 if(childComment ===""){
+  			 alert("댓글내용을 작성해주세요.");
+  			return; 
+  		 }
   		 const reply = {
 	                postId: postId,
 	                boardId: ${board.boardId},
-	                commentContent : commentContentInput.value,
+	                commentContent :childComment ,
 	                anonymousCheck: anonyCk,
 	                commentRef: parentCommentId
 	            };

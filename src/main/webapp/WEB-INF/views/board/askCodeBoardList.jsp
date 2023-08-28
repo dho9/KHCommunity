@@ -7,6 +7,9 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
 <style>
+a.article{
+color: black;
+}
 .anonymous{
 	float: right;
 	background-color: white;
