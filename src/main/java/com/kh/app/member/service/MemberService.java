@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.kh.app.curriculum.entity.Curriculum;
+import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
@@ -42,13 +43,11 @@ public interface MemberService extends UserDetailsService{
 
 	int insertVacation(StudentVacation vacation);
 
-	EmployeeInfoDto findByEmployeeInfo(String memberId);
+	List<EmployeeInfoDto> findByEmployeeInfo(String memberId);
+
+	EmployeeDto findEmployeeById(String memberId);
 
 	StudentDto findStudentType(String memberId);
-
-
-	
-
 
 
 }

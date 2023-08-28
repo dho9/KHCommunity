@@ -11,14 +11,15 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-
 public class EmployeeInfoDto {
-	private String memberId;
-	private String employeeId;
-	private String memberName;
-	private String subject;
-	private String curriculumName;
-	private String auth;
-	private String jobCode;
-	private Integer classId;
+    private String memberId;
+    private String memberName;
+    private String classId;
+    private String subject;
+    private String curriculumName;
+    private String auth;
+    private String jobCode;
+    private String employeeId;
+    private LocalDate curriculumStartAt;
+    private LocalDate curriculumEndAt;
 }
