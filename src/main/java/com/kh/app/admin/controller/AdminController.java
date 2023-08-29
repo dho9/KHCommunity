@@ -55,6 +55,7 @@ import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.dto.MyClassBoardListDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
@@ -679,9 +680,24 @@ public class AdminController {
 		return "redirect:/admin/adminStoreList.do";
 	}
 	
+	// 우리반 게시판관리 목록조회
 	@GetMapping("/myClassBoardList.do")
-	public void myClassBoardList() {
-//		List<Curriculum> curriculums = 
+	public void myClassBoardList(Model model) {
+		List<MyClassBoardListDto> boardLists = adminService.findAllMyClassBoard();
+		model.addAttribute("boardLists", boardLists);
+		
+		List<Curriculum> curriculums = adminService.findRecentCurriculum();
+		model.addAttribute("curriculums", curriculums);
+	}
+	
+	@PostMapping("/deleteMyClassBoard.do")
+	public String deleteMyClassBoard(@RequestParam String boardId, @RequestParam String selectedCurriculumId) {
+		// 우리반게시판 게시글 전체삭제
+		int result = adminService.deleteMyClassBoard(boardId);
+		// 우리반게시판 커리큘럼 수정
+		int result1 = adminService.updateMyClass(boardId, selectedCurriculumId);
+		
+		return "redirect:/admin/myClassBoardList.do";
 	}
 	
 	// 수강생 휴가 승인 페이지
