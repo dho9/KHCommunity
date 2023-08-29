@@ -61,7 +61,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 .modal-message-content{width: 100%; height: 200px;}
 #certiSteps{width:90%; text-align: center; margin: 0px auto;}
 .certiStep{display: inline-block; width: 24%; margin: 10px 2%; text-align: center; margin-top: 40px;}
-#msgPagingDiv .pagination{text-align: center; margin: 0px auto; width: fit-content;}
+#msgPagingDiv .msgPagination{ margin: 0px auto; width: fit-content;}
 #reportModal label{margin-left: -80%;}
 #reportModal textarea,select{width:92%;}
 /* 회원인증 css */
@@ -380,7 +380,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</tbody>
 				</table>
 				<div id="msgPagingDiv">
-					<ul class="pagination">
+					<ul class="pagination msgPagination">
 						<li class="page-item disabled" id="prevButton">
 						  <span class="page-link">Previous</span>
 						</li>
@@ -443,64 +443,21 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
                         <th scope="col">상담내역</th>
 					</thead>
 					<tbody id= "chatTblBody">
-						<c:if test="${empty studentChatList }">
-							<tr>
-								<td colspan="5" class="text-center">조회된 상담내역이 없습니다.</td>
-							
-							</tr>
-						</c:if>
-					 	<c:if test="${not empty studentChatList}">
-					 		
-							<c:forEach items="${studentChatList}" var="studentChatList" varStatus="vs">
-								<tr id="chatRow">
-						            <td>${(currentPage-1) * 10 + vs.index + 1}</td>
-						            <td>${studentChatList.studentName}(${studentChatList.studentId})</td>
-						            <td>${studentChatList.chatType}</td>
-						            <td>${studentChatList.chatDate}</td>
-						            <td>
-						                <button type="button" class="btn btn-outline-primary" id="chatView"
-						                        style="--bs-btn-padding-y: .0rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
-						                        data-bs-toggle="modal" data-bs-target="#chatModal"
-						                        data-chatid="${studentChatList.chatId}">
-						                    보기
-						                </button>
-						            </td>
-					            <tr> 
-							</c:forEach>
-					 	</c:if>
+						
 					</tbody>
 				</table>
 				<br/>
-				     <div class="d-flex justify-content-center">
-				        <ul class="pagination">
-				            <c:if test="${currentPage > 1}">
-				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/member/studentChatList.do?page=${currentPage - 1}" aria-label="Previous">
-				                        <span aria-hidden="true">&laquo;</span>
-				                    </a>
-				                </li>
-				            </c:if>
-				            
-				            <c:forEach var="pageNum" begin="1" end="${totalPages}">
-				                <c:choose>
-				                    <c:when test="${pageNum eq currentPage}">
-				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
-				                    </c:when>
-				                    <c:otherwise>
-				                        <li class="page-item"><span class="page-link" onclick ="chatPageChange(${pageNum})">${pageNum}</span></li>
-				                    </c:otherwise>
-				                </c:choose>
-				            </c:forEach>
-				            
-				            <c:if test="${currentPage < totalPages}">
-				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/member/studentChatList.do?page=${currentPage + 1}" aria-label="Next">
-				                        <span aria-hidden="true">&raquo;</span>
-				                    </a>
-				                </li>
-				            </c:if>
-				        </ul>
-					</div>
+				<div class="d-flex justify-content-center" style="margin-top: 3%">
+					<ul class="pagination chatPagination">
+					    <li class="page-item disabled">
+					      <a id="prev" class="page-link" href="#">이전</a>
+					    </li>
+					    
+					    <li class="page-item">
+					      <a id="next" class="page-link" href="#">다음</a>
+					    </li>
+				    </ul>
+			    </div>
 			</div>
 		
 		</div>
@@ -778,6 +735,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	window.onload=()=>{
 		msgList(1);
 		certification();
+		chatPageChange(1);
 	};
 
 	document.getElementById("logoutBtn").addEventListener("click", function(event) {
@@ -883,7 +841,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				let pages = 0;
 				pages = Math.ceil(listSize / 5);
 				
-				const paginationContainer = document.querySelector(".pagination");
+				const paginationContainer = document.querySelector(".msgPagination");
 	            paginationContainer.innerHTML = "";
 
 	            let paginationHTML = `
@@ -1188,33 +1146,35 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	        }
 	    };
 	});
-	      
-	const chatViewButtons = document.querySelectorAll("#chatView");
-	chatViewButtons.forEach(button => {
-	    button.addEventListener("click", function () {
-	        const chatId = this.getAttribute("data-chatid");
-	        console.log(chatId);
-	        // 채팅 메시지를 가져오기 위한 AJAX 요청 수행
-	        $.ajax({
-	            type: "GET",
-	            url: "${pageContext.request.contextPath}/member/chatView.do",
-	            data: {
-	                chatId: chatId
-	            },
-	            success: function (responseData) {
-	                // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
-	                console.log(responseData)
-	                
-	                modalSend(responseData);
-	                
-	            },
-	            error: function () {
-	                console.log("실패");
-	            }
-	        });
-	    });
-	});
-
+	
+	function chatlogBtn() {
+		const chatViewButtons = document.querySelectorAll("#chatView");
+		chatViewButtons.forEach(button => {
+		    button.addEventListener("click", function () {
+		        const chatId = this.getAttribute("data-chatid");
+		        console.log(chatId);
+		        // 채팅 메시지를 가져오기 위한 AJAX 요청 수행
+		        $.ajax({
+		            type: "GET",
+		            url: "${pageContext.request.contextPath}/member/chatView.do",
+		            data: {
+		                chatId: chatId
+		            },
+		            success: function (responseData) {
+		                // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
+		                console.log(responseData)
+		                
+		                modalSend(responseData);
+		                
+		            },
+		            error: function () {
+		                console.log("실패");
+		            }
+		        });
+		    });
+		});
+	};
+	
 	function modalSend(responseData) {
 		
 		
@@ -1279,7 +1239,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	
 	 function chatPageChange(pageNum) {
 			
-			console.log("왜안돼");
 			$.ajax({
 	            type: "GET",
 	            url: "${pageContext.request.contextPath}/member/studentChatList.do",
@@ -1289,10 +1248,21 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            success: function (responseData) {
 	                console.log(responseData);
 	                const studentChatList = responseData.studentChatList;
+	                const totalPages = responseData.totalPages;
+	                const currentPage = responseData.currentPage;
+	                
 	                let html ="";
 	                let index = 0;
 	                const chatTblBody = document.querySelector("#chatTblBody");
 	                
+	                
+	                if(studentChatList.length == 0) {
+	                	chatTblBody.innerHTML = `
+							<tr>
+					  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
+					  		</tr>
+						`;
+					}
 	                for(let i = 0; i < studentChatList.length; i++){
 	                	
 	                	console.log(pageNum, pageNum-1, (pageNum-1) * 5, (pageNum-1) * 5 + i, (pageNum-1) * 5 + i +1)
@@ -1315,6 +1285,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	                }
 	                
 	                chatTblBody.innerHTML = html;
+	                
+	                renderPagination(currentPage, totalPages);
+	                
+	                chatlogBtn();
 	            },
 	            error: function () {
 	                console.log("실패");
@@ -1322,6 +1296,71 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	        });
 			
 		};
+		
+		function loadPage(pageNumber) {
+			chatPageChange(pageNumber);
+	        currentPage = pageNumber;
+	    }
+		
+		
+		function renderPagination(currentPage, totalPages) {
+		    const paginationElement = document.querySelector('.chatPagination');
+		    paginationElement.innerHTML = ""; // 기존 페이지 바 내용 초기화
+
+		    // 이전 페이지 링크
+		    const prevButton = document.createElement('li');
+		    prevButton.classList.add('page-item');
+		    if (currentPage === 1) {
+		        prevButton.classList.add('disabled');
+		    }
+		    const prevLink = document.createElement('a');
+		    prevLink.classList.add('page-link');
+		    prevLink.textContent = '이전';
+		    prevLink.setAttribute('href', '#');
+		    prevLink.addEventListener('click', () => {
+		    	loadPage(currentPage - 1);
+		    });
+		    prevButton.appendChild(prevLink);
+		    paginationElement.appendChild(prevButton);
+
+		    // 페이지 번호 링크
+		    for (let i = 1; i <= totalPages; i++) {
+		        const pageButton = document.createElement('li');
+		        pageButton.classList.add('page-item');
+		        if (i === currentPage) {
+		            pageButton.classList.add('active');
+		        }
+		        const pageLink = document.createElement('a');
+		        pageLink.classList.add('page-link');
+		        pageLink.textContent = i;
+		        pageLink.setAttribute('href', '#');
+		        pageLink.setAttribute('data-page', i);
+		        pageLink.addEventListener('click', (event) => {
+		            const clickedPage = event.target.getAttribute('data-page');
+		            if (clickedPage) {
+		            	loadPage(parseInt(clickedPage));
+		            }
+		        });
+		        pageButton.appendChild(pageLink);
+		        paginationElement.appendChild(pageButton);
+		    }
+
+		    // 다음 페이지 링크
+		    const nextButton = document.createElement('li');
+		    nextButton.classList.add('page-item');
+		    if (currentPage === totalPages) {
+		        nextButton.classList.add('disabled');
+		    }
+		    const nextLink = document.createElement('a');
+		    nextLink.classList.add('page-link');
+		    nextLink.textContent = '다음';
+		    nextLink.setAttribute('href', '#');
+		    nextLink.addEventListener('click', () => {
+		        loadNextPage();
+		    });
+		    nextButton.appendChild(nextLink);
+		    paginationElement.appendChild(nextButton);
+		}
 	
 </script>	
 

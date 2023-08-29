@@ -77,23 +77,6 @@ public class MyPageController {
 		}
 		// Dday 끝 }
 		
-		  	int limit = 5;
-			Map<String, Object> params = Map.of(
-					"page", 1,
-					"limit", limit
-			);
-			
-		    model.addAttribute("currentPage", 1);
-		    
-		    // 전체 채팅 방 수를 가져온다.
-		    int totalChatListCount = memberService.getTotalCountOfChatList(principal.getMemberId());
-		    // totalPages 계산
-		    int totalPages = (int) Math.ceil((double) totalChatListCount / limit);
-		    model.addAttribute("totalPages", totalPages);
-		    
-		    List<AdminChatListDto> studentChatList = memberService.findAllChat(params, principal.getMemberId());
-		    
-		    model.addAttribute("studentChatList", studentChatList);
 	}
 
 	@GetMapping("/employeeMyPage.do")
@@ -146,9 +129,7 @@ public class MyPageController {
 				"limit", limit
 		);
 		
-	    // 전체 채팅 방 수를 가져온다.
 	    int totalChatListCount = memberService.getTotalCountOfChatList(principal.getMemberId());
-	    // totalPages 계산
 	    int totalPages = (int) Math.ceil((double) totalChatListCount / limit);
 	    
 	    List<AdminChatListDto> studentChatList = memberService.findAllChat(params, principal.getMemberId());
@@ -176,6 +157,7 @@ public class MyPageController {
 	@ResponseBody
 	public ResponseEntity<List<ChatMessage>> chatView(@RequestParam(value="chatId", required=false) int chatId) {
 	    List<ChatMessage> chatMsgs = memberService.getChatMessagesByChatId(chatId);
+	    System.out.println("받아오긴함 ??" + chatId);
 	    return ResponseEntity.ok(chatMsgs);
 	}
 }
