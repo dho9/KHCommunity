@@ -997,7 +997,7 @@ public class BoardController {
 		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
 		
 		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
-	    int totalCount = 10;
+	    int totalCount = 20;
 	    
 	    // totalPage 계산
 	    int totalPages = (int) Math.ceil((double) totalCount / limit);

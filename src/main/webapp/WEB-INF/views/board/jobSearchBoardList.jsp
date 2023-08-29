@@ -10,26 +10,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-<style>
-a.article{
-color: black;
-}
-.anonymous{
-	float: right;
-	background-color: white;
-	margin-right: 13px;
-}
-.anonymousImg{
-	width: 59px;
-}
-iframe {
-	height: 279px;
-    margin-top: 2%;
-    width: 1100px;
-    margin-left: 25.8%;
-}
-</style>
-	<!-- <iframe id="pageFrame" name="pageFrame" src="http://www.jobkorea.co.kr/Starter/calendar/sub/week" scrolling="auto"></iframe> -->
+
+
 	<!-- 직무선택 -->
 	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 	    직무선택
@@ -95,7 +77,7 @@ iframe {
 		  <label class="form-check-label" for="flexCheckDefault">신입</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="1~3년" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" value="1~3년 id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">1~3년</label>
 		</div>
       	<div class="form-check">
@@ -121,16 +103,19 @@ iframe {
 	<!-- 채용공고 -->
 	<c:if test="${not empty jobKoreaList}">
 		<c:forEach items="${jobKoreaList}" var="board">
-			<div>
-			  	<h2 class="medium bold"><a href="${board.url}">${board.company}</a></h2> <br>
-			  	<p class="medium">${board.title}</p> <br>
-			  	<p class="medium">${board.option}</p> <br>
-			  	<p class="medium">${board.etc}</p> <br>
+			<div style="display: flex;">
+				<c:if test="${board.title != ''}">
+				  	<div class="medium bold" style="width: 850px;"><a href="${board.url}">${board.company}</a></div>
+				  	<div>
+					  	<p class="medium"><a href="${board.url}">${board.title}</a></p> <br>
+					  	<p class="medium">${board.option}</p> <br>
+					  	<p class="medium">${board.etc}</p> <br>
+				  	</div>
+				</c:if>
 			</div>
 		</c:forEach>
 	</c:if>
 	
-
 	<!-- 페이지 이동 및 페이지 번호 표시 -->
 	<div class="d-flex justify-content-center">
         <ul class="pagination">
@@ -163,78 +148,52 @@ iframe {
         </ul>
 	</div>
 	<script>
-	// 체크한 체크박스만 나오게
-	function searchJobKorea() {
-		const selectedJobTypes = getSelectedCheckboxes("jobType");
-	    const selectedLocations = getSelectedCheckboxes("location");
-	    const selectedExperience = getSelectedCheckboxes("experience");
+    window.onload = function() {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/board/jobSearch.do',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                const jobKoreaList = response.jobKoreaList;
+                console.log(jobKoreaList);
+            }
+        });
+    };
 
-	    const jobKoreaList = ${jobKoreaList}; // 이 부분은 서버에서 제공하는 공고 목록을 가져온 부분과 맞게 변경해야 합니다.
 
-	    const filteredJobKoreaList = jobKoreaList.filter(board => {
-	        return (
-	            selectedJobTypes.includes(board.jobType) &&
-	            selectedLocations.includes(board.location) &&
-	            selectedExperience.includes(board.experience)
-	        );
-	    });
 
-	    const jobKoreaListContainer = document.getElementById("jobKoreaListContainer");
-	    jobKoreaListContainer.innerHTML = "";
-	    for (const board of filteredJobKoreaList) {
-	        const boardDiv = document.createElement("div");
-	        boardDiv.innerHTML = `
-	            <h2 class="medium bold"><a href="${board.url}">${board.company}</a></h2> <br>
-	            <p class="medium">${board.title}</p> <br>
-	            <p class="medium">${board.option}</p> <br>
-	            <p class="medium">${board.etc}</p> <br>
-	        `;
-	        jobKoreaListContainer.appendChild(boardDiv);
-	    }
-	}
-
-	function getSelectedCheckboxes(checkboxGroupName) {
-	    const checkboxes = document.querySelectorAll(`input[name="${checkboxGroupName}"]:checked`);
-	    console.log(document.querySelectorAll(`input[name="${checkboxGroupName}"]);
-	    const selectedValues = [];
-	    for (const checkbox of checkboxes) {
-	        selectedValues.push(checkbox.value);
-	    }
-	    return selectedValues;
-	}
-	
 	// 전체체크박스
 	function showLocations(locations) {
 		const locationDetail = document.getElementById("locationDetail");
 	    locationDetail.innerHTML = "";
-
+	
 	    const mainLocation = locations[0];
-
+	
 	    const mainLocationCheckbox = document.createElement("input");
 	    mainLocationCheckbox.classList.add("form-check-input");
 	    mainLocationCheckbox.type = "checkbox";
 	    mainLocationCheckbox.value = mainLocation;
 	    mainLocationCheckbox.id = `flexCheck${mainLocation}`;
 	    mainLocationCheckbox.checked = false; // 처음에는 비활성화 상태로 설정
-
+	
 	    mainLocationCheckbox.addEventListener("change", () => {
 	        const subCheckboxes = locationDetail.querySelectorAll(".form-check-input");
 	        for (const checkbox of subCheckboxes) {
 	            checkbox.checked = mainLocationCheckbox.checked;
 	        }
 	    });
-
+	
 	    const mainLocationLabel = document.createElement("label");
 	    mainLocationLabel.classList.add("form-check-label");
 	    mainLocationLabel.htmlFor = `flexCheck${mainLocation}`;
 	    mainLocationLabel.textContent = mainLocation;
-
+	
 	    const mainLocationItem = document.createElement("div");
 	    mainLocationItem.classList.add("form-check");
 	    mainLocationItem.appendChild(mainLocationCheckbox);
 	    mainLocationItem.appendChild(mainLocationLabel);
 	    locationDetail.appendChild(mainLocationItem);
-
+	
 	    for (const subLocation of locations.slice(1)) {
 	        const subLocationItem = document.createElement("div");
 	        subLocationItem.classList.add("form-check");
@@ -244,6 +203,6 @@ iframe {
 	        `;
 	        locationDetail.appendChild(subLocationItem);
 	    }
-    }
+	}
 	</script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
