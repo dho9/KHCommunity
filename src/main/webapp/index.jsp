@@ -5,6 +5,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+.card {
+    /* 기존의 스타일 유지 */
+    border-radius: 10px; /* 카드의 모서리를 둥글게 만듭니다 */
+}
 .accordion {
 	display: none;
     padding: 10px 0 10px 37px;
