@@ -15,6 +15,7 @@ import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.dto.MyClassBoardListDto;
 import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.dto.CurriculumListDto;
@@ -156,6 +157,14 @@ public interface AdminService {
 	int deleteReport(String reportId);
 
 	int sendReportToStudent(String attackerId, String admin, String messageContent);
+
+	int deleteMyClassBoard(String boardId);
+
+	List<MyClassBoardListDto> findAllMyClassBoard();
+
+	List<Curriculum> findRecentCurriculum();
+
+	int updateMyClass(String boardId, String selectedCurriculumId);
 
 
 

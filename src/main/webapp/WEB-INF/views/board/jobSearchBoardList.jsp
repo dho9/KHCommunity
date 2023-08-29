@@ -189,20 +189,45 @@
     	}
     };
     
-    function searchJobKorea() {
-        const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
-        const locationCheckboxes = document.querySelectorAll('input[name="career"]:checked');
-
-        const filterJobTypes = Array.from(jobTypeCheckboxes).map(checkbox => checkbox.value);
-        const filterLocations = Array.from(locationCheckboxes).map(checkbox => checkbox.value);
-		console.log(filterJobTypes,filterLocations)
-        // 여기서 filterJobTypes와 filterLocations을 사용하여 검색을 수행하고 결과를 표시하는 로직을 추가하세요.
-        // 필터된 결과를 jobKoreaList에 할당한 후 render 함수를 호출하여 결과를 표시하세요.
-
-        // 예시: jobSearchFiltered(filterJobTypes, filterLocations);
-    }
-
-
+    // 검색
+    function searchJobKorea(jobKoreaList) {
+		const filterList = [];
+	    const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
+	    jobTypeCheckboxes.forEach(checkbox => {
+	    	filterList.push(checkbox.value);
+	    });
+	    
+	    const locationCheckboxes = document.querySelectorAll('input[name="location"]:checked');
+	    locationCheckboxes.forEach(checkbox => {
+	    	filterList.push(checkbox.value);
+	    });
+	    
+	    const careerCheckboxes = document.querySelectorAll('input[name="career"]:checked');
+	    careerCheckboxes.forEach(checkbox => {
+	    	filterList.push(checkbox.value);
+	    });
+	    
+	    console.log(filterList);
+	    filter(filterList, currentPage);
+	    
+	}
+	
+	function filter(filterList, currentPage) {
+		$.ajax({
+            url: '${pageContext.request.contextPath}/board/jobSearchByFilter.do',
+            data : {
+            	page : pageNumber,
+            	filterList : filterList
+            },
+            success: function(response) {
+                const jobKoreaList = response.jobKoreaList;
+                console.log(jobKoreaList);
+                
+                render(jobKoreaList);
+            }
+        });
+	}
+    
 	// 전체체크박스
 	function showLocations(locations) {
 		const locationDetail = document.getElementById("locationDetail");
@@ -239,7 +264,7 @@
 	        const subLocationItem = document.createElement("div");
 	        subLocationItem.classList.add("form-check");
 	        subLocationItem.innerHTML = `
-	            <input class="form-check-input" type="checkbox" value="\${subLocation}" id="flexCheck${subLocation}">
+	            <input class="form-check-input" type="checkbox" value="\${subLocation}" name="location">
 	            <label class="form-check-label" for="flexCheck${subLocation}">\${subLocation}</label>
 	        `;
 	        locationDetail.appendChild(subLocationItem);

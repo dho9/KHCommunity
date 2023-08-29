@@ -454,12 +454,18 @@ CREATE TABLE myclass (
     FOREIGN KEY (board_id) REFERENCES board(board_id),
     FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
 );
-select * from myclass;
 
-select * from post where board_id = 22;
+SELECT *
+FROM curriculum
+WHERE curriculum_start_at >= TRUNC(SYSDATE);
 update myclass set curriculum_id = 21 where board_id = 22;
 insert into myclass values (28, 6);
-select * from curriculum;
+select * from curriculum order by curriculum_end_at;
+select * from board;
+select * from post;
+select * from myclass;
+
+
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);
 ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
@@ -1223,7 +1229,7 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 select * from calendar;
-
+select * from myclass;
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
@@ -1441,3 +1447,5 @@ select * from delete_comment;
 select * from post_comment where comment_id = 243;
 select * from post;
 
+select * from chat_room;
+delete chat_room where chat_id between 119 and 140;

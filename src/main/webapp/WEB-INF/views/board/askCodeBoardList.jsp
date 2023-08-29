@@ -67,12 +67,14 @@ color: black;
 					  		<h3 class="medium">${board.memberId}</h3>
 				  		</c:if>
 					  	<time class="medium">
-						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 						  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
 					  	</time>
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
-					  	<p class="medium">${board.content}</p> <br>
+					  	<p class="medium">
+					  		${board.content}
+					  	</p> <br>
 					  	<c:forEach items="${board.tag}" var="tag">
 					  		<span class="tag">${tag}</span>
 					  	</c:forEach>
@@ -144,7 +146,7 @@ color: black;
 	      		</select>
 	      	</p>
 	        <p>
-	        	<textarea id="batch_content" name="batch_content"></textarea>
+	        	<textarea class="codeTextCreate" id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>
 	        	<label for="hashTag">해시태그</label><br>
@@ -152,8 +154,8 @@ color: black;
 	        	<div class="hashTag-container"></div>
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
-        	<button type="submit" id="submitBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af;">취소</button>
+        	<button class="createPostBtn" type="submit" id="submitBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="anonymous">
         		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
@@ -169,7 +171,7 @@ color: black;
 	    createForm.classList.remove("hidden");
 	    
 	    // 에디터 설정 
-	    var textarea = document.querySelector('#batch_content');
+	    var textarea = document.querySelector('.codeTextCreate');
 	    var language = document.querySelector('#language');
 	    
 	    var editor = CodeMirror.fromTextArea(textarea, {

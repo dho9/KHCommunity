@@ -166,8 +166,8 @@ color: black;
 	        	<div class="hashTag-container"></div>
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right; border-left: solid 3px white;">취소</button>
-        	<button style="float: right; border-left: solid 3px white;" ><span class="material-symbols-outlined" >edit</span></button>
+	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right; border-left: solid 3px white; background-color: #0ca5af;">취소</button>
+        	<button class="createPostBtn" style="float: right; border-left: solid 3px white;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
         	<button type="button" class="sell" style="float: right; color: #c62917; font-size: 18px; font-weight: bold; background: none;">팝니다</button>
         	<button type="button" class="anonymous">

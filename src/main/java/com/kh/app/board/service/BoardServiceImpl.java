@@ -409,11 +409,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardListDto> jobSearchBoardFindAll() {
-		return boardRepository.jobSearchBoardFindAll();
-	}
-	
-	@Override
 	public int totalCountMyClassBoardByTag(String tag, int boardId) {
 		return boardRepository.totalCountMyClassBoardByTag(tag, boardId);
 	}
