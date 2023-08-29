@@ -455,16 +455,6 @@ CREATE TABLE myclass (
     FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
 );
 
-SELECT *
-FROM curriculum
-WHERE curriculum_start_at >= TRUNC(SYSDATE);
-update myclass set curriculum_id = 21 where board_id = 22;
-insert into myclass values (28, 6);
-select * from curriculum order by curriculum_end_at;
-select * from board;
-select * from post;
-select * from myclass;
-
 
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);

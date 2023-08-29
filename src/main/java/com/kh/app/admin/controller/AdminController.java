@@ -486,6 +486,8 @@ public class AdminController {
 			List<Report> reports = adminService.findAllReports(params);
 			int totalCount = adminService.countAllReports();
 			int totalPages = (int) Math.ceil((double) totalCount / limit);
+			log.info("totalCount = {}", totalCount);
+			log.info("totalPages = {}", totalPages);
 			model.addAttribute("reports", reports);
 			model.addAttribute("currentPage", page);
 			model.addAttribute("totalPages", totalPages);

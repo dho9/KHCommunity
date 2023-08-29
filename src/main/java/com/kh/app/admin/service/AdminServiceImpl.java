@@ -338,7 +338,11 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public List<Report> findAllReports(Map<String, Object> params) {
-		return adminRepository.findAllReports(params);
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findAllReports(rowBounds);
 	}
 	
 	@Override
@@ -348,7 +352,11 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Override
 	public List<Report> findReportsByFilter(String reportType, Map<String, Object> params) {
-		return adminRepository.findReportsByFilter(reportType, params);
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findReportsByFilter(reportType, rowBounds);
 	}
 	
 	@Override
