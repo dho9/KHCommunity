@@ -1121,44 +1121,77 @@ public class BoardController {
         log.info("page!!!!!!!! = {},", page);
         int limit = 5;
         List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
-
+        
+        List<JobKorea> realList = new ArrayList<JobKorea>();
+		for (JobKorea _jobKorea : jobKoreaList) {
+//				System.out.println(_jobKorea.getTitle().contains(filter));
+//				System.out.println(_jobKorea.getEtc().contains(filter));
+//				System.out.println(_jobKorea.getOption().contains(filter));
+				if (!_jobKorea.getTitle().equals("")) {
+					log.info("_jobKorea = {}",_jobKorea);
+					realList.add(_jobKorea);
+			}
+		}
         // 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
-        int totalCount = 50;
+        int totalCount = 500;
 
         // totalPage 계산
         int totalPages = (int) Math.ceil((double) totalCount / limit);
 
-        log.info("jobKoreaList={}", jobKoreaList);
+        log.info("jobKoreaList={}", realList);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
+                .body(Map.of("jobKoreaList", realList, "currentPage", page, "totalPages", totalPages));
     }
 	
 	@GetMapping("/jobSearchByFilter.do")
 	@ResponseBody
 	public ResponseEntity<?> jobSearchByFilter(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(value = "filterList[]") String[] filterList, Model model) throws IOException {
-		log.info("filterList!!!!!!!! = {},", Arrays.toString(filterList));
+//		log.info("filterList!!!!!!!! = {},", Arrays.toString(filterList));
 		
 		int limit = 5;
-		List<JobKorea> _jobKoreaList = boardService.getJobKoreaDatas(page, limit);
-		List<JobKorea> jobKoreaList = null;
-		if(_jobKoreaList.contains(Arrays.toString(filterList))) {
-			jobKoreaList = boardService.getJobKoreaDatas(page, limit);
-		}
 		
 		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
-		int totalCount = 50;
-		
-		// totalPage 계산
-		int totalPages = (int) Math.ceil((double) totalCount / limit);
-		
-		log.info("jobKoreaList={}", jobKoreaList);
+        int totalCount = 100;
+
+        // totalPage 계산
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+        List<JobKorea> exList = new ArrayList<JobKorea>(); 
+        for(int i=1; i<20; i++) {
+        	
+        	List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(i, limit);
+        	exList.addAll(jobKoreaList);
+        }
+        
+		List<JobKorea> jobKoreaFilterList = new ArrayList<JobKorea>();
+		for (JobKorea _jobKorea : exList) {
+			for (String filter : filterList) {
+//				System.out.println(_jobKorea.getTitle().contains(filter));
+//				System.out.println(_jobKorea.getEtc().contains(filter));
+//				System.out.println(_jobKorea.getOption().contains(filter));
+				if (!_jobKorea.getTitle().equals("") && ( _jobKorea.getTitle().contains(filter) || _jobKorea.getEtc().contains(filter) || _jobKorea.getOption().contains(filter))) {
+					log.info("_jobKorea = {}",_jobKorea);
+					jobKoreaFilterList.add(_jobKorea);
+					break;
+				}
+			}
+		}
+		List<JobKorea> realList = getJobKoreaDatas(jobKoreaFilterList, page, limit);
+		int endPage = (int) Math.ceil((double) jobKoreaFilterList.size()/limit);
+	    log.info("jobKoreaList={}", jobKoreaFilterList);
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
-	
+				.body(Map.of("jobKoreaList", realList, "currentPage", page, "totalPages", totalPages, "endPage", endPage));
+		
+	}
+
+	private List<JobKorea> getJobKoreaDatas(List<JobKorea> jobKoreaFilterList, int page, int limit) {
+		int startIndex = (page - 1) * limit;
+		int endIndex = Math.min(startIndex + limit, jobKoreaFilterList.size());
+				
+		return jobKoreaFilterList.subList(startIndex, endIndex);
+	}
+}
 
 
     
-}
-}
