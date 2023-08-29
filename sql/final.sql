@@ -454,12 +454,8 @@ CREATE TABLE myclass (
     FOREIGN KEY (board_id) REFERENCES board(board_id),
     FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
 );
-select * from myclass;
 
-select * from post where board_id = 22;
-update myclass set curriculum_id = 21 where board_id = 22;
-insert into myclass values (28, 6);
-select * from curriculum;
+
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);
 ALTER TABLE authority ADD CONSTRAINT PK_AUTHORITY PRIMARY KEY (
@@ -1441,3 +1437,5 @@ select * from delete_comment;
 select * from post_comment where comment_id = 243;
 select * from post;
 
+select * from chat_room;
+delete chat_room where chat_id between 119 and 140;

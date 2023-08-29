@@ -19,6 +19,7 @@ import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.dto.MyClassBoardListDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
@@ -337,7 +338,11 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public List<Report> findAllReports(Map<String, Object> params) {
-		return adminRepository.findAllReports(params);
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findAllReports(rowBounds);
 	}
 	
 	@Override
@@ -347,7 +352,11 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Override
 	public List<Report> findReportsByFilter(String reportType, Map<String, Object> params) {
-		return adminRepository.findReportsByFilter(reportType, params);
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return adminRepository.findReportsByFilter(reportType, rowBounds);
 	}
 	
 	@Override
@@ -390,5 +399,25 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int sendReportToStudent(String attackerId, String admin, String messageContent) {
 		return adminRepository.sendReportToStudent(attackerId, admin, messageContent);
+	}
+	
+	@Override
+	public int deleteMyClassBoard(String boardId) {
+		return adminRepository.deleteMyClassBoard(boardId);
+	}
+	
+	@Override
+	public List<MyClassBoardListDto> findAllMyClassBoard() {
+		return adminRepository.findAllMyClassBoard();
+	}
+	
+	@Override
+	public List<Curriculum> findRecentCurriculum() {
+		return adminRepository.findRecentCurriculum();
+	}
+	
+	@Override
+	public int updateMyClass(String boardId, String selectedCurriculumId) {
+		return adminRepository.updateMyClass(boardId, selectedCurriculumId);
 	}
 }

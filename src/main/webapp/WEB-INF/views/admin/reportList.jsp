@@ -101,6 +101,7 @@
 				            </c:if>
 				        </ul>
 				    </nav>
+				<a class="page-link" href="${pageContext.request.contextPath}/admin/reportList.do">목록</a>
 				</div>
           </div>
       </div>

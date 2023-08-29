@@ -55,6 +55,7 @@ import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.dto.MyClassBoardListDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
@@ -485,6 +486,8 @@ public class AdminController {
 			List<Report> reports = adminService.findAllReports(params);
 			int totalCount = adminService.countAllReports();
 			int totalPages = (int) Math.ceil((double) totalCount / limit);
+			log.info("totalCount = {}", totalCount);
+			log.info("totalPages = {}", totalPages);
 			model.addAttribute("reports", reports);
 			model.addAttribute("currentPage", page);
 			model.addAttribute("totalPages", totalPages);
@@ -531,6 +534,7 @@ public class AdminController {
 	@PostMapping("/adminTeacherDelete.do")
 	public String adminTeacherDelete(@Valid Teacher teacher) {
 		String memberId = teacher.getMemberId();
+		log.info("memberId = {}", memberId);
 		// member테이블에서 삭제
 		int result1 = adminService.deleteAdminTeacher(memberId);
 		int result2 = adminService.deleteAdminAuthority(memberId);
@@ -668,7 +672,6 @@ public class AdminController {
 	@GetMapping("/adminStoreList.do")
 	public void adminStoreList(Model model) {
 		List<Store> store = storeService.findAll();
-//		 log.debug("ticekt = {}", ticket);
 		model.addAttribute("stores", store);
 	}
 	
@@ -678,6 +681,26 @@ public class AdminController {
 		int result = adminService.deleteStore(storeId);
 		
 		return "redirect:/admin/adminStoreList.do";
+	}
+	
+	// 우리반 게시판관리 목록조회
+	@GetMapping("/myClassBoardList.do")
+	public void myClassBoardList(Model model) {
+		List<MyClassBoardListDto> boardLists = adminService.findAllMyClassBoard();
+		model.addAttribute("boardLists", boardLists);
+		
+		List<Curriculum> curriculums = adminService.findRecentCurriculum();
+		model.addAttribute("curriculums", curriculums);
+	}
+	
+	@PostMapping("/deleteMyClassBoard.do")
+	public String deleteMyClassBoard(@RequestParam String boardId, @RequestParam String selectedCurriculumId) {
+		// 우리반게시판 게시글 전체삭제
+		int result = adminService.deleteMyClassBoard(boardId);
+		// 우리반게시판 커리큘럼 수정
+		int result1 = adminService.updateMyClass(boardId, selectedCurriculumId);
+		
+		return "redirect:/admin/myClassBoardList.do";
 	}
 	
 	// 수강생 휴가 승인 페이지
@@ -751,9 +774,8 @@ public class AdminController {
 		
 	    model.addAttribute("currentPage", page);
 	    
-	    // 전체 학생 수를 가져온다.
+	    // 전체 채팅 방 수를 가져온다.
 	    int totalChatListCount = adminService.getTotalCountOfChatList();
-
 	    // totalPages 계산
 	    int totalPages = (int) Math.ceil((double) totalChatListCount / limit);
 	    model.addAttribute("totalPages", totalPages);
@@ -762,8 +784,7 @@ public class AdminController {
 	    
 	    model.addAttribute("adminChatList", adminChatList);
 	    
-	}
-	
+	}	
 	@GetMapping("/chatView.do")
 	@ResponseBody
 	public ResponseEntity<List<ChatMessage>> chatView(@RequestParam(value="chatId", required=false) int chatId) {

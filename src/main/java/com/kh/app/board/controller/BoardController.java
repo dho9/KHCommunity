@@ -98,7 +98,7 @@ public class BoardController {
 	    
 		return "/board/freeBoardList";
 	}
-
+	
 	@GetMapping("/marketBoardList.do")
 	public String marketBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
 		int limit = 6;
