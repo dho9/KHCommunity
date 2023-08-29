@@ -255,15 +255,15 @@ public interface AdminRepository {
 	int insertStore(String storeName, String postNumber, String address);
 
 	@Select("select * from report order by report_send_date")
-	List<Report> findAllReports(Map<String, Object> params);
+	List<Report> findAllReports(RowBounds rowBounds);
 
 	@Select("select count(*) from report")
 	int countAllReports();
 
-	List<Report> findReportsByFilter(String reportType, Map<String, Object> params);
+	List<Report> findReportsByFilter(String reportType, RowBounds rowBounds);
 
-	@Select("select count(*) from report")
 	int countReportsByFilter(String reportType);
+	
 	@Select("select\r\n"
 			+ "    t.chat_id,\r\n"
 			+ "    t.student_id,\r\n"
