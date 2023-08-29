@@ -387,8 +387,11 @@ button.updateBtn, button.deleteBtn{
 					</ul>
 					<hr>
 					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h2>
-						<br> <input type="hidden" name="content" id="content"
+						<br> 
+						<%--
+						<input type="hidden" name="content" id="content"
 							value="${postDetail.content}">
+						 --%>
 						<c:if test="${postAttach != null }">
 							<c:if test="${postDetail.boardId eq '5'}">
 								<img
@@ -874,22 +877,8 @@ button.updateBtn, button.deleteBtn{
 		        theme: "dracula",   //테마는 맘에드는 걸로.
 		        val: textarea.value
 		    });
-		
-	    	function escapeString(inputString, charToEscape) {
-	    	    // 이스케이프할 문자를 백슬래시와 함께 추가합니다.
-	    	    var escapedChar = '\\' + charToEscape;
-	    	    
-	    	    // 입력된 문자열에서 특정 문자를 찾아 이스케이프합니다.
-	    	    var escapedString = inputString.replace(new RegExp(charToEscape, 'g'), escapedChar);
-	    	    
-	    	    return escapedString;
-	    	}
-
-	    	// 함수 사용 예시
-	    	var escapedString = escapeString(`${postDetail.content}`, '"');
-	    	console.log("escapedString = ",escapedString);
-	    	
-	    	editor.setValue(escapedString);
+		    
+	    editor.setValue(`${postDetail.content}`);
 	    
 		    language.addEventListener('change', (e) => {
 		        var lang = e.target.value;
@@ -1196,7 +1185,6 @@ button.updateBtn, button.deleteBtn{
 	
 	// 코드편집기
 	var textarea = document.querySelector('#batch_content');
-	var content = document.querySelector('#content').value;    
 	
 	if(textarea !== null){
 		var editor = CodeMirror.fromTextArea(textarea, {
@@ -1208,9 +1196,7 @@ button.updateBtn, button.deleteBtn{
 	       	cursorBlinkRate: 0  
 	    });
 		
-		
-	    
-	    editor.setValue(content);
+	    editor.setValue(`${postDetail.content}`);
 	}
     
     
