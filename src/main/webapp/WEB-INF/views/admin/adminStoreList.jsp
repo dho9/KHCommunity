@@ -87,7 +87,7 @@
                 <!-- 모달 내용 -->
                 <form:form id="storeForm" modelAttribute="store" action="${pageContext.request.contextPath}/admin/insertStore.do" method="post" enctype="multipart/form-data">
 				    <input type="text" id="storeName" name="storeName" placeholder="식당 이름을 작성해주세요" style="width:500px;">
-				    <button type="button" id="searchAddressButton">주소 검색</button>
+				    <button type="button" id="searchAddressButton" class="btn btn-primary">주소 검색</button>
 				    <div><input type="text" id="postNumber" name="postNumber" readonly style="width:100px; border:none;"></div>
 				    <div><input type="text" id="address" name="address" readonly style="width:400px; border:none;"></div>
     				<div><input type="file" id="file" name="file" accept=".jpg"></div>

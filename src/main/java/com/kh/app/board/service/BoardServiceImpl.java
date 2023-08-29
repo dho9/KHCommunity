@@ -409,11 +409,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardListDto> jobSearchBoardFindAll() {
-		return boardRepository.jobSearchBoardFindAll();
-	}
-	
-	@Override
 	public int totalCountMyClassBoardByTag(String tag, int boardId) {
 		return boardRepository.totalCountMyClassBoardByTag(tag, boardId);
 	}
@@ -441,7 +436,7 @@ public class BoardServiceImpl implements BoardService {
 	public List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException {
 		List<JobKorea> jobKoreaList = new ArrayList<>();
 		
-		Document document = Jsoup.connect(URL + "&page=" + page).get();
+		Document document = Jsoup.connect(URL + "&tabType=recruit&Page_No=" + page).get();;
 	    Elements contents = document.select(".post");
 	    
 	    int startIndex = (page - 1) * limit;
@@ -452,16 +447,15 @@ public class BoardServiceImpl implements BoardService {
 	        
 	        String href = content.select(".post-list-corp .name").attr("href");
 	        String fullUrl = BASE_URL + href;
-	        
-	        JobKorea jobKorea = JobKorea.builder()
-	                            .company(content.select(".post-list-corp .name").text())
-	                            .title(content.select(".post-list-info .title").text())
-	                            .option(content.select(".post-list-info .option").text())
-	                            .etc(content.select(".post-list-info .etc").text())
-	                            .url(fullUrl)
-	                            .build();
-	        
-	        jobKoreaList.add(jobKorea);
+	        	JobKorea jobKorea = JobKorea.builder()
+	        			.company(content.select(".post-list-corp .name").text())
+	        			.title(content.select(".post-list-info .title").text())
+	        			.option(content.select(".post-list-info .option").text())
+	        			.etc(content.select(".post-list-info .etc").text())
+	        			.url(fullUrl)
+	        			.build();
+	        	
+	        	jobKoreaList.add(jobKorea);
 	    }
 	    
 	    return jobKoreaList;

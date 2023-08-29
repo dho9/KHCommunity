@@ -12,9 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -35,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
@@ -100,7 +98,7 @@ public class BoardController {
 	    
 		return "/board/freeBoardList";
 	}
-
+	
 	@GetMapping("/marketBoardList.do")
 	public String marketBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
 		int limit = 6;
@@ -522,10 +520,6 @@ public class BoardController {
 		}
 		result = boardService.insertPostContent(board);
 		
-		if(board.getBoardId() == 11) {
-			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
-		}
-		
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 
 	}
@@ -611,9 +605,6 @@ public class BoardController {
 		result = boardService.updatePost(board);
 		result = boardService.updatePostContent(board);
 		
-		if(boardId == 11) {
-			return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
-		}
 		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
 	}
 	
@@ -806,19 +797,26 @@ public class BoardController {
 	}
 	
 	@GetMapping("/myClassBoardDetail.do")
-	public void myClassBoardDetail(@RequestParam int id, Model model) {
+	public void myClassBoardDetail(
+			@RequestParam int id,
+			@AuthenticationPrincipal MemberDetails principal,
+			@Valid StudentMypageInfoDto studentInfo,
+			Model model) {
 		BoardListDto postDetail = boardService.findById(id);
-		log.debug("postDetail = {}", postDetail);
-
+//		log.info("postDetail = {}", postDetail);
 		PostAttachment postAttach = boardService.findAttachById(id);
-		log.debug("postAttach = {}", postAttach);
-		
+//		log.info("postAttach = {}", postAttach);
 		List<Comment> comments = boardService.findByCommentByPostId(id);
-		log.debug("comments = {}", comments);
+//		log.info("comments = {}", comments);
+		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+//	    log.info("studentInfo = {}", studentInfo);
 		
+		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("postAttach", postAttach);
 		model.addAttribute("comments", comments);
+		
+	
 	}
 	
 	@GetMapping("/fileDownload.do")
@@ -957,15 +955,26 @@ public class BoardController {
 		return "redirect:/board/boardDetail.do?id="+ reportPostId;
 	}
 	
-	/*
-	 * @GetMapping("/jobSearchBoardList.do") public String jobSearchBoardList(Model
-	 * model) { List<BoardListDto> jobSearchBoardList =
-	 * boardService.jobSearchBoardFindAll();
-	 * 
-	 * model.addAttribute("jobSearchBoardList", jobSearchBoardList);
-	 * 
-	 * return "/board/jobSearchBoardList"; }
-	 */
+	 @GetMapping("/jobSearchBoardList.do") 
+	 public String jobSearchBoardList(@RequestParam(name = "page", defaultValue = "1") int page, Model model) throws IOException { 
+	    int limit = 8;
+		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		
+		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+	    int totalCount = 10;
+	    
+	    // totalPage 계산
+	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	    log.info("jobKoreaList={}", jobKoreaList);
+	    Gson gson = new Gson();
+	    String jobKoreaListAsJson = gson.toJson(jobKoreaList);
+	    model.addAttribute("jobKoreaListAsJson", jobKoreaListAsJson);
+		model.addAttribute("jobKoreaList", jobKoreaList);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+	  
+		return "/board/jobSearchBoardList"; 
+	  }
 	
 	@GetMapping("/threePostByBoardId.do")
 	@ResponseBody
@@ -991,94 +1000,196 @@ public class BoardController {
 		
 	}
 	
-	@GetMapping("/jobKorea.do")
-	public String jobKorea(@RequestParam(name = "page", defaultValue = "1") int page, Model model) throws IOException {
-		int limit = 8;
-		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+	@PostMapping("/createMyClass.do")
+	public String createMyClass(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam(required = false) String[] _tags,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
+//		log.info("loginMember = {}", member);
+		List<String> tags = _tags != null ? Arrays.asList(_tags) : null;
 		
-		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
-	    int totalCount = 10;
-	    
-	    // totalPage 계산
-	    int totalPages = (int) Math.ceil((double) totalCount / limit);
-	    
-		log.info("jobKoreaList={}", jobKoreaList);
-		model.addAttribute("jobKoreaList", jobKoreaList);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		return "/board/jobSearchBoardList";
+		// 1. 파일저장
+		int result = 0;
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		for(MultipartFile file : files) {
+			if(!file.isEmpty()) {
+				String originalFilename = file.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				file.transferTo(destFile);	
+
+				PostAttachment attach = 
+						PostAttachment.builder()
+						.postOriginalFilename(originalFilename)
+						.postRenamedFilename(renamedFilename)
+						.boardId(boardId)
+						.build();
+
+				attachments.add(attach);
+			}
+		}
+			
+		BoardCreateDto board = BoardCreateDto.builder()
+								.title(title)
+								.content(text)
+								.boardId(boardId)
+								.memberId(member.getMemberId())
+								.attachments(attachments)
+								.tags(tags)
+								.build();
+		log.info("board = {}", board);
+		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
+			result = boardService.insertBoardNofiles(board);
+		}else {
+			result = boardService.insertBoard(board);
+		}
+		result = boardService.insertPostContent(board);
+		
+		return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
 	}
 	
-//	@PostMapping("/createMyClass.do")
-//	public String createMyClass(
-//			@RequestParam String title,
-//			@RequestParam String text,
-//			@RequestParam int boardId,
-//			@RequestParam(required = false) String grade,
-//			@RequestParam(required = false) boolean anonymousCheck,
-//			@RequestParam(required = false) String[] _tags,
-//			@AuthenticationPrincipal MemberDetails member,
-//			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException{
-//		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!", boardId);
-//		//log.debug("loginMember = {}", member);
-//		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
-//
-//		// 1. 파일저장
-//		int result = 0;
-//		List<PostAttachment> attachments = new ArrayList<>(); 
-//		for(MultipartFile file : files) {
-//			if(!file.isEmpty()) {
-//				String originalFilename = file.getOriginalFilename();
-//				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-//				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-//				file.transferTo(destFile);	
-//
-//				PostAttachment attach = 
-//						PostAttachment.builder()
-//						.postOriginalFilename(originalFilename)
-//						.postRenamedFilename(renamedFilename)
-//						.boardId(boardId)
-//						.build();
-//
-//				attachments.add(attach);
-//			}
-//		}
-//			
-//			BoardCreateDto board = null;
-//			
-//			if(grade == null || grade.equals("")) {
-//				board = BoardCreateDto.builder()
-//						.title(title)
-//						.content(text)
-//						.boardId(boardId)
-//						.memberId(member.getMemberId())
-//						.tags(tags)
-//						.attachments(attachments)
-//						.anonymousCheck(anonymousCheck)
-//						.build();
-//				
-//			} else {
-//				String realGrade = " [평점 : " + grade + "]";
-//				board = BoardCreateDto.builder()
-//						.title(title + realGrade)
-//						.content(text)
-//						.boardId(boardId)
-//						.memberId(member.getMemberId())
-//						.tags(tags)
-//						.attachments(attachments)
-//						.anonymousCheck(anonymousCheck)
-//						.build();
-//			}
-//		
-//		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
-//			result = boardService.insertBoardNofiles(board);
-//		}else {
-//			result = boardService.insertBoard(board);
-//		}
-//		result = boardService.insertPostContent(board);
-//		
-//		return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
-//	}
+	@PostMapping("/deleteMyClassPost.do") 
+	public String deleteMyClassPost (
+			@RequestParam int deletePostId,
+			@RequestParam String postBoardLink,
+			@RequestParam int boardId
+			) {
+		int result = boardService.deleteBoard(deletePostId); 
+//		log.info("보드링크={}",postBoardLink);
+//		log.info("포스트아이디={}",deletePostId);
+		return "redirect:/board/" + postBoardLink + ".do?boardId=" + boardId;
+	}
 	
+	@PostMapping("/updateMyClassPost.do")
+	public String updateMyClassPost(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam int postId,
+			@RequestParam(required = false) String _tags,
+			@AuthenticationPrincipal MemberDetails member,
+			@RequestParam(value = "file", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+		
+		List<String> tags = _tags != null ? Arrays.asList(_tags.replace("[", "").replace("]", "").split(",")) : null; 
+		
+		BoardCreateDto board = null;
+		int result = 0;
+		
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		if(files != null) {
+			
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
+					
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.postId(postId)
+							.build();
+					
+					attachments.add(attach);
+				}
+			}
+		}
+			board = BoardCreateDto.builder()
+					.postId(postId)
+					.title(title)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments) 
+					.build();
+			
+		result = boardService.updatePost(board);
+		result = boardService.updatePostContent(board);
+		
+		return "redirect:/board/myClassBoardDetail.do?id=" + board.getPostId();
+	}
+	
+	@GetMapping("/jobSearch.do")
+    public ResponseEntity<?> jobKorea(@RequestParam(name = "page", defaultValue = "1") int page, Model model) throws IOException {
+        log.info("page!!!!!!!! = {},", page);
+        int limit = 5;
+        List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+        
+        List<JobKorea> realList = new ArrayList<JobKorea>();
+		for (JobKorea _jobKorea : jobKoreaList) {
+//				System.out.println(_jobKorea.getTitle().contains(filter));
+//				System.out.println(_jobKorea.getEtc().contains(filter));
+//				System.out.println(_jobKorea.getOption().contains(filter));
+				if (!_jobKorea.getTitle().equals("")) {
+					log.info("_jobKorea = {}",_jobKorea);
+					realList.add(_jobKorea);
+			}
+		}
+        // 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+        int totalCount = 500;
+
+        // totalPage 계산
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+
+        log.info("jobKoreaList={}", realList);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Map.of("jobKoreaList", realList, "currentPage", page, "totalPages", totalPages));
+    }
+	
+	@GetMapping("/jobSearchByFilter.do")
+	@ResponseBody
+	public ResponseEntity<?> jobSearchByFilter(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(value = "filterList[]") String[] filterList, Model model) throws IOException {
+//		log.info("filterList!!!!!!!! = {},", Arrays.toString(filterList));
+		
+		int limit = 5;
+		
+		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+        int totalCount = 100;
+
+        // totalPage 계산
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+        List<JobKorea> exList = new ArrayList<JobKorea>(); 
+        for(int i=1; i<20; i++) {
+        	
+        	List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(i, limit);
+        	exList.addAll(jobKoreaList);
+        }
+        
+		List<JobKorea> jobKoreaFilterList = new ArrayList<JobKorea>();
+		for (JobKorea _jobKorea : exList) {
+			for (String filter : filterList) {
+//				System.out.println(_jobKorea.getTitle().contains(filter));
+//				System.out.println(_jobKorea.getEtc().contains(filter));
+//				System.out.println(_jobKorea.getOption().contains(filter));
+				if (!_jobKorea.getTitle().equals("") && ( _jobKorea.getTitle().contains(filter) || _jobKorea.getEtc().contains(filter) || _jobKorea.getOption().contains(filter))) {
+					log.info("_jobKorea = {}",_jobKorea);
+					jobKoreaFilterList.add(_jobKorea);
+					break;
+				}
+			}
+		}
+		List<JobKorea> realList = getJobKoreaDatas(jobKoreaFilterList, page, limit);
+		int endPage = (int) Math.ceil((double) jobKoreaFilterList.size()/limit);
+	    log.info("jobKoreaList={}", jobKoreaFilterList);
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("jobKoreaList", realList, "currentPage", page, "totalPages", totalPages, "endPage", endPage));
+		
+	}
+
+	private List<JobKorea> getJobKoreaDatas(List<JobKorea> jobKoreaFilterList, int page, int limit) {
+		int startIndex = (page - 1) * limit;
+		int endIndex = Math.min(startIndex + limit, jobKoreaFilterList.size());
+				
+		return jobKoreaFilterList.subList(startIndex, endIndex);
+	}
 }
 
