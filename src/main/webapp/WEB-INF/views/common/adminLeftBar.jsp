@@ -107,6 +107,13 @@
 
 				                        if (newWindow) {
 				                            newWindow.focus();
+				                            
+				                         	// 토스트 숨기기
+				                            const toastBootstrap = bootstrap.Toast.getInstance($liveToast);
+				                            if (toastBootstrap) {
+				                                toastBootstrap.hide();
+				                            }
+				                            
 				                        }
 				                    },
 				                    error: function(error) {

@@ -170,7 +170,12 @@ function modalSend(responseData) {
 	   modalMessages.innerHTML = '';
 	   
 	    responseData.forEach(chat => {
-	       const messageItem = document.createElement("li");
+	    	
+	    	const chatSendAt = new Date(chat.chatSendAt);
+	    	console.log(chatSendAt);
+	    	const formattedSendAt = `\${chatSendAt.getFullYear()}/\${chatSendAt.getMonth() + 1}/\${chatSendAt.getDate()}/\${chatSendAt.getHours()}:\${chatSendAt.getMinutes()}:\${chatSendAt.getSeconds()}`;
+	    	console.log(formattedSendAt);
+	        const messageItem = document.createElement("li");
 	        messageItem.classList.add("message", chat.employeeId === null ? "right" : "left", "appeared");
 	        
 	        const studentImgUrl = "/kh/resources/images/usericon.png";
@@ -196,7 +201,7 @@ function modalSend(responseData) {
 	                </span> <br>
 	                <span>\${chat.chatContent}</span> <br>
 	                <span style="font-size:12px; color:black; font-weight:500;">
-	                    \${chat.chatSendAt}
+	                	\${formattedSendAt}
 	                </span>`;
 	        }
 	        else {
@@ -206,7 +211,7 @@ function modalSend(responseData) {
 	                </span> <br>
 	                <span>\${chat.chatContent}</span> <br>
 	                <span style="font-size:12px; color:black; font-weight:500;">
-	                    \${chat.chatSendAt}
+	                	\${formattedSendAt}
 	                </span>`;
 	        }
 	        textWrapper.appendChild(textDiv);

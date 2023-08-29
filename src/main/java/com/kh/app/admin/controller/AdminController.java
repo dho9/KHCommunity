@@ -787,7 +787,6 @@ public class AdminController {
 	@ResponseBody
 	public ResponseEntity<List<ChatMessage>> chatView(@RequestParam(value="chatId", required=false) int chatId) {
 	    List<ChatMessage> chatMsgs = adminService.getChatMessagesByChatId(chatId);
-	    System.out.println(chatMsgs);
 	    return ResponseEntity.ok(chatMsgs);
 	}
  }
