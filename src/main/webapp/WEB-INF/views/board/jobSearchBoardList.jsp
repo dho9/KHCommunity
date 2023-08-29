@@ -37,31 +37,31 @@ iframe {
 	<div class="collapse" id="collapseExample">
 	  <div class="card card-body">
 	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="백엔드개발자" id="flexCheckDefault" >
+		  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드개발자" id="flexCheckDefault" >
 		  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="프론트엔드개발자" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드개발자" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
 		</div>
       	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="웹개발자" id="flexCheckDefault" >
+		  <input class="form-check-input" type="checkbox" name="jobType" value="웹개발자" id="flexCheckDefault" >
 		  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="앱개발자" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="jobType" value="앱개발자" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="소프트웨어개발자" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어개발자" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="게임개발자" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="jobType" value="게임개발자" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="하드웨어개발자" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어개발자" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
 		</div>
 	  </div>
@@ -91,23 +91,23 @@ iframe {
 	<div class="collapse" id="collapseExample">
 	  <div class="card card-body">
 	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="신입" id="flexCheckDefault" >
+		  <input class="form-check-input" type="checkbox" name="location" value="신입" id="flexCheckDefault" >
 		  <label class="form-check-label" for="flexCheckDefault">신입</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="1~3년" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="location" value="1~3년" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">1~3년</label>
 		</div>
       	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="4~6년" id="flexCheckDefault" >
+		  <input class="form-check-input" type="checkbox" name="location" value="4~6년" id="flexCheckDefault" >
 		  <label class="form-check-label" for="flexCheckDefault">4~6년</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="7~9년" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="location" value="7~9년" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">7~9년</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="10~15년" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="location" value="10~15년" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">10~15년</label>
 		</div>
 	  </div>
@@ -130,7 +130,6 @@ iframe {
 		</c:forEach>
 	</c:if>
 	
-
 	<!-- 페이지 이동 및 페이지 번호 표시 -->
 	<div class="d-flex justify-content-center">
         <ul class="pagination">
@@ -163,6 +162,57 @@ iframe {
         </ul>
 	</div>
 	<script>
+	// 검색
+	function searchJobKorea() {
+		// 체크박스로 선택된 값들 가져오기
+	    const selectedJobTypes = getSelectedCheckboxes("jobType");
+	    const selectedLocations = getSelectedCheckboxes("location");
+	    const selectedExperience = getSelectedCheckboxes("experience");
+
+	    // 서버로부터 받은 전체 리스트 (이 부분은 실제 구현시 서버에서 받아와야 함)
+		var jobKoreaList = JSON.parse('<c:out value="${jobKoreaListAsJson}" />');
+
+	    // 선택된 체크박스 값에 따라 리스트 필터링
+	    const filteredJobKoreaList = jobKoreaList.filter(job => {
+	        return (
+	            selectedJobTypes.includes(job.jobType) &&
+	            selectedLocations.includes(job.location) &&
+	            selectedExperience.includes(job.experience)
+	        );
+	    });
+
+		// 화면에 표시하는 부분 초기화
+		const jobBoardElement = document.getElementById('job-board');
+		jobBoardElement.innerHTML = '';
+
+		// 필터링 된 결과 화면에 표시하기
+		for (const job of filteredJobKoreaList) {
+			const divElement = document.createElement('div');
+			
+			divElement.innerHTML =
+				`<h2 class="medium bold"><a href="${job.url}">${job.company}</a></h2> <br>
+				 <p class="medium">${job.title}</p> <br>
+				 <p class="medium">${job.option}</p> <br>
+				 <p class="medium">${job.etc}</p> <br>
+				`;
+				
+		  	jobBoardElement.appendChild(divElement);
+	   }
+	}
+
+	function getSelectedCheckboxes(checkboxGroupName) {
+		console.log(checkboxGroupName);
+		const checkboxes = document.querySelectorAll(`input[name="\${checkboxGroupName}"]:checked`);
+		
+		const selectedValues = [];
+		for (const checkbox of checkboxes) {
+		 	selectedValues.push(checkbox.value);
+	   }
+	   
+		return selectedValues;
+	}
+	
+	
 	// 체크한 체크박스만 나오게
 	function searchJobKorea() {
 		const selectedJobTypes = getSelectedCheckboxes("jobType");
@@ -181,6 +231,8 @@ iframe {
 
 	    const jobKoreaListContainer = document.getElementById("jobKoreaListContainer");
 	    jobKoreaListContainer.innerHTML = "";
+
+	    // 필터링 된 결과 화면에 표시하기
 	    for (const board of filteredJobKoreaList) {
 	        const boardDiv = document.createElement("div");
 	        boardDiv.innerHTML = `
