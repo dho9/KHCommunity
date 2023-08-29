@@ -481,52 +481,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		msgList(1);
 		certification();
 	};
+
 	document.getElementById("logoutBtn").addEventListener("click", function(event) {
 		memberLogoutFrm.submit();
 	});
 	
-	// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
-	document.querySelector("#consultRequest").onclick = () => {
-		const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
-		const stompClient = Stomp.over(ws);
-
-		stompClient.connect({}, (frame) => {
-			console.log('open : ', frame);
-			
-			// 구독신청 
-			stompClient.subscribe('/topic/chat', (message) => {
-				console.log('/topic/notice : ', message);
-				renderMessage(message);
-			});
-		});
-		
-		const consultReqFrm = document.consultReqFrm; 
-		const loginMemberId = document.querySelector("#loginMemberId").value;
-		const token = consultReqFrm._csrf.value;
-		
-		console.log(consultReqFrm);
-		console.log(loginMemberId);
-		
-		$.ajax({
-			type : "POST",
-			url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
-			data :{
-				memberId: loginMemberId
-			},
-			headers: {
-	            "X-CSRF-TOKEN": token
-	        },
-			success(responseData){
-				console.log("성공")
-				/* location.href="${pageContext.request.contextPath}/chat/chatConsultingRequest.do"; */
-				
-			},
-			error(error) {
-	            // 오류 발생 시 실행되는 부분
-	            console.error("error"); // 오류 내용을 출력
-	        }
-		});
-	};
 	
 	// MH - 쪽지함 관련 기능 시작
 	const msgList = (page) => {
@@ -863,7 +822,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 <script>
 
-// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
+	// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
 	document.querySelector("#consultRequest").onclick = () => {
 		const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
 		const stompClient = Stomp.over(ws);
@@ -877,7 +836,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				renderMessage(message);
 			});
 		});
-	
+
+		const consultReqFrm = document.consultReqFrm; 
+		const loginMemberId = document.querySelector("#loginMemberId").value;
+		const token = consultReqFrm._csrf.value;
+		
+		console.log(consultReqFrm);
+		console.log(loginMemberId);
+		
 		$.ajax({
 			type : "POST",
 			url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
@@ -893,9 +859,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				if (newWindow) {
 	                newWindow.focus();
 	            }
-	        }
+			}
 		});
-	};
+	});
 	
 </script>	
 

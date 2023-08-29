@@ -1383,7 +1383,7 @@ INSERT INTO calendar values(seq_cal.nextval,'','할일title','test',
 '내용-content',to_date('2023/08/19','YYYY/MM/DD'),
 to_date('2023/08/21','YYYY/MM/DD'),1,'yellow','navy','navy','mini');
 
-
+delete talker where chat_id between 43 and 74;
 
 
 update student set approve_request_date = sysdate where student_id = 'xogus';

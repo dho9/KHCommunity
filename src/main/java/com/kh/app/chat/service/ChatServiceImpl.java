@@ -32,4 +32,24 @@ public class ChatServiceImpl implements ChatService {
 		return chatId;
 	}
 	
+	@Override
+	public int insertStudentChatMsg(int chatId, String studentId, String message) {
+		return chatRepository.insertStudentChatMsg(chatId, studentId, message);
+	}
+	
+	@Override
+	public int insertAdminChatMsg(int chatId, String message) {
+		return chatRepository.insertAdminChatMsg(chatId, message);
+	}
+	
+	@Override
+	public int updateAdminTalker(int chatId) {
+		return chatRepository.updateAdminTalker(chatId);
+	}
+	
+	@Override
+	public int updateChatTypeInChatRoom(int chatId, String chatType) {
+		return chatRepository.updateChatTypeInChatRoom(chatId, chatType);
+	}
+	
 }

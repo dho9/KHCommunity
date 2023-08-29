@@ -77,7 +77,7 @@
 				        <ul class="pagination">
 				            <c:if test="${currentPage > 1}">
 				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentList.do?page=${currentPage - 1}" aria-label="Previous">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/employeeList.do?page=${currentPage - 1}" aria-label="Previous">
 				                        <span aria-hidden="true">&laquo;</span>
 				                    </a>
 				                </li>
