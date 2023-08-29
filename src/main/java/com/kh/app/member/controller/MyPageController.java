@@ -5,8 +5,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
@@ -70,6 +76,24 @@ public class MyPageController {
 			model.addAttribute("Ddays", Ddays);
 		}
 		// Dday 끝 }
+		
+		  	int limit = 5;
+			Map<String, Object> params = Map.of(
+					"page", 1,
+					"limit", limit
+			);
+			
+		    model.addAttribute("currentPage", 1);
+		    
+		    // 전체 채팅 방 수를 가져온다.
+		    int totalChatListCount = memberService.getTotalCountOfChatList(principal.getMemberId());
+		    // totalPages 계산
+		    int totalPages = (int) Math.ceil((double) totalChatListCount / limit);
+		    model.addAttribute("totalPages", totalPages);
+		    
+		    List<AdminChatListDto> studentChatList = memberService.findAllChat(params, principal.getMemberId());
+		    
+		    model.addAttribute("studentChatList", studentChatList);
 	}
 
 	@GetMapping("/employeeMyPage.do")
@@ -105,7 +129,34 @@ public class MyPageController {
 		EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
 
 		model.addAttribute("adminInfo", adminInfo);
+		
+		
+	
+		 
 	}
+	
+	@GetMapping("/studentChatList.do")
+	public ResponseEntity<?> StudentChatList(@RequestParam(defaultValue = "1") int page,
+			@AuthenticationPrincipal MemberDetails principal
+			) {
+		// 페이징
+	    int limit = 5;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+		);
+		
+	    // 전체 채팅 방 수를 가져온다.
+	    int totalChatListCount = memberService.getTotalCountOfChatList(principal.getMemberId());
+	    // totalPages 계산
+	    int totalPages = (int) Math.ceil((double) totalChatListCount / limit);
+	    
+	    List<AdminChatListDto> studentChatList = memberService.findAllChat(params, principal.getMemberId());
+	    
+	    return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("currentPage", page, "totalPages", totalPages, "studentChatList", studentChatList));
+	}	
 
 	
 	@PostMapping("vacationApprove.do")
@@ -119,5 +170,12 @@ public class MyPageController {
 		int result = memberService.updateVacationApprove(vacationId, approveResult);
 		
 		return "redirect:/member/employeeMyPage.do";
+	}
+	
+	@GetMapping("/chatView.do")
+	@ResponseBody
+	public ResponseEntity<List<ChatMessage>> chatView(@RequestParam(value="chatId", required=false) int chatId) {
+	    List<ChatMessage> chatMsgs = memberService.getChatMessagesByChatId(chatId);
+	    return ResponseEntity.ok(chatMsgs);
 	}
 }

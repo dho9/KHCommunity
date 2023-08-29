@@ -8,7 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.session.RowBounds;
 
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.controller.StudentDto;
@@ -95,6 +98,37 @@ public interface MemberRepository {
 
 	@Select("SELECT m.member_name, m.member_phone, m.member_email,  c.curriculum_id, c.subject, c.curriculum_name, c.curriculum_start_at,  c.curriculum_end_at FROM student s LEFT JOIN member m ON s.student_id = m.member_id LEFT JOIN curriculum c ON s.curriculum_id = c.curriculum_id where  c.teacher_id=#{memberId}")
 	List<StudentListDto> findStudentByTeacher(String memberId);
+
+	@Select("select count(*) from talker WHERE student_id =#{memberId} ")
+	int getTotalCountOfChatList(String memberId);
+
+	@Select("select\r\n"
+			+ "    t.chat_id,\r\n"
+			+ "    t.student_id,\r\n"
+			+ "    m.member_name student_name,\r\n"
+			+ "    r.chat_type,\r\n"
+			+ "    r.chat_date,\r\n"
+			+ "    c.curriculum_name,\r\n"
+			+ "    c.class_id,\r\n"
+			+ "    s.student_type\r\n"
+			+ "from \r\n"
+			+ "    talker t \r\n"
+			+ "        join chat_room r\r\n"
+			+ "            on t.chat_id = r.chat_id\r\n"
+			+ "        join student s\r\n"
+			+ "            on t.student_id = s.student_id\r\n"
+			+ "        join curriculum c\r\n"
+			+ "            on s.curriculum_id = c.curriculum_id\r\n"
+			+ "        join member m\r\n"
+			+ "            on s.student_id = m.member_id\r\n"
+			+ "where \r\n"
+			+ "		t.student_id = #{memberId}"
+			+ "order by \r\n"
+			+ "		r.chat_id")
+	List<AdminChatListDto> findAllChat(RowBounds rowBounds, String memberId);
+
+	@Select("select * from chat_message where chat_id = #{chatId} order by chat_no")
+	List<ChatMessage> getChatMessagesByChatId(int chatId);
 
 
 }
