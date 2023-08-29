@@ -216,9 +216,10 @@
 		$.ajax({
             url: '${pageContext.request.contextPath}/board/jobSearchByFilter.do',
             data : {
-            	page : pageNumber,
-            	filterList : filterList
+            	page : currentPage,
+            	'filterList[]': filterList
             },
+            dataType : "json",
             success: function(response) {
                 const jobKoreaList = response.jobKoreaList;
                 console.log(jobKoreaList);
