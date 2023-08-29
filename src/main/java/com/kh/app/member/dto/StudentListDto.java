@@ -2,28 +2,25 @@ package com.kh.app.member.dto;
 
 import java.time.LocalDate;
 
-import com.kh.app.member.entity.Employee;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @Builder
-public class EmployeeInfoDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class StudentListDto {
 
-	private String memberId;
 	private String memberName;
-	private String classId;
+	private String memberPhone;
+	private String memberEmail;
+	private int curriculumId;
 	private String subject;
 	private String curriculumName;
-	private String auth;
-	private String jobCode;
-	private String employeeId;
-	private int curriculumId;
 	private LocalDate curriculumStartAt;
 	private LocalDate curriculumEndAt;
-	
-}
 
+}

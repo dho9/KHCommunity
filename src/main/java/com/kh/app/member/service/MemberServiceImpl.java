@@ -1,11 +1,13 @@
 package com.kh.app.member.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,11 +16,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.app.chat.dto.AdminChatListDto;
+import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.Member;
@@ -223,6 +228,33 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findStudentType(memberId);
 	}
 
+	@Override
+	public int updateVacationApprove(String vacationId, String approveResult) {
+		return memberRepository.updateVacationApprove(vacationId, approveResult);
+	}
+
+	@Override
+	public List<StudentListDto> findStudentByTeacher(String memberId) {
+		return memberRepository.findStudentByTeacher(memberId);
+	}
+	@Override
+	public int getTotalCountOfChatList(String memberId) {
+		return memberRepository.getTotalCountOfChatList(memberId);
+	}
 	
+	@Override
+	public List<AdminChatListDto> findAllChat(Map<String, Object> params, String memberId) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return memberRepository.findAllChat(rowBounds, memberId);
+	}
+	
+	@Override
+	public List<ChatMessage> getChatMessagesByChatId(int chatId) {
+		return memberRepository.getChatMessagesByChatId(chatId);
+	}
 
 }
