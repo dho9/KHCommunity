@@ -463,7 +463,6 @@ public class BoardServiceImpl implements BoardService {
 	        
 	        jobKoreaList.add(jobKorea);
 	    }
-	    
 	    return jobKoreaList;
 	}
 	

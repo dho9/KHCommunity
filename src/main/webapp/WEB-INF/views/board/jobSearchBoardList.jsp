@@ -10,26 +10,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-<style>
-a.article{
-color: black;
-}
-.anonymous{
-	float: right;
-	background-color: white;
-	margin-right: 13px;
-}
-.anonymousImg{
-	width: 59px;
-}
-iframe {
-	height: 279px;
-    margin-top: 2%;
-    width: 1100px;
-    margin-left: 25.8%;
-}
-</style>
-	<!-- <iframe id="pageFrame" name="pageFrame" src="http://www.jobkorea.co.kr/Starter/calendar/sub/week" scrolling="auto"></iframe> -->
+
+
 	<!-- 직무선택 -->
 	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 	    직무선택
@@ -37,32 +19,32 @@ iframe {
 	<div class="collapse" id="collapseExample">
 	  <div class="card card-body">
 	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="백엔드개발자" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드개발자" id="flexCheckDefault" >
+		  <label class="form-check-label" for="flexCheckDefault">백엔드개발</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="프론트엔드개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드개발자" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발</label>
 		</div>
       	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="웹개발자" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="웹개발자" id="flexCheckDefault" >
+		  <label class="form-check-label" for="flexCheckDefault">웹개발</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="앱개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="앱개발자" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">앱개발</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="소프트웨어개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어개발자" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="게임개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="게임개발자" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">게임개발</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="하드웨어개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어개발자" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발</label>
 		</div>
 	  </div>
 	</div>
@@ -91,23 +73,23 @@ iframe {
 	<div class="collapse" id="collapseExample">
 	  <div class="card card-body">
 	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="신입" id="flexCheckDefault" >
+		  <input class="form-check-input" type="checkbox" name="career" value="신입" id="flexCheckDefault" >
 		  <label class="form-check-label" for="flexCheckDefault">신입</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="1~3년" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">1~3년</label>
 		</div>
       	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="4~6년" id="flexCheckDefault" >
+		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckDefault" >
 		  <label class="form-check-label" for="flexCheckDefault">4~6년</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="7~9년" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">7~9년</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="10~15년" id="flexCheckChecked" >
+		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
 		  <label class="form-check-label" for="flexCheckChecked">10~15년</label>
 		</div>
 	  </div>
@@ -119,122 +101,140 @@ iframe {
 	</button>
 	
 	<!-- 채용공고 -->
-	<c:if test="${not empty jobKoreaList}">
-		<c:forEach items="${jobKoreaList}" var="board">
-			<div>
-			  	<h2 class="medium bold"><a href="${board.url}">${board.company}</a></h2> <br>
-			  	<p class="medium">${board.title}</p> <br>
-			  	<p class="medium">${board.option}</p> <br>
-			  	<p class="medium">${board.etc}</p> <br>
-			</div>
-		</c:forEach>
-	</c:if>
+	<div id="job"></div>
 	
-
-	<!-- 페이지 이동 및 페이지 번호 표시 -->
-	<div class="d-flex justify-content-center">
-        <ul class="pagination">
-            <c:if test="${currentPage > 1}">
-                <li class="page-item">
-                    <a class="page-link" href="${pageContext.request.contextPath}/board/jobKorea.do?page=${currentPage - 1}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            </c:if>
-            
-            <c:forEach var="pageNum" begin="1" end="${totalPages}">
-                <c:choose>
-                    <c:when test="${pageNum eq currentPage}">
-                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board/jobKorea.do?page=${pageNum}">${pageNum}</a></li>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
-            
-            <c:if test="${currentPage < totalPages}">
-                <li class="page-item">
-                    <a class="page-link" href="${pageContext.request.contextPath}/board/jobKorea.do?page=${currentPage + 1}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </c:if>
-        </ul>
-	</div>
+	
+	<!-- 더보기 -->
+	<button class="btn btn-primary" type="button" id="loadPrevButton">
+	    이전
+	</button>
+	<button class="btn btn-primary" type="button" id="loadMoreButton">
+	    다음
+	</button>
+	
 	<script>
-	// 체크한 체크박스만 나오게
-	function searchJobKorea() {
-		const selectedJobTypes = getSelectedCheckboxes("jobType");
-	    const selectedLocations = getSelectedCheckboxes("location");
-	    const selectedExperience = getSelectedCheckboxes("experience");
-
-	    const jobKoreaList = ${jobKoreaList}; // 이 부분은 서버에서 제공하는 공고 목록을 가져온 부분과 맞게 변경해야 합니다.
-
-	    const filteredJobKoreaList = jobKoreaList.filter(board => {
-	        return (
-	            selectedJobTypes.includes(board.jobType) &&
-	            selectedLocations.includes(board.location) &&
-	            selectedExperience.includes(board.experience)
-	        );
-	    });
-
-	    const jobKoreaListContainer = document.getElementById("jobKoreaListContainer");
-	    jobKoreaListContainer.innerHTML = "";
-	    for (const board of filteredJobKoreaList) {
-	        const boardDiv = document.createElement("div");
-	        boardDiv.innerHTML = `
-	            <h2 class="medium bold"><a href="${board.url}">${board.company}</a></h2> <br>
-	            <p class="medium">${board.title}</p> <br>
-	            <p class="medium">${board.option}</p> <br>
-	            <p class="medium">${board.etc}</p> <br>
-	        `;
-	        jobKoreaListContainer.appendChild(boardDiv);
+	// 이전/다음
+	let currentPage = 1;
+	const itemsPerPage = 10;
+	
+	document.getElementById("loadPrevButton").addEventListener("click", () => {
+	    loadPrevJobPostings();
+	});
+	
+	document.getElementById("loadMoreButton").addEventListener("click", () => {
+	    loadMoreJobPostings();
+		document.getElementById("loadPrevButton").style.display = 'inline-block';
+	});
+	
+	window.onload = function () {
+	    jobSearch(currentPage);
+		document.getElementById("loadPrevButton").style.display = 'none';
+	};
+	
+	function loadMoreJobPostings() {
+	    currentPage++;
+	    if(currentPage == 50) {
+	    	document.getElementById("loadMoreButton").style.display = 'none';
 	    }
-	}
-
-	function getSelectedCheckboxes(checkboxGroupName) {
-	    const checkboxes = document.querySelectorAll(`input[name="${checkboxGroupName}"]:checked`);
-	    console.log(document.querySelectorAll(`input[name="${checkboxGroupName}"]);
-	    const selectedValues = [];
-	    for (const checkbox of checkboxes) {
-	        selectedValues.push(checkbox.value);
-	    }
-	    return selectedValues;
+	    jobSearch(currentPage);
 	}
 	
+	function loadPrevJobPostings() {
+	    currentPage--;
+	    if(currentPage == 1) {
+	    	document.getElementById("loadPrevButton").style.display = 'none';
+	    }
+	    jobSearch(currentPage);
+	}
+	
+    function jobSearch(pageNumber) {
+    	console.log('!!!!!!!!!!!!!!!', pageNumber)
+    	$.ajax({
+            url: '${pageContext.request.contextPath}/board/jobSearch.do',
+            type: 'GET',
+            data : {
+            	page : pageNumber
+            },
+            dataType: 'json',
+            success: function(response) {
+                const jobKoreaList = response.jobKoreaList;
+                console.log(jobKoreaList);
+                
+                render(jobKoreaList);
+            }
+        });
+    }
+    
+    function render(jobKoreaList) {
+    	const job = document.querySelector('#job');
+    	job.innerHTML = "";
+    	
+    	for(let i=0; i<jobKoreaList.length; i++) {
+    		const company = jobKoreaList[i].company;
+    		const title = jobKoreaList[i].title;
+    		const option = jobKoreaList[i].option;
+    		const etc = jobKoreaList[i].etc;
+    		const url = jobKoreaList[i].url;
+    		
+    		if(title != "") {
+	    		job.innerHTML += `<div style="display: flex;"><div style="width: 500px;"><a href="\${url}">\${company}</a></div>
+	    		<div style="width: 500px;">
+	    			<p class="medium"><a href="\${url}">\${title}</a></p> <br>
+				  	<p class="medium">\${option}</p> <br>
+				  	<p class="medium">\${etc}</p> <br>
+				</div>
+				</div>
+	    		`;
+    		}
+    	}
+    };
+    
+    function searchJobKorea() {
+        const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
+        const locationCheckboxes = document.querySelectorAll('input[name="career"]:checked');
+
+        const filterJobTypes = Array.from(jobTypeCheckboxes).map(checkbox => checkbox.value);
+        const filterLocations = Array.from(locationCheckboxes).map(checkbox => checkbox.value);
+		console.log(filterJobTypes,filterLocations)
+        // 여기서 filterJobTypes와 filterLocations을 사용하여 검색을 수행하고 결과를 표시하는 로직을 추가하세요.
+        // 필터된 결과를 jobKoreaList에 할당한 후 render 함수를 호출하여 결과를 표시하세요.
+
+        // 예시: jobSearchFiltered(filterJobTypes, filterLocations);
+    }
+
+
 	// 전체체크박스
 	function showLocations(locations) {
 		const locationDetail = document.getElementById("locationDetail");
 	    locationDetail.innerHTML = "";
-
+	
 	    const mainLocation = locations[0];
-
+	
 	    const mainLocationCheckbox = document.createElement("input");
 	    mainLocationCheckbox.classList.add("form-check-input");
 	    mainLocationCheckbox.type = "checkbox";
 	    mainLocationCheckbox.value = mainLocation;
 	    mainLocationCheckbox.id = `flexCheck${mainLocation}`;
 	    mainLocationCheckbox.checked = false; // 처음에는 비활성화 상태로 설정
-
+	
 	    mainLocationCheckbox.addEventListener("change", () => {
 	        const subCheckboxes = locationDetail.querySelectorAll(".form-check-input");
 	        for (const checkbox of subCheckboxes) {
 	            checkbox.checked = mainLocationCheckbox.checked;
 	        }
 	    });
-
+	
 	    const mainLocationLabel = document.createElement("label");
 	    mainLocationLabel.classList.add("form-check-label");
 	    mainLocationLabel.htmlFor = `flexCheck${mainLocation}`;
 	    mainLocationLabel.textContent = mainLocation;
-
+	
 	    const mainLocationItem = document.createElement("div");
 	    mainLocationItem.classList.add("form-check");
 	    mainLocationItem.appendChild(mainLocationCheckbox);
 	    mainLocationItem.appendChild(mainLocationLabel);
 	    locationDetail.appendChild(mainLocationItem);
-
+	
 	    for (const subLocation of locations.slice(1)) {
 	        const subLocationItem = document.createElement("div");
 	        subLocationItem.classList.add("form-check");
@@ -244,6 +244,6 @@ iframe {
 	        `;
 	        locationDetail.appendChild(subLocationItem);
 	    }
-    }
+	}
 	</script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
