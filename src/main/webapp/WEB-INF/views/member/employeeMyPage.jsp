@@ -1,12 +1,12 @@
-<%@page import="com.kh.app.member.dto.EmployeeInfoDto"%>
+<%@page import="java.time.LocalDate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
 	integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
@@ -15,245 +15,747 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 	crossorigin="anonymous"></script>
-	<!-- bootstrap css -->
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">  -->
+	
+<!-- bootstrap css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 <style>
-@font-face {
-    font-family: 'HakgyoansimWoojuR';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-}
-.myPageIcon {width:34%; display:inline-block; padding:10px 0 0 0; font-family: 'HakgyoansimWoojuR'; font-size: 60px; text-align: center; margin: 5%;}
-.myPageIcon p {font-family: 'HakgyoansimWoojuR'; font-size: 30px; margin: 7% 0;}
-.myPageIcon:hover {border-radius: 10px; background-color: #e3f5fc; cursor: pointer;}
-.container-md{display:table-cell; margin-top:2%; border-radius: 30px;}
-section {width: 1200px; text-align: center; margin: 2% auto;}
-#memberInfo{width: 80%;  height:200px; text-align: left; background-color: #4870ef; display:inline-block; border-radius: 30px; margin-bottom: 60px;}
-#memberInfo h2{ font-family: 'HakgyoansimWoojuR'; font-size: 63px; color:white; margin:3%;}
-#memberInfo p{ font-family: 'HakgyoansimWoojuR'; font-size: 30px; color:white; margin:2%;}
-#memberInfo div{display:inline-block;}
-#info-container {width:67%;} 
-#dDay {width:30%; height:100%; vertical-align: middle; text-align: center;}
-#memberInfo h1{ font-family: 'HakgyoansimWoojuR'; font-size: 80px; color:white;}
-.container{display: initial; }
+@font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
+#top-container{width: 100%; height: 180px; background-color: royalblue; z-index: -10;}
+#side-container{background-color: white; width:250px;  margin: -6% 1% 0 20%; display: inline-block; border-radius: 20px; float: left;}
+#main-container{background-color: white; width:830px;  margin: -6% 20% 0 0%; display: inline-block; border-radius: 20px; float: right; box-shadow: 1px 1px 3px #cecece;}
+#profile-container{border-bottom: 1.5px solid #606060; width: 150px; height:150px; background-color: #e2e2e2; margin:10% auto; border: 0.5px solid #cecece; text-align: center; border-radius: 50%;}
+#profile{width: 70%; vertical-align: middle; display: inline-block; margin-top: 15%; opacity: 0.47;}
+#profileName{font-family: 'GmarketSansMedium'; font-size: 30px; font-weight: 500; margin-top: 10px; margin-bottom:10px; color: #4d4d4d;}
+#logoutBtn{font-family: 'GmarketSansMedium'; width: 80%; height: 40px; border-radius:30px; color: #606060; background-color: white; border: 1.5px solid #606060; display: inline-block; margin-bottom: 17px;}
+#logoutBtn:hover {background-color: #606060; color: white;}
+#underProfile-container{width:90%; text-align: center; margin: 5% auto; border-bottom: 1px solid #cecece;}
+.myPageHr{color: #cecece; margin-top: -0.5rem; margin-bottom: 0.5rem; border: 0; border-top: 1px solid rgba(0,0,0,.8);}
+.mypageContent{width:90%; font-family: 'GmarketSansMedium'; margin: 40px 40px; color: #3c3c3c; padding: 20px 30px;; border: 0.5px solid #cecece; border-radius: 25px;}
+#myId{color:#606060; font-family: 'GmarketSansMedium';}
 
 
-/* 정보수정 폼 */
-#update-container {display: flex; justify-content: center; align-items: center; min-height: 57vh; font-family: 'HakgyoansimWoojuR'; }
-#delete-container form {font-family: 'HakgyoansimWoojuR'; width: 500px; padding: 78px; background-color: #fff; border-radius: 8px; text-align: left;}
-#update-container form {width: 500px; background-color: #fff; border-radius: 8px; text-align: left;}
-form tr {margin-bottom: 16px;}
-form th {padding-right: 16px;}
-input[type="text"], input[type="password"], input[type="date"], input[type="tel"], input[type="email"] {font-size: 16px;padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;}
-input[type="submit"], input[type="reset"] {font-size: 16px;padding: 8px 16px; margin-top: 16px; border: none; border-radius: 4px; background-color: #28a745; color: #fff; cursor: pointer;}
-input[type="submit"]:hover, input[type="reset"]:hover { background-color: #218838;}
-div#update-container{width: 483px; margin:0 auto; text-align:center;}
-div#update-container input, div#update-container select {margin-bottom:10px;}
 
-/*  추가된 css */
-#certificationDiv{display:none;} 
-#vacationDiv{display:none;} 
-#delete-container{display:none;}
-#certificationDiv label{ font-size: 50px; color: blue; width:90%}
-#certificationDiv h1{font-family: 'HakgyoansimWoojuR'; font-size: 50px; font-weight:bold;}
-#certificaitonFrm{width: 90%; font-family: 'HakgyoansimWoojuR'; font-size: 22px; margin:5%;}
-#certificaitonFrm div input{font-family: 'HakgyoansimWoojuR'; font-size: 22px; width:68%; display: inline-block;}
-.frmStyles{font-family: 'HakgyoansimWoojuR'; font-size: 22px; width:45%; display: inline-block;}
-#certificaitonFrm label{font-family: 'HakgyoansimWoojuR'; font-size: 22px; width:18%; display: inline-block;}
-#certificaitonFrm div{margin: 5% 0; padding: 3%}
-.certiBtn {border-radius: 10px; border: 2px solid #4870ef; background-color: white; color: #4870ef; width:100px; height:40px;}
-.fileInput{border: 1px solid black; border-radius: 5px; width: 500px}
-.certiBtn:hover{background-color: #4870ef; color: white;} 
-/*  추가된 css */
+/* 수강정보 css */
+p.classInfo{color:#606060;}
+p.adminInfo{color:#606060; font-size: 20px; display: inline-block; margin:0px 10px;}
+span.classInfo{font-size: 1.3rem; border-right: 2px solid #cecece}
+h2.classInfo{font-weight: bold; color:royalblue;}
+p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
+.classInfo{display: inline-block; margin:0px 10px;}
 
-.myPageDivs{width: 90%}
+/*  메세지 css */
+@font-face { font-family: 'Pretendard-Regular'; src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff'); font-weight: 400; font-style: normal;}
+#messageBoxDiv,#messageDetail,#reportModal{font-family: 'Pretendard-Regular'; text-align: center; font-weight: 100;}
+.truncate-text {max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; display: inline-block;}
+#messageDetail,#reportModal {background-color: rgba(0, 0, 0, 0.2);}
+#messageTbl td,tr,th{text-align: center;}
+#messageDetail .modal-dialog{margin: 8% auto; width: 40%;}
+#reportModal .modal-dialog{margin: 8% auto; width: 40%; background-color: white;}
+.modal-message-content{width: 100%; height: 200px;}
+#certiSteps{width:90%; text-align: center; margin: 0px auto;}
+.certiStep{display: inline-block; width: 24%; margin: 10px 2%; text-align: center; margin-top: 40px;}
+#msgPagingDiv .pagination{text-align: center; margin: 0px auto; width: fit-content;}
+#reportModal label{margin-left: -80%;}
+#reportModal textarea,select{width:92%;}
+/* 회원인증 css */
+.input-group {margin: 1% 9%; text-align: center;}
+#upfile{width: 80%;}
 
-/* 내정보 css시작 */
-#myInfo-container h1{font-family: 'HakgyoansimWoojuR'; font-size: 57px; font-weight:bold; padding:65px;}
-#myInfo-container p {font-size: 20px; } 
-/* 내정보 css끝 */
+/* 사이드 버튼 css */
+#mypageBtns{width:90%; margin: 0 auto;}
+.mypageBtn{text-decoration: none; font-family: 'GmarketSansMedium';font-weight: 100; font-size: 21px; width: 60%; margin: 15px auto; color: #4d4d4d;}
+.mypageBtn a{text-decoration: none;}
+.mypageBtn:hover{cursor: pointer; color: royalblue;}
 
-/*식권구매 css시작*/
-#ticketInfo-container {text-align: center; }
-#ticketInfo-container h1{padding-left: 95px; font-family: 'HakgyoansimWoojuR'; font-size: 57px; font-weight:bold; padding:65px;}
-#ticketInfo-container table {display: table; margin: auto; font-family: 'HakgyoansimWoojuR'; border-collapse: collapse; width: 111%; margin-bottom: 30px;}
-#ticketInfo-container th, td {border: 1px solid #e3f5fc; text-align: left; padding: 8px;}
-#ticketInfo-container th {background-color: #e3f5fc;}
-#ticketInfo-container tr:nth-child(even) {background-color: #e3f5fc;}
-#ticketInfo-container tbody .text-center {text-align: center;}
-/*식권구매 css끝*/
+/* 회원 관련 css */
+#InfoModal{background-color: rgba(0,0,0,0.2);}
+#modalBtns{text-align: right;}
+#memberDeleteFrm {display :none;}
+#memberDelBtn{display: inline-block; margin: 3px 40%;}
 
-#messageBoxDiv{ display: none;}
+/* 구매내역 css */
+#messageTbl td,tr,th{text-align: center;}
 
 </style>
-	<section>
-	<div id="memberInfo">
-	
-		<sec:authentication property="principal" var="loginMember"/>
-		<div id="info-container">
-			<c:if test="${employeeInfo.auth == 'TEACHER'}">
-				<h2><i class="bi bi-bookmark-heart-fill">
-				</i>&nbsp;${employeeInfo.employeeId}${employeeInfo.memberName }[${employeeInfo.auth}]</h2>
-				
-				<p>${employeeInfo.subject}/${employeeInfo.curriculumName} Class${employeeInfo.classId}  권한 :${employeeInfo.auth}</p>
-			</c:if>
-			
-			<c:if test="${employeeInfo.auth == 'ADMIN'}">
-				<h2><i class="bi bi-bookmark-heart-fill">
-				</i>&nbsp;${employeeInfo.memberName }[${employeeInfo.jobCode}]</h2>
-				<p>${employeeInfo.employeeId} 권한 :${employeeInfo.auth}</p>
-				<p></p>
-			</c:if>
-			
-			<a href="${pageContext.request.contextPath}/message/messageSend.do" style="text-decoration: none;">테스트용</a>
-		
-		</div>
+
+<section>
+
+	<!-- 상단 파란부분 div  -->
+	<div id= "top-container">
 	</div>
 	
-	<br/>
-	<div class="container">
 
-	<div class="container-md" style="border: 5px solid #c5d6dc; width: 470px; height:515px; font-size:50px">
-		<div id="icons" class="container-fluid">
-		<div class="myPageIcon" id="myPageIcon1">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-  				<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-  				<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-			</svg>
-			<p>내 정보</p>
-		</div>	
-		<div class="myPageIcon" id="certification">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-fill-check" viewBox="0 0 16 16">
-  				<path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-  				<path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
-			</svg>
-			<p>학생인증</p>
-		</div>	
+	<!-- 회원정보 및 버튼 div  -->
+	<div id= "side-container">
+		<div id="profile-container">	
+			<sec:authentication property="principal" var="loginMember"/>
+			<c:if test="${not empty adminInfo}">
+	  			<img id="profile" alt="profile" src="${pageContext.request.contextPath}/resources/images/emp.png">
+			</c:if>
+			<c:if test="${fn:contains(loginMember.authorities, 'TEACHER')}">
+				<img id="profile" alt="profile" src="${pageContext.request.contextPath}/resources/images/teacher.png">
+			</c:if>
+		</div>
 		
-		<div class="myPageIcon" id="myPageIcon3">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
- 				<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-			</svg>
-			<p>정보수정</p>
-		</div>	
-		
-		<div class="myPageIcon"  id="myPageIcon4">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-emoji-frown" viewBox="0 0 16 16">
-  				<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  				<path d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
-			</svg>
-			<p>회원탈퇴</p>
-		</div>	
-		<div class="myPageIcon" id="myPageIcon5">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-airplane" viewBox="0 0 16 16">
-  				<path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Zm.894.448C7.111 2.02 7 2.569 7 3v4a.5.5 0 0 1-.276.447l-5.448 2.724a.5.5 0 0 0-.276.447v.792l5.418-.903a.5.5 0 0 1 .575.41l.5 3a.5.5 0 0 1-.14.437L6.708 15h2.586l-.647-.646a.5.5 0 0 1-.14-.436l.5-3a.5.5 0 0 1 .576-.411L15 11.41v-.792a.5.5 0 0 0-.276-.447L9.276 7.447A.5.5 0 0 1 9 7V3c0-.432-.11-.979-.322-1.401C8.458 1.159 8.213 1 8 1c-.213 0-.458.158-.678.599Z"/>
-			</svg>
-			<p>휴가신청</p>
-		</div>	
-		<div class="myPageIcon" id="messageBoxList">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-  				<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
-			</svg>
-			<p>쪽지함</p>
-		</div>	
-		
-		<div class="myPageIcon" id="myPageIcon7">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
- 				<path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
-			</svg>
-			<p>구매내역</p>
-		</div>	
-
-		<div class="myPageIcon">
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-headset" viewBox="0 0 16 16">
-				<path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866.5h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 .866.5H11.5A1.5 1.5 0 0 0 13 12h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/>
-			</svg>
-			<p>상담내역</p>
+		<div id="underProfile-container">
+			<h2 id="profileName">${loginMember.name}님</h2>
+			<p id="myId">(${loginMember.username})<p/>
+			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
 
+		<div id="mypageBtns">
+			<p class="mypageBtn" id="memberInfo"><i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보</p>
+			<hr class="myPageHr"/>
+			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</p>
+			<hr class="myPageHr"/>
+			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
+			<hr class="myPageHr"/>
+			
+			<hr class="myPageHr"/>
 		</div>
-		</div>	
-		<div class="container-md" style="width:655px; height:500px; border: 1px solid black;" >
-		<!-- 리스트시작 -->
-		 <div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
-          <div class="card-header flex" id="todayIssueHeader">
-			    <div class="d-flex justify-content-between align-items-center" >
-			        <span class="mb-0" style="font-weight: 900;">수강생 휴가승인 목록 &nbsp;&nbsp;&nbsp;</span>
-			    </div>
-		  </div>
-          <div class="card-body" id="todayIssueBody">
-              <table class="table table-hover text-center">
-                  <thead>
-                      <tr>
-                         
-                          <th scope="col">ID</th>
-                          <th scope="col">이름</th>
-                          <th scope="col">승인 신청일</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                  <c:if test="${studentInfo != null}">
-                  	<c:forEach items="${studentInfo}" var="studentInfo" varStatus="vs">
-                      <tr data-bs-toggle="modal" data-bs-target="#myModal" 
-                      	  data-row-id="${vs.count}" data-first-id="${student.studentId}" data-second-name="${student.memberName}" 
-                      	  data-studentType="${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}" 
-                      	  data-student-file="${student.studentRenamedFilename}" data-handle="@mdo">
-                          <td>${vs.count}</td>
-                          <td>${studentInfo.studentId}</td>
-                          <td>${studentInfo.memberName}</td>
-                          <td>${student.approveRequestDate}</td>
-                          <td>${student.studentType eq 'c' ? '예비생' : student.studentType eq 's'? '수강생' : '수료생'}</td>
-                      </tr>
-                  	</c:forEach>
-                  </c:if>
-                  <c:if test="${students == null }">
-                  	<tr>
-                  		<td colspan="5">조회된 수강생이 없습니다.</td>
-                  	</tr>
-                  </c:if>
-                  </tbody>
-              </table>
-              <br>
-		    <!-- 페이지 이동 및 페이지 번호 표시 -->
-				<div class="d-flex justify-content-center">
-				    <nav aria-label="Page navigation">
-				        <ul class="pagination">
-				            <c:if test="${currentPage > 1}">
-				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentApprovementList.do?page=${currentPage - 1}" aria-label="Previous">
-				                        <span aria-hidden="true">&laquo;</span>
-				                    </a>
-				                </li>
-				            </c:if>
-				            
-				            <c:forEach var="pageNum" begin="1" end="${totalPages}">
-				                <c:choose>
-				                    <c:when test="${pageNum eq currentPage}">
-				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
-				                    </c:when>
-				                    <c:otherwise>
-				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudentApprovementList.do?page=${pageNum}">${pageNum}</a></li>
-				                    </c:otherwise>
-				                </c:choose>
-				            </c:forEach>
-				            
-				            <c:if test="${currentPage < totalPages}">
-				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminStudenApprovementtList.do?page=${currentPage + 1}" aria-label="Next">
-				                        <span aria-hidden="true">&raquo;</span>
-				                    </a>
-				                </li>
-				            </c:if>
-				        </ul>
-				    </nav>
+		<form:form name ="memberLogoutFrm" 
+        	action="${pageContext.request.contextPath}/member/memberLogout.do" 
+        	method="POST">
+		</form:form>
+	</div>
+
+ 	<!-- 메인 div 시작 -->
+	<div id= "main-container">
+	
+		<!-- 관리자 div -->
+		<c:if test="${not empty adminInfo}">
+		<div class="mypageContent">
+			<span class="classInfo">나의 정보 &nbsp;&nbsp;&nbsp;</span>
+			<span class="classInfo">${adminInfo.jobCode}팀 &nbsp;&nbsp;&nbsp;</span>
+			<p class="adminInfo">입사일 : ${adminInfo.employeeEnrollDate} </p>
+			<p class="adminInfo" id="daysFromEnrollDate"></p>
+		</div>
+		</c:if>
+		<c:if test="${fn:contains(loginMember.authorities, 'TEACHER')}">
+			<div class="mypageContent">
+				<span class="classInfo">진행중인 수업 정보 &nbsp;&nbsp;&nbsp;</span>
+				<p class="classInfo" id="teacherClassInfoContainer">
+					<c:forEach items="${employeeInfo}" var="info">
+			      		<c:set var="now" value="<%= LocalDate.now() %>" />
+				      		<c:if test="${info.curriculumStartAt.compareTo(now) <= 0 && info.curriculumEndAt.compareTo(now) >= 0}">
+								<span id="teacherClassInfo"> ${info.subject} ${info.curriculumName} Class ${info.classId}</span>
+				      		</c:if>
+			   		 </c:forEach>
+		   		 </p>
+			</div>
+		</c:if>
+		
+		<!-- 쪽지함 div-->
+		<div class="mypageContent" id="messageBoxList">
+			<p class="infoTitles"><i class="bi bi-envelope"></i> &nbsp;쪽지함</p>
+			<div class="myPageDivs" id="messageBoxDiv" >	
+				<table class="table table-hover" id="messageTbl">
+					<thead>
+						<tr>
+						<th>No</th>
+						<th>보낸사람</th>
+						<th>내용</th>
+						<th>받은날짜</th>
+						<th>읽음여부</th>
+						</tr>
+					</thead>
+					<tbody id= "messageBoxTbl">
+					</tbody>
+				</table>
+				<div id="msgPagingDiv">
+					<ul class="pagination">
+						<li class="page-item disabled" id="prevButton">
+						  <span class="page-link">Previous</span>
+						</li>
+						<li class="page-item" aria-current="page" onclick="changePage(1)">
+	                            <span class="page-link">1</span>
+	                        </li>
+						<li class="page-item" id="nextButton">
+						  <a class="page-link" href="#">Next</a>
+						</li>
+					</ul>
 				</div>
 			</div>
-      </div>
-		<!-- 리스트끝 -->
-			</div>
+
 			
+		</div>	
+
+		<!-- 구매내역 div-->
+		<div class="mypageContent">
+			<p class="infoTitles"><i class="bi bi-coin"></i> &nbsp;구매내역</p>
+			<div class="myPageDivs" id="mealCouponList" >	
+				<table class="table table-hover" id="mealCouponTbl">
+					<thead>
+						<th>주문번호</th>
+						<th>가게이름</th>
+						<th>식권매수</th>
+						<th>총가격</th>
+					</thead>
+					<tbody id= "messageBoxTbl">
+						<c:if test="${empty studentTicketInfo }">
+							<tr>
+								<td colspan="5" class="text-center">조회된 구매식권이 없습니다.</td>
+							
+							</tr>
+							</c:if>
+					 	<c:if test="${not empty studentTicketInfo}">
+							<c:forEach items="${studentTicketInfo}" var="studentTicketInfo" varStatus="vs">
+								<tr>
+									<td>${studentTicketInfo.orderId}</td>
+									<td>${studentTicketInfo.storename}</td>
+									<td>${studentTicketInfo.amount}</td>
+									<td>${studentTicketInfo.totalPrice}</td>
+								</tr>
+							</c:forEach>
+					 	</c:if>
+					</tbody>
+				</table>
 			</div>
+		</div>	
+	
+	</div> 
+	<!-- 메인컨테이너 div끝 -->
+		
+		
+	<!-- 쪽지모달 -->
+	<div id="messageDetail" class="modal fade" role="dialog">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-body">
+	            <button type="button" class="close" data-dismiss="modal">&times;</button></br>
+	                <h3>쪽지내용 상세보기</h3></br></br>
+	                <textarea class="modal-message-content" readonly></textarea></br></br>
+	                 <button type="button" class="btn btn-primary" id="editButton">삭제</button>&nbsp;&nbsp;&nbsp;
+	                 <button type="button" class="btn btn-outline-primary" id="reportButton">신고</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>		
+	
+	
+	<!-- 회원관리 모달 -->
+	<div class="modal fade" id="InfoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="memberModalLabel"></h1>
+		        <button type="button" class="btn-close infoClose" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        <div id="update-container" class="myPageDivs">
+					<%-- principal을 변수 loginMember 저장 --%>
+					<form:form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post" id="memberUpdateFrm">
+					<tr>
+						<th>아이디 : </th>
+						<td>
+							<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
+						</td>
+					</tr>
+					<br/>
+					<div class="forHide">
+					<tr>
+						<th>패스워드 : </th>
+						<td>
+							<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>패스워드 확인 : </th>
+						<td>
+							<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+						</td>
+					</tr>
+					<br/>
+					</div>
+					<tr>
+						<th>이름 : </th>
+						<td>
+							<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>생일 : </th>
+						<td>
+							<input type="date" class="form-control readChange" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>전화번호 : </th>
+						<td>
+							<input type="tel" class="form-control readChange" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>이메일 : </th>
+						<td>
+							<input type="email" class="form-control readChange" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
+						</td>
+					</tr>
+					<br/>
+					<hr class="myPageHr"/>
+					<div id="modalBtns" class="forHide">
+						<input type="submit" class="btn btn-primary" value="수정" >&nbsp;
+						<input type="reset" class="btn btn-outline-primary" value="초기화">
+					</div>
+					</form:form>
+					
+					<!-- 탈퇴폼 -->
+					<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm" method="post">
+					<tr>
+						<th>아이디 : </th>
+						<td>
+							<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
+						</td>
+					</tr>
+					<br/>
+					
+					<tr>
+						<th>패스워드 : </th>
+						<td>
+							<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+						</td>
+					</tr>
+					<br/>
+					
+					<tr>
+						<th>패스워드 확인 : </th>
+						<td>
+							<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>이름 : </th>
+						<td>
+							<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>생일 : </th>
+						<td>
+							<input type="date" class="form-control" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>전화번호 : </th>
+						<td>
+							<input type="tel" class="form-control" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
+						</td>
+					</tr>
+					<br/>
+					<tr>
+						<th>이메일 : </th>
+						<td>
+							<input type="email" class="form-control" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
+						</td>
+					</tr>
+					<br/>
+					<hr class="myPageHr"/>
+						<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
+				</form:form>
+				</div>
+		      </div>
+		    </div>
+		  </div>
+	</div>
+	
+	<!-- 신고하기 모달 -->
+	<div id="reportModal" class="modal fade" role="dialog">
+	    <div class="modal-dialog">
+	    	<div class="modal-content">
+	    	<div class="modal-header">
+		        <h1 class="modal-title fs-5">신고하기</h1>
+		        <button type="button" class="btn-close reportClose" data-bs-dismiss="modal" aria-label="Close"></button>
+		    </div>
+	    	<div class="modal-body">
+			    <form:form 
+			    	id="reportForm"
+			    	name="reportForm"
+			    	action="${pageContext.request.contextPath}/message/messageReport.do"
+			    	method="post"
+			    >
+			      <input type="hidden" name="reportMessageId" id="reportMessageId" value=""> 
+			      <input type="hidden" name="reporterId" id="reporterId" value="${loginMember.username}">
+			      <input type="hidden" name="attackerId" id="attackerId" value="">
+			      <input type="hidden" id="reportType" name="reportType" value="">
+			      <br/>
+			      <label for="reportType">신고유형</label>
+			      <br/>
+			      <select name="reportType_" id="reportType_" >
+							<option value="선택없음">신고 유형을 선택해주세요</option>	      			
+							<option value="욕설/비하">욕설/비하</option>	      			
+							<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>	      			
+							<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>	      			
+							<option value="유출/사칭/사기">유출/사칭/사기</option>	      			
+							<option value="낚시/놀람/도배">낚시/놀람/도배</option>	      			
+							<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>	      			
+		     	  </select><br/>
+		     	  <br/>
+			      <label for="reportContent">신고내용</label><br/>
+			      <textarea id="reportContent" name="reportContent" rows="4" required></textarea>
+			      <br/><br/><br/>
+			      <hr class="myPageHr"/>
+			      <button class="btn btn-outline-primary" type="submit" id="reportSubmit">&nbsp;&nbsp;&nbsp;제출&nbsp;&nbsp;&nbsp;</button>
+			    </form:form>
+			    </div>
+		    </div>
+		</div>
+	</div>	
+		
+</selction>
+<script>
+
+	window.onload=()=>{
+		msgList(1);
+		enrollDate();
+		teacherInfo();
+
+	};
+	
+	document.getElementById("logoutBtn").addEventListener("click", function(event) {
+		memberLogoutFrm.submit();
+	});
+	
+	const enrollDate = () =>{
+		const enrollDateStr = "${adminInfo.employeeEnrollDate}";
+		const enrollDate = new Date(enrollDateStr.replace(/-/g, "/"));
+
+		const currentDate = new Date();
+
+		const timeDiff = currentDate.getTime() - enrollDate.getTime();
+		const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+		
+	    const daysFromEnrollDate = document.getElementById("daysFromEnrollDate");
+		if(daysFromEnrollDate) {
+			daysFromEnrollDate.innerHTML ="총 근무일수 ( " + daysDiff + "일 )";
 			
-	</section>
+		}
+		
+	};
+
+
+	
+	// MH - 쪽지함 관련 기능 시작
+	const msgList = (page) => {
+		msgPage();
+		const size = 5;
+	    $.ajax({
+	        url: `${pageContext.request.contextPath}/message/messageList.do`,
+	        method: "GET",
+	        data : {
+	        	page : page,
+	        	size : 5
+	        	},
+	        success: function(responseData) {
+	            const messageBoxTbl = document.querySelector("#messageBoxTbl");
+	            if (responseData.length !== 0) {
+	            	
+	                let html = ""; 
+	                responseData.forEach(function(message) {
+	                    let readCk = ""
+						if(message.readCheck == 'y'){
+							readCk = `<i class="bi bi-envelope-paper-heart"></i>`;
+						}else{
+							readCk = `<i class="bi bi-envelope-heart"></i>`;
+						}
+	                    html += `
+					        <tr>
+					            <td class="msgId">\${message.messageId}</td>
+					            <td class="sender">\${message.sendId}</td>
+					            <td><span class="truncate-text">\${message.messageContent}</span></td>
+					            <td>\${message.sendAt}</td>
+					            <td class="readCheckColumn">\${readCk}</td>
+					        </tr>
+					    `;
+	                    
+	                });
+	                
+	                messageBoxTbl.innerHTML = html; 
+	                
+	                let msgId = "";
+					let readCheckValue ="";
+					let sender = "";
+					$(document).ready(function() {
+					    $(".truncate-text").click(function() {
+							let messageContent = $(this).text();
+							sender = $(this).closest("tr").find(".sender").html();
+					        $(".modal-message-content").text(messageContent);
+					        readCheckValue = $(this).closest("tr").find(".readCheckColumn").html();
+					        if(readCheckValue == `<i class="bi bi-envelope-heart"></i>`){
+					        	readCheckValue = 'n';
+					        } else {
+					        	readCheckValue = 'y';
+					        }
+					        
+					        msgId = $(this).closest("tr").find(".msgId").html();
+					        $("#messageDetail").modal("show");
+					        updateReadCheck(readCheckValue, msgId, page);
+					    });
+					    $("#editButton").click(function() {
+					    	deleteMsg(msgId, page);
+					    });
+					    $("#reportButton").click(function() {
+					    	reportMsg(msgId, sender);
+					    });
+					});
+					
+	            } else {
+	                messageBoxTbl.innerHTML = `
+	                    <tr>
+	                        <td colspan="5" class="text-center">받은 쪽지가 없습니다.</td>
+	                    </tr>	
+	                `;
+	            }
+	        }
+	    });
+	};
+	
+	const msgAllList =() =>{
+		let listSize= 0;
+		$.ajax({
+			url: "${pageContext.request.contextPath}/message/messageAllList.do",
+			method : "GET",
+			dataType : "json",
+			success(responseData){
+				listSize = responseData.listNum
+			}
+		});
+		return listSize;
+	};
+	
+	const msgPage =() =>{
+		$.ajax({
+			url: "${pageContext.request.contextPath}/message/messageAllList.do",
+			method : "GET",
+			dataType : "json",
+			success(responseData){
+				let listSize = responseData.listNum
+				let pages = 0;
+				pages = Math.ceil(listSize / 5);
+				
+				const paginationContainer = document.querySelector(".pagination");
+	            paginationContainer.innerHTML = "";
+
+	            let paginationHTML = `
+	                <li class="page-item disabled" id="prevButton">
+	                    <span class="page-link">Previous</span>
+	                </li>
+	            `;
+	            
+	            if(listSize ==0){
+	            	paginationHTML += `
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link" onclick="changePage(1)">1</span>
+                        </li>
+                    `;
+	            }
+
+	            for (let i = 1; i <= pages; i++) {
+	                if (i === 1) {
+	                    paginationHTML += `
+	                        <li class="page-item" aria-current="page">
+	                            <span class="page-link" onclick="changePage(\${i})">\${i}</span>
+	                        </li>
+	                    `;
+	                } else {
+	                    paginationHTML += `
+	                        <li class="page-item" onclick="changePage(\${i})">
+	                            <span class="page-link">\${i}</span>
+	                        </li>
+	                    `;
+	                }
+	            }
+
+	            paginationHTML += `
+	                <li class="page-item disabled" id="nextButton">
+	                    <a class="page-link" href="#" onclick="nextPage()">Next</a>
+	                </li>
+	            `;
+
+	            paginationContainer.innerHTML = paginationHTML;
+
+	           
+			}
+		});
+	};
+	
+	function changePage(page) {
+	    currentPage = page;
+	    updatePageButtons();
+	    msgList(currentPage);
+	}
+
+	function updatePageButtons() {
+	    const pageItems = document.querySelectorAll(".page-item");
+	    
+	    pageItems.forEach(item => {
+	        item.classList.remove("active");
+	    });
+
+	    const currentPageItem = document.querySelector(`.page-item:nth-child(\${currentPage + 1})`);
+	    currentPageItem.classList.add("active");
+	}
+	
+	// 쪽지 읽음 여부 업데이트
+	const updateReadCheck = (checked, msgId, page) =>{
+		console.log(checked, msgId);
+		if(checked == 'n'){
+			$.ajax({
+				url: "${pageContext.request.contextPath}/message/messageUpdate.do",
+				data :{
+					checked :checked,
+					messageId: msgId
+				},
+				method : "GET",
+				dataType : "json",
+				success(responseData){
+					msgList(page);
+				}
+			});
+		}
+	};
+	
+	// 쪽지삭제
+	const deleteMsg = (msgId, page) =>{
+		$.ajax({
+			url: "${pageContext.request.contextPath}/message/messageDelete.do",
+			data :{
+				messageId : msgId
+			},
+			method : "GET",
+			dataType : "json",
+			success(responseData){
+				msgList(page);
+				$('#messageDetail').modal('hide');
+			}
+		});
+	};
+	
+	
+	// 쪽지신고 
+	const reportMsg = (msgId, sender) =>{
+		$('#messageDetail').modal('hide');
+		      
+	    const reportMessageId = document.querySelector("#reportMessageId");   
+	    const attackerId = document.querySelector("#attackerId");   
+	    reportMessageId.value = msgId;
+	    attackerId.value = sender;
+	    
+	    console.log(reportMessageId.value);
+		$('#reportModal').modal('show');
+		
+		const reportType_ = document.querySelector("#reportType_");
+		const reportType = document.querySelector("#reportType");
+		if(reportType_ !== null && reportType !== null){
+			reportType_.addEventListener('change', (e) => {
+				reportType.value = reportType_.value;
+				console.log(reportType.value);
+			});
+		}
+		
+
+	};
+	
+	// MH - 쪽지함 관련 기능 끝!	
+	
+	
+	
+	// 회원관련 기능 시작
+	
+	// 1. 조회
+	document.querySelector("#memberInfo").onclick=()=>{
+		document.querySelector("#memberDeleteFrm").style.display="none";
+		document .querySelector("#memberUpdateFrm").style.display="block";
+		const forHide = document.querySelectorAll(".forHide");
+		const modalTitle = document.querySelector("#memberModalLabel");
+		modalTitle.innerHTML="회원정보";
+		forHide.forEach((hideItem)=>{
+			hideItem.style.display="none";
+		});
+		$('.readChange').attr('readonly',true);
+		$("#InfoModal").modal("show");
+		
+	};
+	// 2. 수정
+	document.querySelector("#infoUdate").onclick=()=>{
+		document.querySelector("#memberDeleteFrm").style.display="none";
+		document .querySelector("#memberUpdateFrm").style.display="block";
+		const forHide= document.querySelectorAll(".forHide");
+		const modalTitle = document.querySelector("#memberModalLabel");
+		modalTitle.innerHTML="회원정보 수정";
+		forHide.forEach((hideItem)=>{
+			hideItem.style.display="block";
+		});
+		$('.readChange').attr('readonly',false);
+		$("#InfoModal").modal("show");
+		
+	};
+	
+	document.memberUpdateFrm.onsubmit = (e) => {
+		const password = document.querySelector("#memberPwd");
+		const passwordConfirmation = document.querySelector("#passwordConfirmation");
+		if(password.value !== passwordConfirmation.value) {
+			alert("비밀번호가 일치하지 않습니다.");
+			return false;
+		}else{
+			alert("회원정보가 정상적으로 수정되었습니다.");
+		}
+	};
+	
+	// 3. 삭제
+	document.querySelector("#memberDel").onclick=()=>{
+		const modalTitle = document.querySelector("#memberModalLabel");
+		modalTitle.innerHTML="회원탈퇴";
+		document.querySelector("#memberDeleteFrm").style.display="block";
+		document.querySelector("#memberUpdateFrm").style.display="none";
+		$("#InfoModal").modal("show");
+	};
+	
+	document.querySelector(".infoClose").onclick=()=>{		
+		$("#InfoModal").modal("hide");
+	};
+	document.querySelector(".reportClose").onclick=()=>{		
+		$("#reportModal").modal("hide");
+	};
+
+	const deleteMember = () => {
+		
+		const result = confirm('정말 탈퇴하시겠습니까?');
+		if (result === true) {
+			document.memberDeleteFrm.submit();
+		}
+	};
+	
+
+	const teacherInfo = () => {
+		
+		const teacherClassInfo = document.querySelector("#teacherClassInfo");
+		const teacherClassInfoContainer = document.querySelector("#teacherClassInfoContainer");
+		if(teacherClassInfoContainer !=null && teacherClassInfo==null){
+			teacherClassInfoContainer.innerHTML = `<span id="teacherClassInfo"> 현재 진행중인 수업이 없습니다.</span>`
+		}
+
+	}	
+	// 회원 관련 기능 끝
+
+
+</script>	
+
+
+<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -54,9 +53,18 @@
                     <p class="school">${ loginMember.memberEmail}</p>
                     </sec:authorize>
                     <ul class="buttons">
-                  <li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
-                  <li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
-                         <li><a href="#" id="logoutLink">로그아웃</a></li>                       
+  						<sec:authorize access="isAuthenticated()">
+	                    	<c:if test="${fn:contains(loginMember.authorities, 'STUDENT')}">
+		                 		<li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
+		                 	</c:if>
+		                 	<c:if test="${fn:contains(loginMember.authorities, 'TEACHER') || fn:contains(loginMember.authorities, 'ADMIN')}">
+		                 		<li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
+							</c:if>
+	                        <li><a href="#" id="logoutLink">로그아웃</a></li>    
+	                    </sec:authorize>  
+	                    <sec:authorize access="isAnonymous()">
+	                    	<li style="margin: 0 25%;"><a href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a></li>
+	                    </sec:authorize>                   
                     </ul>
                     <hr>
                 </form>
@@ -120,20 +128,6 @@
                 </div>
             </div>
             <div class="card">
-                <div class="board" id="myClassBoardContainer">
-                    <h3>
-                        <a href="${pageContext.request.contextPath}/board/myClassBoardList.do">우리반게시판</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="card">
-                <div class="board" id="jobSearchBoardContainer">
-                    <h3>
-                        <a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do">취업정보게시판</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="card">
                 <div class="board" id="sharingInformationBoardContainer">
                     <h3>
                         <a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do">정보게시판</a>
@@ -163,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	loadThreePostByBoardId(5, "askCodeBoardContainer");
 	loadThreePostByBoardId(7, "graduateBoardContainer");
 	loadThreePostByBoardId(8, "preStudentBoardContainer");
-	loadThreePostByBoardId(11, "myClassBoardContainer");
-	loadThreePostByBoardId(12, "jobSearchBoardContainer");
+	//loadThreePostByBoardId(11, "myClassBoardContainer");
+	//loadThreePostByBoardId(12, "jobSearchBoardContainer");
 });
 
 async function loadThreePostByBoardId(boardId, boardContainer) {
@@ -212,8 +206,8 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
             }
         });
     });
-    document.querySelector('.card').addEventListener('mouseout', (e) => {
-        console.log(e);
+    document.querySelector('.favorite').addEventListener('mouseout', (e) => {
+        console.log(e+'ㅋㅋㅋㅋ');
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
     });
@@ -224,5 +218,6 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
 document.getElementById("logoutLink").addEventListener("click", function(event) {
 	memberLogoutFrm.submit();
 });
+
 </script>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>

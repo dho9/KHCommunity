@@ -14,6 +14,7 @@ import org.apache.ibatis.session.RowBounds;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
+import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
@@ -32,24 +33,24 @@ public interface BoardRepository {
 
 	List<BoardSearchDto> findAllByMemberId(String memberId);
 	
-	List<BoardListDto> freeBoardFindAll();
+	List<BoardListDto> freeBoardFindAll(RowBounds rowBounds);
 	
-	List<BoardListDto> marketBoardFindAll();
+	List<BoardListDto> marketBoardFindAll(RowBounds rowBounds);
 	
-	List<BoardListDto> todayFoodBoardFindAll();
+	List<BoardListDto> todayFoodBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> sharingInformationBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> askCodeBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> studyBoardFindAll(RowBounds rowBounds);
+	
+	List<BoardListDto> graduateBoardFindAll(RowBounds rowBounds);
 
-	List<BoardListDto> preStudentBoardFindAll();
+	List<BoardListDto> preStudentBoardFindAll(RowBounds rowBounds);
 
-	List<BoardListDto> graduateBoardFindAll();
+	List<BoardListDto> employeeBoardFindAll(RowBounds rowBounds);
 	
-	List<BoardListDto> employeeBoardFindAll();
-	
-	List<BoardListDto> studyBoardFindAll();
-	
-	List<BoardListDto> sharingInformationBoardFindAll();
-
-	List<BoardListDto> askCodeBoardFindAll();
-
 	List<BoardListDto> myClassBoardFindAll();
 
 	@Select("select * from favorite where board_id = #{boardId} and member_id = #{memberId}")
@@ -106,7 +107,7 @@ public interface BoardRepository {
 	@Select("select * from post_attachment where post_id = #{id}")
 	PostAttachment findAttachById(int id);
 
-	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds);
+	List<BoardListDto> myClassBoardFindAll(RowBounds rowBounds, int boardId);
 	
 	List<Comment> findByCommentByPostId(int postId);
 	
@@ -121,7 +122,7 @@ public interface BoardRepository {
 	
 	CommentLike findCommentLikeCount(int commentId);
 
-	List<BoardListDto> myClassBoardFindByTag(String tag, RowBounds rowBounds);
+	List<BoardListDto> myClassBoardFindByTag(String tag, RowBounds rowBounds, int boardId);
 	
 	@Select("SELECT pc.comment_id FROM post_comment pc WHERE pc.post_id = #{postId} AND pc.comment_id IN (SELECT cl.comment_id FROM comment_like cl WHERE cl.member_id = #{memberId})")
 	List<CommentLike> CommentLikeCheckById(int postId, String memberId);
@@ -130,7 +131,7 @@ public interface BoardRepository {
 	        "VALUES (seq_comment_id.nextval, #{postId}, #{boardId}, #{memberId}, #{commentContent}, #{commentLevel}, #{commentRef}, #{anonymousCheck})")
 	int createComment(Comment comment);
 
-	int totalCountMyClassBoard();
+	int totalCountMyClassBoard(int boardId);
 	
 	@Delete("delete post where post_id = #{deletePostId}")
 	int deleteBoard(int deletePostId);
@@ -170,6 +171,10 @@ public interface BoardRepository {
 	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
 	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
 	int insertPostReport(PostReportDto postReport);
+	
+	@Insert("insert into report(report_id, comment_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
+	        "values(seq_report_id.nextval, #{commentId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+	int insertCommentReport(CommentReportDto commentReport);
 
 	@Select("SELECT p.post_id, p.title, pc.content, b.board_name\r\n"
 			+ "FROM post p\r\n"
@@ -182,8 +187,8 @@ public interface BoardRepository {
 
 	List<BoardListDto> jobSearchBoardFindAll();
 
-	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=11 and tag =#{tag}")
-	int totalCountMyClassBoardByTag(String tag);
+	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=#{boardId} and tag =#{tag}")
+	int totalCountMyClassBoardByTag(String tag, int boardId);
 	
 	@Update ("update post_comment set comment_content = '삭제된 댓글입니다.', delete_ck = 1 where comment_id = #{commentId}" )
 	int deleteComment(int commentId);
@@ -192,5 +197,39 @@ public interface BoardRepository {
 	
 	@Delete ("delete from post_comment where comment_id =#{commentId}")
 	int deleteCommentId(int commentId);
+
+	@Select ("select count(*) from post where board_id=1")
+	int totalCountFreeBoard();
+
+	@Select ("select count(*) from post where board_id=2")
+	int totalCountMarketBoard();
+
+	@Select ("select count(*) from post where board_id=3")
+	int totalCountTodayFoodBoard();
+	
+	@Select ("select count(*) from post where board_id=4")
+	int totalCountSharingInformationBoard();
+
+	@Select ("select count(*) from post where board_id=5")
+	int totalCountAskCodeBoard();
+
+	@Select ("select count(*) from post where board_id=6")
+	int totalCountStudyBoard();
+
+	@Select ("select count(*) from post where board_id=7")
+	int totalCountGraduateBoard();
+
+	@Select ("select count(*) from post where board_id=8")
+	int totalCountPreStudentBoard();
+
+	@Select ("select count(*) from post where board_id=9")
+	int totalCountEmployeeBoard();
+
+	
+	
+
+	
+
+	
 	
 }

@@ -6,15 +6,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="/WEB-INF/views/common/adminLeftBar.jsp" %>
 
-	<section>
-		<div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
-    		<div class="card-header flex">
-				<span class="mb-0" style="font-weight: 900;">상담 목록 &nbsp;&nbsp;&nbsp;</span>
-			</div>
-  			<div class="card-body" id="todayIssueBody">
-  				<table class="table table-hover text-center">
-                	<thead>
-                    	<tr>
+<section>
+	<div class="card" style="margin: 30px 0 0 330px; width: 1300px; height: fit-content">
+   		<div class="card-header flex">
+			<span class="mb-0" style="font-weight: 900;">상담 목록 &nbsp;&nbsp;&nbsp;</span>
+		</div>
+ 			<div class="card-body" id="todayIssueBody">
+				<table class="table table-hover text-center">
+    	           	<thead>
+        	           	<tr>
                         	<th scope="col">#</th>
                           	<th scope="col">상담자(ID)</th>
                           	<th scope="col">상담유형</th>
@@ -36,7 +36,7 @@
 					            <td>${chatList.classId}</td>
 					            <td>${chatList.studentType eq 'c' ? '예비생' : chatList.studentType eq 's'? '수강생' : '수료생'}</td>
 					            <td>
-					                <button type="button" class="btn btn-outline-primary"
+					                <button type="button" class="btn btn-outline-primary" id="chatView"
 					                        style="--bs-btn-padding-y: .0rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
 					                        data-bs-toggle="modal" data-bs-target="#chatModal"
 					                        data-chatid="${chatList.chatId}">
@@ -65,7 +65,7 @@
 				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
 				                    </c:when>
 				                    <c:otherwise>
-				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/adminCourseList.do?page=${pageNum}">${pageNum}</a></li>
+				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/adminChatList.do?page=${pageNum}">${pageNum}</a></li>
 				                    </c:otherwise>
 				                </c:choose>
 				            </c:forEach>
@@ -81,119 +81,118 @@
 				    </nav>
 				</div>
   			</div>
-		</div>
-		<!-- 버튼 클릭시 채팅 조회 모달 -->
-		<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		    <div class="modal-dialog">
-		        <div class="modal-content">
-		            <div class="modal-header">
-		                <h1 class="modal-title fs-5" id="exampleModalLabel">상담내역</h1>
-		                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	</div>
+	<!-- 버튼 클릭시 채팅 조회 모달 -->
+	<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		    	<div class="modal-header">
+		            <h1 class="modal-title fs-5" id="exampleModalLabel">상담내역</h1>
+		            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+		        <div class="modal-body">
+		            <div class="chat_window">
+		              	<div class="top_menu">
+		               		<div class="title">KH TIME</div>
+		               	</div>
+		               	<ul class="messages" id="modalMessages">
+				            <li class="message left appeared">
+				               	<div class="avatarBox">
+				               		<img src="${pageContext.request.contextPath}/resources/images/usericon.png">
+				               	</div>
+				               	<div class="text_wrapper" style="margin-top:10px;">
+				               		<div class="text">
+					            		<span style="font-size:13px; color:black; font-weight:600;">
+						               				
+					               		</span> <br>
+				               			<span></span> <br>
+				               			<span style="font-size:12px; color:black; font-weight:500;">
+				                					
+				               			</span>
+				               		</div>
+				               	</div>
+				            </li>
+		                		
+				            <li class="message right appeared">
+				               	<div class="avatarBox">
+				               		<img style="margin-top:20px;"src="${pageContext.request.contextPath}/resources/images/kh admin logo.png">
+				               	</div>
+				               	<div class="text_wrapper">
+				               		<div class="text">
+				               			<span style="font-size:13px; color:black; font-weight:600;">
+					              			관리자
+					              		</span> <br>
+				               			<span></span> <br>
+				               			<span style="font-size:12px; color:black; font-weight:500;">
+				                					
+				               			</span>
+				               		</div>
+				               	</div>
+				            </li>
+		               	</ul>
+		                	
 		            </div>
-		            <div class="modal-body">
-		                <div class="chat_window">
-		                	<div class="top_menu">
-		                		<div class="title">KH TIME</div>
-		                	</div>
-		                	<ul class="messages" id="modalMessages">
-		                		<c:forEach items="${messages}" var="msg">
-		                			<c:if test="${msg.memberId != null}">
-				                		<li class="message left appeared">
-				                			<div class="avatarBox">
-				                				<img src="${pageContext.request.contextPath}/resources/images/usericon.png">
-				                			</div>
-				                			<div class="text_wrapper" style="margin-top:10px;">
-				                				<div class="text">
-						                			<span style="font-size:13px; color:black; font-weight:600;">
-						                				${msg.memberId}
-						                			</span> <br>
-				                					<span>${msg.chatContent}</span> <br>
-				                					<span style="font-size:12px; color:black; font-weight:500;">
-				                						<fmt:parseDate value="${msg.chatSendAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="chatSendAt"/>
-	        											<fmt:formatDate value="${chatSendAt}" pattern="yy/MM/dd HH:mm"/>
-				                					</span>
-				                				</div>
-				                			</div>
-				                		</li>
-		                			</c:if>
-		                			<c:if test="${msg.memberId == null}">
-				                		<li class="message right appeared">
-				                			<div class="avatarBox">
-				                				<img style="margin-top:20px;"src="${pageContext.request.contextPath}/resources/images/kh admin logo.png">
-				                			</div>
-				                			<div class="text_wrapper">
-				                				<div class="text">
-				                					<span style="font-size:13px; color:black; font-weight:600;">
-						                				관리자
-						                			</span> <br>
-				                					<span>${msg.chatContent}</span> <br>
-				                					<span style="font-size:12px; color:black; font-weight:500;">
-				                						<fmt:parseDate value="${msg.chatSendAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="chatSendAt"/>
-	        											<fmt:formatDate value="${chatSendAt}" pattern="yy/MM/dd HH:mm"/>
-				                					</span>
-				                				</div>
-				                			</div>
-				                		</li>
-		                			</c:if>
-		                		</c:forEach>
-		                	</ul>
-		                	<!-- <div class="bottom_wrapper clearfix">
-		                		<div class="message_input_wrapper">
-		                			<input class="message_input" placeholder="Type your message here..." />
-		                		</div>
-		                		<div class="send_message">
-		                			<div class="icon"></div>
-		                			<div class="text">Send</div>
-		                		</div>
-		                	</div> -->
-		                </div>
-		                <!-- <div class="message_template">
-		                	<li class="message">
-		                		<div class="avatar"></div>
-		                		<div class="text_wrapper">
-		                			<div class="text"></div>
-		                		</div>
-		                	</li>
-		                </div> -->
-		        	</div>
-		           	<div class="modal-footer">
-		            	<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
-		            </div>
-		    	</div>
-			</div>
+		                
+		        </div>
+		        <div class="modal-footer">
+		           	<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+		        </div>
+		    </div>
 		</div>
-	</section>
+	</div>
+</section>
 	
-	<script>
-      $(function(){
-        var accordionButton = $('.list .items > .a_title');
-        accordionButton.on('click', function(e){
-          e.preventDefault();
-          var $this = $(this);
-          var target = $this.parent();
-          var description = $this.siblings('.a_content');
-          var other = target.siblings('.items');
-          var otherDescription = other.find('.a_content');
-          accordionToggle(target, description, other, otherDescription);
-        });
+<script>
+$(function(){
+	var accordionButton = $('.list .items > .a_title');
+    accordionButton.on('click', function(e){
+    	e.preventDefault();
+        var $this = $(this);
+        var target = $this.parent();
+        var description = $this.siblings('.a_content');
+        var other = target.siblings('.items');
+        var otherDescription = other.find('.a_content');
+        accordionToggle(target, description, other, otherDescription);
+    });
         
-        function accordionToggle(target, description, other, otherDescription){
-          if (target.hasClass('active')) {
-              target.removeClass('active');
-              description.stop().slideUp(300);
-          } else {
-              target.addClass('active');
-              description.stop().slideDown(300);
-          }
-          if (other && otherDescription) {
-              other.removeClass('active');
-              otherDescription.stop().slideUp(300);
-          }
-        };
-      });
+    function accordionToggle(target, description, other, otherDescription){
+    	if (target.hasClass('active')) {
+          target.removeClass('active');
+          description.stop().slideUp(300);
+        } else {
+          target.addClass('active');
+          description.stop().slideDown(300);
+        }
+        if (other && otherDescription) {
+          other.removeClass('active');
+          otherDescription.stop().slideUp(300);
+        }
+    };
+});
       
-   	  
+const chatViewButtons = document.querySelectorAll("#chatView");
+chatViewButtons.forEach(button => {
+    button.addEventListener("click", function () {
+        const chatId = this.getAttribute("data-chatid");
+        console.log(chatId);
+        // 채팅 메시지를 가져오기 위한 AJAX 요청 수행
+        $.ajax({
+            type: "GET",
+            url: "${pageContext.request.contextPath}/admin/chatView.do",
+            data: {
+                chatId: chatId
+            },
+            success: function (responseData) {
+                // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
+                console.log(responseData)
+            },
+            error: function () {
+                console.log("실패");
+            }
+        });
+    });
+});
       
-    </script>
-  </body>
+</script>
+</body>
 </html>

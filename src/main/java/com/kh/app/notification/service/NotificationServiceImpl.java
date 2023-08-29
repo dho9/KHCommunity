@@ -18,7 +18,7 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		ChatPayload payload = ChatPayload.builder()
 				.chatId(talker.getChatId())
-				.content(talker.getStudentId() + "님이 상담을 요청하셨습니다. / 채팅방 : " + talker.getChatId() + "번")
+				.content(talker.getStudentId() + "님이 상담을 요청하셨습니다." +"/n"+ "채팅방 : " + talker.getChatId() + "번")
 				.createdAt(System.currentTimeMillis())
 				.build();
 		

@@ -764,17 +764,14 @@ public class AdminController {
 	    
 	    List<AdminChatListDto> adminChatList = adminService.findAllChat(params);
 	    
-	    List<ChatMessage> messages = null;
-	    
-	    // 각 채팅방마다 메시지 목록을 조회하여 설정
-	    for (AdminChatListDto chat : adminChatList) {
-	    	int chatId = chat.getChatId();
-	        messages = adminService.getChatMessagesByChatId(chatId);
-	        chat.setChatMessage(messages);
-//	        System.out.println("messages = " + messages);
-	    }
-	    model.addAttribute("messages", messages);
 	    model.addAttribute("adminChatList", adminChatList);
 	    
+	}
+	
+	@GetMapping("/chatView.do")
+	@ResponseBody
+	public ResponseEntity<List<ChatMessage>> chatView(@RequestParam(value="chatId", required=false) int chatId) {
+	    List<ChatMessage> chatMsgs = adminService.getChatMessagesByChatId(chatId);
+	    return ResponseEntity.ok(chatMsgs);
 	}
  }
