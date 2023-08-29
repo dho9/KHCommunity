@@ -134,8 +134,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		<div class="mypageContent">
 			<span class="classInfo">나의 수강정보 &nbsp;&nbsp;&nbsp;</span>
 			<p class="classInfo">${studentInfo.curriculumName }반</p>
-			<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
-			<h2 class="classInfo">&nbsp;&nbsp;
+			<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId} &nbsp;</p>
+			<h2 class="classInfo">
 			<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
 			<c:if test="${not fn:contains(Ddays, '-')}">D - ${Ddays}</c:if>
 			</h2>
@@ -237,7 +237,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		</div>	
 		<!-- 휴가신청 -->
 		<div class="mypageContent">
-				<p class="infoTitles"><i class="bi bi-coin"></i> &nbsp;휴가신청</p>
+				<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
 				<div class="myPageDivs" id="vacationDiv" >		
 					<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
 						enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">

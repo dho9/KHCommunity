@@ -56,8 +56,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 /*  메세지 css */
 @font-face { font-family: 'Pretendard-Regular'; src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff'); font-weight: 400; font-style: normal;}
 #messageBoxDiv,#messageDetail,#reportModal{font-family: 'Pretendard-Regular'; text-align: center; font-weight: 100;}
-.truncate-text {max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; display: inline-block;}
-#messageDetail,#reportModal {background-color: rgba(0, 0, 0, 0.2);}
+.truncate-text,#fileName {max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; display: inline-block;}
+#messageDetail,#reportModal,#vacationModal,#studentsModal {background-color: rgba(0, 0, 0, 0.2);}
 #messageTbl td,tr,th{text-align: center;}
 #messageDetail .modal-dialog{margin: 8% auto; width: 40%;}
 #reportModal .modal-dialog{margin: 8% auto; width: 40%; background-color: white;}
@@ -67,6 +67,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 #msgPagingDiv .pagination{text-align: center; margin: 0px auto; width: fit-content;}
 #reportModal label{margin-left: -80%;}
 #reportModal textarea,select{width:92%;}
+
 /* 회원인증 css */
 .input-group {margin: 1% 9%; text-align: center;}
 #upfile{width: 80%;}
@@ -86,6 +87,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 /* 구매내역 css */
 #messageTbl td,tr,th{text-align: center;}
 
+/* 휴가 css */
+#vacationModal label{font-family: 'GmarketSansMedium'; font-size: 20px; font-weight: bold; color: #26426e; display:inline-block; width: 28%; border-right: 2px solid #cecece; margin-right: 40px;}
+.vcContent{font-family: 'GmarketSansMedium'; font-size: 20px; display:inline-block; color:#606060;}
+#studentsModal .modal-content{font-family: 'Pretendard-Regular'; width: 150%; margin-left: -20%;}
+#vacationModal .modal-dialog{width: 700px; height: 500px;}
+/* #studentsModalContent{width: 1000px;} */
 </style>
 
 <section>
@@ -108,7 +115,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		</div>
 		
 		<div id="underProfile-container">
-			<h2 id="profileName">${loginMember.name}님</h2>
+			<h2 id="profileName">${loginMember.name}님 </h2>
 			<p id="myId">(${loginMember.username})<p/>
 			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
@@ -120,14 +127,18 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
-			
-			<hr class="myPageHr"/>
+			<c:if test="${fn:contains(loginMember.authorities, 'TEACHER')}">
+				<p class="mypageBtn" id="studentsList"><i class="bi bi-people-fill"></i> &nbsp;&nbsp; 학생조회</p>
+				<hr class="myPageHr"/>
+			</c:if>
+	
 		</div>
 		<form:form name ="memberLogoutFrm" 
         	action="${pageContext.request.contextPath}/member/memberLogout.do" 
         	method="POST">
 		</form:form>
 	</div>
+
 
  	<!-- 메인 div 시작 -->
 	<div id= "main-container">
@@ -141,6 +152,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<p class="adminInfo" id="daysFromEnrollDate"></p>
 		</div>
 		</c:if>
+		<!-- 선생님 정보 -->
 		<c:if test="${fn:contains(loginMember.authorities, 'TEACHER')}">
 			<div class="mypageContent">
 				<span class="classInfo">진행중인 수업 정보 &nbsp;&nbsp;&nbsp;</span>
@@ -148,7 +160,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					<c:forEach items="${employeeInfo}" var="info">
 			      		<c:set var="now" value="<%= LocalDate.now() %>" />
 				      		<c:if test="${info.curriculumStartAt.compareTo(now) <= 0 && info.curriculumEndAt.compareTo(now) >= 0}">
-								<span id="teacherClassInfo"> ${info.subject} ${info.curriculumName} Class ${info.classId}</span>
+								<span id="teacherClassInfo"> ${info.subject} ${info.curriculumName} Class ${info.classId}</span>				      			
+				      			<c:set var="culId" value="${info.curriculumId}" />
 				      		</c:if>
 			   		 </c:forEach>
 		   		 </p>
@@ -187,10 +200,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				</div>
 			</div>
 
-			
 		</div>	
 
 		<!-- 구매내역 div-->
+	
 		<div class="mypageContent">
 			<p class="infoTitles"><i class="bi bi-coin"></i> &nbsp;구매내역</p>
 			<div class="myPageDivs" id="mealCouponList" >	
@@ -222,7 +235,48 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				</table>
 			</div>
 		</div>	
-	
+		
+		<c:if test="${fn:contains(loginMember.authorities, 'TEACHER')}">
+			<div class="mypageContent">
+			
+				<p class="infoTitles"><i class="bi bi-list-task"></i> &nbsp;휴가신청 목록</p>
+				<div class="myPageDivs" id="vacationList" >	
+					<table class="table table-hover" id="vacationTbl">
+						<thead>
+						<tr>
+							<th>신청번호</th>
+							<th>학생 아이디</th>
+							<th>이름</th>
+							<th>휴가 시작일</th>
+							<th>휴가 종료일</th>
+							<th>첨부파일명</th>
+						</tr>	
+						</thead>
+	 					<tbody id= "messageBoxTbl">
+							<c:if test="${empty vacationApprove }">
+								<tr>
+									<td colspan="5" class="text-center">조회된 휴가신청 내역이 없습니다.</td>
+								
+								</tr>
+								</c:if>
+						 	<c:if test="${not empty vacationApprove}">
+								<c:forEach items="${vacationApprove}" var="vacationApprove" varStatus="vs">
+									<tr class="vacationRow">
+										<td>${vacationApprove.vacationId}</td>
+										<td>${vacationApprove.studentId}</td>
+										<td>${vacationApprove.memberName}</td>
+										<td>${vacationApprove.vacationStartDate}</td>
+										<td>${vacationApprove.vacationEndDate}</td>
+										<td id="fileName">${vacationApprove.vacationRenamedFilename}</td>
+									</tr>
+								</c:forEach>
+						 	</c:if>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</c:if>
+			
 	</div> 
 	<!-- 메인컨테이너 div끝 -->
 		
@@ -417,6 +471,114 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		    </div>
 		</div>
 	</div>	
+	
+	<!-- 학생 휴가 모달 -->
+	<div id="vacationModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-xl" style="width: 1200px;">
+	    	<div class="modal-content">
+	    	<div class="modal-header">
+		        <h1 class="modal-title fs-5">휴가신청 상세보기</h1>
+		        <button type="button" class="btn-close vacationClose" data-bs-dismiss="modal" aria-label="Close"></button>
+		    </div>
+	    	<div class="modal-body">
+			    <form:form 
+			    	id="vacationForm"
+			    	name="vacationForm"
+			    	action="${pageContext.request.contextPath}/member/vacationApprove.do"
+			    	method="post"
+			    >
+				  <div class="row">
+				  	  <div class="col-md-6">
+				  	  	  <br/><br/>
+					      <input type="hidden" name="vacationId" id="vacationId" value=""> 
+					      <input type="hidden" name="approveResult" id="approveResult" value="">
+					      <br/>
+					      <label for="vcId">휴가신청 번호  </label>
+					      <span id="vcId" class="vcContent" ></span>
+					      <br/><br/>
+					      <label for="vcStudentId">신청자 아이디  </label>
+					      <span id="vcStudentId" class="vcContent" ></span>
+				     	  <br/><br/>
+				     	  <label for="vcStudentName">신청자 이름 </label>
+					      <span id="vcStudentName" class="vcContent" ></span>
+				     	  <br/><br/>
+				     	  <label for="vcStart" >휴가 시작일 </label>
+					      <span id="vcStart" class="vcContent" ></span>
+				     	  <br/><br/>
+				     	  <label for="vcEnd">휴가 종료일 </label>
+					      <span id="vcEnd" class="vcContent" ></span>
+					      <br/><br/>
+				     	  <label for="studentRenamedFilename">첨부파일명 </label>
+					      <span id="studentRenamedFilename" class="vcContent"></span>
+				     	  <br/><br/>
+				      </div>
+				      <div class="col-md-6"> 
+			     	  	  <iframe id="studentPdf" class="border rounded-4" src="${pageContext.request.contextPath}/resources/images/vacationSubmitUpload/" style="width: 100%; height: 500px;"></iframe>
+				  	  	  <br/><br/>
+				  	  </div>
+				  </div>
+			      <hr class="myPageHr"/>
+			      <div id="modalBtns">
+			      	<button class="btn btn-outline-primary" type="submit" id="vcApprove">&nbsp;&nbsp;&nbsp;승인&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;
+					<button class="btn btn-primary" type="submit" id="vcReturn">&nbsp;&nbsp;&nbsp;반려&nbsp;&nbsp;&nbsp;</button>
+				  </div>
+			      
+			    </form:form>
+			    </div>
+		    </div>
+		</div>
+	</div>	
+	
+	
+	
+	<!-- 학생 목록 모달 -->
+	<div id="studentsModal" class="modal fade" role="dialog">
+		<div class="modal-dialog" id="studentsModalContent">
+		    	<div class="modal-content">
+			    	<div class="modal-header">
+				        <h1 class="modal-title fs-5">학생목록</h1>
+				        <button type="button" class="btn-close studentsClose" data-bs-dismiss="modal" aria-label="Close"></button>
+				    </div>
+			    	<div class="modal-body">
+					    <table class="table table-hover" id="vacationTbl">
+							<thead>
+							<tr>
+								<th>No</th>
+								<th>이름</th>
+								<th>전화</th>
+								<th>이메일</th>
+								<th>과목</th>
+								<th>과정명</th>
+							</tr>	
+							</thead>
+	 	 					<tbody id= "messageBoxTbl">
+	 							<c:if test="${empty studentList}">
+									<tr>
+										<td colspan="5" class="text-center">조회된 학생 목록이 없습니다.</td>
+									</tr>
+								</c:if>
+							 	<c:if test="${not empty studentList}">
+							 	
+									<c:forEach items="${studentList}" var="studentList" varStatus="vs">
+										<c:if test="${studentList.curriculumId eq culId}">
+											<tr class="studentRow">
+												<td>${vs.index + 1}</td>
+												<td>${studentList.memberName}</td>
+												<td>${studentList.memberPhone}</td>
+												<td>${studentList.memberEmail}</td>
+												<td>${studentList.subject}</td>
+												<td>${studentList.curriculumName}</td>
+											</tr>
+										</c:if>
+									</c:forEach>
+							 	</c:if>
+							</tbody> 
+						</table>
+					</div>
+			    </div>
+	
+		</div>
+	</div>
 		
 </selction>
 <script>
@@ -733,6 +895,13 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	document.querySelector(".reportClose").onclick=()=>{		
 		$("#reportModal").modal("hide");
 	};
+	document.querySelector(".vacationClose").onclick=()=>{		
+		$("#vacationModal").modal("hide");
+	};
+	
+	document.querySelector(".studentsClose").onclick=()=>{		
+		$("#studentsModal").modal("hide");
+	};
 
 	const deleteMember = () => {
 		
@@ -753,7 +922,52 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 	}	
 	// 회원 관련 기능 끝
+	
+	
+	// 휴가기능
+	document.querySelectorAll(".vacationRow").forEach(e => {
+		e.addEventListener('click', () => {
+			
+			const tdElements = e.querySelectorAll('td');
+			const vcContents = document.querySelectorAll(".vcContent");
+			let studentRenamedFilename ="";
+			for(let i = 0; i < tdElements.length; i++){
+				console.log(i, tdElements[i]);
+				console.log(i, vcContents[i]);
+				vcContents[i].innerHTML = tdElements[i].innerHTML;
+				studentRenamedFilename = tdElements[tdElements.length -1].innerHTML;
+				console.log(tdElements[tdElements.length -1].innerHTML);
+			}
+			
+            const iframe = document.getElementById("studentPdf"); // "iframeElement"을 실제 iframe의 ID로 변경해주세요
+            const currentSrc = iframe.src; // 이미 있는 URL 가져오기
+            const updatedSrc = currentSrc + studentRenamedFilename; // 기존 URL 뒤에 studentRenamedFilename 추가
 
+            iframe.src = updatedSrc;
+            
+			vacationId.value = vcContents[0].innerHTML;   
+			$("#vacationModal").modal("show");
+			
+			const result = document.querySelector("#approveResult");
+			
+			document.querySelector("#vcApprove").onclick=()=>{
+				result.value = "2";
+			};
+			document.querySelector("#vcReturn").onclick=()=>{
+				result.value = "0";
+			};
+			
+		});
+    });
+	
+	// 학생 목록 조회
+	document.querySelector("#studentsList").onclick=()=>{
+		$("#studentsModal").modal("show");
+		
+	};
+	
+	
+	
 
 </script>	
 

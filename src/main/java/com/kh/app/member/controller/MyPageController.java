@@ -12,12 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
+import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.MemberDetails;
@@ -50,7 +52,7 @@ public class MyPageController {
 		// Dday 시작
 		if (studentInfo.getCurriculumId() != 0) {
 			Curriculum curriculumDday = memberService.findByDdayInfo(studentInfo.getCurriculumId());
-			
+
 			model.addAttribute("curriculumDday", curriculumDday);
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -65,43 +67,57 @@ public class MyPageController {
 			long calculate = endDate.getTime() - today.getTime();
 
 			int Ddays = (int) (calculate / (24 * 60 * 60 * 1000));
-			model.addAttribute("Ddays",Ddays); 
+			model.addAttribute("Ddays", Ddays);
 		}
 		// Dday 끝 }
 	}
-	
-		 @GetMapping("/employeeMyPage.do") 
-		 public void employeeMyPage(Model model, 
-				 @AuthenticationPrincipal MemberDetails principal,
-				 @RequestParam(value = "classId", required = false) Integer classId,
-				 @RequestParam(value = "subject", required = false) String subject,
-				 @RequestParam(value = "jobCode", required = false) String jobCode,
-				 @RequestParam(value = "employeeId", required = false) String employeeId,
-				 @RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
-			
-			 List<EmployeeInfoDto> employeeInfo =
-					 memberService.findByEmployeeInfo(principal.getMemberId());
-			  model.addAttribute("employeeInfo", employeeInfo);
 
-			  log.info("★★employeeInfo = {} ",employeeInfo);
+	@GetMapping("/employeeMyPage.do")
+	public void employeeMyPage(Model model, @AuthenticationPrincipal MemberDetails principal,
+			@RequestParam(value = "classId", required = false) Integer classId,
+			@RequestParam(value = "subject", required = false) String subject,
+			@RequestParam(value = "jobCode", required = false) String jobCode,
+			@RequestParam(value = "employeeId", required = false) String employeeId,
+			@RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
+
 		
-			  
-			  List<StudentVacationApproveDto> studentVacationApprove = 
-					  memberService.findAllVacationApproveList(principal.getMemberId());
-			  model.addAttribute("studentVacationApprove" , studentVacationApprove);
-			  log.info("★★★★studentVacationApprove = {}" , studentVacationApprove);
-			  
-			  LocalDate currentDate = LocalDate.now();
-		      model.addAttribute("currentDate", currentDate);
-		      
-		      log.info("currentDate = {}", currentDate);
-			  log.info("principal.getMemberId() = {}", principal.getMemberId());
-			  log.info("studentVacationApprove = {}", studentVacationApprove);
-			  
-			  EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
-			  
-			  model.addAttribute("adminInfo", adminInfo);
-		 	}
+		
+		
+		String auth = principal.getAuthorities() + "";
+		if("[TEACHER]".equals(auth)) {
+			
+			List<EmployeeInfoDto> employeeInfo = memberService.findByEmployeeInfo(principal.getMemberId());
+			model.addAttribute("employeeInfo", employeeInfo);
+		}
 
 
+		List<StudentVacationApproveDto> studentVacationApprove = memberService
+				.findAllVacationApproveList(principal.getMemberId());
+		model.addAttribute("vacationApprove", studentVacationApprove);
+		log.info("★★vacationApprove = {} ", studentVacationApprove);
+		LocalDate currentDate = LocalDate.now();
+		model.addAttribute("currentDate", currentDate);
+
+		List<StudentListDto> studentList = memberService.findStudentByTeacher(principal.getMemberId());
+		model.addAttribute("studentList", studentList);
+		log.info("★★employeeInfo = {} ", studentList);
+		
+		EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
+
+		model.addAttribute("adminInfo", adminInfo);
+	}
+
+	
+	@PostMapping("vacationApprove.do")
+	public String postReport(
+			@RequestParam String vacationId ,
+			@RequestParam String approveResult
+			) {
+		
+		log.info("vacationId = {} {}", vacationId, approveResult);
+		
+		int result = memberService.updateVacationApprove(vacationId, approveResult);
+		
+		return "redirect:/member/employeeMyPage.do";
+	}
 }

@@ -9,6 +9,7 @@ import com.kh.app.member.dto.EmployeeDto;
 import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.Member;
@@ -53,6 +54,10 @@ public interface MemberService extends UserDetailsService{
 	EmployeeDto findEmployeeById(String memberId);
 
 	StudentDto findStudentType(String memberId);
+
+	int updateVacationApprove(String vacationId, String approveResult);
+
+	List<StudentListDto> findStudentByTeacher(String memberId);
 
 
 }
