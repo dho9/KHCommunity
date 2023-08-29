@@ -751,9 +751,8 @@ public class AdminController {
 		
 	    model.addAttribute("currentPage", page);
 	    
-	    // 전체 학생 수를 가져온다.
+	    // 전체 채팅 방 수를 가져온다.
 	    int totalChatListCount = adminService.getTotalCountOfChatList();
-
 	    // totalPages 계산
 	    int totalPages = (int) Math.ceil((double) totalChatListCount / limit);
 	    model.addAttribute("totalPages", totalPages);
@@ -762,12 +761,12 @@ public class AdminController {
 	    
 	    model.addAttribute("adminChatList", adminChatList);
 	    
-	}
-	
+	}	
 	@GetMapping("/chatView.do")
 	@ResponseBody
 	public ResponseEntity<List<ChatMessage>> chatView(@RequestParam(value="chatId", required=false) int chatId) {
 	    List<ChatMessage> chatMsgs = adminService.getChatMessagesByChatId(chatId);
+	    System.out.println(chatMsgs);
 	    return ResponseEntity.ok(chatMsgs);
 	}
  }

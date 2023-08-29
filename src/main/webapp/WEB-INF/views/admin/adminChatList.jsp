@@ -53,7 +53,7 @@
 				        <ul class="pagination">
 				            <c:if test="${currentPage > 1}">
 				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminCourseList.do?page=${currentPage - 1}" aria-label="Previous">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminChatList.do?page=${currentPage - 1}" aria-label="Previous">
 				                        <span aria-hidden="true">&laquo;</span>
 				                    </a>
 				                </li>
@@ -72,7 +72,7 @@
 				            
 				            <c:if test="${currentPage < totalPages}">
 				                <li class="page-item">
-				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminCourseList.do?page=${currentPage + 1}" aria-label="Next">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/adminChatList.do?page=${currentPage + 1}" aria-label="Next">
 				                        <span aria-hidden="true">&raquo;</span>
 				                    </a>
 				                </li>
@@ -96,39 +96,7 @@
 		               		<div class="title">KH TIME</div>
 		               	</div>
 		               	<ul class="messages" id="modalMessages">
-				            <li class="message left appeared">
-				               	<div class="avatarBox">
-				               		<img src="${pageContext.request.contextPath}/resources/images/usericon.png">
-				               	</div>
-				               	<div class="text_wrapper" style="margin-top:10px;">
-				               		<div class="text">
-					            		<span style="font-size:13px; color:black; font-weight:600;">
-						               				
-					               		</span> <br>
-				               			<span></span> <br>
-				               			<span style="font-size:12px; color:black; font-weight:500;">
-				                					
-				               			</span>
-				               		</div>
-				               	</div>
-				            </li>
-		                		
-				            <li class="message right appeared">
-				               	<div class="avatarBox">
-				               		<img style="margin-top:20px;"src="${pageContext.request.contextPath}/resources/images/kh admin logo.png">
-				               	</div>
-				               	<div class="text_wrapper">
-				               		<div class="text">
-				               			<span style="font-size:13px; color:black; font-weight:600;">
-					              			관리자
-					              		</span> <br>
-				               			<span></span> <br>
-				               			<span style="font-size:12px; color:black; font-weight:500;">
-				                					
-				               			</span>
-				               		</div>
-				               	</div>
-				            </li>
+				            
 		               	</ul>
 		                	
 		            </div>
@@ -185,6 +153,9 @@ chatViewButtons.forEach(button => {
             success: function (responseData) {
                 // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
                 console.log(responseData)
+                
+                modalSend(responseData);
+                
             },
             error: function () {
                 console.log("실패");
@@ -192,6 +163,60 @@ chatViewButtons.forEach(button => {
         });
     });
 });
+
+function modalSend(responseData) {
+	   const modalMessages = document.getElementById("modalMessages");
+	    
+	   modalMessages.innerHTML = '';
+	   
+	    responseData.forEach(chat => {
+	       const messageItem = document.createElement("li");
+	        messageItem.classList.add("message", chat.employeeId === null ? "right" : "left", "appeared");
+	        
+	        const studentImgUrl = "/kh/resources/images/usericon.png";
+	        const adminImgUrl = "/kh/resources/images/admin.png";
+	        
+	        const avatarBox = document.createElement("div");
+	        avatarBox.classList.add("avatarBox");
+	        const avatarImage = document.createElement("img");
+	        avatarImage.src = chat.employeeId === null ? studentImgUrl : adminImgUrl; // 대화 상대의 아바타 이미지 URL 설정
+	        avatarImage.style.marginTop = chat.employeeId === null ? '' : '20px';
+	        avatarBox.appendChild(avatarImage);
+	        
+	        const textWrapper = document.createElement("div");
+	        textWrapper.classList.add("text_wrapper");
+	        textWrapper.style.marginTop = chat.employeeId === null ? '10px' : '';
+	        const textDiv = document.createElement("div");
+	        textDiv.classList.add("text");
+	        
+	        if(chat.memberId === null){
+	            textDiv.innerHTML = `
+	                <span style="font-size:13px; color:black; font-weight:600;">
+	                    관리자
+	                </span> <br>
+	                <span>\${chat.chatContent}</span> <br>
+	                <span style="font-size:12px; color:black; font-weight:500;">
+	                    \${chat.chatSendAt}
+	                </span>`;
+	        }
+	        else {
+	           textDiv.innerHTML = `
+	                <span style="font-size:13px; color:black; font-weight:600;">
+	                    \${chat.memberId}
+	                </span> <br>
+	                <span>\${chat.chatContent}</span> <br>
+	                <span style="font-size:12px; color:black; font-weight:500;">
+	                    \${chat.chatSendAt}
+	                </span>`;
+	        }
+	        textWrapper.appendChild(textDiv);
+	        
+	        messageItem.appendChild(avatarBox);
+	        messageItem.appendChild(textWrapper);
+
+	        modalMessages.appendChild(messageItem);
+	   })
+	}
       
 </script>
 </body>
