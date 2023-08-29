@@ -1133,5 +1133,29 @@ public class BoardController {
                 .status(HttpStatus.OK)
                 .body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
     }
+	
+	@GetMapping("/jobSearchByFilter.do")
+	@ResponseBody
+	public ResponseEntity<?> jobSearchByFilter(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(value = "filterList[]") String[] filterList, Model model) throws IOException {
+		log.info("filterList!!!!!!!! = {},", Arrays.toString(filterList));
+		
+		int limit = 5;
+		List<JobKorea> _jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		List<JobKorea> jobKoreaList = null;
+		if(_jobKoreaList.contains(Arrays.toString(filterList))) {
+			jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		}
+		
+		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
+		int totalCount = 50;
+		
+		// totalPage 계산
+		int totalPages = (int) Math.ceil((double) totalCount / limit);
+		
+		log.info("jobKoreaList={}", jobKoreaList);
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
+	}
 }
 
