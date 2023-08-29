@@ -185,8 +185,6 @@ public interface BoardRepository {
 			+ "FETCH FIRST 3 ROWS ONLY")
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
-	List<BoardListDto> jobSearchBoardFindAll();
-
 	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=#{boardId} and tag =#{tag}")
 	int totalCountMyClassBoardByTag(String tag, int boardId);
 	

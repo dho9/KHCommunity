@@ -91,7 +91,7 @@
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
                 <li id="myClass"><a>우리반</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/jobKorea.do" style="text-decoration: none;">취업</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
                 <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
@@ -136,4 +136,32 @@
 		</div>
 	</div>
 	<div id="jangjun">
+	<sec:authentication property="principal" var="loginMember" />
+	<script>
+	document.querySelector('#myClass').addEventListener('click', () => {
+		const _memberId = '<sec:authentication property="name"/>';
+ 	    const memberId = _memberId.replace(/&#64;/g, '@');
+	    if(_memberId === 'anonymousUser') {
+	        alert('로그인이 필요합니다.');
+	    }
+        else {
+	        $.ajax({
+	           url : "${pageContext.request.contextPath}/member/findStudentType.do",
+	           data : {
+	               memberId : memberId
+	           },
+	           success(responseData) {
+	               const {student} = responseData;
+	               const {curriculumId, studentType, boardId} = student;
+	               if(studentType != 's' || boardId == 0) {
+	                   alert('수강중인 학생만 이용가능합니다.');
+	               }
+	               else {
+	                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+	               }
+	           }
+	        });
+        }
+   });
+	</script>
 	
