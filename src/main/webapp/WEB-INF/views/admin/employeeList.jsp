@@ -129,9 +129,9 @@
                           생일 : <input type="date" name="birthday" id="modalBirthday" readonly> <br>
                           입사일 : <input type="date" name="lastDay" id="modalLastDay" readonly><br>
                           부서 : 
-								<input type="radio" name="job_Code" id="jobCode1" value="행정">행정
-								<input type="radio" name="job_Code" id="jobCode2" value="총무">총무
-								<input type="radio" name="job_Code" id="jobCode3" value="운영">운영
+								<input type="radio" name="job_Code" id="modelJobCode1" value="행정">행정
+								<input type="radio" name="job_Code" id="modelJobCode2" value="총무">총무
+								<input type="radio" name="job_Code" id="modelJobCode3" value="운영">운영
                           <br>
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnEdit">수정</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -196,9 +196,9 @@
             document.getElementById("modalEmail").value = email;
             document.getElementById("modalLastDay").value = lastDay;
             // document.getElementById("modalStudentType").value = studentType;
-            document.getElementById("jobCode1").checked = (job_Code_value === "행정");
-            document.getElementById("jobCode2").checked = (job_Code_value === "총무");
-            document.getElementById("jobCode3").checked = (job_Code_value === "운영");
+            document.getElementById("modelJobCode1").checked = (job_Code_value === "행정");
+            document.getElementById("modelJobCode2").checked = (job_Code_value === "총무");
+            document.getElementById("modelJobCode3").checked = (job_Code_value === "운영");
           });
         });
     

@@ -21,6 +21,7 @@ import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.curriculum.dto.AdminCurriculumDetailDto;
 import com.kh.app.board.dto.BoardCreateDto;
+import com.kh.app.board.dto.MyClassBoardListDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
@@ -161,7 +162,7 @@ public interface AdminRepository {
 	@Insert("insert into message_box values (seq_message_id.NEXTVAL, #{sendId}, #{receiveId}, #{messageContent}, default, default, 'n')")
 	int sendMessageToStudent(MessageBox message);
 
-	@Select("select * from curriculum")
+	@Select("select * from curriculum order by curriculum_end_at")
 	List<Curriculum> findAllCurriculum();
 
 	@Select("SELECT s.student_id, m.member_name, s.student_type, s.approve_check, s.approve_request_date, (select student_renamed_filename from student_attachment a where a.member_id = s.student_id) as studentRenamedFilename FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
@@ -305,6 +306,24 @@ public interface AdminRepository {
 
 	@Insert("insert into message_box values(seq_message_id.nextval, #{admin}, #{attackerId}, #{messageContent}, default, default, 'n')")
 	int sendReportToStudent(String attackerId, String admin, String messageContent);
+
+	@Delete("delete from post where board_Id = #{boardId}")
+	int deleteMyClassBoard(String boardId);
+
+	@Select("SELECT *\r\n"
+			+ "FROM myclass\r\n"
+			+ "JOIN curriculum ON myclass.curriculum_id = curriculum.curriculum_id")
+	List<MyClassBoardListDto> findAllMyClassBoard();
+
+	@Select("SELECT c.curriculum_id, c.class_id, c.teacher_id, c.subject, c.curriculum_name, c.curriculum_start_at, c.curriculum_end_at\r\n"
+			+ "FROM curriculum c\r\n"
+			+ "LEFT JOIN myclass mc ON c.curriculum_id = mc.curriculum_id\r\n"
+			+ "WHERE c.curriculum_start_at >= TRUNC(SYSDATE)\r\n"
+			+ "    AND mc.curriculum_id IS NULL")
+	List<Curriculum> findRecentCurriculum();
+
+	@Update("update myclass set curriculum_id = #{selectedCurriculumId} where board_id = #{boardId}")
+	int updateMyClass(String boardId, String selectedCurriculumId);
 
 	
 }
