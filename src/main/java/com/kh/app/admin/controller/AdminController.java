@@ -532,6 +532,7 @@ public class AdminController {
 	@PostMapping("/adminTeacherDelete.do")
 	public String adminTeacherDelete(@Valid Teacher teacher) {
 		String memberId = teacher.getMemberId();
+		log.info("memberId = {}", memberId);
 		// member테이블에서 삭제
 		int result1 = adminService.deleteAdminTeacher(memberId);
 		int result2 = adminService.deleteAdminAuthority(memberId);
