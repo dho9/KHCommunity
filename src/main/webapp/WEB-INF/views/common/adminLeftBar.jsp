@@ -45,7 +45,26 @@
 				const {chatId, content, createdAt} = JSON.parse(message.body);
 				console.log(chatId, content, createdAt);
 				
-				const $liveToast = $("#liveToast");
+				const toastContainer = document.getElementById("toastContainer");
+				const uniqueId = Math.random().toString(36).substring(2, 15);
+				const toastBox = document.createElement('div')
+				toastBox.innerHTML = `
+					<div id="liveToast-\${uniqueId}" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
+						<div class="toast-header">
+							<img style="width:60px;" src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" class="rounded me-2">
+								<strong class="me-auto">KH TIME 알림</strong>
+								<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<div class="toast-text"></div>
+							<div class="mt-2 pt-2 border-top">
+								<form:form id="chatApproveFrm-\${uniqueId}" name="chatApproveFrm-\${uniqueId}">
+								</form:form>
+							</div>
+						</div>
+					</div>`
+				toastContainer.appendChild(toastBox);
+				const $liveToast = $(`#liveToast-\${uniqueId}`);
 				$liveToast.find(".toast-text").html(content);
 				const acceptButton = $("<button>").attr({
 			        type: "button",
@@ -53,70 +72,71 @@
 			        id:"chatApproveBtn",
 			        "data-chatid": chatId
 			    }).text("수락");
-				$liveToast.find("#chatApproveFrm").append(acceptButton);
-				
-				$("#chatApproveBtn").click(function() {
-			          const chatId = $(this).attr("data-chatid");
-			          const chatApproveFrm = document.chatApproveFrm;
-			          const token = chatApproveFrm._csrf.value;
-					  
-			          console.log(chatId);
-			          
-			          $.ajax({
-			              type: "POST",
-			              url: "${pageContext.request.contextPath}/chat/updateAdminTalker.do",
-			              data: {
-			                  chatId
-			              },
-			              headers: {
-			                  "X-CSRF-TOKEN": token
-			              },
-			              success: function(responseData) {
-			                  console.log("성공", responseData);
-
-			                  // 새 창 열기
-			                  const newWindow = window.open(
-			                      "${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + chatId,
-			                      '_blank'
-			                  );
-
-			                  if (newWindow) {
-			                      newWindow.focus();
-			                  }
-			              },
-			              error: function(error) {
-			                  console.error("에러", error);
-			              }
-			          });
-			      });
-				
-				const toastBootstrap = bootstrap.Toast.getOrCreateInstance($liveToast);
-				toastBootstrap.show()
-			}
+				$liveToast.find(`#chatApproveFrm-\${uniqueId}`).append(acceptButton);
 			
+				$(document).ready(function() {
+				    // 각 버튼에 대한 작업 수행
+				    $("#chatApproveBtn").each(function(e) {
+				    	
+				        // 클릭 이벤트 핸들러 등록
+				        acceptButton.click(function() {
+				            const chatId = $(this).attr("data-chatid");
+				            console.log(chatId);
+
+				            const chatApproveFrm = document.getElementById(`chatApproveFrm-\${uniqueId}`);
+				            if (chatApproveFrm) {  // 엘리먼트가 존재하는지 확인
+				                const token = chatApproveFrm._csrf.value;
+
+				                $.ajax({
+				                    type: "POST",
+				                    url: "${pageContext.request.contextPath}/chat/updateAdminTalker.do",
+				                    data: {
+				                        chatId
+				                    },
+				                    headers: {
+				                        "X-CSRF-TOKEN": token
+				                    },
+				                    success: function(responseData) {
+				                        console.log("성공", responseData);
+
+				                        // 새 창 열기
+				                        const newWindow = window.open(
+				                            "${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + chatId,
+				                            '_blank'
+				                        );
+
+				                        if (newWindow) {
+				                            newWindow.focus();
+				                            
+				                         	// 토스트 숨기기
+				                            const toastBootstrap = bootstrap.Toast.getInstance($liveToast);
+				                            if (toastBootstrap) {
+				                                toastBootstrap.hide();
+				                            }
+				                            
+				                        }
+				                    },
+				                    error: function(error) {
+				                        console.error("에러", error);
+				                    }
+				                });
+				            } else {
+				                console.error("chatApproveFrm 엘리먼트를 찾을 수 없습니다.");
+				            }
+				        });
+
+				        const toastBootstrap = bootstrap.Toast.getOrCreateInstance($liveToast);
+				        toastBootstrap.show();
+				    });
+				});
+			}
 			
 		</script>
 </sec:authorize>
   </head>
   <body>
-  <div class="toast-container position-fixed bottom-0 end-0 p-3">
-  		<div id="liveToast" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
-    		<div class="toast-header">
-      		<img style="width:60px;" src="${pageContext.request.contextPath}/resources/images/kh admin logo.png" class="rounded me-2">
-      			<strong class="me-auto">KH TIME 알림</strong>
-      			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    		</div>
-    		<div class="toast-body">
-      			<div class="toast-text">
-      			
-      			</div>
-      			<div class="mt-2 pt-2 border-top">
-     				<form:form id="chatApproveFrm" name="chatApproveFrm">
-     					
-     				</form:form>
-    			</div>
-    		</div>
-  		</div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer">
+  		
 	</div>
     <section class="mainSection">
       <div class="leftBar">
