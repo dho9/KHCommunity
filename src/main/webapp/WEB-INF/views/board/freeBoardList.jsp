@@ -161,13 +161,14 @@ color: black;
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag">해시태그</label><br>
+	        	<label for="hashTag" class="hashTag">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
-        	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+	        <label class="custom-file-button" for="fileInput">파일 선택</label>
+	        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
+	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right; border-left: solid 3px white; background-color: #0ca5af;">취소</button>
+        	<button class="createPostBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="anonymous">
         		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
         	</button>
