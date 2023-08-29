@@ -19,32 +19,32 @@
 	<div class="collapse" id="collapseExample">
 	  <div class="card card-body">
 	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드개발자" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">백엔드개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드" id="flexCheckDefault" >
+		  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
 		</div>
       	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="웹개발자" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">웹개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="웹" id="flexCheckDefault" >
+		  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="앱개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">앱개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="앱" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="게임개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">게임개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="게임" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
 		</div>
 	  </div>
 	</div>
@@ -111,6 +111,12 @@
 	<button class="btn btn-primary" type="button" id="loadMoreButton">
 	    다음
 	</button>
+	<button style="display: none;" class="btn btn-primary" type="button" id="loadPrevButtonByFilter">
+	    이전
+	</button>
+	<button style="display: none;" class="btn btn-primary" type="button" id="loadMoreButtonByFilter">
+	    다음
+	</button>
 	
 	<script>
 	// 이전/다음
@@ -157,9 +163,12 @@
             },
             dataType: 'json',
             success: function(response) {
+            	console.log(response)
                 const jobKoreaList = response.jobKoreaList;
                 console.log(jobKoreaList);
-                
+                if(jobKoreaList.length == 0) {
+                	jobSearch(pageNumber+1);
+            	}
                 render(jobKoreaList);
             }
         });
@@ -191,6 +200,11 @@
     
     // 검색
     function searchJobKorea(jobKoreaList) {
+    	document.querySelector('#loadPrevButton').style.display = 'none';
+    	document.querySelector('#loadMoreButton').style.display = 'none';
+    	document.querySelector('#loadPrevButtonByFilter').style.display = 'inline-block';
+    	document.querySelector('#loadMoreButtonByFilter').style.display = 'inline-block';
+    	
 		const filterList = [];
 	    const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
 	    jobTypeCheckboxes.forEach(checkbox => {
@@ -210,6 +224,49 @@
 	    console.log(filterList);
 	    filter(filterList, currentPage);
 	    
+	    document.getElementById("loadPrevButtonByFilter").addEventListener("click", () => {
+		    loadPrevJobPostingsByFilter();
+		});
+		
+		document.getElementById("loadMoreButtonByFilter").addEventListener("click", () => {
+		    loadMoreJobPostingsByFilter();
+			document.getElementById("loadPrevButtonByFilter").style.display = 'inline-block';
+		});
+		
+		function loadMoreJobPostingsByFilter() {
+		    currentPage++;
+		    filter(filterList, currentPage);
+		}
+		
+		function loadPrevJobPostingsByFilter() {
+		    currentPage--;
+		    filter(filterList, currentPage);
+		}
+		
+	    function render(jobKoreaList) {
+	    	const job = document.querySelector('#job');
+	    	job.innerHTML = "";
+	    	
+	    	for(let i=0; i<jobKoreaList.length; i++) {
+	    		const company = jobKoreaList[i].company;
+	    		const title = jobKoreaList[i].title;
+	    		const option = jobKoreaList[i].option;
+	    		const etc = jobKoreaList[i].etc;
+	    		const url = jobKoreaList[i].url;
+	    		
+	    		if(title != "") {
+		    		job.innerHTML += `<div style="display: flex;"><div style="width: 500px;"><a href="\${url}">\${company}</a></div>
+		    		<div style="width: 500px;">
+		    			<p class="medium"><a href="\${url}">\${title}</a></p> <br>
+					  	<p class="medium">\${option}</p> <br>
+					  	<p class="medium">\${etc}</p> <br>
+					</div>
+					</div>
+		    		`;
+	    		}
+	    	}
+	    };
+	    
 	}
 	
 	function filter(filterList, currentPage) {
@@ -221,9 +278,19 @@
             },
             dataType : "json",
             success: function(response) {
+            	
+            	console.log(response);
+            	const {endPage, currentPage} = response;
                 const jobKoreaList = response.jobKoreaList;
                 console.log(jobKoreaList);
-                
+                if(endPage == currentPage) {
+                	document.getElementById("loadMoreButtonByFilter").style.display = 'none';
+                	document.getElementById("loadPrevButtonByFilter").style.display = 'inline-block';
+                }
+                if(currentPage == 1) {
+                	document.getElementById("loadPrevButtonByFilter").style.display = 'none';
+                	document.getElementById("loadMoreButtonByFilter").style.display = 'inline-block';
+                }
                 render(jobKoreaList);
             }
         });
