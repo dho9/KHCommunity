@@ -19,32 +19,32 @@
 	<div class="collapse" id="collapseExample">
 	  <div class="card card-body">
 	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드개발자" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">백엔드개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드" id="flexCheckDefault" >
+		  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
 		</div>
       	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="웹개발자" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">웹개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="웹" id="flexCheckDefault" >
+		  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="앱개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">앱개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="앱" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="게임개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">게임개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="게임" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
 		</div>
 		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어개발자" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발</label>
+		  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어" id="flexCheckChecked" >
+		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
 		</div>
 	  </div>
 	</div>
@@ -110,6 +110,9 @@
 	</button>
 	<button class="btn btn-primary" type="button" id="loadMoreButton">
 	    다음
+	</button>
+	<button style="display: none;" class="btn btn-primary" type="button" id="MoreButton">
+	    더보기
 	</button>
 	
 	<script>
@@ -191,6 +194,10 @@
     
     // 검색
     function searchJobKorea(jobKoreaList) {
+    	document.querySelector('#MoreButton').style.display = 'block';
+    	document.querySelector('#loadPrevButton').style.display = 'none';
+    	document.querySelector('#loadMoreButton').style.display = 'none';
+    	
 		const filterList = [];
 	    const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
 	    jobTypeCheckboxes.forEach(checkbox => {

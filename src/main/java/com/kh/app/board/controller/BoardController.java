@@ -1140,22 +1140,35 @@ public class BoardController {
 		log.info("filterList!!!!!!!! = {},", Arrays.toString(filterList));
 		
 		int limit = 5;
-		List<JobKorea> _jobKoreaList = boardService.getJobKoreaDatas(page, limit);
-		List<JobKorea> jobKoreaList = null;
-		if(_jobKoreaList.contains(Arrays.toString(filterList))) {
-			jobKoreaList = boardService.getJobKoreaDatas(page, limit);
-		}
 		
 		// 전체 게시글 수를 가져오는 로직을 구현해야 합니다.
-		int totalCount = 50;
+        int totalCount = 50;
+
+        // totalPage 계산
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+        
+		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit);
+		List<JobKorea> jobKoreaFilterList = new ArrayList<JobKorea>();
 		
-		// totalPage 계산
-		int totalPages = (int) Math.ceil((double) totalCount / limit);
-		
-		log.info("jobKoreaList={}", jobKoreaList);
+		for (JobKorea _jobKorea : jobKoreaList) {
+			System.out.println("_job" + _jobKorea);
+			for (String filter : filterList) {
+				System.out.println(_jobKorea.getTitle().contains(filter));
+				System.out.println(_jobKorea.getEtc().contains(filter));
+				System.out.println(_jobKorea.getOption().contains(filter));
+				if (_jobKorea.getTitle().contains(filter) || _jobKorea.getEtc().contains(filter) || _jobKorea.getOption().contains(filter)) {
+					log.info("_jobKorea = {}",_jobKorea);
+					jobKoreaFilterList.add(_jobKorea);
+					break;
+				}
+			}
+		}
+
+	    log.info("jobKoreaList={}", jobKoreaFilterList);
 		return ResponseEntity
 				.status(HttpStatus.OK)
-				.body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
+				.body(Map.of("jobKoreaList", jobKoreaFilterList, "currentPage", page, "totalPages", totalPages));
+		
 	}
 }
 
