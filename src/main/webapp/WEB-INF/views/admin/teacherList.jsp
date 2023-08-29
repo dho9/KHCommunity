@@ -182,14 +182,7 @@
             document.getElementById("modalBirthday").value = birthday;
             document.getElementById("modalEmail").value = email;
             document.getElementById("modalLastDay").value = lastDay;
-            document.getElementById("subject1").checked = (subject === "자바");
-            document.getElementById("subject2").checked = (subject === "정보보안");
           });
-        });
-    
-        // 수정 버튼 클릭 이벤트 처리
-        $("#btnEdit").on("click", function () {
-          showConfirmation("${pageContext.request.contextPath}/admin/adminTeacherUpdate.do");
         });
     
         // 강퇴 버튼 클릭 이벤트 처리
@@ -208,15 +201,12 @@
         function sendDataToServer(url) {
           const modalFrm = document.modalFrm;
           const memberId = modalFrm.firstId.value;
-          const subject = modalFrm.subject.value;
           const token = document.modalFrm._csrf.value;
-          console.log(subject);
           $.ajax({
             type: "POST",
             url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
             data: {
-            	memberId,
-            	subject
+            	memberId
             },
             headers: {
                 "X-CSRF-TOKEN": token
