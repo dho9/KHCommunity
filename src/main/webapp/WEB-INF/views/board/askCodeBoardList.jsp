@@ -72,7 +72,9 @@ color: black;
 					  	</time>
 					  	<hr>
 					  	<h2 class="medium bold">${board.title}</h2> <br>
-					  	<p class="medium">${board.content}</p> <br>
+					  	<p class="medium">
+					  		${board.content}
+					  	</p> <br>
 					  	<c:forEach items="${board.tag}" var="tag">
 					  		<span class="tag">${tag}</span>
 					  	</c:forEach>
@@ -144,7 +146,7 @@ color: black;
 	      		</select>
 	      	</p>
 	        <p>
-	        	<textarea id="batch_content" name="batch_content"></textarea>
+	        	<textarea class="codeTextCreate" id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>
 	        	<label for="hashTag">해시태그</label><br>
@@ -169,7 +171,7 @@ color: black;
 	    createForm.classList.remove("hidden");
 	    
 	    // 에디터 설정 
-	    var textarea = document.querySelector('#batch_content');
+	    var textarea = document.querySelector('.codeTextCreate');
 	    var language = document.querySelector('#language');
 	    
 	    var editor = CodeMirror.fromTextArea(textarea, {
