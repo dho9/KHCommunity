@@ -111,8 +111,11 @@
 	<button class="btn btn-primary" type="button" id="loadMoreButton">
 	    다음
 	</button>
-	<button style="display: none;" class="btn btn-primary" type="button" id="MoreButton">
-	    더보기
+	<button style="display: none;" class="btn btn-primary" type="button" id="loadPrevButtonByFilter">
+	    이전
+	</button>
+	<button style="display: none;" class="btn btn-primary" type="button" id="loadMoreButtonByFilter">
+	    다음
 	</button>
 	
 	<script>
@@ -160,9 +163,12 @@
             },
             dataType: 'json',
             success: function(response) {
+            	console.log(response)
                 const jobKoreaList = response.jobKoreaList;
                 console.log(jobKoreaList);
-                
+                if(jobKoreaList.length == 0) {
+                	jobSearch(pageNumber+1);
+            	}
                 render(jobKoreaList);
             }
         });
@@ -194,9 +200,10 @@
     
     // 검색
     function searchJobKorea(jobKoreaList) {
-    	document.querySelector('#MoreButton').style.display = 'block';
     	document.querySelector('#loadPrevButton').style.display = 'none';
     	document.querySelector('#loadMoreButton').style.display = 'none';
+    	document.querySelector('#loadPrevButtonByFilter').style.display = 'inline-block';
+    	document.querySelector('#loadMoreButtonByFilter').style.display = 'inline-block';
     	
 		const filterList = [];
 	    const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
@@ -217,6 +224,49 @@
 	    console.log(filterList);
 	    filter(filterList, currentPage);
 	    
+	    document.getElementById("loadPrevButtonByFilter").addEventListener("click", () => {
+		    loadPrevJobPostingsByFilter();
+		});
+		
+		document.getElementById("loadMoreButtonByFilter").addEventListener("click", () => {
+		    loadMoreJobPostingsByFilter();
+			document.getElementById("loadPrevButtonByFilter").style.display = 'inline-block';
+		});
+		
+		function loadMoreJobPostingsByFilter() {
+		    currentPage++;
+		    filter(filterList, currentPage);
+		}
+		
+		function loadPrevJobPostingsByFilter() {
+		    currentPage--;
+		    filter(filterList, currentPage);
+		}
+		
+	    function render(jobKoreaList) {
+	    	const job = document.querySelector('#job');
+	    	job.innerHTML = "";
+	    	
+	    	for(let i=0; i<jobKoreaList.length; i++) {
+	    		const company = jobKoreaList[i].company;
+	    		const title = jobKoreaList[i].title;
+	    		const option = jobKoreaList[i].option;
+	    		const etc = jobKoreaList[i].etc;
+	    		const url = jobKoreaList[i].url;
+	    		
+	    		if(title != "") {
+		    		job.innerHTML += `<div style="display: flex;"><div style="width: 500px;"><a href="\${url}">\${company}</a></div>
+		    		<div style="width: 500px;">
+		    			<p class="medium"><a href="\${url}">\${title}</a></p> <br>
+					  	<p class="medium">\${option}</p> <br>
+					  	<p class="medium">\${etc}</p> <br>
+					</div>
+					</div>
+		    		`;
+	    		}
+	    	}
+	    };
+	    
 	}
 	
 	function filter(filterList, currentPage) {
@@ -228,9 +278,19 @@
             },
             dataType : "json",
             success: function(response) {
+            	
+            	console.log(response);
+            	const {endPage, currentPage} = response;
                 const jobKoreaList = response.jobKoreaList;
                 console.log(jobKoreaList);
-                
+                if(endPage == currentPage) {
+                	document.getElementById("loadMoreButtonByFilter").style.display = 'none';
+                	document.getElementById("loadPrevButtonByFilter").style.display = 'inline-block';
+                }
+                if(currentPage == 1) {
+                	document.getElementById("loadPrevButtonByFilter").style.display = 'none';
+                	document.getElementById("loadMoreButtonByFilter").style.display = 'inline-block';
+                }
                 render(jobKoreaList);
             }
         });

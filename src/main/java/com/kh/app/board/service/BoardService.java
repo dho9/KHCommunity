@@ -149,6 +149,5 @@ public interface BoardService {
 
 	int totalCountEmployeeBoard();
 
-	
 
 }
