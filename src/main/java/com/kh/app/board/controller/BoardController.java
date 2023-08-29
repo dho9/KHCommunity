@@ -1132,5 +1132,6 @@ public class BoardController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
-    }
+    
+}
 }
