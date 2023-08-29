@@ -313,8 +313,9 @@ body.appwebview nav {
 }
 
 #submenu {
-	border-bottom: 1px solid #d6d6d6;
-	background-color: #f2f2f2;
+    border-bottom: 3.5px solid #001fff47;
+    border-top: 3.5px solid #001fff47;
+    background-color: white;
 }
 
 #submenu>div.wrap {
@@ -331,7 +332,7 @@ body.appwebview nav {
 	display: inline-block;
 	width: 1px;
 	height: 200px;
-	background-color: #e3e3e3;
+	background-color: #001fff47;
 }
 
 #submenu>div.wrap>div.group {
@@ -1144,15 +1145,16 @@ aside>div.title>ol.buttons>li>a.image.setting {
 
 #container>div.rightside div.card, #container>div.leftside div.card {
 	margin-bottom: 5px;
-	border: 1px solid #d6d6d6;
-	background-color: #f9f9f9;
+	border: 3px solid #001fff47;
+	background-color: white;
+	border-radius: 10px;
 }
 
 #container>div.main div.card {
 	float: left;
 	margin: 0 5px 5px 0;
 	width: 295px;
-	border: 1px solid #e3e3e3;
+	border: 3px solid #001fff47;
 	overflow: hidden;
 	background-color: #fff;
 }
@@ -1308,10 +1310,11 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	width: 780px;
 	display: block;
 	padding: 15px;
-	border: solid 3px lightgray;
+	border: solid 3px #001fff47;
 	font-size: 17px;
 	margin-bottom: 5px;
-	background-color: #f9f9f9;
+	background-color: white;
+	border-radius: 10px;
 }
 
 #container>div.wrap.articles>form#createForm {
@@ -1323,25 +1326,28 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	padding-right: 3px;
 }
 
-#container>div.wrap.articles>form#updateForm {
-	position: relative;
-	margin-bottom: 5px;
-	border: 2px solid #d6d6d6;
-	box-sizing: border-box;
-	padding-bottom: 135px;
-	padding-right: 3px;
+#container>div.wrap.articles>form#createForm {
+    position: relative;
+    margin-bottom: 5px;
+    border: 2px solid #001fff47;
+    box-sizing: border-box;
+    padding-bottom: 135px;
+    padding-right: 3px;
+    border-radius: 10px;
 }
 
 #container>div.wrap.articles>form#createForm p {
-	padding: 15px;
-	border-bottom: 1px solid #e3e3e3;
-	background-color: #fff;
+    padding: 15px;
+    border-bottom: 1px solid #001fff47;
+    background-color: #fff;
+    border-radius: 7px;
 }
 
 #container>div.wrap.articles>form#updateForm p {
 	padding: 15px;
-	border-bottom: 1px solid #e3e3e3;
-	background-color: #fff;
+    border-bottom: 1px solid #001fff47;
+    background-color: #fff;
+    border-radius: 7px;
 }
 
 #container>div.wrap.articles>form#createForm p input.title {
@@ -1368,12 +1374,27 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	width: 59px;
 	height: 59px;
 	border: none;
+	border-radius: 10px;
+	color: white;
+}
+
+#container>div.wrap.articles>form#createForm button.createPostBtn {
+	background-color: #c62917;
+}
+
+#container>div.wrap.articles>form#createForm button.submitBtn {
+	background-color: #c62917;
+}
+
+#container>div.wrap.articles>form#createForm button.cancle {
+	background-color: #0ca5af;
 }
 
 #container>div.wrap.articles>form#updateForm button {
 	width: 59px;
 	height: 59px;
 	border: none;
+	border-radius: 10px;
 }
 
 #container>div.wrap.articles>form#createForm p textarea.smallplaceholder
@@ -1396,12 +1417,36 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	resize: none;
 }
 
-#container>div.wrap.articles>form#createForm label {
+#container>div.wrap.articles>form#createForm label.hashTag {
 	color: #292929;
 	font-size: 18px;
 	font-weight: bold;
 	margin-left: 1%;
 }
+
+
+/* 기본 파일 업로드 버튼을 감춤 */
+.file {
+  display: none;
+}
+
+/* 사용자 정의 스타일 적용한 버튼 */
+.custom-file-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 마우스 호버 효과 */
+.custom-file-button:hover {
+  background-color: #45a049;
+}
+
+
 
 #container>div.wrap.articles>form#updateForm label {
 	color: #292929;
@@ -1431,7 +1476,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 
 .bi-star, .bi-star-fill {
 	font-size: 30px;
-	color: #f8fd20;
+	color: #ffbf00;
 	float: right;
 	cursor: pointer;
 }
@@ -1456,9 +1501,11 @@ input[name=_tags] {
 }
 
 #container>div.articles>article>a.article {
-	display: block;
-	padding: 15px;
-	border: solid 0.7px lightgray;
+    display: block;
+    padding: 15px;
+    border: solid 0.7px lightgray;
+    border-radius: 10px;
+    margin: 9;
 }
 
 #container>div.articles>article>a.article:hover {
@@ -1601,12 +1648,13 @@ dl, ul, ol, menu, li {
 #container div.card>div.banner img {
 	width: 100%;
 	height: auto;
+	border-radius: 10px;
 }
 
 #container div.card>div.board>a {
 	display: block;
 	padding: 10px;
-	border-top: 1px solid #e3e3e3;
+	border-top: 1px solid #001fff47;
 }
 
 #container div.card>div.board>a:hover {
@@ -1868,12 +1916,13 @@ dl, ul, ol, menu, li {
 	line-height: 20px;
 	padding: 10px;
 	box-sizing: border-box;
-	border: 2px solid #d6d6d6;
+	border: 2px solid #001fff47;
 	color: #292929;
 	font-size: 14px;
 	background: transparent url('/images/new/aside.search.background.png')
 		no-repeat right center;
 	background-size: 40px 40px;
+	border-radius: 10px;
 }
 
 #container>div.rightside form.search>input.text:focus {
@@ -1882,17 +1931,19 @@ dl, ul, ol, menu, li {
 }
 
 #container>div.title {
-	margin-bottom: -20px;
-	padding: 15px;
-	border: 1px solid #d6d6d6;
-	box-sizing: border-box;
+    margin-bottom: -20px;
+    padding: 15px;
+    border: 2px solid #001fff47;
+    border-radius: 10px;
+    box-sizing: border-box;
 }
 
 #container>div.articles>article {
-	margin-bottom: -1px;
-	box-sizing: border-box;
-	border: 1px solid #e3e3e3;
-	background-color: #fff;
+    margin-bottom: -1px;
+    box-sizing: border-box;
+    border: 2px solid #001fff47;
+    background-color: #fff;
+    border-radius: 10px;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * *  /  pc only  /  * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1933,7 +1984,7 @@ dl, ul, ol, menu, li {
 		position: relative;
 		left: 215px;
 		margin: 15px 0;
-		width: 605px;
+		width: 612px;
 	}
 }
 

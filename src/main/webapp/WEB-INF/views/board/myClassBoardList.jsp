@@ -72,7 +72,7 @@
 	        </button>
 	      </div>
 	      <div class="modal-body" style="height: 700px;">
-	      	<form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createPost.do" id="createForm" method="POST" enctype="multipart/form-data" style="height: 550px;">
+	      	<form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createMyClass.do" id="createForm" method="POST" enctype="multipart/form-data" style="height: 550px;">
 		      	<input type = "hidden" name="boardId" id="boardId" value="${studentInfo.boardId}">
 		      	<div class="input-group mb-3">
 				  <div class="input-group-prepend">

@@ -164,8 +164,8 @@ color: black;
 	        	<div class="hashTag-container"></div>
 	        </div>
 	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white;">취소</button>
-        	<button style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
+	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af;">취소</button>
+        	<button class="createPostBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="anonymous" onclick="anonymousCheck()">
 	    		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
 	    	</button>

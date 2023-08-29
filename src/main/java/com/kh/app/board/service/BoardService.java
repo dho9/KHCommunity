@@ -119,8 +119,6 @@ public interface BoardService {
 
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
-	List<BoardListDto> jobSearchBoardFindAll();
-
 	int totalCountMyClassBoardByTag(String tag, int boardId);
 	
 	int deleteComment(int commentId);
