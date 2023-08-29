@@ -436,7 +436,7 @@ public class BoardServiceImpl implements BoardService {
 	public List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException {
 		List<JobKorea> jobKoreaList = new ArrayList<>();
 		
-		Document document = Jsoup.connect(URL + "&page=" + page).get();
+		Document document = Jsoup.connect(URL + "&tabType=recruit&Page_No=" + page).get();
 	    Elements contents = document.select(".post");
 	    
 	    int startIndex = (page - 1) * limit;
