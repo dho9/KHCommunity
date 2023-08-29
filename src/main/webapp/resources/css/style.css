@@ -1532,7 +1532,7 @@ input[name=_tags] {
 
 #container>div.articles>article h3.medium {
 	float: left;
-	max-width: 90px;
+	/* max-width: 90px; */
 	margin: 0 10px 5px 0;
 	height: 20px;
 	line-height: 20px;

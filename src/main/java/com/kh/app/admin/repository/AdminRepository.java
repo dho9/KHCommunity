@@ -282,10 +282,12 @@ public interface AdminRepository {
 			+ "        join curriculum c\r\n"
 			+ "            on s.curriculum_id = c.curriculum_id\r\n"
 			+ "        join member m\r\n"
-			+ "            on s.student_id = m.member_id")
-	List<AdminChatListDto> findAllChat(Map<String, Object> params);
-
+			+ "            on s.student_id = m.member_id\r\n"
+			+ "order by \r\n"
+			+ "		r.chat_id")
 	List<AdminChatListDto> findAllChat(RowBounds rowBounds);
+
+	//List<AdminChatListDto> findAllChat(RowBounds rowBounds);
 
 	@Select("select count(*) from chat_room")
 	int getTotalCountOfChatList();

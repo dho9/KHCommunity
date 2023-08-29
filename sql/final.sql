@@ -1437,3 +1437,5 @@ select * from delete_comment;
 select * from post_comment where comment_id = 243;
 select * from post;
 
+select * from chat_room;
+delete chat_room where chat_id between 119 and 140;
