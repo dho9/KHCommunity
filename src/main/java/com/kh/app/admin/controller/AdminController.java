@@ -668,7 +668,6 @@ public class AdminController {
 	@GetMapping("/adminStoreList.do")
 	public void adminStoreList(Model model) {
 		List<Store> store = storeService.findAll();
-//		 log.debug("ticekt = {}", ticket);
 		model.addAttribute("stores", store);
 	}
 	
@@ -678,6 +677,11 @@ public class AdminController {
 		int result = adminService.deleteStore(storeId);
 		
 		return "redirect:/admin/adminStoreList.do";
+	}
+	
+	@GetMapping("/myClassBoardList.do")
+	public void myClassBoardList() {
+//		List<Curriculum> curriculums = 
 	}
 	
 	// 수강생 휴가 승인 페이지
