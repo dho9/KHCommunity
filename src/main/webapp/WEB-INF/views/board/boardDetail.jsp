@@ -5,14 +5,22 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%-- 글목록 아이콘 --%>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <style>
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
 .listCallBack{
     display: block;
     margin-top: 5px;
-    margin-left: 5px;
-    padding: 0 10px 0 25px;
     height: 35px;
+    padding-right: 7px;
     line-height: 35px;
     border: 1px solid #c62917;
     border-radius: 3px;
@@ -72,8 +80,10 @@ div.child-comments {
 }
 
 article.child {
-	border: 1px solid #e2e2e3;
-	background-color: #e5e8eb66;
+    border: 1px solid #e2e2e3;
+    background-color: #e5e8eb66;
+    border-radius: 10px;
+    margin-top: 5px;
 }
 
 form.writecomment.child {
@@ -235,17 +245,19 @@ ul.commentMenu li {
 #commnetContainer>div.articles>article form.writecomment ul.option li.submit
 	{
 	float: right;
-	background-color: #c62917;
 	background-image:
 		url('${pageContext.request.contextPath}/resources/images/댓글제출.png');
 	background-color: #c62917;
+	border-radius: 10px;
 }
 
 #commnetContainer {
-	display: block;
-	padding: 2px;
-	border: solid 0.7px lightgray;
-	background-color: #f2eded75;
+    margin-top: 7px;
+    display: block;
+    padding: 2px;
+    border: solid 0.7px #001fff47;
+    border-radius: 10px;
+    background-color: #f2eded75;
 }
 
 #messageContainer {
@@ -348,7 +360,7 @@ button.updateBtn, button.deleteBtn{
 						</c:if>
 						<time class="large" style="font-size: 12px">
 							<fmt:parseDate value="${postDetail.postCreatedAt}"
-								pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt" />
+								pattern="yyyy-MM-dd'T'HH:mm" var="createdAt" />
 							<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm" />
 						</time>
 					</div>
@@ -381,7 +393,7 @@ button.updateBtn, button.deleteBtn{
 							<c:if test="${postDetail.boardId eq '5'}">
 								<img
 									src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
-									style="width: 747px;">
+									style="width: 50%;">
 								<p class="large">
 									<textarea id="batch_content" name="batch_content"></textarea>
 
@@ -391,7 +403,7 @@ button.updateBtn, button.deleteBtn{
 							<c:if test="${postDetail.boardId ne '5'}">
 								<img
 									src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
-									style="width: 747px;">
+									style="width: 50%;">
 								<p class="large">${postDetail.content}</p>
 								<br>
 							</c:if>
@@ -450,7 +462,9 @@ button.updateBtn, button.deleteBtn{
 			</div>
 
 		</div>
-		<button class="listCallBack"  onClick="location.href='${pageContext.request.contextPath}/board/${board.boardLink}.do'">글 목록</button>
+		<button class="listCallBack"  onClick="location.href='${pageContext.request.contextPath}/board/${board.boardLink}.do'">
+			<span class="material-symbols-outlined" style="float: left; display: inline-block; margin-top: 5px; margin-right: 7px; margin-left: 4px;">list</span>글 목록
+		</button>
 		
 	</div>
 	<%-- 해시태그를 클릭했을 때의 폼 --%>
@@ -860,8 +874,23 @@ button.updateBtn, button.deleteBtn{
 		        theme: "dracula",   //테마는 맘에드는 걸로.
 		        val: textarea.value
 		    });
-		    
-	    editor.setValue("${postDetail.content}");
+		
+	    	function escapeString(inputString, charToEscape) {
+	    	    // 이스케이프할 문자를 백슬래시와 함께 추가합니다.
+	    	    var escapedChar = '\\' + charToEscape;
+	    	    
+	    	    // 입력된 문자열에서 특정 문자를 찾아 이스케이프합니다.
+	    	    var escapedString = inputString.replace(new RegExp(charToEscape, 'g'), escapedChar);
+	    	    
+	    	    return escapedString;
+	    	}
+
+	    	// 함수 사용 예시
+	    	var escapedString = escapeString(`${postDetail.content}`, '"');
+	    	console.log("escapedString = ",escapedString);
+	    	
+	    	editor.setValue(escapedString);
+	    
 		    language.addEventListener('change', (e) => {
 		        var lang = e.target.value;
 		        if(lang === "javascript" || lang === "html"){
@@ -1053,7 +1082,7 @@ button.updateBtn, button.deleteBtn{
 	
 	// onload 됐을때 즐겨찾기/공감 했는지
 	document.addEventListener('DOMContentLoaded', () => {
-		isFovorite(); // 즐겨찾기했는지
+		// isFovorite(); // 즐겨찾기했는지
 		isLike(); // 공감했는지
 	});
 	  
@@ -1178,6 +1207,8 @@ button.updateBtn, button.deleteBtn{
 	       	readOnly: true,
 	       	cursorBlinkRate: 0  
 	    });
+		
+		
 	    
 	    editor.setValue(content);
 	}
