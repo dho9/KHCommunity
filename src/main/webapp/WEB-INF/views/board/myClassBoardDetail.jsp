@@ -71,95 +71,97 @@
 	margin-top: -3%;
 }
 </style>
+
 	<div id="myClassBoard-div2">
 	<sec:authentication property="principal" var="loginMember"/>
-	<div class="myClassBoard-title">
-		<h2 class="title">우리반 게시판</h2>
-		<p>${loginMember.name}님, 반갑습니다. 'KH소통할까?'에 오신 걸 환영합니다.</p>
-	</div>
-	<div class="myClassBoard-subTitle">
-		<ul>
-			<li style="margin-left: 4%;">${studentInfo.curriculumName}반</li>
-			<li style="margin-left: 3.5%;">[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
-		</ul>
-	</div>
-	
-	<button id="prevBtn" type="button" class="btn btn-outline-primary" value="${postDetail.boardId}"><i class="bi bi-list"></i>글목록</button>
-	
-	<c:if test="${loginMember.memberId eq postDetail.memberId}">
-		<div id="updateAndDeleteBtn-div">
-			<button id="updateBtn" type="button" class="btn btn-outline-primary">수정</button>
-			<button id="deleteBtn" type="button" class="btn btn-outline-primary">삭제</button>
+		<div class="myClassBoard-title">
+			<h2 class="title">우리반 게시판</h2>
+			<p>${loginMember.name}님, 반갑습니다. 'KH소통할까?'에 오신 걸 환영합니다.</p>
 		</div>
-	</c:if>
+		<div class="myClassBoard-subTitle">
+			<ul>
+				<li style="margin-left: 4%;">${studentInfo.curriculumName}반</li>
+				<li style="margin-left: 3.5%;">[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
+			</ul>
+		</div>
+	
+		<button id="prevBtn" type="button" class="btn btn-outline-primary" value="${postDetail.boardId}"><i class="bi bi-list"></i>글목록</button>
+	
+		<c:if test="${loginMember.memberId eq postDetail.memberId}">
+			<div id="updateAndDeleteBtn-div">
+				<button id="updateBtn" type="button" class="btn btn-outline-primary">수정</button>
+				<button id="deleteBtn" type="button" class="btn btn-outline-primary">삭제</button>
+			</div>
+		</c:if>
 
-	<!-- 게시글 -->
-	<div id="post-div" class="d-flex justify-content-center">
-		<div class="card border-primary mb-3">
-		  <div class="card-header">
-		  	<h3>${postDetail.title}</h3>
-		  	<h5>${postDetail.memberName} | 
-			  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
-				<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
-			</h5>
-		  </div>
-		  <div class="card-header">
-			  <c:if test="${postAttach.postRenamedFilename ne null}">
-		  		<a href = '${pageContext.request.contextPath}/board/fileDownload.do?id=${postDetail.postId}';>첨부파일 - ${postAttach.postRenamedFilename}</a>
-			  </c:if>
-			  <c:if test="${postAttach.postRenamedFilename eq null}">
-		  		<a>첨부파일 - 없음</a>
-			  </c:if>
-  	  	  </div>
-		  <div class="card-body">
-		  	<c:if test="${postAttach.postRenamedFilename ne null}">
-			  	<img src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}" style="width: 55%; height: 75%">
-		  	</c:if>
-		    <p class="card-text">${postDetail.content}</p>
-		  </div>
+		<!-- 게시글 -->
+		<div id="post-div" class="d-flex justify-content-center">
+			<div class="card border-primary mb-3">
+			  <div class="card-header">
+			  	<h3>${postDetail.title}</h3>
+			  	<h5>${postDetail.memberName} | 
+				  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
+					<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
+				</h5>
+			  </div>
+			  <div class="card-header">
+				  <c:if test="${postAttach.postRenamedFilename ne null}">
+			  		<a href = '${pageContext.request.contextPath}/board/fileDownload.do?id=${postDetail.postId}';>첨부파일 - ${postAttach.postRenamedFilename}</a>
+				  </c:if>
+				  <c:if test="${postAttach.postRenamedFilename eq null}">
+			  		<a>첨부파일 - 없음</a>
+				  </c:if>
+	  	  	  </div>
+			  <div class="card-body">
+			  	<c:if test="${postAttach.postRenamedFilename ne null}">
+				  	<img src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}" style="width: 55%; height: 75%">
+			  	</c:if>
+			    <p class="card-text">${postDetail.content}</p>
+			  </div>
+			</div>
 		</div>
-	</div>
 	
-	<!-- 댓글 -->
-	<div class="d-flex justify-content-center">
-		<c:if test="${comments ne null}">
-			<ul class="list-group list-group-flush">
-				<c:forEach items="${comments}" var="comment">
-					<c:if test="${comment.commentLevel eq 1}">
-					  <li class="list-group-item">
-					  	<b>${comment.memberName}</b>
-					  	<span>
-					  		<fmt:parseDate value="${comment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
-						  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
-					  	</span>
-					  	<c:if test="${loginMember.memberId eq comment.memberId}">
-						  	<b id="deleteComment" data-value = "${comment.commentId}" style="float: right;">|&nbsp; 삭제</b>
-					  	</c:if>
-					  	<b id="childComment" style="float: right;">답글 &nbsp;</b>
-					  	<input type="hidden" name=commentId value="${comment.commentId}"/>
-					  	<div>${comment.commentContent}</div>
-					  </li>
-					  <c:forEach items="${comments}" var="childComment">
-						<c:if test="${childComment.commentLevel eq 2 && childComment.commentRef eq comment.commentId}">
-						  <li class="list-group-item ml-2">
-						  	<i class="bi bi-arrow-return-right"></i>
-						    <b>${childComment.memberName}</b>
-						    <span>
-						  		<fmt:parseDate value="${childComment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+		<!-- 댓글 -->
+		<div class="d-flex justify-content-center">
+			<c:if test="${comments ne null}">
+				<ul class="list-group list-group-flush">
+					<c:forEach items="${comments}" var="comment">
+						<c:if test="${comment.commentLevel eq 1}">
+						  <li class="list-group-item">
+						  	<b>${comment.memberName}</b>
+						  	<span>
+						  		<fmt:parseDate value="${comment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
 							  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
 						  	</span>
-						  	<c:if test="${loginMember.memberId eq childComment.memberId}">
-							  	<b id="deleteComment" data-value = "${childComment.commentId}" style="float: right;">&nbsp; 삭제</b>
+						  	<c:if test="${loginMember.memberId eq comment.memberId}">
+							  	<b id="deleteComment" data-value = "${comment.commentId}" style="float: right;">|&nbsp; 삭제</b>
 						  	</c:if>
-						  	<div style="margin-left: 21px;">${childComment.commentContent}</div>
+						  	<b id="childComment" style="float: right;">답글 &nbsp;</b>
+						  	<input type="hidden" name=commentId value="${comment.commentId}"/>
+						  	<div>${comment.commentContent}</div>
 						  </li>
+						  <c:forEach items="${comments}" var="childComment">
+							<c:if test="${childComment.commentLevel eq 2 && childComment.commentRef eq comment.commentId}">
+							  <li class="list-group-item ml-2">
+							  	<i class="bi bi-arrow-return-right"></i>
+							    <b>${childComment.memberName}</b>
+							    <span>
+							  		<fmt:parseDate value="${childComment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+								  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
+							  	</span>
+							  	<c:if test="${loginMember.memberId eq childComment.memberId}">
+								  	<b id="deleteComment" data-value = "${childComment.commentId}" style="float: right;">&nbsp; 삭제</b>
+							  	</c:if>
+							  	<div style="margin-left: 21px;">${childComment.commentContent}</div>
+							  </li>
+							</c:if>
+						  </c:forEach>
 						</c:if>
-					  </c:forEach>
-					</c:if>
-				</c:forEach>
-			</ul>
-		</c:if>
-	</div>
+					</c:forEach>
+				</ul>
+			</c:if>
+		</div>
+	
 	<!-- 삭제 폼 -->
 	<form:form action="${pageContext.request.contextPath}/board/deleteMyClassPost.do" name="boardDeleteFrm" method="POST">
 		<input type="hidden" name="deletePostId" id="deletePostId" value="${postDetail.postId}"/>
@@ -176,7 +178,7 @@
 			<input type="hidden" name="boardId" value="${postDetail.boardId}"/>
 			<input type="hidden" name="commentRef" />
 		    <textarea id="commentContent" name="commentContent" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-			<button id="commentBtn" type="submit" class="btn btn-outline-warning">등록</button>
+			<button id="commentBtn" type="submit" class="btn btn-warning">등록</button>
 		</div>
 	</form:form>
 	<form:form name="tokenFrm"></form:form>
@@ -185,7 +187,7 @@
 	document.querySelectorAll('#deleteComment').forEach((deleteComment) => {
 		deleteComment.addEventListener('click', (e) => {
 			if(confirm('정말 삭제하시겠습니까?')) {
-				console.log(e.target.dataset.value);
+				/* console.log(e.target.dataset.value); */
 				const postId = document.querySelector('input[name=postId]').value;
 				$.ajax({
 					url : "${pageContext.request.contextPath}/board/deleteComment.do",
@@ -237,7 +239,8 @@
 							</h5>
 						  </div>
 						  <div class="card-header">
-				      	  	<input class="file" type="file" name="file" multiple="multiple"/>
+						  	<input class="file" type="file" name="file" id="fileInput" multiple="multiple">
+					 	    <label class="btn btn-primary" for="fileInput">파일 선택</label>
 				      	  </div>
 						  <div class="card-body">
 						    <p class="card-text"><textarea style="width: 80%; height: 95%;" name="text">${postDetail.content}</textarea></p>
@@ -254,7 +257,7 @@
 		childComment.addEventListener('click', (e) => {
 			const html = `
 	            <textarea name="commentContent" class="form-control" id="exampleFormControlTextarea1" rows="3" style="background-color: #6495ed1c; height: 70px;"></textarea>
-	            <button id="childCommentBtn" type="button" class="btn btn-outline-warning">등록</button>
+	            <button id="childCommentBtn" type="button" class="btn btn-warning">등록</button>
 	        `;
 	        e.target.closest('li').insertAdjacentHTML('afterend', html);
 	        document.querySelector('#commentContent').style.display = 'none';

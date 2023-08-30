@@ -10,95 +10,184 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-
-
-	<!-- 직무선택 -->
-	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-	    직무선택
-	</button>
-	<div class="collapse" id="collapseExample">
-	  <div class="card card-body">
-	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
-		</div>
-      	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="웹" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="앱" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="게임" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
-		</div>
-	  </div>
-	</div>
-	<!-- 근무지역 -->
-	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-	    근무지역
-	</button>
-    <div class="collapse" id="collapseExample">
-        <div class="card card-body">
-            <button class="btn btn-link" onclick="showLocations(['서울전체', '강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', 
-            																'노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구	', '서초구', '성동구', '성북구', '송파구',
-            																'양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구']);">서울</button>
-            <button class="btn btn-link" onclick="showLocations(['경기전체', '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시',
-            																'남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', 
-            																'안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시',
-            																'의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']);">경기</button>
-            <button class="btn btn-link" onclick="showLocations(['인천전체', '강화군', '계양구', '미추홀구', '남동구', '동구', '부평구', '서구', '연수구', '옹진군', '중구']);">인천</button>
-            <div id="locationDetail"></div>
-        </div>
-    </div>
-    
-	<!-- 경력 -->
-	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-	    경력
-	</button>
-	<div class="collapse" id="collapseExample">
-	  <div class="card card-body">
-	  	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="career" value="신입" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">신입</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">1~3년</label>
-		</div>
-      	<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckDefault" >
-		  <label class="form-check-label" for="flexCheckDefault">4~6년</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">7~9년</label>
-		</div>
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
-		  <label class="form-check-label" for="flexCheckChecked">10~15년</label>
-		</div>
-	  </div>
-	</div>
+<style>
+.card.card-body {
+	width: 300px;
+	height: 200px;
+}
+#type-div {
+	display: inline-block;
+}
+#typeBtn {
+	width: 300px;
+}
+#job {
+	margin-left: 28%;
+	margin-top: 6%;
+}
+#loadMoreButton, #loadMoreButtonByFilter {
+	width: 70px;
+    height: 55px;
+}
+#loadPrevButton, #loadPrevButtonByFilter {
+	width: 70px;
+    height: 55px;
+    /* margin-left: 28%;
+    margin-right: 36.5%; */
+}
+#loadMoreButton {
+	margin-left: 36.5%;
+}
+#loadPrevButton {
+	margin-left: 28%;
+}
+#searchBtn {
+    margin-left: 87%;
+    width: 70px;
+    height: 42px;
+}
+#jobDetail {
+	display: flex;
+    border: 2px solid #007bff;
+    border-radius: 20px;
+    padding: 15px;
+    width: 838px;
+    margin-bottom: 1%;
+}
+#jobDetail:hover {
+	background-color: #f9f9f9;
+}
+#jobDetail a {
+	font-weight: bold;
+}
+#jobDetailCompany {
+	width: 320px;
+	margin-top: 9%;
+    font-size: 27px;
+}
+#jobDetailCompany a {
+	color: #495057;
+    text-align: center;
+    margin-left: -9px;
+}
+#jobDetailEtc {
+	color: #6c757d;
+	font-size: 15px;
+}
+#locationBtn {
+    font-size: 14px;
+}
+</style>
+		
+	<div id="container">
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">
+		      	<button id="typeBtn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				    직무선택
+				</button>
+		      </th>
+		      <th scope="col">
+		      	<button id="typeBtn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				    근무지역
+				</button>
+		      </th>
+		      <th scope="col">
+		      	<button id="typeBtn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				    경력
+				</button>
+		      </th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		      <td>
+		      	<div id="collapseExample">
+			      	<div class="card card-body">
+					  	<div class="form-check">
+						  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드" id="flexCheckDefault" >
+						  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드" id="flexCheckChecked" >
+						  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
+						</div>
+				      	<div class="form-check">
+						  <input class="form-check-input" type="checkbox" name="jobType" value="웹" id="flexCheckDefault" >
+						  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" name="jobType" value="앱" id="flexCheckChecked" >
+						  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어" id="flexCheckChecked" >
+						  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" name="jobType" value="게임" id="flexCheckChecked" >
+						  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어" id="flexCheckChecked" >
+						  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
+						</div>
+					  </div>
+				  </div>
+		      </td>
+		      <td>
+		      	<div id="collapseExample">
+			        <div class="card card-body" style="text-align: center;">
+			        	<div>
+				            <button id="seoulBtn" class="btn btn-outline-primary" onclick="showLocations(['서울전체', '강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', 
+				            																'노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구	', '서초구', '성동구', '성북구', '송파구',
+				            																'양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구']);">서울</button>
+				            <button id="gyeonggiBtn" class="btn btn-outline-primary" onclick="showLocations(['경기전체', '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시',
+				            																'남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', 
+				            																'안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시',
+				            																'의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']);">경기</button>
+				            <button id="incheonBtn" class="btn btn-outline-primary" onclick="showLocations(['인천전체', '강화군', '계양구', '미추홀구', '남동구', '동구', '부평구', '서구', '연수구', '옹진군', '중구']);">인천</button>
+			        	</div>
+			            <div id="locationDetail" style="overflow: scroll; height: 150px; padding: 10px; text-align: left;"></div>
+			        </div>
+			    </div>
+		      </td>
+		      <td>
+		      	<div id="collapseExample">
+				  <div class="card card-body">
+				  	<div class="form-check">
+					  <input class="form-check-input" type="checkbox" name="career" value="신입" id="flexCheckDefault" >
+					  <label class="form-check-label" for="flexCheckDefault">신입</label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
+					  <label class="form-check-label" for="flexCheckChecked">1~3년</label>
+					</div>
+			      	<div class="form-check">
+					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckDefault" >
+					  <label class="form-check-label" for="flexCheckDefault">4~6년</label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
+					  <label class="form-check-label" for="flexCheckChecked">7~9년</label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
+					  <label class="form-check-label" for="flexCheckChecked">10~15년</label>
+					</div>
+				  </div>
+				</div>
+		      </td>
+		    </tr>
+		  </tbody>
+		</table>
 	
 	<!-- 검색 버튼 -->
-	<button class="btn btn-primary" type="button" onclick="searchJobKorea()">
+	<button id="searchBtn" class="btn btn-primary" type="button" onclick="searchJobKorea()">
 	    검색
 	</button>
+	</div>
 	
 	<!-- 채용공고 -->
 	<div id="job"></div>
@@ -129,18 +218,18 @@
 	
 	document.getElementById("loadMoreButton").addEventListener("click", () => {
 	    loadMoreJobPostings();
-		document.getElementById("loadPrevButton").style.display = 'inline-block';
+		document.getElementById("loadPrevButton").style.visibility = 'visible';
 	});
 	
 	window.onload = function () {
 	    jobSearch(currentPage);
-		document.getElementById("loadPrevButton").style.display = 'none';
+		document.getElementById("loadPrevButton").style.visibility = 'hidden';
 	};
 	
 	function loadMoreJobPostings() {
 	    currentPage++;
 	    if(currentPage == 50) {
-	    	document.getElementById("loadMoreButton").style.display = 'none';
+	    	document.getElementById("loadMoreButton").style.visibility = 'hidden';
 	    }
 	    jobSearch(currentPage);
 	}
@@ -148,11 +237,10 @@
 	function loadPrevJobPostings() {
 	    currentPage--;
 	    if(currentPage == 1) {
-	    	document.getElementById("loadPrevButton").style.display = 'none';
+	    	document.getElementById("loadPrevButton").style.visibility = 'hidden';
 	    }
 	    jobSearch(currentPage);
 	}
-	
     function jobSearch(pageNumber) {
     	console.log('!!!!!!!!!!!!!!!', pageNumber)
     	$.ajax({
@@ -175,6 +263,7 @@
     }
     
     function render(jobKoreaList) {
+    	console.log('???????????????????????', jobKoreaList);
     	const job = document.querySelector('#job');
     	job.innerHTML = "";
     	
@@ -182,28 +271,32 @@
     		const company = jobKoreaList[i].company;
     		const title = jobKoreaList[i].title;
     		const option = jobKoreaList[i].option;
-    		const etc = jobKoreaList[i].etc;
+    		let etc = jobKoreaList[i].etc;
     		const url = jobKoreaList[i].url;
     		
     		if(title != "") {
-	    		job.innerHTML += `<div style="display: flex;"><div style="width: 500px;"><a href="\${url}">\${company}</a></div>
-	    		<div style="width: 500px;">
-	    			<p class="medium"><a href="\${url}">\${title}</a></p> <br>
-				  	<p class="medium">\${option}</p> <br>
-				  	<p class="medium">\${etc}</p> <br>
-				</div>
-				</div>
+    			if (etc.split(" ").length > 5) {
+                    etc = etc.split(" ").slice(0, 5).join(" ") + "...";
+                    
+		    		job.innerHTML += `<div id="jobDetail"><div id="jobDetailCompany"><a href="\${url}">\${company}</a></div>
+		    		<div style="width: 640px; height: 183px;">
+		    			<p class="medium" style="font-size: 22px;"><a href="\${url}">\${title}</a></p>
+					  	<p class="medium">\${option}</p>
+					  	<p class="medium" id="jobDetailEtc">\${etc}</p>
+					</div>
+					</div>
 	    		`;
+                }
     		}
     	}
     };
     
     // 검색
     function searchJobKorea(jobKoreaList) {
-    	document.querySelector('#loadPrevButton').style.display = 'none';
-    	document.querySelector('#loadMoreButton').style.display = 'none';
-    	document.querySelector('#loadPrevButtonByFilter').style.display = 'inline-block';
-    	document.querySelector('#loadMoreButtonByFilter').style.display = 'inline-block';
+    	document.querySelector('#loadPrevButton').style.visibility = 'hidden';
+    	document.querySelector('#loadMoreButton').style.visibility = 'hidden';
+    	document.querySelector('#loadPrevButtonByFilter').style.visibility = 'visible';
+    	document.querySelector('#loadMoreButtonByFilter').style.visibility = 'visible';
     	
 		const filterList = [];
 	    const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
@@ -221,7 +314,7 @@
 	    	filterList.push(checkbox.value);
 	    });
 	    
-	    console.log(filterList);
+	    /* console.log(filterList); */
 	    filter(filterList, currentPage);
 	    
 	    document.getElementById("loadPrevButtonByFilter").addEventListener("click", () => {
@@ -230,7 +323,7 @@
 		
 		document.getElementById("loadMoreButtonByFilter").addEventListener("click", () => {
 		    loadMoreJobPostingsByFilter();
-			document.getElementById("loadPrevButtonByFilter").style.display = 'inline-block';
+			document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
 		});
 		
 		function loadMoreJobPostingsByFilter() {
@@ -244,6 +337,7 @@
 		}
 		
 	    function render(jobKoreaList) {
+	    	console.log(jobKoreaList);
 	    	const job = document.querySelector('#job');
 	    	job.innerHTML = "";
 	    	
@@ -255,13 +349,13 @@
 	    		const url = jobKoreaList[i].url;
 	    		
 	    		if(title != "") {
-		    		job.innerHTML += `<div style="display: flex;"><div style="width: 500px;"><a href="\${url}">\${company}</a></div>
-		    		<div style="width: 500px;">
-		    			<p class="medium"><a href="\${url}">\${title}</a></p> <br>
-					  	<p class="medium">\${option}</p> <br>
-					  	<p class="medium">\${etc}</p> <br>
-					</div>
-					</div>
+	    			job.innerHTML += `<div id="jobDetail"><div id="jobDetailCompany"><a href="\${url}">\${company}</a></div>
+			    		<div style="width: 640px; height: 183px;">
+			    			<p class="medium" style="font-size: 22px;"><a href="\${url}">\${title}</a></p>
+						  	<p class="medium">\${option}</p>
+						  	<p class="medium" id="jobDetailEtc">\${etc}</p>
+						</div>
+						</div>
 		    		`;
 	    		}
 	    	}
@@ -279,23 +373,22 @@
             dataType : "json",
             success: function(response) {
             	
-            	console.log(response);
+            	console.log('111111111', response);
             	const {endPage, currentPage} = response;
                 const jobKoreaList = response.jobKoreaList;
-                console.log(jobKoreaList);
-                if(endPage == currentPage) {
-                	document.getElementById("loadMoreButtonByFilter").style.display = 'none';
-                	document.getElementById("loadPrevButtonByFilter").style.display = 'inline-block';
-                }
+                console.log('111111111', jobKoreaList);
                 if(currentPage == 1) {
-                	document.getElementById("loadPrevButtonByFilter").style.display = 'none';
-                	document.getElementById("loadMoreButtonByFilter").style.display = 'inline-block';
-                }
+                	document.getElementById("loadPrevButtonByFilter").style.visibility = 'hidden';
+                	document.getElementById("loadMoreButtonByFilter").style.visibility = 'visible';
+                } 
+                if (endPage == currentPage) {
+                	document.getElementById("loadMoreButtonByFilter").style.visibility = 'hidden';
+                	document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
+                } 
                 render(jobKoreaList);
             }
         });
 	}
-    
 	// 전체체크박스
 	function showLocations(locations) {
 		const locationDetail = document.getElementById("locationDetail");

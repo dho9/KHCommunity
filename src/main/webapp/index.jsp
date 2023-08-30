@@ -24,11 +24,18 @@
 .active {
 	display: block;
 }
+#pageFrame {
+    width: 51%;
+    height: 27%;
+    margin-left: 18%;
+    margin-top: 0.5%;
+}
 </style>
     <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
             <form class="search">
                 <input type="search" name="keyword" class="text" placeholder="전체 게시판의 글을 검색하세요!">
+                
             </form>
             <div class="title">
                 <a class="hamburger"></a>
@@ -135,6 +142,7 @@
                 <div class="board" id="sharingInformationBoardContainer">
                     <h3>
                         <a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do">정보게시판</a>
+                        <li><a href="${pageContext.request.contextPath}/board/study.do">sdasdsadas</a></li>
                     </h3>
                 </div>
             </div>
@@ -184,6 +192,8 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
 </script>
 <sec:authorize access="isAuthenticated()">
 <script>
+
+	// 즐겨찾기한 게시판
     document.querySelector('#myBoard').addEventListener('mouseover', () => {
         $.ajax({
             url: "${pageContext.request.contextPath}/board/myBoards.do",
@@ -210,7 +220,7 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
             }
         });
     });
-    document.querySelector('.favorite').addEventListener('mouseout', (e) => {
+    document.querySelector('.favorite').addEventListener('mouseleave', (e) => {
         console.log(e+'ㅋㅋㅋㅋ');
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
