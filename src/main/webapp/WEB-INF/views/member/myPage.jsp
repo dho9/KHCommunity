@@ -52,9 +52,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 /*  메세지 css */
 @font-face { font-family: 'Pretendard-Regular'; src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff'); font-weight: 400; font-style: normal;}
-#messageBoxDiv,#messageDetail,#reportModal{font-family: 'Pretendard-Regular'; text-align: center; font-weight: 100;}
+#messageBoxDiv,#messageDetail,#reportModal,#vacationModal{font-family: 'Pretendard-Regular'; text-align: center; font-weight: 100;}
 .truncate-text {max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; display: inline-block;}
-#messageDetail,#reportModal {background-color: rgba(0, 0, 0, 0.2);}
+#messageDetail,#reportModal,#vacationModal {background-color: rgba(0, 0, 0, 0.2);}
 #messageTbl td,tr,th{text-align: center;}
 #messageDetail .modal-dialog{margin: 8% auto; width: 40%;}
 #reportModal .modal-dialog{margin: 8% auto; width: 40%; background-color: white;}
@@ -81,11 +81,13 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 #memberDelBtn{display: inline-block; margin: 3px 40%;}
 
 /* 구매내역 css */
-#messageTbl td,tr,th{text-align: center;}
+#messageTbl td,tr,th{text-align: center; font-family: 'Pretendard-Regular';}
 
 
 /* 휴가신청 css */
 /* #vacationDiv .btn btn-primary {display: inline-block;} */
+#vacationModal{text-align: left;}
+#vcUpFile{width:100%; margin-left: -45px;}
 
 .chat_window {
   width: 100%;
@@ -275,7 +277,17 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
   display: none;
 }
 
-
+#chatTbl td,th{
+ 	padding: 5px;
+ 	vertical-align: baseline;
+ 	font-family: 'Pretendard-Regular';
+}
+#chatView{
+	padding: 3px 12px;
+}
+#vcSubmit{
+	margin-left: 40%;
+}
 
 </style>
 
@@ -304,7 +316,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="chatListBtn"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 상담내역</p>
+			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
 			<hr class="myPageHr"/>
 			
 			<!-- 성근님 코드 -->
@@ -326,11 +338,20 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		<!-- 나의 수강정보 div -->
 		<div class="mypageContent">
 			<span class="classInfo">나의 수강정보 &nbsp;&nbsp;&nbsp;</span>
-			<p class="classInfo">${studentInfo.curriculumName }반</p>
-			<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId} &nbsp;</p>
-			<h2 class="classInfo">
-			<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
-			<c:if test="${not fn:contains(Ddays, '-')}">D - ${Ddays}</c:if>
+			<c:if test="${not empty studentInfo.curriculumName}">
+				<p class="classInfo">${studentInfo.curriculumName}반</p>
+				<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId} &nbsp;</p>
+				<h2 class="classInfo">
+				<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
+				<c:if test="${not fn:contains(Ddays, '-')}">D - ${Ddays}</c:if>
+				</h2>
+			</c:if>
+			<c:if test="${empty studentInfo.curriculumName}">
+				<span class="classInfo">배정된 반이 없습니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<h2 class="classInfo">
+					&nbsp;예비생
+				</h2>							
+			</c:if>
 			</h2>
 		</div>
 		
@@ -396,7 +417,23 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			
 		</div>	
 		
-	
+			
+		
+		<!-- 쪽지모달 -->
+		<div id="messageDetail" class="modal fade" role="dialog">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-body">
+		            <button type="button" class="close msg-close" data-dismiss="modal">&times;</button></br>
+		                <h3>쪽지내용 상세보기</h3></br></br>
+		                <textarea class="modal-message-content" readonly></textarea></br></br>
+		                 <button type="button" class="btn btn-primary" id="editButton">삭제</button>&nbsp;&nbsp;&nbsp;
+		                 <button type="button" class="btn btn-outline-primary" id="reportButton">신고</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>		
+		
 		
 		<!-- 구매내역 div-->
 		<div class="mypageContent">
@@ -431,6 +468,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			</div>
 		</div>	
 		
+		
+		<!-- 상담내역 div -->
 		<div class="mypageContent">
 			<p class="infoTitles"><i class="bi bi-chat-right-text"></i> &nbsp;상담내역</p>
 			<div class="myPageDivs" id="chatQnAList" >	
@@ -447,7 +486,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</tbody>
 				</table>
 				<br/>
-				<div class="d-flex justify-content-center" style="margin-top: 3%">
+				<div class="d-flex justify-content-center">
 					<ul class="pagination chatPagination">
 					    <li class="page-item disabled">
 					      <a id="prev" class="page-link" href="#">이전</a>
@@ -491,243 +530,236 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		
 		
 		<!-- 휴가신청 -->
-		<div class="mypageContent">
-				<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
-				<div class="myPageDivs" id="vacationDiv" >		
-					<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
-						enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
-					
-						<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
-						<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
-							 <br/>
-							 <tr>
-								<th> 휴가시작날짜 : </th>
-								<td>
-									<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
-								</td>
-							</tr>
-							<br/>
-						
-							<tr>
-								<th>휴가끝나는날짜 : </th>
-								<td>
-									<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
-								</td>
-							</tr>
-							
-							<br/>
-							<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
-						<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId}" readonly>
-						
-						<div class="input-group" style="padding:0px;">
-			  				<div class="custom-file">
-			    				<input type="file" class="fileInput" name="upFile" id="upFile" multiple>
-			    				<!-- <label class="custom-file-label" for="upFile">파일을 선택하세요</label> -->
-			  				</div>		  				
+		<div id="vacationModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+	        	<div class="modal-content">
+	            	<div class="modal-body">
+	            		<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br>
+						<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
+							<div class="myPageDivs" id="vacationDiv" >		
+								<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
+									enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
+									<br/>
+									<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
+									<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
+										 <br/>
+										 <br/>
+										 <tr>
+											<th> 휴가시작날짜 : </th>
+											<td>
+												<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
+											</td>
+										</tr>
+										<br/>
+										<br/>
+									
+										<tr>
+											<th>휴가끝나는날짜 : </th>
+											<td>
+												<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
+											</td>
+										</tr>
+										
+										<br/>
+										<br/>
+										<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
+									<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId}" readonly>
+									
+									<div class="input-group" style="padding:0px;">
+						  				<div class="custom-file">
+						    				<input type="file" class="form-control" name="upFile" id="vcUpFile" multiple>
+						  				</div>		  				
+									</div>
+									<br/>
+									<br/>
+									<input type="submit"  class="btn btn-primary" id="vcSubmit" value="&nbsp;&nbsp;저장&nbsp;&nbsp;" >
+									<br/>
+									<br/>
+								</form:form>
+							</div>	
 						</div>
-						<label class="frmStyles" for="state">처리상황 &nbsp;: &nbsp;</label>
-						<span id="state" class="frmStyles"></span>
-						<br/>
-						<input type="submit"  class="btn btn-primary" value="저장" >
-					</form:form>
-				</div>
-			</div>	
-		
+					</div> 
+				</div>	
+			</div>
 		</div> 
 	
 	<!-- 메인컨테이너 div끝 -->
-		
-		
-	<!-- 쪽지모달 -->
-	<div id="messageDetail" class="modal fade" role="dialog">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-body">
-	            <button type="button" class="close" data-dismiss="modal">&times;</button></br>
-	                <h3>쪽지내용 상세보기</h3></br></br>
-	                <textarea class="modal-message-content" readonly></textarea></br></br>
-	                 <button type="button" class="btn btn-primary" id="editButton">삭제</button>&nbsp;&nbsp;&nbsp;
-	                 <button type="button" class="btn btn-outline-primary" id="reportButton">신고</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>		
+
 	
-	
-	<!-- 회원관리 모달 -->
-	<div class="modal fade" id="InfoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h1 class="modal-title fs-5" id="memberModalLabel"></h1>
-		        <button type="button" class="btn-close infoClose" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body">
-		        <div id="update-container" class="myPageDivs">
-					<%-- principal을 변수 loginMember 저장 --%>
-					<form:form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post" id="memberUpdateFrm">
-					<tr>
-						<th>아이디 : </th>
-						<td>
-							<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
-						</td>
-					</tr>
-					<br/>
-					<div class="forHide">
-					<tr>
-						<th>패스워드 : </th>
-						<td>
-							<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>패스워드 확인 : </th>
-						<td>
-							<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
-						</td>
-					</tr>
-					<br/>
-					</div>
-					<tr>
-						<th>이름 : </th>
-						<td>
-							<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>생일 : </th>
-						<td>
-							<input type="date" class="form-control readChange" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>전화번호 : </th>
-						<td>
-							<input type="tel" class="form-control readChange" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>이메일 : </th>
-						<td>
-							<input type="email" class="form-control readChange" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
-						</td>
-					</tr>
-					<br/>
-					<hr class="myPageHr"/>
-					<div id="modalBtns" class="forHide">
-						<input type="submit" class="btn btn-primary" value="수정" >&nbsp;
-						<input type="reset" class="btn btn-outline-primary" value="초기화">
-					</div>
+		<!-- 회원관리 모달 -->
+		<div class="modal fade" id="InfoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h1 class="modal-title fs-5" id="memberModalLabel"></h1>
+			        <button type="button" class="btn-close infoClose" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <div id="update-container" class="myPageDivs">
+						<%-- principal을 변수 loginMember 저장 --%>
+						<form:form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post" id="memberUpdateFrm">
+						<tr>
+							<th>아이디 : </th>
+							<td>
+								<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
+							</td>
+						</tr>
+						<br/>
+						<div class="forHide">
+						<tr>
+							<th>패스워드 : </th>
+							<td>
+								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>패스워드 확인 : </th>
+							<td>
+								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+							</td>
+						</tr>
+						<br/>
+						</div>
+						<tr>
+							<th>이름 : </th>
+							<td>
+								<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>생일 : </th>
+							<td>
+								<input type="date" class="form-control readChange" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>전화번호 : </th>
+							<td>
+								<input type="tel" class="form-control readChange" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>이메일 : </th>
+							<td>
+								<input type="email" class="form-control readChange" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
+							</td>
+						</tr>
+						<br/>
+						<hr class="myPageHr"/>
+						<div id="modalBtns" class="forHide">
+							<input type="submit" class="btn btn-primary" value="수정" >&nbsp;
+							<input type="reset" class="btn btn-outline-primary" value="초기화">
+						</div>
+						</form:form>
+						
+						<!-- 탈퇴폼 -->
+						<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm" method="post">
+						<tr>
+							<th>아이디 : </th>
+							<td>
+								<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
+							</td>
+						</tr>
+						<br/>
+						
+						<tr>
+							<th>패스워드 : </th>
+							<td>
+								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+							</td>
+						</tr>
+						<br/>
+						
+						<tr>
+							<th>패스워드 확인 : </th>
+							<td>
+								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>이름 : </th>
+							<td>
+								<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>생일 : </th>
+							<td>
+								<input type="date" class="form-control" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>전화번호 : </th>
+							<td>
+								<input type="tel" class="form-control" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
+							</td>
+						</tr>
+						<br/>
+						<tr>
+							<th>이메일 : </th>
+							<td>
+								<input type="email" class="form-control" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
+							</td>
+						</tr>
+						<br/>
+						<hr class="myPageHr"/>
+							<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
 					</form:form>
-					
-					<!-- 탈퇴폼 -->
-					<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm" method="post">
-					<tr>
-						<th>아이디 : </th>
-						<td>
-							<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
-						</td>
-					</tr>
-					<br/>
-					
-					<tr>
-						<th>패스워드 : </th>
-						<td>
-							<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
-						</td>
-					</tr>
-					<br/>
-					
-					<tr>
-						<th>패스워드 확인 : </th>
-						<td>
-							<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>이름 : </th>
-						<td>
-							<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>생일 : </th>
-						<td>
-							<input type="date" class="form-control" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>전화번호 : </th>
-						<td>
-							<input type="tel" class="form-control" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
-						</td>
-					</tr>
-					<br/>
-					<tr>
-						<th>이메일 : </th>
-						<td>
-							<input type="email" class="form-control" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
-						</td>
-					</tr>
-					<br/>
-					<hr class="myPageHr"/>
-						<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
-				</form:form>
-				</div>
-		      </div>
-		    </div>
-		  </div>
-	</div>
-	
-	<!-- 신고하기 모달 -->
-	<div id="reportModal" class="modal fade" role="dialog">
-	    <div class="modal-dialog">
-	    	<div class="modal-content">
-	    	<div class="modal-header">
-		        <h1 class="modal-title fs-5">신고하기</h1>
-		        <button type="button" class="btn-close reportClose" data-bs-dismiss="modal" aria-label="Close"></button>
-		    </div>
-	    	<div class="modal-body">
-			    <form:form 
-			    	id="reportForm"
-			    	name="reportForm"
-			    	action="${pageContext.request.contextPath}/message/messageReport.do"
-			    	method="post"
-			    >
-			      <input type="hidden" name="reportMessageId" id="reportMessageId" value=""> 
-			      <input type="hidden" name="reporterId" id="reporterId" value="${loginMember.username}">
-			      <input type="hidden" name="attackerId" id="attackerId" value="">
-			      <input type="hidden" id="reportType" name="reportType" value="">
-			      <br/>
-			      <label for="reportType">신고유형</label>
-			      <br/>
-			      <select name="reportType_" id="reportType_" >
-							<option value="선택없음">신고 유형을 선택해주세요</option>	      			
-							<option value="욕설/비하">욕설/비하</option>	      			
-							<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>	      			
-							<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>	      			
-							<option value="유출/사칭/사기">유출/사칭/사기</option>	      			
-							<option value="낚시/놀람/도배">낚시/놀람/도배</option>	      			
-							<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>	      			
-		     	  </select><br/>
-		     	  <br/>
-			      <label for="reportContent">신고내용</label><br/>
-			      <textarea id="reportContent" name="reportContent" rows="4" required></textarea>
-			      <br/><br/><br/>
-			      <hr class="myPageHr"/>
-			      <button class="btn btn-outline-primary" type="submit" id="reportSubmit">&nbsp;&nbsp;&nbsp;제출&nbsp;&nbsp;&nbsp;</button>
-			    </form:form>
+					</div>
+			      </div>
 			    </div>
-		    </div>
+			  </div>
 		</div>
-	</div>	
+		
+		<!-- 신고하기 모달 -->
+		<div id="reportModal" class="modal fade" role="dialog">
+		    <div class="modal-dialog">
+		    	<div class="modal-content">
+		    	<div class="modal-header">
+			        <h1 class="modal-title fs-5">신고하기</h1>
+			        <button type="button" class="btn-close reportClose" data-bs-dismiss="modal" aria-label="Close"></button>
+			    </div>
+		    	<div class="modal-body">
+				    <form:form 
+				    	id="reportForm"
+				    	name="reportForm"
+				    	action="${pageContext.request.contextPath}/message/messageReport.do"
+				    	method="post"
+				    >
+				      <input type="hidden" name="reportMessageId" id="reportMessageId" value=""> 
+				      <input type="hidden" name="reporterId" id="reporterId" value="${loginMember.username}">
+				      <input type="hidden" name="attackerId" id="attackerId" value="">
+				      <input type="hidden" id="reportType" name="reportType" value="">
+				      <br/>
+				      <label for="reportType">신고유형</label>
+				      <br/>
+				      <select name="reportType_" id="reportType_" >
+								<option value="선택없음">신고 유형을 선택해주세요</option>	      			
+								<option value="욕설/비하">욕설/비하</option>	      			
+								<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>	      			
+								<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>	      			
+								<option value="유출/사칭/사기">유출/사칭/사기</option>	      			
+								<option value="낚시/놀람/도배">낚시/놀람/도배</option>	      			
+								<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>	      			
+			     	  </select><br/>
+			     	  <br/>
+				      <label for="reportContent">신고내용</label><br/>
+				      <textarea id="reportContent" name="reportContent" rows="4" required></textarea>
+				      <br/><br/><br/>
+				      <hr class="myPageHr"/>
+				      <button class="btn btn-outline-primary" type="submit" id="reportSubmit">&nbsp;&nbsp;&nbsp;제출&nbsp;&nbsp;&nbsp;</button>
+				    </form:form>
+				    </div>
+			    </div>
+			</div>
+		</div>	
 		
 </selction>
 <script>
@@ -743,10 +775,13 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	});
 	
 	
+	
 	// MH - 쪽지함 관련 기능 시작
+	let msgId = ""; // 전역 변수로 선언
+	
 	const msgList = (page) => {
-		msgPage();
-		const size = 5;
+		
+		
 	    $.ajax({
 	        url: `${pageContext.request.contextPath}/message/messageList.do`,
 	        method: "GET",
@@ -756,10 +791,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	        	},
 	        success: function(responseData) {
 	            const messageBoxTbl = document.querySelector("#messageBoxTbl");
-	            if (responseData.length !== 0) {
-	            	
+	            
+	            const messageList =responseData.messageList;
+	            if (messageList.length !== 0) {
 	                let html = ""; 
-	                responseData.forEach(function(message) {
+	                messageList.forEach(function(message) {
 	                    let readCk = ""
 						if(message.readCheck == 'y'){
 							readCk = `<i class="bi bi-envelope-paper-heart"></i>`;
@@ -775,12 +811,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					            <td class="readCheckColumn">\${readCk}</td>
 					        </tr>
 					    `;
-	                    
 	                });
 	                
 	                messageBoxTbl.innerHTML = html; 
 	                
-	                let msgId = "";
 					let readCheckValue ="";
 					let sender = "";
 					$(document).ready(function() {
@@ -794,13 +828,19 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					        } else {
 					        	readCheckValue = 'y';
 					        }
-					        
 					        msgId = $(this).closest("tr").find(".msgId").html();
 					        $("#messageDetail").modal("show");
 					        updateReadCheck(readCheckValue, msgId, page);
+					        
 					    });
+					    
+					    
+					    const totalPage = responseData.totalPages;
+					    
+					    
 					    $("#editButton").click(function() {
-					    	deleteMsg(msgId, page);
+					    	console.log("112121dddddd");
+					    	deleteMsg(msgId, page, totalPage);
 					    });
 					    $("#reportButton").click(function() {
 					    	reportMsg(msgId, sender);
@@ -814,99 +854,86 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	                    </tr>	
 	                `;
 	            }
+	            let totalPages = responseData.totalPages;
+	            messagePagination(page, totalPages);
 	        }
 	    });
 	};
+
 	
-	const msgAllList =() =>{
-		let listSize= 0;
-		$.ajax({
-			url: "${pageContext.request.contextPath}/message/messageAllList.do",
-			method : "GET",
-			dataType : "json",
-			success(responseData){
-				listSize = responseData.listNum
-			}
-		});
-		return listSize;
-	};
+	function loadMsgPage(pageNumber) {
+		msgList(pageNumber);
+        currentPage = pageNumber;
+    }
 	
-	const msgPage =() =>{
-		$.ajax({
-			url: "${pageContext.request.contextPath}/message/messageAllList.do",
-			method : "GET",
-			dataType : "json",
-			success(responseData){
-				let listSize = responseData.listNum
-				let pages = 0;
-				pages = Math.ceil(listSize / 5);
-				
-				const paginationContainer = document.querySelector(".msgPagination");
-	            paginationContainer.innerHTML = "";
-
-	            let paginationHTML = `
-	                <li class="page-item disabled" id="prevButton">
-	                    <span class="page-link">Previous</span>
-	                </li>
-	            `;
-	            
-	            if(listSize ==0){
-	            	paginationHTML += `
-                        <li class="page-item active" aria-current="page">
-                            <span class="page-link" onclick="changePage(1)">1</span>
-                        </li>
-                    `;
-	            }
-
-	            for (let i = 1; i <= pages; i++) {
-	                if (i === 1) {
-	                    paginationHTML += `
-	                        <li class="page-item" aria-current="page">
-	                            <span class="page-link" onclick="changePage(\${i})">\${i}</span>
-	                        </li>
-	                    `;
-	                } else {
-	                    paginationHTML += `
-	                        <li class="page-item" onclick="changePage(\${i})">
-	                            <span class="page-link">\${i}</span>
-	                        </li>
-	                    `;
-	                }
-	            }
-
-	            paginationHTML += `
-	                <li class="page-item disabled" id="nextButton">
-	                    <a class="page-link" href="#" onclick="nextPage()">Next</a>
-	                </li>
-	            `;
-
-	            paginationContainer.innerHTML = paginationHTML;
-
-	           
-			}
-		});
-	};
 	
-	function changePage(page) {
-	    currentPage = page;
-	    updatePageButtons();
-	    msgList(currentPage);
-	}
+	function messagePagination(currentPage, pages) {
+	    const paginationElement = document.querySelector('.msgPagination');
+	    paginationElement.innerHTML = ""; // 기존 페이지 바 내용 초기화
 
-	function updatePageButtons() {
-	    const pageItems = document.querySelectorAll(".page-item");
-	    
-	    pageItems.forEach(item => {
-	        item.classList.remove("active");
+	    // 이전 페이지 링크
+	    const prevButton = document.createElement('li');
+	    prevButton.classList.add('page-item');
+	    if (currentPage === 1) {
+	        prevButton.classList.add('disabled');
+	    }
+	    const prevLink = document.createElement('a');
+	    prevLink.classList.add('page-link');
+	    prevLink.textContent = '이전';
+	    prevLink.setAttribute('href', '#');
+	    prevLink.addEventListener('click', () => {
+	    	event.preventDefault();
+	    	loadMsgPage(currentPage - 1);
 	    });
+	    prevButton.appendChild(prevLink);
+	    paginationElement.appendChild(prevButton);
 
-	    const currentPageItem = document.querySelector(`.page-item:nth-child(\${currentPage + 1})`);
-	    currentPageItem.classList.add("active");
+	    // 페이지 번호 링크
+	    for (let i = 1; i <= pages; i++) {
+	        const pageButton = document.createElement('li');
+	        pageButton.classList.add('page-item');
+	        if (i === currentPage) {
+	            pageButton.classList.add('active');
+	        }
+	        const pageLink = document.createElement('a');
+	        pageLink.classList.add('page-link');
+	        pageLink.textContent = i;
+	        pageLink.setAttribute('href', '#');
+	        pageLink.setAttribute('data-page', i);
+	        pageLink.addEventListener('click', (event) => {
+	        	event.preventDefault();
+	            const clickedPage = event.target.getAttribute('data-page');
+	            if (clickedPage) {
+	            	loadMsgPage(parseInt(clickedPage));
+	            }
+	        });
+	        pageButton.appendChild(pageLink);
+	        paginationElement.appendChild(pageButton);
+	    }
+
+	    // 다음 페이지 링크
+	    const nextButton = document.createElement('li');
+	    nextButton.classList.add('page-item');
+	    if (currentPage === pages) {
+	        nextButton.classList.add('disabled');
+	    }
+	    const nextLink = document.createElement('a');
+	    nextLink.classList.add('page-link');
+	    nextLink.textContent = '다음';
+	    nextLink.setAttribute('href', '#');
+	    nextLink.addEventListener('click', () => {
+	    	loadMsgPage(currentPage + 1);
+	    });
+	    nextButton.appendChild(nextLink);
+	    paginationElement.appendChild(nextButton);
 	}
 	
+
+
 	// 쪽지 읽음 여부 업데이트
 	const updateReadCheck = (checked, msgId, page) =>{
 		console.log(checked, msgId);
+
 		if(checked == 'n'){
 			$.ajax({
 				url: "${pageContext.request.contextPath}/message/messageUpdate.do",
@@ -923,22 +950,45 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		}
 	};
 	
+	let deletingMsg = false;
 	// 쪽지삭제
-	const deleteMsg = (msgId, page) =>{
-		$.ajax({
-			url: "${pageContext.request.contextPath}/message/messageDelete.do",
-			data :{
-				messageId : msgId
-			},
-			method : "GET",
-			dataType : "json",
-			success(responseData){
-				msgList(page);
-				$('#messageDetail').modal('hide');
-			}
-		});
-	};
+	const deleteMsg = (msgId, page) => {
+	    if (deletingMsg) {
+	        console.log("Deletion in progress. Please wait.");
+			console.log("no.0");
+	        return; // 이미 삭제 처리 중이면 함수 종료
+	    }
 	
+	    console.log("delpage", page);
+	    $.ajax({
+	        url: "${pageContext.request.contextPath}/message/messageDelete.do",
+	        data: {
+	            messageId: msgId
+	        },
+	        method: "GET",
+	        dataType: "json",
+	        beforeSend: function() {
+	            deletingMsg = true; // 삭제 처리 시작 전에 상태 업데이트
+	            console.log("no.1");
+	        },
+	        success(responseData) {
+	            msgList(page);
+	            $('#messageDetail').modal('hide');
+	        	console.log("처리완료");
+	        	 console.log("no.2");
+	        },
+	        error(responseData) {
+	            alert("신고된 메세지는 처리 전에 삭제할 수 없습니다.");
+	            $('#messageDetail').modal('hide');
+	            console.log("no.3");
+	        },
+	        complete: function() {
+
+	            deletingMsg = false; // 삭제 처리 완료 후 상태 업데이
+	            console.log("no.4");
+	        }
+	    });
+	};
 	
 	// 쪽지신고 
 	const reportMsg = (msgId, sender) =>{
@@ -1021,6 +1071,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		$("#InfoModal").modal("show");
 		
 	};
+
 	// 2. 수정
 	document.querySelector("#infoUdate").onclick=()=>{
 		document.querySelector("#memberDeleteFrm").style.display="none";
@@ -1062,6 +1113,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	document.querySelector(".reportClose").onclick=()=>{		
 		$("#reportModal").modal("hide");
 	};
+	document.querySelector(".vacation-close").onclick=()=>{		
+		$("#vacationModal").modal("hide");
+	};
+	document.querySelector(".msg-close").onclick=()=>{		
+		$("#messageDetail").modal("hide");
+	};
 
 	const deleteMember = () => {
 		
@@ -1072,6 +1129,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	};
 	
 	// 회원 관련 기능 끝
+	
+	document.querySelector("#vacationBtn").onclick=()=>{
+		$("#vacationModal").modal("show");
+		
+		
+	};
 
 
 </script>	
@@ -1259,36 +1322,36 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	                if(studentChatList.length == 0) {
 	                	chatTblBody.innerHTML = `
 							<tr>
-					  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
+					  			<th colspan="5">조회된 게시글이 존재하지 않습니다.</th>
 					  		</tr>
 						`;
+					} else {
+		                for(let i = 0; i < studentChatList.length; i++){
+		                	
+		                	console.log(pageNum, pageNum-1, (pageNum-1) * 5, (pageNum-1) * 5 + i, (pageNum-1) * 5 + i +1)
+		                	html+=`
+		                	<tr>
+				            <td>\${(pageNum-1) * 5 + i + 1}</td>
+				            <td>\${studentChatList[i].studentName}(\${studentChatList[i].studentId})</td>
+				            <td>\${studentChatList[i].chatType}</td>
+				            <td>\${studentChatList[i].chatDate}</td>
+				            <td>
+				                <button type="button" class="btn btn-outline-primary" id="chatView"
+				                        style="--bs-btn-padding-y: .0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .6rem;"
+				                        data-bs-toggle="modal" data-bs-target="#chatModal"
+				                        data-chatid="\${studentChatList[i].chatId}">
+				                    보기
+				                </button>
+				            </td>
+			            	<tr>` 
+			            	
+		                }
+	                	chatTblBody.innerHTML = html;
+		                renderPagination(currentPage, totalPages);
+		                chatlogBtn();
 					}
-	                for(let i = 0; i < studentChatList.length; i++){
-	                	
-	                	console.log(pageNum, pageNum-1, (pageNum-1) * 5, (pageNum-1) * 5 + i, (pageNum-1) * 5 + i +1)
-	                	html+=`
-	                	<tr>
-			            <td>\${(pageNum-1) * 5 + i + 1}</td>
-			            <td>\${studentChatList[i].studentName}(\${studentChatList[i].studentId})</td>
-			            <td>\${studentChatList[i].chatType}</td>
-			            <td>\${studentChatList[i].chatDate}</td>
-			            <td>
-			                <button type="button" class="btn btn-outline-primary" id="chatView"
-			                        style="--bs-btn-padding-y: .0rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
-			                        data-bs-toggle="modal" data-bs-target="#chatModal"
-			                        data-chatid="\${studentChatList[i].chatId}">
-			                    보기
-			                </button>
-			            </td>
-		            	<tr>` 
-		            	
-	                }
 	                
-	                chatTblBody.innerHTML = html;
 	                
-	                renderPagination(currentPage, totalPages);
-	                
-	                chatlogBtn();
 	            },
 	            error: function () {
 	                console.log("실패");
@@ -1356,7 +1419,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		    nextLink.textContent = '다음';
 		    nextLink.setAttribute('href', '#');
 		    nextLink.addEventListener('click', () => {
-		        loadNextPage();
+		        loadPage(currentPage + 1);
 		    });
 		    nextButton.appendChild(nextLink);
 		    paginationElement.appendChild(nextButton);
