@@ -4,6 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
 a.article{
@@ -85,6 +87,7 @@ color: black;
 					</a>
 				</c:forEach>
 			</article>
+			
 			<div class="pagination">
 		        <ul>
 		          <c:if test="${currentPage > 1}">
@@ -106,7 +109,28 @@ color: black;
 		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage + 1}" ></a></li>
 		          </c:if>
 		        </ul>
-	      </div>
+	        </div> 
+	        
+		  <%-- 부트스태랩
+		  <ul class="pagination justify-content-center">
+		    
+		    <li class="page-item">
+		      <a class="page-link" href="#" aria-label="Previous">
+		        <span aria-hidden="true">&laquo;</span>
+		      </a>
+		    </li>
+		    
+		    <c:if test="${currentPage > 1}">
+			    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}">1</a></li>
+		    </c:if>
+		    
+		    <li class="page-item">
+		      <a class="page-link" href="#" aria-label="Next">
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		    </li>
+		  </ul>
+		   --%>
 		</c:if>
 	</div>
     <form:form name="tokenFrm"></form:form>
