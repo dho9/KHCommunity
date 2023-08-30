@@ -39,8 +39,8 @@
             </div>
         </aside>
         <div class="banners">
-            <a href=""><img src=""
-                    style="width: 600px; height: 200px; outline: auto;"></a>
+            <a href="https://www.iei.or.kr/company/company.kh"><img src="${pageContext.request.contextPath}/resources/images/banner.png"
+                    style="width: 600px; height: 200px;"></a>
         </div>
         <sec:authentication property="principal" var="loginMember"/>
         <form:form name ="memberLogoutFrm" 
