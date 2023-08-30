@@ -26,6 +26,7 @@ import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.StudentVacation;
 import com.kh.app.member.entity.StudentVacationAttachment;
+import com.kh.app.notification.entity.Notification;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 @Mapper
@@ -129,6 +130,12 @@ public interface MemberRepository {
 
 	@Select("select * from chat_message where chat_id = #{chatId} order by chat_no")
 	List<ChatMessage> getChatMessagesByChatId(int chatId);
+
+	@Select("SELECT * FROM (SELECT * FROM alarm WHERE received_id = #{memberId} ORDER BY alarm_id DESC) WHERE ROWNUM <= 6")
+	List<Notification> getNotificationsById(String memberId);
+
+	@Update("update alarm set read_check = 'y' where alarm_id = #{alarmId}")
+	int updateAlarmReadCheck(int alarmId);
 
 
 }

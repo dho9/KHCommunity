@@ -16,6 +16,52 @@
 .new {
 	text-decoration: none;
 }
+
+#alarmTextBox{
+	font-size:15px;
+	display: inherit;
+    padding-top: 27px;
+    width: 150px;
+    justify-content: center;
+    align-items: center;
+}
+
+#alarmContentBox {
+	font-size:10px;
+	border:2px solid black;
+	border-radius:15px;
+	padding:10px;
+	margin-top:5px;
+	width:fit-content;
+	margin-right:30px;
+	opacity:0;
+	transition: opacity 0.5s ease;
+}
+
+#alarmImgBox {
+	cursor:pointer;
+}
+
+#alarmBox.show-content #alarmContentBox{
+	
+	opacity:1;
+}
+
+#alarmImg {
+  transform-origin: top;
+}
+
+@keyframes bell{
+  0%, 50%{
+	transform: rotate(0deg);
+	}
+  5%, 15%, 25%, 35%, 45% {
+	transform: rotate(13deg);
+  }
+  10%, 20%, 30%, 40% {
+	transform: rotate(-13deg);
+  }
+}
 </style>
 
 
@@ -37,6 +83,7 @@
 	
 <link href="/favicon.ico" rel="shortcut icon">
 	<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/style.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>KH소통할까?</title>
     <meta charset="utf-8">
     <meta name="referrer" content="origin">
@@ -78,14 +125,27 @@
                <a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/images/로고.png"
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
-            <div id="account">
+            <div id="account" style="display:flex;">
             	<sec:authorize access="hasAuthority('ADMIN')">
 	            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:60px; font-size: 1px;">
 	            		관리자페이지
 	            	</a>
             	</sec:authorize>
-               <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="로그인" class="icon message">로그인</a>
-               <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="회원가입" class="icon my">회원가입</a>
+            	<sec:authorize access="isAuthenticated()">
+            		<div style="width:65px;" id="alarmBox">
+            			<div id="alarmImgBox" style="display:flex; padding-top:10px;">
+            				<img id="alarmImg" style="width:30px;" alt="" src="${pageContext.request.contextPath}/resources/images/alarmicon.png">
+							
+            			</div>
+            			<div id="alarmContentBox" style="background-color:white;">
+            				
+            			</div>
+            		</div>
+            	</sec:authorize>
+            	<sec:authorize access="!isAuthenticated()">
+	               <a href="${pageContext.request.contextPath}/member/memberLogin.do" title="로그인" class="icon message">로그인</a>
+    	           <a href="${pageContext.request.contextPath}/member/memberCreate.do" title="회원가입" class="icon my">회원가입</a>
+            	</sec:authorize>
 
             </div>
             <ul id="menu">
@@ -165,10 +225,205 @@
 	        });
         }
    });
+	
+	
 	</script>
 	<sec:authorize access="isAuthenticated()">
 		<script>
 			const memberId = '<sec:authentication property="principal.username"/>';
+			
+			$(document).ready(function() {
+			    // 알림 데이터를 가져와서 헤더에 표시
+			    fetchNotifications();
+			    
+			    const alamText = document.querySelector("#alarmContent");
+			    
+			});
+			
+			function fetchNotifications() {
+				$.ajax({
+					type:"GET",
+					url: "${pageContext.request.contextPath}/common/header.do",
+					data: {
+						memberId
+					},
+					success: function(data) {
+						console.log("성공")
+						renderNotifications(data);
+					},
+					error: function() {
+						console.log("실패")
+					}
+				});
+			 }
+			
+			function renderNotifications(notifications) {
+				
+				const alarmImgBox = document.querySelector("#alarmImgBox");
+				let hasUnreadNotification = false; // 읽지 않은 알림이 있는지 확인하는 플래그
+
+				  
+				notifications.forEach(notification => {
+					const { alarmId, content, readCheck, alarmType } = notification;
+					
+					const alarmContentBox = document.querySelector("#alarmContentBox");
+					const alarmContent = document.createElement('div');
+					const contentBr = document.createElement('br');
+					alarmContent.style.borderRadius = "10px";
+				    
+					const uniqueId = Math.random().toString(36).substring(2, 15);
+					
+				    if (readCheck === 'n') {
+				    	hasUnreadNotification = true;
+				    	
+				    	if(alarmType === 'm'){
+				    		alarmContent.innerHTML = `
+					    		<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	✉️ 쪽지 <br>
+							        	\${content}
+							      	</div>
+							        <button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
+						    `;
+				    	} else if(alarmType === 'r') {
+				    		alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	⛔ 신고 <br>
+						        	\${content}
+						      	</div>
+						    `;
+				    	} else if(alarmType === 'c') {
+				    		alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	🌐 댓글 <br>
+						        	\${content}
+						      	</div>
+						    `;
+				    	} else if(alarmType === 'a') {
+				    		alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	✔️ 승인관련 <br>
+						        	\${content}
+						      	</div>
+						    `;
+				    	} else if(alarmType === 'v') {
+				    		alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	🗓️ 휴가관련 <br>
+						        	\${content}
+						      	</div>
+						    `;
+				    	}
+				    	
+				    } else {
+				    	if(alarmType === 'm') {
+				    		alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	✉️ 쪽지 <br>
+						        	\${content}
+						      	</div>
+						    `;
+				    	} else if(alarmType === 'r') {
+				    		alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	⛔ 신고 <br>
+						        	\${content}
+						      	</div>
+						    `;			    		
+			    		} else if(alarmType === 'c') {
+			    			alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	🌐 댓글 <br>
+						        	\${content}
+						      	</div>
+						    `;
+			    		} else if(alarmType === 'a') {
+			    			alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	✔️ 승인관련 <br>
+						        	\${content}
+						      	</div>
+						    `;
+			    		} else if(alarmType === 'v') {
+			    			alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						        	🗓️ 휴가관련 <br>
+						        	\${content}
+						      	</div>
+						    `;
+			    		}
+				    }
+				    
+				    alarmContentBox.appendChild(alarmContent);
+				    alarmContentBox.appendChild(contentBr);
+				    
+					const checkBtn = document.querySelector(`#isChecked-\${uniqueId}`);
+					const readCheckFrm = document.readCheckFrm;
+					
+					if(checkBtn){
+						checkBtn.addEventListener("click", function(){
+					        if (readCheck === 'n'){
+					        	
+					        	const token = '${_csrf.token}';
+					        	
+					            $.ajax({
+					                type: "POST",
+					                url: "${pageContext.request.contextPath}/common/updateAlarmReadCheck.do",
+					                data: {
+					                    alarmId
+					                },
+					                headers: {
+					                    "X-CSRF-TOKEN": token
+					                },
+					                success: function(data) {
+					                	alarmContent.style.color="grey";
+					                	alarmContent.style.borderColor = "grey";
+					                	checkBtn.style.display="none";
+					                	alarmImg.style.animation = "";
+					                	window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
+					                },
+					                error: function() {
+					                    console.log("실패")
+					                }
+					            });
+					        }
+					    });
+					}
+					
+				});
+				
+			    
+				
+				// 읽지 않은 알림이 있는 경우 빨간 동그라미와 애니메이션 효과 표시
+				  const alarmImg = document.querySelector("#alarmImg");
+				  if (hasUnreadNotification) {
+				    const redDiv = document.createElement('div');
+				    redDiv.innerHTML = `
+				      <div class="red-circle" style="border: 1px solid red; border-radius: 50%; width: 18px; height: 18px; background-color: red; position: absolute; top: 25px; margin-left: -15px; color: white; font-size: 10px; font-weight: 800; text-align: center;">N</div>
+				    `;
+				    alarmImgBox.appendChild(redDiv);
+				    alarmImg.style.animation = "bell 2s infinite linear";
+				  } else {
+				    alarmImg.style.animation = "none";
+				  }
+			}
+			
+			let isContentVisible = false;
+
+			alarmBox.addEventListener("click", function() {
+			    if (isContentVisible) {
+			        alarmBox.classList.remove("show-content");
+			    } else {
+			        alarmBox.classList.add("show-content");
+			    }
+			    
+			    isContentVisible = !isContentVisible;
+			});
+		    
+		   
+		   
+			
 			
 			const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
 			const stompClient = Stomp.over(ws);
@@ -177,17 +432,84 @@
 				console.log('open : ', frame);
 				
 				// 구독신청 
-				stompClient.subscribe(`/topic/msgnotice/${memberId}`, (message) => {
+				stompClient.subscribe(`/topic/msgnotice/\${memberId}`, (message) => {
 					console.log(`/topic/msgnotice/${memberId} : `, message);
 					renderMessage(message);
 				});
 			});
 			
 			const renderMessage = (message) => {
-				const {type, from, to, content, createdAt} = JSON.parse(message.body);
-				console.log(type, from, to, content, createdAt);
+				const {sendId, recieveId, content, createdAt, alarmType} = JSON.parse(message.body);
+				console.log(sendId, recieveId, content, createdAt, alarmType);
+				
+				const alarmImgBox = document.querySelector("#alarmImgBox");
+				
+				const existingRedCircle = alarmImgBox.querySelector(".red-circle");
+				
+				if (!existingRedCircle) {
+				    const redDiv = document.createElement('div');
+				    redDiv.innerHTML = `
+				        <div class="red-circle" style="border:1px solid red; border-radius:50%; width:18px; height:18px; background-color:red; position:absolute; top:25px; margin-left:-15px; color:white; font-size:10px; font-weight:800; text-align:center;">N</div>
+				    `;
+				    alarmImgBox.appendChild(redDiv);
+				}
+				
+				const alarmImg = document.querySelector("#alarmImg");
+
+				// 이미 애니메이션이 적용된 상태인지 확인
+			    /* const currentAnimation = alarmImg.style.animation;
+			    if (!currentAnimation || currentAnimation === 'none') {
+			        // 애니메이션이 적용되지 않은 상태라면 애니메이션 추가 */
+			        alarmImg.style.animation = "bell 2s infinite linear";
+			    /* } */
+				
+				const alarmContentBox = document.querySelector("#alarmContentBox");
+				const alarmContent = document.createElement('div');
+				alarmContent.classList.add="alarmContainer"
+				const alarmBr = document.createElement('br');
+				
+				if(alarmType === 'm'){
+					alarmContent.innerHTML = `
+				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+				        	✉️ 쪽지 <br>
+				        	\${content}
+				      	</div>
+				    `;
+				} else if(alarmType === 'r') {
+		    		alarmContent.innerHTML = `
+				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+				        	⛔ 신고 <br>
+				        	\${content}
+				      	</div>
+				    `;
+		    	} else if(alarmType === 'c') {
+		    		alarmContent.innerHTML = `
+				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+				        	🌐 댓글 <br>
+				        	\${content}
+				      	</div>
+				    `;
+		    	} else if(alarmType === 'a') {
+		    		alarmContent.innerHTML = `
+				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+				        	✔️ 승인관련 <br>
+				        	\${content}
+				      	</div>
+				    `;
+		    	} else if(alarmType === 'v') {
+		    		alarmContent.innerHTML = `
+				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+				        	🗓️ 휴가관련 <br>
+				        	\${content}
+				      	</div>
+				    `;
+		    	}
+				
+				alarmContentBox.prepend(alarmBr);
+				alarmContentBox.prepend(alarmContent);
 				
 				
+			    
 			}
 			
 		</script>
