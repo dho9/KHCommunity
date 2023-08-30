@@ -1,10 +1,14 @@
 package com.kh.app.notification.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.app.chat.entity.Talker;
 import com.kh.app.messageBox.entity.AnonymousCheck;
@@ -15,6 +19,7 @@ import com.kh.app.notification.repository.NotificationRepository;
 import com.kh.app.ws.dto.ChatPayload;
 import com.kh.app.ws.dto.MsgPayload;
 
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
@@ -78,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
 	
 	// 관리자 페이지에서 쪽지 보낼 때 받는 사람에게 알림
 	@Override
-	public int notifyMsgSendFromAdmin(@Valid MessageBox message) {
+	public int notifyMsgSendFromAdmin(MessageBox message) {
 		
 		// 알림 받을 대상
 		String to = message.getReceiveId();
@@ -87,6 +92,7 @@ public class NotificationServiceImpl implements NotificationService {
 		String sendId = "admin";
 				
 		MsgPayload payload = MsgPayload.builder()
+				.alarmId(0)
 				.sendId(sendId)
 				.receivedId(to)
 				.content("관리자가 쪽지를 보냈습니다.")
@@ -94,13 +100,21 @@ public class NotificationServiceImpl implements NotificationService {
 				.alarmType(AlarmType.m)
 				.build();
 				
+		// db저장
+		int alarmId = notificationRepository.insertMessageAlarmFromAdmin(payload);
+		
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		
+//		resultMap.put("alarmId", payload.getAlarmId());
+//		
+//		System.out.println(resultMap);
+//		System.out.println(payload.getAlarmId());
+//		payload.setAlarmId(payload.getAlarmId());
+		
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/msgnotice/" + to, payload);
 		
-		
-		// db저장
-		int result = notificationRepository.insertMessageAlarmFromAdmin(payload);
-		return result;
+		return alarmId;
 	}
 	
 }

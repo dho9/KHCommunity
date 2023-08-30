@@ -1,10 +1,8 @@
 package com.kh.app.notification.service;
 
-import javax.validation.Valid;
 
 import com.kh.app.chat.entity.Talker;
 import com.kh.app.messageBox.entity.MessageBox;
-import com.kh.app.notification.entity.Alarm;
 
 public interface NotificationService {
 
@@ -12,7 +10,7 @@ public interface NotificationService {
 
 	int notifyMsgSend(MessageBox message);
 
-	int notifyMsgSendFromAdmin(@Valid MessageBox message);
+	int notifyMsgSendFromAdmin(MessageBox message);
 
 
 }
