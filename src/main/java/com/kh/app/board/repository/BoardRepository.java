@@ -229,7 +229,7 @@ public interface BoardRepository {
 	@Select("select * from study")
 	List<StudyList> findAllStudy();
 	
-	@Insert("insert into study(study_id,board_id,study_name,member_id,member_count) values (seq_study_id.nextval, seq_board_id.nextval,#{studyName},#{memberId}, #{memberCount})")
+	@Insert("insert into study(study_id,board_id,study_name,member_id,study_people,member_count,post_id) values (seq_study_id.nextval, seq_board_id.nextval,#{studyName},#{memberId},1, #{memberCount},#{postId})")
 	int createStudy(Study study);
 	
 	@Select("select board_id from study where study_name = #{studyName} and member_id = #{memberId} and member_count= #{memberCount}")
@@ -240,6 +240,12 @@ public interface BoardRepository {
 			+ "FROM study "
 			+ "WHERE board_id = #{boardId}")
 	int createBoard(Study study);
+	
+	@Select("select seq_post_id.CURRVAL from dual")
+	int findByPostId();
+	
+	@Update("update study set post_id = #{postId} where board_Id = #{boardId}")
+	int updatePostId(int postId, int boardId);
 
 
 	

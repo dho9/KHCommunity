@@ -1509,5 +1509,48 @@ select s.*   from study s;
 select * from board;
 update board set board_name = '스터디전용' where board_id = 43;
 select * from post order by post_id desc;
+select * from post_content order by post_id desc;
 select * from board order by board_id desc;
 select * from study order by study_id desc;
+SELECT p.post_id, p.board_id,p.member_id,p.tag ,s.study_name ,s.study_people,s.member_count, s.study_created_at, s.study_end_at FROM post p JOIN study s ON p.board_id = s.board_id
+;
+select * from study;
+select * from post where member_id ='eogh' and title = (select study_name from study where study_id =6);
+select 
+ p.*
+ from 
+    post p
+where
+    p.title = (select study_name from study;
+    
+    select * from post order by post_id desc;
+    
+    alter table study add post_id number;
+    ALTER TABLE study drop CONSTRAINT FK_study_post_id;
+select * from post order by 1 desc;
+select * from study;
+select * from post where board_id = 6;
+update study set post_id = 203 where study_name='자바 빡시게하자';
+
+	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+  		p.board_id,
+  		p.anonymous_check,
+        m.member_name
+	from
+	    post p join post_content c
+	    	on p.post_id = c.post_id
+        left join member m
+            on p.member_id = m.member_id
+	where
+	    p.post_id=205;
+        
+        select * from post_content where post_id=205;
+        

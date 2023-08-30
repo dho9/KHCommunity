@@ -481,6 +481,16 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.createBoard(study);
 	}
+	@Override
+	public int findByPostId() {
+		// TODO Auto-generated method stub
+		return boardRepository.findByPostId();
+	}
+	@Override
+	public int updatePostId(int postId, int boardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.updatePostId(postId,boardId);
+	}
 	
 }
 

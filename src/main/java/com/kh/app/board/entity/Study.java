@@ -19,5 +19,6 @@ public class Study {
 	private int memberCount;
 	private LocalDateTime studyCreatedAt;
 	private LocalDateTime studyEndAt;
+	private int postId;
 	
 }
