@@ -71,7 +71,7 @@ public class BoardController {
 
 	@Autowired
 	private MemberService memberService;
-	
+
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
@@ -1193,3 +1193,5 @@ public class BoardController {
 	}
 }
 
+
+    
