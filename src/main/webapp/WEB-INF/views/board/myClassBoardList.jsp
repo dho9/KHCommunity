@@ -13,58 +13,61 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 
 	<div id="myClassBoard-div">
-	<sec:authentication property="principal" var="loginMember"/>
-	<div class="myClassBoard-title">
-		<h2 class="title">우리반 게시판</h2>
-		<p>${loginMember.name}님, 반갑습니다. 'KH소통할까?'에 오신 걸 환영합니다.</p>
-	</div>
-	<div class="myClassBoard-subTitle">
-		<ul>
-			<li>${studentInfo.curriculumName}반</li>
-			<li>[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
-		</ul>
-	</div>
 	
-	<!-- Button trigger modal -->
-	<button id="writePost" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">글쓰기</button>
-	
-	<div id="button-div">
-		<button type="button" class="btn btn-outline-success" id="notice">공지사항</button>
-		<button type="button" class="btn btn-outline-success" id="sharing">과제공유</button>
-		<button type="button" class="btn btn-outline-success" id="free">게시판</button>
-		<button type="button" class="btn btn-outline-success" id="allBtn">전체</button>
-	</div>
-	
-	<table class="table table-hover" style="width: 96%;">
-	  <thead>
-	    <tr>
-	      <th scope="col">번호</th>
-	      <th scope="col">제목</th>
-	      <th scope="col">작성자</th>
-	      <th scope="col">작성일</th>
-	    </tr>
-	  </thead>
-	  <tbody></tbody>
-	</table>
-	
-	<!-- 페이지 이동 및 페이지 번호 표시 -->
-	<div class="d-flex justify-content-center" style="margin-top: 3%">
-	<ul class="pagination">
-	    <li class="page-item disabled">
-	      <a id="prev" class="page-link" href="#">이전</a>
-	    </li>
+		<sec:authentication property="principal" var="loginMember"/>
+		
+		<div class="myClassBoard-title">
+			<h2 class="title">우리반 게시판</h2>
+			<p>${loginMember.name}님, 반갑습니다. 'KH소통할까?'에 오신 걸 환영합니다.</p>
+		</div>
+		<div class="myClassBoard-subTitle">
+			<ul>
+				<li>${studentInfo.curriculumName}반</li>
+				<li>[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
+			</ul>
+		</div>
+		
+		<!-- Button trigger modal -->
+		<button id="writePost" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">글쓰기</button>
+		
+		<div id="button-div">
+			<button type="button" class="btn btn-outline-success" id="notice">공지사항</button>
+			<button type="button" class="btn btn-outline-success" id="sharing">과제공유</button>
+			<button type="button" class="btn btn-outline-success" id="free">게시판</button>
+			<button type="button" class="btn btn-outline-success" id="allBtn">전체</button>
+		</div>
+		
+		<table class="table table-hover" style="width: 96%;">
+		  <thead>
+		    <tr>
+		      <th scope="col">번호</th>
+		      <th scope="col">제목</th>
+		      <th scope="col">작성자</th>
+		      <th scope="col">작성일</th>
+		    </tr>
+		  </thead>
+		  <tbody></tbody>
+		</table>
+		
+		<!-- 페이지 이동 및 페이지 번호 표시 -->
+		<div class="d-flex justify-content-center" style="margin-top: 3%">
+			<ul class="pagination">
+			    <li class="page-item disabled">
+			      <a id="prev" class="page-link" href="#">이전</a>
+			    </li>
+			    
+			    <li class="page-item">
+			      <a id="next" class="page-link" href="#">다음</a>
+			    </li>
+		    </ul>
+	    </div>
 	    
-	    <li class="page-item">
-	      <a id="next" class="page-link" href="#">다음</a>
-	    </li>
-    </ul>
-    </div>
 	</div>
 	
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content vw-300">
+	  <div class="modal-dialog" role="document" style="max-width: 987px;">
+	    <div class="modal-content" style="height: 65%;">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">게시글 작성</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -116,11 +119,12 @@
 	- 범죄, 불법 행위 등 법령을 위반하는 행위 
 	- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
 	- 음란물, 성적 수치심을 유발하는 행위 
-	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text" style="width: 100%; height: 91%;"></textarea>
+	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text" style="width: 100%; height: 60%;"></textarea>
 		        </p>
-		 	    <input style="margin-top: 5px;" class="file" type="file" name="file" multiple="multiple">
+		 	    <input class="file" type="file" name="file" id="fileInput" multiple="multiple">
+		 	    <label class="btn btn-primary" for="fileInput">파일 선택</label>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" id="clearBtn">취소</button>
+		        <button type="button" class="btn btn-secondary" id="clearBtn">초기화</button>
 		        <button type="submit" class="btn btn-primary" id="saveBtn">작성</button>
 		      </div>
 		      </form:form>
@@ -311,7 +315,7 @@
 	   }
 	
 	function board (pageNumber, e) {
-		console.log('여기로 가는거지?')
+		/* console.log('여기로 가는거지?') */
 		const pagination = document.querySelector('.pagination');
 	    pagination.innerHTML = '';
 	    
