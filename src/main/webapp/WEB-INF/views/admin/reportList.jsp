@@ -75,6 +75,9 @@
 				<div class="d-flex justify-content-center">
 				    <nav aria-label="Page navigation">
 				        <ul class="pagination">
+				        	<li class="page-item">
+        						<a class="page-link" href="${pageContext.request.contextPath}/admin/reportList.do">목록</a>
+        					</li>
 				            <c:if test="${currentPage > 1}">
 				                <li class="page-item">
 				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/reportList.do?page=${currentPage - 1}" aria-label="Previous">
@@ -101,7 +104,6 @@
 				            </c:if>
 				        </ul>
 				    </nav>
-				<a class="page-link" href="${pageContext.request.contextPath}/admin/reportList.do">목록</a>
 				</div>
           </div>
       </div>
