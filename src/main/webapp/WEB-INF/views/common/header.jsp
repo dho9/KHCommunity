@@ -100,7 +100,8 @@
         </div>
     </nav>
     <div id="submenu">
-		<div class="wrap">
+    <!-- style="display: none;" -->
+		<div class="wrap" id="boardSubmenu">
 			<div class="divider"></div>
 			<div class="group">
 				<ul>

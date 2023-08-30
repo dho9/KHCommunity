@@ -56,7 +56,7 @@ public class MessageContoller {
    // 페이징된 메세지 리스트
    @GetMapping("/messageList.do")
    @ResponseBody
-   public List<MessageBox> getMessageList(@RequestParam String page,
+   public ResponseEntity<?> getMessageList(@RequestParam String page,
                                           @RequestParam String size,
                                           Model model,
                                           @AuthenticationPrincipal MemberDetails member) {
@@ -65,9 +65,12 @@ public class MessageContoller {
        int pageInt = Integer.parseInt(page);
        int sizeInt = Integer.parseInt(size);
        
-       List<MessageBox> messageList = messageService.getMessageListWithPaging(memberId, pageInt, sizeInt);
+       List<MessageBox> messageAllList = messageService.getMessageList(memberId);
        
-       return messageList;
+       List<MessageBox> messageList = messageService.getMessageListWithPaging(memberId, pageInt, sizeInt);
+       int totalPages = messageAllList.size() / sizeInt  + (messageAllList.size() % sizeInt > 0? 1 : 0);
+       
+       return ResponseEntity.status(HttpStatus.OK).body(Map.of("totalPages", totalPages, "messageList", messageList));
    }
    
    
@@ -76,9 +79,15 @@ public class MessageContoller {
 	@ResponseBody
 	public ResponseEntity<?> messageDelete(@RequestParam String messageId) {
 
-		int result= messageService.messageDelete(messageId);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(Map.of("messageId", messageId));
+		try {
+	        int result = messageService.messageDelete(messageId);
+
+	        return ResponseEntity.status(HttpStatus.OK).body(Map.of("messageId", messageId));
+	    } catch (Exception e) {
+	        
+	        String errorMessage = "신고한 메세지는 신고 처리 전까지 삭제가 불가능합니다.";
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("errorMessage", errorMessage));
+	    }
 	}
 	
 	
