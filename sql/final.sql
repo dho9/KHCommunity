@@ -96,6 +96,7 @@
 --drop sequence seq_chat_message_no;
 --drop sequence seq_curriculum_id;
 --drop sequence seq_cal;
+--drop sequence seq_alarm_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -114,6 +115,7 @@ create sequence seq_store_id;
 create sequence seq_ticket_id;
 create sequence seq_chat_message_no;
 create sequence seq_curriculum_id;
+create sequence seq_alarm_id;
 create sequence seq_cal
 	start with 1
 	increment by 1
@@ -359,6 +361,8 @@ CREATE TABLE delete_post (
    content   varchar2(4000)      
 );
 
+
+
 ALTER TABLE delete_post
 MODIFY title VARCHAR2(2000);
 
@@ -455,6 +459,26 @@ CREATE TABLE myclass (
     FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
 );
 
+CREATE TABLE alarm (
+    alarm_id number,
+    received_id varchar(30),
+    content varchar(400),
+    created_at date,
+    alarm_type char(1),
+    read_check char(1)
+);
+
+drop table alarm;
+CREATE TABLE alarm (
+    alarm_id number,
+    received_id varchar(30),
+    content varchar(400),
+    created_at date,
+    alarm_type char(1),
+    read_check char(1)
+);
+
+drop table alarm;
 
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);
@@ -910,7 +934,10 @@ alter table message_box add constraint CK_messagebox_anonymous_check check (anon
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
 -- 댓글삭제여부
 alter table post_comment add constraint ck_post_comment_delete_ck check (delete_ck in ('0','1'));
-
+-- 알림 타입(r:신고, m:쪽지, c:댓글, a:승인관련, v:휴가관련)
+alter table alarm add constraint ck_alarm_alarm_type check (alarm_type in ('m', 'r', 'c', 'a', 'v'));
+-- 알림 읽음 여부
+alter table alarm add constraint ck_alarm_read_check check (read_check in ('y', 'n'));
 --=================================
 --트리거
 --==================================
@@ -1219,7 +1246,7 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 select * from calendar;
-
+select * from alarm;
 
 delete chat_room where chat_id between 75 and 77;
 
@@ -1444,6 +1471,21 @@ select * from post;
 
 select * from chat_room;
 delete chat_room where chat_id between 119 and 140;
+
+
+select * from alarm;
+
+update alarm set read_check = 'n' where received_id = 'khendev23';
+
+SELECT *
+FROM (
+    SELECT *
+    FROM alarm
+    WHERE received_id = 'khendev23'
+    ORDER BY alarm_id DESC
+)
+WHERE ROWNUM <= 6;
+
 drop table study CASCADE CONSTRAINTS;
 
 

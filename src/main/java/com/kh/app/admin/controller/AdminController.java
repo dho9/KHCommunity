@@ -43,6 +43,7 @@ import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
+import com.kh.app.notification.service.NotificationService;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
@@ -91,6 +92,9 @@ public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	// 메인화면 출력: 오늘의 이슈, 게시판 현황, 게시글 통계, 미승인 내역, 신고현황 - 유성근
 	@GetMapping("/adminMain.do")
@@ -377,6 +381,10 @@ public class AdminController {
 	public String adminStudentSendMessage(@Valid MessageBox message) {
 		message.setSendId("admin");
 		int result = adminService.sendMessageToStudent(message);
+		
+		// 알림
+		int alarmId = notificationService.notifyMsgSendFromAdmin(message);
+		
 		return "redirect:/admin/adminStudentList.do";
 	}
 

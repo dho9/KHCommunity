@@ -19,6 +19,7 @@ import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.StudentVacation;
+import com.kh.app.notification.entity.Notification;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 
@@ -67,6 +68,10 @@ public interface MemberService extends UserDetailsService{
 	List<AdminChatListDto> findAllChat(Map<String, Object> params, String memberId);
 
 	List<ChatMessage> getChatMessagesByChatId(int chatId);
+
+	List<Notification> getNotificationsById(String memberId);
+
+	int updateAlarmReadCheck(int alarmId);
 
 
 }
