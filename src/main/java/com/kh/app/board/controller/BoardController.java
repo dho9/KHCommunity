@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.kh.app.board.dto.BoardCreateDto;
@@ -44,6 +45,7 @@ import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyList;
+import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -1200,9 +1202,21 @@ public class BoardController {
 	@GetMapping("/studyBoardList.do")
 	public String studyList(Model model) {
 		List<StudyList> studyList = boardService.findAllStudy();
+		for (StudyList study : studyList) {
+		    int postId = study.getPostId(); // StudyList 객체의 id 가져오기
+		    
+			BoardListDto postDetail = boardService.findById(postId);
+			study.setTag(postDetail.getTag());  
+		    System.out.println("wkwkwkwkwkwkwk"+study);
+		    // 태그 목록 출력
+		}
+
+
+
+		
 		model.addAttribute("studyBoardList", studyList);
 //		List<StudyList> studyLists = boardService.findTagId(studyList); 
-		System.out.println(studyList);
+//		System.out.println(studyList);
 		 return "/board/studyBoardList";
 	}
 	
@@ -1211,18 +1225,16 @@ public class BoardController {
 	
 	@GetMapping("/studyDetail.do")
 	public void studyDetail(@RequestParam int id, Model model) {
-		BoardListDto postDetail = boardService.findById(id);
-		System.out.println(id);
+		StudyListDto postDetail = boardService.studyFindById(id);
+//		System.out.println(id);
 		//log.debug("postDetail = {}", postDetail);
-		System.out.println(postDetail);
+//		System.out.println(postDetail);
 		Board board = boardService.findBoardName(postDetail.getBoardId());
 		log.debug("boardddddddddddd={}",board);
 		//log.debug("boardddddddddddd={}",postDetail);
-		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board",board );
-//		System.out.println(board);
-		model.addAttribute("postAttach",postAttach);
+		System.out.println(postDetail);
 	}
 	
 	@PostMapping("/createStudyPost.do")
@@ -1238,10 +1250,9 @@ public class BoardController {
 		//전용게시판 생성 
 		Study study= Study.builder().memberCount(count).studyName(title).memberId(member.getMemberId()).build();
 		result = boardService.createStudy(study);
-
 		//전용게시판 board 테이블에 생성해주기.(impl)
 		int findId = boardService.findBoarderId(study);
-		System.out.println("asdsadsad"+findId);
+//		System.out.println("asdsadsad"+findId);
 		study.setBoardId(findId);
 		result = boardService.createBoard(study);
 		
@@ -1254,9 +1265,10 @@ public class BoardController {
 				.tags(tags)
 				.build();
 		result = boardService.insertBoard(board);
-		System.out.println(board);
+//		System.out.println(board);
+		
 		int postId = boardService.findByPostId();
-		System.out.println(postId+"ASdsadsadsad");
+//		System.out.println(postId+"ASdsadsadsad");
 		study= Study.builder().postId(postId).build();
 		
 		result = boardService.updatePostId(postId,findId);
@@ -1264,6 +1276,23 @@ public class BoardController {
 		result = boardService.insertPostContent(board);
 		return "redirect:/board/studyDetail.do?id=" + board.getPostId();
 
+	}
+	
+	@PostMapping("/studyApply.do")
+	public String studyApply(@RequestParam int studyId,@RequestParam int postId, @RequestParam String appliId,@RequestParam String appliContent,RedirectAttributes redirectAttr) {
+
+		int result = boardService.insertStudy(studyId,appliId,appliContent);
+		if(result>0) {
+			String msg ="지원이 완료 되었습니다.";
+			redirectAttr.addFlashAttribute("msg",msg);
+			return "redirect:/board/studyDetail.do?id=" + postId;
+		}else {
+			String msg ="지원신청을 다시 해주세요.";
+			redirectAttr.addFlashAttribute("msg",msg);
+			return "redirect:/board/studyDetail.do?id=" +postId;
+		}
+				
+				
 	}
 	
 }

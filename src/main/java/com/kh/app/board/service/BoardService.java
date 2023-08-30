@@ -14,6 +14,7 @@ import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyList;
+import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -162,6 +163,10 @@ public interface BoardService {
 	int findByPostId();
 
 	int updatePostId(int postId, int boardId);
+
+	StudyListDto studyFindById(int id);
+
+	int insertStudy(int studyId, String appliId, String appliContent);
 
 
 }

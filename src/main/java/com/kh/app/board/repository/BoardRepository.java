@@ -20,6 +20,7 @@ import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyList;
+import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -246,6 +247,11 @@ public interface BoardRepository {
 	
 	@Update("update study set post_id = #{postId} where board_Id = #{boardId}")
 	int updatePostId(int postId, int boardId);
+
+	StudyListDto studyFindById(int id);
+
+	@Insert("insert into study_info (study_id, member_id, introduce, study_application_at, application_check) values(#{studyId},#{appliId}, #{appliContent},default,default )")
+	int insertStudy(int studyId, String appliId, String appliContent);
 
 
 	

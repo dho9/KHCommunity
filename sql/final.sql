@@ -1550,7 +1550,40 @@ update study set post_id = 203 where study_name='자바 빡시게하자';
         left join member m
             on p.member_id = m.member_id
 	where
-	    p.post_id=205;
+	    p.post_id=210;
         
-        select * from post_content where post_id=205;
+        select * from post_content where post_id=210;
+        select * from post order by 1 desc;
+        delete from study where post_id is null ;
+        select * from study_info;
+        delete from study_info;
+        delete from study;
+        select * from study;
+        select * from post order by 1 desc;
         
+        
+SELECT
+    p.post_id,
+    p.member_id,
+    p.title,
+    p.post_created_at,
+    p.tag,
+    c.content,
+    p.board_id,
+    m.member_name,
+    s.study_people,
+    s.member_count
+FROM
+    post p
+JOIN
+    post_content c ON p.post_id = c.post_id
+LEFT JOIN
+    member m ON p.member_id = m.member_id
+JOIN
+    study s ON p.post_id = s.post_id
+WHERE
+    p.post_id = 216;
+    select * from study;
+    select * from study_info;
+  
+  

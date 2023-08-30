@@ -8,6 +8,10 @@
 <%-- 글목록 아이콘 --%>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<!-- bootstrap css -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
 .material-symbols-outlined {
   font-variation-settings:
@@ -15,6 +19,27 @@
   'wght' 400,
   'GRAD' 0,
   'opsz' 24
+}
+  .btn-primary {
+    float: right;
+    margin-right: 2%;
+  }
+
+#container>div.articles>article p.medium {
+    margin-bottom: 5px;
+    line-height: 20px;
+    white-space: normal;
+    overflow: hidden;
+    color: #444444;
+    font-size: 14px;
+    float: right;
+    font-weight: bolder;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    width: 17%;
+    text-align: center;
+    height: 3%;
+    padding-top: 5px;
 }
 .listCallBack{
     display: block;
@@ -352,7 +377,7 @@ button.updateBtn, button.deleteBtn{
 				<a class="article"> <img class="picture large"
 					src="${pageContext.request.contextPath}/resources/images/usericon.png" />
 					<div class="profile">
-							<h3 class="large" style="font-size: 13px" id="postCreateId">${postDetail.memberId}</h3>
+							<h3 class="large" style="font-size: 16px" id="postCreateId">${postDetail.memberId}</h3>
 						<time class="large" style="font-size: 12px">
 							<fmt:parseDate value="${postDetail.postCreatedAt}"
 								pattern="yyyy-MM-dd'T'HH:mm" var="createdAt" />
@@ -375,12 +400,16 @@ button.updateBtn, button.deleteBtn{
 						<c:if test="${postDetail.memberId ne loginMember.username}">
 							<li class="messagesend" style="margin-right: 5px;"
 								id="openMessageBtn"
-								onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지
+								onclick="messageSend('${postDetail.memberId}')">쪽지
 								|</li>
 							<li class="abuse">신고</li>
 						</c:if>
 					</ul>
 					<hr>
+					<c:forEach items="${postDetail.tag}" var="tag">
+							<span class="tag">${tag}</span>
+						</c:forEach>
+						<hr>
 					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h2>
 						<br> 
 						<%--
@@ -416,26 +445,12 @@ button.updateBtn, button.deleteBtn{
 							</c:if>
 							<c:if test="${postDetail.boardId ne '5'}">
 								<p class="large">${postDetail.content}</p>
+								<p class="medium">모집인원 : ${postDetail.studyPeople} / ${postDetail.memberCount}</p> <br>
 								<br>
 							</c:if>
 
 						</c:if>
-
-
-						<c:forEach items="${postDetail.tag}" var="tag">
-							<span class="tag">${tag}</span>
-						</c:forEach>
-						<ul class="status">
-							<%-- 좋아요 버튼 --%>
-							<li><img class="like" data-value="${postDetail.postId}"
-								style="cursor: pointer;"
-								src="${pageContext.request.contextPath}/resources/images/like.png" /></li>
-							<li class="vote" data-value="${postDetail.postId}"
-								style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
-							<li><img
-								src="${pageContext.request.contextPath}/resources/images/comment.png" /></li>
-							<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li>
-						</ul>
+							<button type="button" class="btn btn-primary" id="applic">지원하기</button>
 						<hr></a>
 			</article>
 		</c:if>
@@ -462,8 +477,26 @@ button.updateBtn, button.deleteBtn{
 			value="${board.boardLink}" />
 	</form:form>
 
-
-
+	<!-- 지원 모달 -->
+		<!-- 지원 모달 -->
+	<div id="studyModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2 style="margin-bottom: 10px">지원하기</h2>
+			<form:form id="appliForm" name="appliForm"
+				action="${pageContext.request.contextPath}/board/studyApply.do"
+				method="post">
+				<input type="text" name="studyId" id="studyId"
+					value="${postDetail.studyId}">
+					<input type="hidden" name="postId" id=""postId""
+					value="${postDetail.postId}">
+				<input type="text" name="appliId" id="appliId"
+					value="${loginMember.username}">
+				<textarea id="appliContent" name="appliContent" rows="4" style = "height: 30%; width: 100%; margin-top: 15px; resize:none" placeholder="간단한 소개를 입력하세요 (거주지역, 활동시간 등)" required></textarea>
+				<button type="submit"  class="btn btn-primary"style = "margin-top: 19px;   font-weight: bold; ">지원하기</button>
+			</form:form>
+		</div>
+	</div>
 
 	<!-- 쪽지 모달 -->
 
@@ -542,6 +575,26 @@ button.updateBtn, button.deleteBtn{
 	</div>
 
 	<script>
+	
+	const studyModal = document.getElementById("studyModal");
+	const applicButton = document.getElementById("applic");
+
+	if (applicButton !== null) {
+	  applicButton.addEventListener("click", () => {
+	    studyModal.style.display = "block";
+	  });
+	}
+
+	// studyModal 모달 내부의 닫기 버튼 요소를 가져옵니다.
+	const studyModalCloseBtn = studyModal.querySelector(".close");
+
+	// studyModal 모달 닫기 버튼 클릭 시 모달을 닫습니다.
+	if (studyModalCloseBtn !== null) {
+	  studyModalCloseBtn.addEventListener("click", () => {
+	    studyModal.style.display = "none";
+	  });
+	}
+	
     
 	// 모달 요소와 모달을 트리거하는 버튼을 가져옵니다.
 	const modal = document.getElementById("reportModal");
@@ -565,7 +618,10 @@ button.updateBtn, button.deleteBtn{
 	// 모달 외부를 클릭하면 모달을 닫습니다.
 	window.addEventListener("click", (event) => {
 	  if (event.target === modal) {
-	    modal.style.display = "none";
+		  modal.style.display = "none";
+	  }
+	  if (event.target === studyModal) {
+		  studyModal.style.display = "none";
 	  }
 	});
 	
@@ -591,49 +647,7 @@ button.updateBtn, button.deleteBtn{
 	    const commnetContainer = document.querySelector("#commnetContainer");
 	    let formHtml = "";
 
-	    if("${postDetail.boardId}" === "5"){
-	    formHtml = `
-	      <form:form 
-	      	name="updateFrm" 
-	      	class="hidden" 
-	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
-	      	id="updateForm" 
-	      	method="post" 
-	      	style="height: 66%;"
-      		enctype="multipart/form-data">
-	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
-	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
-	      	<input type = "hidden" name="text" id="text" value="">
-	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
-	      	<input type = "hidden" name="grade" id="grade" >
-	      	<p>
-	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
-	      	</p>
-	      	<p>
-	      		<select name="language" id="language">
-					<option value="java">Java</option>	      			
-					<option value="javascript">JavaScript</option>	      			
-					<option value="html">Html</option>	      			
-					<option value="sql">Sql</option>	      			
-	      		</select>
-	      	</p>
-	        <p>
-	        	<textarea id="batch_content" name="batch_content"></textarea>
-	        </p>
-	        <div>
-	        	<label for="hashTag">해시태그</label><br>
-	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
-	        	<div class="hashTag-container"></div>
-	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
-	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
-        	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
-        	<button type="button" class="anonymous">
-        		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
-        	</button>
-	      </form:form>
-	    `;
-	    } else if("${postDetail.boardId}" === "2"){
+	 
 	    	formHtml = `
 		  	      <form:form 
 		  	      	name="updateFrm" 
@@ -644,169 +658,13 @@ button.updateBtn, button.deleteBtn{
 		  	      	style="height: 66%;"
 		        		enctype="multipart/form-data">
 		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
-		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
 		  	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
 		  	      	<input type = "hidden" name="grade" id="grade" >
 		  	      	<p>
 		  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
 		  	      	</p>
 		  	        <p>
-		  	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
-
-		  	        		아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
-
-		  	        		※ 정치·사회 관련 행위 금지 
-		  	        		- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
-		  	        		- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
-		  	        		- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
-		  	        		- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
-		  	        		* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
-
-		  	        		※ 홍보 및 판매 관련 행위 금지 
-		  	        		- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
-		  	        		- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
-		  	        		* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
-
-		  	        		※ 불법촬영물 유통 금지
-		  	        		불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
-
-		  	        		※ 그 밖의 규칙 위반 
-		  	        		- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
-		  	        		- 범죄, 불법 행위 등 법령을 위반하는 행위 
-		  	        		- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
-		  	        		- 음란물, 성적 수치심을 유발하는 행위 
-		  	        		- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text">${postDetail.content}</textarea>
-		  	        </p>
-		  	        	
-		  	        <div>
-		  	        	<label for="hashTag">해시태그</label><br>
-		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
-		  	        	<div class="hashTag-container"></div>
-		  	        </div>
-		  	         
-		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
-		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
-		          	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
-		        	<button type="button" class="sell" style="float: right; color: #c62917; font-size: 18px; font-weight: bold; background: none;">팝니다</button>
-		          	<button type="button" class="anonymous">
-		          		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
-		          	</button>
-		          	
-		  	      </form:form>
-		  	    `;
-	    } else if("${postDetail.boardId}" === "3") {
-	    	let _titleValue = "${postDetail.title}";
-	    	let titleValue = _titleValue.replace(/\[.*?\]/g, "");
-	    	formHtml = `
-	  	      <form:form 
-	  	      	name="updateFrm" 
-	  	      	class="hidden" 
-	  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
-	  	      	id="updateForm" 
-	  	      	method="post" 
-	  	      	style="height: 71.2%;"
-	        		enctype="multipart/form-data">
-	  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
-	  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
-	  	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
-	  	      	<input type = "hidden" name="grade" id="grade" value="★">
-	  	      	<p>
-	  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="\${titleValue}">
-	  	      	</p>
-	  	        <p>
-		      		<select name="grade_" id="grade_" style="height: 37px; font-size: 30px; color: #dddd3c;;">
-						<option value="★">★</option>	      			
-						<option value="★ ★">★ ★</option>	      			
-						<option value="★ ★ ★">★ ★ ★</option>	      			
-						<option value="★ ★ ★ ★">★ ★ ★ ★</option>	      			
-						<option value="★ ★ ★ ★ ★">★ ★ ★ ★ ★</option>	      			
-		      		</select>
-	    		</p>
-	  	        <p>
-	  	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
-
-	  	        		아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
-
-	  	        		※ 정치·사회 관련 행위 금지 
-	  	        		- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
-	  	        		- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
-	  	        		- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
-	  	        		- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
-	  	        		* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
-
-	  	        		※ 홍보 및 판매 관련 행위 금지 
-	  	        		- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
-	  	        		- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
-	  	        		* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
-
-	  	        		※ 불법촬영물 유통 금지
-	  	        		불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
-
-	  	        		※ 그 밖의 규칙 위반 
-	  	        		- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
-	  	        		- 범죄, 불법 행위 등 법령을 위반하는 행위 
-	  	        		- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
-	  	        		- 음란물, 성적 수치심을 유발하는 행위 
-	  	        		- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text">${postDetail.content}</textarea>
-	  	        </p>
-	  	        	
-	  	        <div>
-	  	        	<label for="hashTag">해시태그</label><br>
-	  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
-	  	        	<div class="hashTag-container"></div>
-	  	        </div>
-	  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
-	  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
-	  	      	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
-	          	<button type="button" class="anonymous">
-	          		<img class="anonymousImg" src="${pageContext.request.contextPath}/resources/images/anonymous.png">
-	          	</button>
-	          	
-	  	      </form:form>
-	  	    `;
-	    } else {
-	    	formHtml = `
-		  	      <form:form 
-		  	      	name="updateFrm" 
-		  	      	class="hidden" 
-		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
-		  	      	id="updateForm" 
-		  	      	method="post" 
-		  	      	style="height: 66%;"
-		        		enctype="multipart/form-data">
-		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
-		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
-		  	      	<input type = "hidden" name="postId" id="postId" value="${postDetail.postId}">
-		  	      	<input type = "hidden" name="grade" id="grade" >
-		  	      	<p>
-		  	      		<input name="title" autocomplete="off" placeholder="글 제목" class="title" id="title" value="${postDetail.title}">
-		  	      	</p>
-		  	        <p>
-		  	        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
-
-		  	        		아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
-
-		  	        		※ 정치·사회 관련 행위 금지 
-		  	        		- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
-		  	        		- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
-		  	        		- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
-		  	        		- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
-		  	        		* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
-
-		  	        		※ 홍보 및 판매 관련 행위 금지 
-		  	        		- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
-		  	        		- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
-		  	        		* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
-
-		  	        		※ 불법촬영물 유통 금지
-		  	        		불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
-
-		  	        		※ 그 밖의 규칙 위반 
-		  	        		- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
-		  	        		- 범죄, 불법 행위 등 법령을 위반하는 행위 
-		  	        		- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
-		  	        		- 음란물, 성적 수치심을 유발하는 행위 
-		  	        		- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text">${postDetail.content}</textarea>
+		  	        	<textarea name="text"  class="smallplaceholder" id="text">${postDetail.content}</textarea>
 		  	        </p>
 		  	        	
 		  	        <div>
@@ -825,7 +683,7 @@ button.updateBtn, button.deleteBtn{
 		          	
 		  	      </form:form>
 		  	    `;
-	    }
+	    
 	    
 	   
 	    articlesContainer.insertAdjacentHTML("afterbegin", formHtml);
@@ -921,44 +779,10 @@ button.updateBtn, button.deleteBtn{
 	// onload 됐을때 즐겨찾기/공감 했는지
 	document.addEventListener('DOMContentLoaded', () => {
 		// isFovorite(); // 즐겨찾기했는지
-		isLike(); // 공감했는지
+		//isLike(); // 공감했는지
 	});
 	  
     
-   	// 공감(좋아요) 했는지 확인
-    function isLike() {
-    	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
-	   		$.ajax({
-	   			url : "${pageContext.request.contextPath}/board/postLike.do",
-	   			data : {
-	   				_postId : e.dataset.value
-	   			},
-	   			method : "GET",
-	               dataType : "json",
-	               success(responseData) {
-	       			const {available, likeCount} = responseData;
-	       			const {postLikeCount} = likeCount;
-	       			
-	       			const like = document.querySelectorAll('.like');
-	       			const vote = document.querySelectorAll('.vote');
-	       			for(let i=0; i<like.length; i++) {
-	       				if(like[i].dataset.value == e.dataset.value) {
-			       			if(available) {
-			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-			                   	vote[i].innerHTML = `\${postLikeCount}`;
-			                   }
-			                   else {
-			                   	like[i].src = "${pageContext.request.contextPath}/resources/images/like.png";
-			                   	vote[i].innerHTML = `\${postLikeCount}`;
-			                   }
-	       				}
-	       			}
-	               }
-	   		});
-    	});
-    }
-   	
 	
 	
 	// 글 삭제
@@ -1023,69 +847,6 @@ button.updateBtn, button.deleteBtn{
 		});
 	}
 	
-	// 공감(좋아요) 누르기
-	function like() {
-		document.querySelector('.vote').onclick = (e) => {
-			console.log('!!!!!!!!!!!!!');
-			const token = document.tokenFrm._csrf.value;
-			
-			$.ajax({
-				url : "${pageContext.request.contextPath}/board/postLike.do",
-				data : {
-					_postId : e.target.dataset.value
-				},
-				headers: {
-	                "X-CSRF-TOKEN": token
-	            },
-	            method : "POST",
-	            dataType : "json",
-	            success(responseData) {
-	            		//console.log(responseData);
-					const {available, likeCount} = responseData;
-					const {postLikeCount} = likeCount;
-	    			
-	    			const like = document.querySelector('.like');
-	    			const vote = document.querySelector('.vote');
-	    			if(available) {
-	                	like.src = "${pageContext.request.contextPath}/resources/images/like.png";
-	                	vote.innerHTML = `\${postLikeCount}`;
-	                }
-	                else {
-	                	like.src = "${pageContext.request.contextPath}/resources/images/fullLike.png";
-	                	vote.innerHTML = `\${postLikeCount}`;
-	                }
-	    			
-	            }
-			});
-		};
-	}
-	
-	//댓글불러오기
-	function loadComment(){
-		const token = document.loadCommentFrm._csrf.value;
-		const currentURL = window.location.href;
-		const urlParams = new URLSearchParams(new URL(currentURL).search);
-		const postId = urlParams.get('id');
-		
-	    $.ajax({
-	    	url : "${pageContext.request.contextPath}/board/loadComment.do",
-	    	headers: {
-	            "X-CSRF-TOKEN": token
-	        },
-	    	data : {
-	    		postId : postId
-	    	},
-	    	method : "POST",
-	    	success(data){
-	    		console.log(data);
-	    		renderComments(data);
-	    		loadCommentLike();
-	    		
-	    		
-	    	}
-	    });
-	}	
-
 	</script>
 	<script>
 	

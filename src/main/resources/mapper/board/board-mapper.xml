@@ -507,4 +507,31 @@ FETCH FIRST 5 ROWS ONLY
 		 (SELECT MAX(pc.comment_created_at) FROM post_comment pc WHERE pc.post_id = p.post_id) DESC
   </select>
   
+  <select id="studyFindById" resultType="StudyListDto">
+SELECT
+    p.post_id,
+    p.member_id,
+    p.title,
+    p.post_created_at,
+    p.tag,
+    c.content,
+    p.board_id,
+    m.member_name,
+    s.study_people,
+    s.member_count,
+    s.study_id
+    
+FROM
+    post p
+JOIN
+    post_content c ON p.post_id = c.post_id
+LEFT JOIN
+    member m ON p.member_id = m.member_id
+JOIN
+    study s ON p.post_id = s.post_id
+WHERE
+    p.post_id = #{id}
+	</select>
+  
+  
 </mapper>
