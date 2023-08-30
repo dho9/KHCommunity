@@ -29,6 +29,7 @@
         <aside class="none">
             <form class="search">
                 <input type="search" name="keyword" class="text" placeholder="전체 게시판의 글을 검색하세요!">
+                
             </form>
             <div class="title">
                 <a class="hamburger"></a>
@@ -135,6 +136,7 @@
                 <div class="board" id="sharingInformationBoardContainer">
                     <h3>
                         <a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do">정보게시판</a>
+                        <li><a href="${pageContext.request.contextPath}/board/study.do">sdasdsadas</a></li>
                     </h3>
                 </div>
             </div>
@@ -210,7 +212,7 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
             }
         });
     });
-    document.querySelector('.favorite').addEventListener('mouseout', (e) => {
+    document.querySelector('.favorite').addEventListener('mouseleave', (e) => {
         console.log(e+'ㅋㅋㅋㅋ');
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
