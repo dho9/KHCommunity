@@ -88,7 +88,7 @@ color: black;
 				</c:forEach>
 			</article>
 			
-			<div class="pagination">
+			<%-- <div class="pagination">
 		        <ul>
 		          <c:if test="${currentPage > 1}">
 		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" >&laquo;</a></li>
@@ -109,9 +109,9 @@ color: black;
 		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage + 1}" ></a></li>
 		          </c:if>
 		        </ul>
-	        </div> 
+	        </div>  --%>
 	        
-		  <%-- 부트스태랩
+		   
 		  <ul class="pagination justify-content-center">
 		    
 		    <li class="page-item">
@@ -120,9 +120,9 @@ color: black;
 		      </a>
 		    </li>
 		    
-		    <c:if test="${currentPage > 1}">
-			    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}">1</a></li>
-		    </c:if>
+		    <li class="page-item"><a class="page-link" href="#">1</a></li>
+		    <li class="page-item"><a class="page-link" href="#">2</a></li>
+		    <li class="page-item"><a class="page-link" href="#">3</a></li>
 		    
 		    <li class="page-item">
 		      <a class="page-link" href="#" aria-label="Next">
@@ -130,7 +130,7 @@ color: black;
 		      </a>
 		    </li>
 		  </ul>
-		   --%>
+		   
 		</c:if>
 	</div>
     <form:form name="tokenFrm"></form:form>
