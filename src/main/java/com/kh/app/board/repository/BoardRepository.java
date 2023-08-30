@@ -19,15 +19,18 @@ import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
+import com.kh.app.board.entity.Study;
 
 @Mapper
 public interface BoardRepository {
+
 
 	List<BoardSearchDto> findAllByKeyword(String keyword);
 
@@ -222,9 +225,28 @@ public interface BoardRepository {
 
 	@Select ("select count(*) from post where board_id=9")
 	int totalCountEmployeeBoard();
+	
+	@Select("select * from study")
+	List<StudyList> findAllStudy();
+	
+	@Insert("insert into study(study_id,board_id,study_name,member_id,study_people,member_count,post_id) values (seq_study_id.nextval, seq_board_id.nextval,#{studyName},#{memberId},1, #{memberCount},#{postId})")
+	int createStudy(Study study);
+	
+	@Select("select board_id from study where study_name = #{studyName} and member_id = #{memberId} and member_count= #{memberCount}")
+	int findBoarderId(Study study);
+	
+	@Insert("INSERT INTO board (board_id, board_name, board_category, board_link)"
+			+ "SELECT board_id, '스터디'||#{memberId}, '스터디', 'study'||#{memberId}"
+			+ "FROM study "
+			+ "WHERE board_id = #{boardId}")
+	int createBoard(Study study);
+	
+	@Select("select seq_post_id.CURRVAL from dual")
+	int findByPostId();
+	
+	@Update("update study set post_id = #{postId} where board_Id = #{boardId}")
+	int updatePostId(int postId, int boardId);
 
-	
-	
 
 	
 

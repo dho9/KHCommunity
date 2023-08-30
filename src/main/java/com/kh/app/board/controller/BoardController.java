@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -42,18 +43,21 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
+import com.kh.app.board.entity.Study;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -71,7 +75,7 @@ public class BoardController {
 
 	@Autowired
 	private MemberService memberService;
-	
+
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
@@ -182,26 +186,26 @@ public class BoardController {
 		return "/board/askCodeBoardList";
 	}
 
-	@GetMapping("/studyBoardList.do")
-	public String studyBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
-		int limit = 6;
-		Map<String, Object> params = Map.of(
-				"page", page,
-				"limit", limit
-		);
-		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll(params);
-		
-		int totalCount = boardService.totalCountStudyBoard();
-		
-		// totalPages 계산
-	    int totalPages = (int) Math.ceil((double) totalCount / limit);
-	    model.addAttribute("totalPages", totalPages);
-
-        
-        model.addAttribute("studyBoardList", studyBoardList);
-        
-        return "/board/studyBoardList";
-	}
+//	@GetMapping("/studyBoardList.do")
+//	public String studyBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+//		int limit = 6;
+//		Map<String, Object> params = Map.of(
+//				"page", page,
+//				"limit", limit
+//		);
+//		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll(params);
+//		
+//		int totalCount = boardService.totalCountStudyBoard();
+//		
+//		// totalPages 계산
+//	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+//	    model.addAttribute("totalPages", totalPages);
+//
+//        
+//        model.addAttribute("studyBoardList", studyBoardList);
+//        
+//        return "/board/studyBoardList";
+//	}
 
 	@GetMapping("/graduateBoardList.do")
 	public String graduateBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
@@ -1191,5 +1195,78 @@ public class BoardController {
 				
 		return jobKoreaFilterList.subList(startIndex, endIndex);
 	}
+	
+	
+	@GetMapping("/studyBoardList.do")
+	public String studyList(Model model) {
+		List<StudyList> studyList = boardService.findAllStudy();
+		model.addAttribute("studyBoardList", studyList);
+//		List<StudyList> studyLists = boardService.findTagId(studyList); 
+		System.out.println(studyList);
+		 return "/board/studyBoardList";
+	}
+	
+
+	
+	
+	@GetMapping("/studyDetail.do")
+	public void studyDetail(@RequestParam int id, Model model) {
+		BoardListDto postDetail = boardService.findById(id);
+		System.out.println(id);
+		//log.debug("postDetail = {}", postDetail);
+		System.out.println(postDetail);
+		Board board = boardService.findBoardName(postDetail.getBoardId());
+		log.debug("boardddddddddddd={}",board);
+		//log.debug("boardddddddddddd={}",postDetail);
+		PostAttachment postAttach = boardService.findAttachById(id);
+		model.addAttribute("postDetail", postDetail);
+		model.addAttribute("board",board );
+//		System.out.println(board);
+		model.addAttribute("postAttach",postAttach);
+	}
+	
+	@PostMapping("/createStudyPost.do")
+	public String createStudyPost(
+			@RequestParam String title,
+			@RequestParam String text,
+			@RequestParam int boardId,
+			@RequestParam int count,
+			@RequestParam(required = false) String[] _tags,
+			@AuthenticationPrincipal MemberDetails member) throws IllegalStateException, IOException{
+		int result=0;
+		List<String> tags = _tags != null ? Arrays.asList(_tags) : null;
+		//전용게시판 생성 
+		Study study= Study.builder().memberCount(count).studyName(title).memberId(member.getMemberId()).build();
+		result = boardService.createStudy(study);
+
+		//전용게시판 board 테이블에 생성해주기.(impl)
+		int findId = boardService.findBoarderId(study);
+		System.out.println("asdsadsad"+findId);
+		study.setBoardId(findId);
+		result = boardService.createBoard(study);
+		
+		// 스터디 original 게시판에 게시글 등록
+		BoardCreateDto board = BoardCreateDto.builder()
+				.boardId(boardId)
+				.title(title)
+				.content(text)
+				.memberId(member.getMemberId())
+				.tags(tags)
+				.build();
+		result = boardService.insertBoard(board);
+		System.out.println(board);
+		int postId = boardService.findByPostId();
+		System.out.println(postId+"ASdsadsadsad");
+		study= Study.builder().postId(postId).build();
+		
+		result = boardService.updatePostId(postId,findId);
+		
+		result = boardService.insertPostContent(board);
+		return "redirect:/board/studyDetail.do?id=" + board.getPostId();
+
+	}
+	
 }
 
+
+    
