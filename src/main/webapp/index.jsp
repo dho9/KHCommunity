@@ -24,6 +24,12 @@
 .active {
 	display: block;
 }
+#pageFrame {
+    width: 51%;
+    height: 27%;
+    margin-left: 18%;
+    margin-top: 0.5%;
+}
 </style>
     <div id="container" class="community" style="margin-top: 25px;">
         <aside class="none">
@@ -38,10 +44,7 @@
                 </ol>
             </div>
         </aside>
-        <div class="banners">
-            <a href=""><img src=""
-                    style="width: 600px; height: 200px; outline: auto;"></a>
-        </div>
+        <iframe id="pageFrame" name="pageFrame" src="http://www.jobkorea.co.kr/Starter/calendar/sub/week" scrolling="auto"></iframe>
         <sec:authentication property="principal" var="loginMember"/>
         <form:form name ="memberLogoutFrm" 
         	action="${pageContext.request.contextPath}/member/memberLogout.do" 
@@ -184,6 +187,8 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
 </script>
 <sec:authorize access="isAuthenticated()">
 <script>
+
+	// 즐겨찾기한 게시판
     document.querySelector('#myBoard').addEventListener('mouseover', () => {
         $.ajax({
             url: "${pageContext.request.contextPath}/board/myBoards.do",
@@ -210,8 +215,10 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
             }
         });
     });
-    document.querySelector('.favorite').addEventListener('mouseout', (e) => {
-        console.log(e+'ㅋㅋㅋㅋ');
+    
+    // 즐겨찾기한 게시판
+    document.querySelector('.favorite').addEventListener('mouseleave', (e) => {
+        /* console.log(e+'ㅋㅋㅋㅋ'); */
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
     });
