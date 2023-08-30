@@ -67,7 +67,8 @@
 <%-- codemirror theme --%>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/eclipse.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/js/codemirror-5.65.14/theme/dracula.css">
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/showForm.js"></script>
     <body>
@@ -164,4 +165,31 @@
         }
    });
 	</script>
+	<sec:authorize access="isAuthenticated()">
+		<script>
+			const memberId = '<sec:authentication property="principal.username"/>';
+			
+			const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
+			const stompClient = Stomp.over(ws);
+		
+			stompClient.connect({}, (frame) => {
+				console.log('open : ', frame);
+				
+				// 구독신청 
+				stompClient.subscribe(`/topic/msgnotice/${memberId}`, (message) => {
+					console.log(`/topic/msgnotice/${memberId} : `, message);
+					renderMessage(message);
+				});
+			});
+			
+			const renderMessage = (message) => {
+				const {type, from, to, content, createdAt} = JSON.parse(message.body);
+				console.log(type, from, to, content, createdAt);
+				
+				
+			}
+			
+		</script>
+		
+	</sec:authorize>
 	

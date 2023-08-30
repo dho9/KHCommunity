@@ -22,10 +22,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<script src="${pageContext.request.contextPath}/resources/js/jquery-3.7.0.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 <style>
 @font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
@@ -60,7 +61,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 .modal-message-content{width: 100%; height: 200px;}
 #certiSteps{width:90%; text-align: center; margin: 0px auto;}
 .certiStep{display: inline-block; width: 24%; margin: 10px 2%; text-align: center; margin-top: 40px;}
-#msgPagingDiv .pagination{text-align: center; margin: 0px auto; width: fit-content;}
+#msgPagingDiv .msgPagination{ margin: 0px auto; width: fit-content;}
 #reportModal label{margin-left: -80%;}
 #reportModal textarea,select{width:92%;}
 /* 회원인증 css */
@@ -85,6 +86,196 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 /* 휴가신청 css */
 /* #vacationDiv .btn btn-primary {display: inline-block;} */
+
+.chat_window {
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  background-color: #f8f8f8;
+  overflow: hidden;
+}
+
+.top_menu {
+  background-color: #fff;
+  width: 100%;
+  padding: 20px 0 15px;
+  box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
+}
+.top_menu .buttons {
+  margin: 3px 0 0 20px;
+  position: absolute;
+}
+.top_menu .buttons .button {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+}
+.top_menu .buttons .button.close {
+  background-color: #f5886e;
+}
+.top_menu .buttons .button.minimize {
+  background-color: #fdbf68;
+}
+.top_menu .buttons .button.maximize {
+  background-color: #a3d063;
+}
+.top_menu .title {
+  text-align: center;
+  color: #bcbdc0;
+  font-size: 20px;
+}
+
+.messages {
+  position: relative;
+  list-style: none;
+  padding: 20px 10px 0 10px;
+  margin: 0;
+  height: 87%;
+  overflow-y: scroll;
+}
+.messages .message {
+  clear: both;
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: all 0.5s linear;
+  opacity: 0;
+}
+.messages .message.left .avatarBox {
+  float: left;
+}
+.messages .message.left .text_wrapper {
+  background-color: #ffe6cb;
+  margin-left: 20px;
+}
+.messages .message.left .text_wrapper::after, .messages .message.left .text_wrapper::before {
+  right: 100%;
+  border-right-color: #ffe6cb;
+}
+.messages .message.left .text {
+  color: #c48843;
+}
+.messages .message.right .avatarBox {
+  float: right;
+}
+.messages .message.right .text_wrapper {
+  background-color: #c7eafc;
+  margin-right: 20px;
+  float: right;
+}
+.messages .message.right .text_wrapper::after, .messages .message.right .text_wrapper::before {
+  left: 100%;
+  border-left-color: #c7eafc;
+}
+.messages .message.right .text {
+  color: #45829b;
+}
+.messages .message.appeared {
+  opacity: 1;
+}
+.messages .message .avatarBox img {
+  width: 60px;
+  /* height: 60px; */
+  border-radius: 50%;
+  display: inline-block;
+}
+.messages .message .text_wrapper {
+  display: inline-block;
+  padding: 15px;
+  border-radius: 6px;
+  width: calc(100% - 85px);
+  min-width: 100px;
+  position: relative;
+}
+.messages .message .text_wrapper::after, .messages .message .text_wrapper:before {
+  top: 18px;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.messages .message .text_wrapper::after {
+  border-width: 13px;
+  margin-top: 0px;
+}
+.messages .message .text_wrapper::before {
+  border-width: 15px;
+  margin-top: -2px;
+}
+.messages .message .text_wrapper .text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.avatarBox {
+	float: right;
+	display: inline-block;
+	width:60px;
+	height:60px;
+}
+.avatarBox img{
+	width:60px;
+}
+
+.bottom_wrapper {
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  padding: 20px 20px;
+}
+.bottom_wrapper .message_input_wrapper {
+  display: inline-block;
+  height: 50px;
+  border-radius: 25px;
+  border: 1px solid #bcbdc0;
+  width: calc(100% - 160px);
+  position: relative;
+  padding: 0 20px;
+}
+.bottom_wrapper .message_input_wrapper .message_input {
+  border: none;
+  height: 100%;
+  box-sizing: border-box;
+  width: calc(100% - 40px);
+  position: absolute;
+  outline-width: 0;
+  color: gray;
+}
+.bottom_wrapper .send_message {
+  width: 140px;
+  height: 50px;
+  display: inline-block;
+  border-radius: 50px;
+  background-color: #a3d063;
+  border: 2px solid #a3d063;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s linear;
+  text-align: center;
+  float: right;
+}
+.bottom_wrapper .send_message:hover {
+  color: #a3d063;
+  background-color: #fff;
+}
+.bottom_wrapper .send_message .text {
+  font-size: 18px;
+  font-weight: 300;
+  display: inline-block;
+  line-height: 48px;
+}
+
+.message_template {
+  display: none;
+}
+
+
 
 </style>
 
@@ -113,6 +304,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
+			<p class="mypageBtn" id="chatListBtn"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 상담내역</p>
+			<hr class="myPageHr"/>
 			
 			<!-- 성근님 코드 -->
 			<form:form name="consultReqFrm">
@@ -134,8 +327,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		<div class="mypageContent">
 			<span class="classInfo">나의 수강정보 &nbsp;&nbsp;&nbsp;</span>
 			<p class="classInfo">${studentInfo.curriculumName }반</p>
-			<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId}</p>
-			<h2 class="classInfo">&nbsp;&nbsp;
+			<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId} &nbsp;</p>
+			<h2 class="classInfo">
 			<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
 			<c:if test="${not fn:contains(Ddays, '-')}">D - ${Ddays}</c:if>
 			</h2>
@@ -187,7 +380,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</tbody>
 				</table>
 				<div id="msgPagingDiv">
-					<ul class="pagination">
+					<ul class="pagination msgPagination">
 						<li class="page-item disabled" id="prevButton">
 						  <span class="page-link">Previous</span>
 						</li>
@@ -202,6 +395,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			</div>
 			
 		</div>	
+		
+	
 		
 		<!-- 구매내역 div-->
 		<div class="mypageContent">
@@ -235,9 +430,69 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				</table>
 			</div>
 		</div>	
+		
+		<div class="mypageContent">
+			<p class="infoTitles"><i class="bi bi-chat-right-text"></i> &nbsp;상담내역</p>
+			<div class="myPageDivs" id="chatQnAList" >	
+				<table class="table table-hover" id="chatTbl">
+					<thead>
+						<th scope="col">No</th>
+                        <th scope="col">상담자</th>
+                        <th scope="col">상담유형</th>
+                        <th scope="col">상담일자</th>
+                        <th scope="col">상담내역</th>
+					</thead>
+					<tbody id= "chatTblBody">
+						
+					</tbody>
+				</table>
+				<br/>
+				<div class="d-flex justify-content-center" style="margin-top: 3%">
+					<ul class="pagination chatPagination">
+					    <li class="page-item disabled">
+					      <a id="prev" class="page-link" href="#">이전</a>
+					    </li>
+					    
+					    <li class="page-item">
+					      <a id="next" class="page-link" href="#">다음</a>
+					    </li>
+				    </ul>
+			    </div>
+			</div>
+		
+		</div>
+			<!-- 버튼 클릭시 채팅 조회 모달 -->
+			<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+				    	<div class="modal-header">
+				            <h1 class="modal-title fs-5" id="exampleModalLabel">상담내역</h1>
+				            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				        </div>
+				        <div class="modal-body">
+				            <div class="chat_window">
+				              	<div class="top_menu">
+				               		<div class="title">KH TIME</div>
+				               	</div>
+				               	<ul class="messages" id="modalMessages">
+						            
+				               	</ul>
+				                	
+				            </div>
+				                
+				        </div>
+				        <div class="modal-footer">
+				           	<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+				        </div>
+				    </div>
+				</div>
+			</div>
+
+		
+		
 		<!-- 휴가신청 -->
 		<div class="mypageContent">
-				<p class="infoTitles"><i class="bi bi-coin"></i> &nbsp;휴가신청</p>
+				<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
 				<div class="myPageDivs" id="vacationDiv" >		
 					<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
 						enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
@@ -480,6 +735,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	window.onload=()=>{
 		msgList(1);
 		certification();
+		chatPageChange(1);
 	};
 
 	document.getElementById("logoutBtn").addEventListener("click", function(event) {
@@ -585,7 +841,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				let pages = 0;
 				pages = Math.ceil(listSize / 5);
 				
-				const paginationContainer = document.querySelector(".pagination");
+				const paginationContainer = document.querySelector(".msgPagination");
 	            paginationContainer.innerHTML = "";
 
 	            let paginationHTML = `
@@ -862,6 +1118,249 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			}
 		});
 	};
+	
+	
+	$(function(){
+		var accordionButton = $('.list .items > .a_title');
+	    accordionButton.on('click', function(e){
+	    	e.preventDefault();
+	        var $this = $(this);
+	        var target = $this.parent();
+	        var description = $this.siblings('.a_content');
+	        var other = target.siblings('.items');
+	        var otherDescription = other.find('.a_content');
+	        accordionToggle(target, description, other, otherDescription);
+	    });
+	        
+	    function accordionToggle(target, description, other, otherDescription){
+	    	if (target.hasClass('active')) {
+	          target.removeClass('active');
+	          description.stop().slideUp(300);
+	        } else {
+	          target.addClass('active');
+	          description.stop().slideDown(300);
+	        }
+	        if (other && otherDescription) {
+	          other.removeClass('active');
+	          otherDescription.stop().slideUp(300);
+	        }
+	    };
+	});
+	
+	function chatlogBtn() {
+		const chatViewButtons = document.querySelectorAll("#chatView");
+		chatViewButtons.forEach(button => {
+		    button.addEventListener("click", function () {
+		        const chatId = this.getAttribute("data-chatid");
+		        console.log(chatId);
+		        // 채팅 메시지를 가져오기 위한 AJAX 요청 수행
+		        $.ajax({
+		            type: "GET",
+		            url: "${pageContext.request.contextPath}/member/chatView.do",
+		            data: {
+		                chatId: chatId
+		            },
+		            success: function (responseData) {
+		                // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
+		                console.log(responseData)
+		                
+		                modalSend(responseData);
+		                
+		            },
+		            error: function () {
+		                console.log("실패");
+		            }
+		        });
+		    });
+		});
+	};
+	
+	function modalSend(responseData) {
+		
+		
+		   const modalMessages = document.getElementById("modalMessages");
+		    
+		   modalMessages.innerHTML = '';
+		   
+		    responseData.forEach(chat => {
+		    	
+		    	const chatSendAt = new Date(chat.chatSendAt);
+		    	console.log(chatSendAt);
+		    	const formattedSendAt = `\${chatSendAt.getFullYear()}/\${chatSendAt.getMonth() + 1}/\${chatSendAt.getDate()}/\${chatSendAt.getHours()}:\${chatSendAt.getMinutes()}:\${chatSendAt.getSeconds()}`;
+		    	console.log(formattedSendAt);
+		        const messageItem = document.createElement("li");
+		        messageItem.classList.add("message", chat.employeeId === null ? "right" : "left", "appeared");
+		        
+		        const studentImgUrl = "/kh/resources/images/usericon.png";
+		        const adminImgUrl = "/kh/resources/images/admin.png";
+		        
+		        const avatarBox = document.createElement("div");
+		        avatarBox.classList.add("avatarBox");
+		        const avatarImage = document.createElement("img");
+		        avatarImage.src = chat.employeeId === null ? studentImgUrl : adminImgUrl; // 대화 상대의 아바타 이미지 URL 설정
+		        avatarImage.style.marginTop = chat.employeeId === null ? '' : '20px';
+		        avatarBox.appendChild(avatarImage);
+		        
+		        const textWrapper = document.createElement("div");
+		        textWrapper.classList.add("text_wrapper");
+		        textWrapper.style.marginTop = chat.employeeId === null ? '10px' : '';
+		        const textDiv = document.createElement("div");
+		        textDiv.classList.add("text");
+		        
+		        if(chat.memberId === null){
+		            textDiv.innerHTML = `
+		                <span style="font-size:13px; color:black; font-weight:600;">
+		                    관리자
+		                </span> <br>
+		                <span>\${chat.chatContent}</span> <br>
+		                <span style="font-size:12px; color:black; font-weight:500;">
+		                	\${formattedSendAt}
+		                </span>`;
+		        }
+		        else {
+		           textDiv.innerHTML = `
+		                <span style="font-size:13px; color:black; font-weight:600;">
+		                    \${chat.memberId}
+		                </span> <br>
+		                <span>\${chat.chatContent}</span> <br>
+		                <span style="font-size:12px; color:black; font-weight:500;">
+		                	\${formattedSendAt}
+		                </span>`;
+		        }
+		        textWrapper.appendChild(textDiv);
+		        
+		        messageItem.appendChild(avatarBox);
+		        messageItem.appendChild(textWrapper);
+
+		        modalMessages.appendChild(messageItem);
+		   })
+		}
+	
+	
+	 function chatPageChange(pageNum) {
+			
+			$.ajax({
+	            type: "GET",
+	            url: "${pageContext.request.contextPath}/member/studentChatList.do",
+	            data: {
+	            	page: pageNum
+	            },
+	            success: function (responseData) {
+	                console.log(responseData);
+	                const studentChatList = responseData.studentChatList;
+	                const totalPages = responseData.totalPages;
+	                const currentPage = responseData.currentPage;
+	                
+	                let html ="";
+	                let index = 0;
+	                const chatTblBody = document.querySelector("#chatTblBody");
+	                
+	                
+	                if(studentChatList.length == 0) {
+	                	chatTblBody.innerHTML = `
+							<tr>
+					  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
+					  		</tr>
+						`;
+					}
+	                for(let i = 0; i < studentChatList.length; i++){
+	                	
+	                	console.log(pageNum, pageNum-1, (pageNum-1) * 5, (pageNum-1) * 5 + i, (pageNum-1) * 5 + i +1)
+	                	html+=`
+	                	<tr>
+			            <td>\${(pageNum-1) * 5 + i + 1}</td>
+			            <td>\${studentChatList[i].studentName}(\${studentChatList[i].studentId})</td>
+			            <td>\${studentChatList[i].chatType}</td>
+			            <td>\${studentChatList[i].chatDate}</td>
+			            <td>
+			                <button type="button" class="btn btn-outline-primary" id="chatView"
+			                        style="--bs-btn-padding-y: .0rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+			                        data-bs-toggle="modal" data-bs-target="#chatModal"
+			                        data-chatid="\${studentChatList[i].chatId}">
+			                    보기
+			                </button>
+			            </td>
+		            	<tr>` 
+		            	
+	                }
+	                
+	                chatTblBody.innerHTML = html;
+	                
+	                renderPagination(currentPage, totalPages);
+	                
+	                chatlogBtn();
+	            },
+	            error: function () {
+	                console.log("실패");
+	            }
+	        });
+			
+		};
+		
+		function loadPage(pageNumber) {
+			chatPageChange(pageNumber);
+	        currentPage = pageNumber;
+	    }
+		
+		
+		function renderPagination(currentPage, totalPages) {
+		    const paginationElement = document.querySelector('.chatPagination');
+		    paginationElement.innerHTML = ""; // 기존 페이지 바 내용 초기화
+
+		    // 이전 페이지 링크
+		    const prevButton = document.createElement('li');
+		    prevButton.classList.add('page-item');
+		    if (currentPage === 1) {
+		        prevButton.classList.add('disabled');
+		    }
+		    const prevLink = document.createElement('a');
+		    prevLink.classList.add('page-link');
+		    prevLink.textContent = '이전';
+		    prevLink.setAttribute('href', '#');
+		    prevLink.addEventListener('click', () => {
+		    	loadPage(currentPage - 1);
+		    });
+		    prevButton.appendChild(prevLink);
+		    paginationElement.appendChild(prevButton);
+
+		    // 페이지 번호 링크
+		    for (let i = 1; i <= totalPages; i++) {
+		        const pageButton = document.createElement('li');
+		        pageButton.classList.add('page-item');
+		        if (i === currentPage) {
+		            pageButton.classList.add('active');
+		        }
+		        const pageLink = document.createElement('a');
+		        pageLink.classList.add('page-link');
+		        pageLink.textContent = i;
+		        pageLink.setAttribute('href', '#');
+		        pageLink.setAttribute('data-page', i);
+		        pageLink.addEventListener('click', (event) => {
+		            const clickedPage = event.target.getAttribute('data-page');
+		            if (clickedPage) {
+		            	loadPage(parseInt(clickedPage));
+		            }
+		        });
+		        pageButton.appendChild(pageLink);
+		        paginationElement.appendChild(pageButton);
+		    }
+
+		    // 다음 페이지 링크
+		    const nextButton = document.createElement('li');
+		    nextButton.classList.add('page-item');
+		    if (currentPage === totalPages) {
+		        nextButton.classList.add('disabled');
+		    }
+		    const nextLink = document.createElement('a');
+		    nextLink.classList.add('page-link');
+		    nextLink.textContent = '다음';
+		    nextLink.setAttribute('href', '#');
+		    nextLink.addEventListener('click', () => {
+		        loadNextPage();
+		    });
+		    nextButton.appendChild(nextLink);
+		    paginationElement.appendChild(nextButton);
+		}
 	
 </script>	
 

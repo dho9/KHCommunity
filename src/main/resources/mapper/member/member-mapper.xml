@@ -123,7 +123,7 @@
  <select id="findByEmployeeInfo" resultMap="findByEmployeeInfoMap">
  select 
      m.member_id, m.member_name, c.class_id, c.subject, c.curriculum_name, a.auth, 
-     e.job_code, e.employee_id, c.curriculum_start_at, c.curriculum_end_at
+     e.job_code, e.employee_id, curriculum_id, c.curriculum_start_at, c.curriculum_end_at
  from
       member m left outer join curriculum c
              on  c.teacher_id = m.member_id
@@ -143,6 +143,7 @@
       <result column="curriculum_name" property="curriculumName"/>
       <result column="auth" property="auth"/>
       <result column="job_code" property="jobCode"/>
+      <result column="curriculum_id" property="curriculumId"/>
       <result column="curriculum_start_at" property="curriculumStartAt"/>
       <result column="curriculum_end_at" property="curriculumEndAt"/>
   </resultMap>
@@ -176,7 +177,7 @@
   from vacation v join vacation_attachment va 
 		on v.vacation_id = va.vacation_id 
 				  join member m on m.member_id = v.student_id
-  where teacher_id = #{teacherId}
+  where teacher_id = #{teacherId} and v.vacation_approve_check = 1
   </select>
 
 </mapper>
