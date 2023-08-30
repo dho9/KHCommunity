@@ -96,6 +96,7 @@
 --drop sequence seq_chat_message_no;
 --drop sequence seq_curriculum_id;
 --drop sequence seq_cal;
+--drop sequence seq_alarm_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -1616,3 +1617,9 @@ WHERE
     p.post_id = 216;
     select * from study;
     select * from study_info;
+
+SELECT *
+  FROM user_sequences;
+  
+  select seq_alarm_id.nextval from dual;
+  select seq_chat_id.currval from dual;
