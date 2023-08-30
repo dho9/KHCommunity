@@ -21,6 +21,7 @@ import com.kh.app.messageBox.entity.AnonymousCheck;
 import com.kh.app.messageBox.entity.MessageBox;
 import com.kh.app.messageBox.entity.ReadCheck;
 import com.kh.app.messageBox.service.MessageService;
+import com.kh.app.notification.service.NotificationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +34,8 @@ public class MessageContoller {
    @Autowired
    private MessageService messageService;
 
+   @Autowired
+   private NotificationService notificationService;
    
    // 메세지 보내기 기능
    @PostMapping("/messageSend.do")
@@ -49,6 +52,9 @@ public class MessageContoller {
             .build();
 
       int result = messageService.insertMessage(message);
+      
+      // 성근 - 쪽지 보내면 실시간 알림
+      result = notificationService.notifyMsgSend(message);
 
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("sendId", sendId, "receiveId", receiveId));
    }

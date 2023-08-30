@@ -32,6 +32,7 @@ import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.StudentVacation;
 import com.kh.app.member.entity.StudentVacationAttachment;
 import com.kh.app.member.repository.MemberRepository;
+import com.kh.app.notification.entity.Notification;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -257,4 +258,14 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.getChatMessagesByChatId(chatId);
 	}
 
+	@Override
+	public List<Notification> getNotificationsById(String memberId) {
+		return memberRepository.getNotificationsById(memberId);
+	}
+	
+	@Override
+	public int updateAlarmReadCheck(int alarmId) {
+		return memberRepository.updateAlarmReadCheck(alarmId);
+	}
+	
 }
