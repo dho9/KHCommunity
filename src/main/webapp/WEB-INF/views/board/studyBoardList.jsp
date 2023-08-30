@@ -187,10 +187,20 @@ ex ) 위치, 스터디내용 ...
 	  writeButton.style.display = "block";
 	  createForm.remove();
 	}
-	
-	
-	
-	  
 	  </script>
-<%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
+	  <div class="rightside">
+		  <div class="card">
+	        <div class="board" id="popularPostsContainer">
+	            <h3>
+	                <a>내 스터디</a>
+	            </h3>
+	            <a href="${pageContext.request.contextPath}/board/boardDetail.do?id=\${post.postId}" class="article">
+                    <p class="title">${post.title}</p>
+                    <hr>
+                </a>
+	        </div>
+	      </div>
+      </div>
+      
+      
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
