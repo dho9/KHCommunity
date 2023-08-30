@@ -59,9 +59,11 @@ IE7 占쎌뵠占쎈릭筌랃옙 : *color: white
 	padding: 0;
 	-webkit-touch-callout: none;
 }
-
+@font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
 body {
 	background-color: #f8f8f8;
+	font-family: 'GmarketSansMedium';
+	font-weight: 100;
 }
 
 body.selectDisabled {
@@ -313,8 +315,8 @@ body.appwebview nav {
 }
 
 #submenu {
-    border-bottom: 3.5px solid #001fff47;
-    border-top: 3.5px solid #001fff47;
+    border-bottom: 1.5px solid #BAD7F1;
+    border-top: 1.5px solid #BAD7F1;
     background-color: white;
 }
 
@@ -332,7 +334,7 @@ body.appwebview nav {
 	display: inline-block;
 	width: 1px;
 	height: 200px;
-	background-color: #001fff47;
+	background-color: #BAD7F1;
 }
 
 #submenu>div.wrap>div.group {
@@ -1141,11 +1143,12 @@ aside>div.title>ol.buttons>li>a.image.setting {
 #container>div.banners img {
 	width: 100%;
 	height: auto;
+	margin-top: 10px;
 }
 
 #container>div.rightside div.card, #container>div.leftside div.card {
 	margin-bottom: 5px;
-	border: 3px solid #001fff47;
+	border: 1px solid #BAD7F1;
 	background-color: white;
 	border-radius: 10px;
 }
@@ -1154,7 +1157,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	float: left;
 	margin: 0 5px 5px 0;
 	width: 295px;
-	border: 3px solid #001fff47;
+	border: 1px solid #BAD7F1;
 	overflow: hidden;
 	background-color: #fff;
 }
@@ -1165,7 +1168,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 
 #container div.card h3>a {
 	line-height: 20px;
-	color: #0a53be;
+	color: #fff;
 	font-size: 14px;
 	font-weight: bold;
 }
@@ -1209,7 +1212,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 #container div.card>form.logged>p.school {
 	line-height: 15px;
 	color: #a6a6a6;
-	font-size: 12px;
+	font-size: 10px;
 	text-align: center;
 }
 
@@ -1311,7 +1314,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	width: 780px;
 	display: block;
 	padding: 15px;
-	border: solid 3px #001fff47;
+	border: solid 3px #BAD7F1;
 	font-size: 17px;
 	margin-bottom: 5px;
 	background-color: white;
@@ -1330,7 +1333,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 #container>div.wrap.articles>form#createForm {
     position: relative;
     margin-bottom: 5px;
-    border: 2px solid #001fff47;
+    border: 1px solid #BAD7F1;
     box-sizing: border-box;
     padding-bottom: 135px;
     padding-right: 3px;
@@ -1339,14 +1342,14 @@ aside>div.title>ol.buttons>li>a.image.setting {
 
 #container>div.wrap.articles>form#createForm p {
     padding: 15px;
-    border-bottom: 1px solid #001fff47;
+    border-bottom: 1px solid #BAD7F1;
     background-color: #fff;
     border-radius: 7px;
 }
 
 #container>div.wrap.articles>form#updateForm p {
 	padding: 15px;
-    border-bottom: 1px solid #001fff47;
+    border-bottom: 1px solid #BAD7F1;
     background-color: #fff;
     border-radius: 7px;
 }
@@ -1655,7 +1658,7 @@ dl, ul, ol, menu, li {
 #container div.card>div.board>a {
 	display: block;
 	padding: 10px;
-	border-top: 1px solid #001fff47;
+	border-top: 1px solid #BAD7F1;
 }
 
 #container div.card>div.board>a:hover {
@@ -1917,7 +1920,7 @@ dl, ul, ol, menu, li {
 	line-height: 20px;
 	padding: 10px;
 	box-sizing: border-box;
-	border: 2px solid #001fff47;
+	border: 1px solid #BAD7F1;
 	color: #292929;
 	font-size: 14px;
 	background: transparent url('/images/new/aside.search.background.png')
@@ -1934,7 +1937,7 @@ dl, ul, ol, menu, li {
 #container>div.title {
     margin-bottom: -20px;
     padding: 15px;
-    border: 2px solid #001fff47;
+    border: 1px solid #BAD7F1;
     border-radius: 10px;
     box-sizing: border-box;
 }
@@ -1942,7 +1945,7 @@ dl, ul, ol, menu, li {
 #container>div.articles>article {
     margin-bottom: -1px;
     box-sizing: border-box;
-    border: 2px solid #001fff47;
+    border: 1px solid #BAD7F1;
     background-color: #fff;
     border-radius: 10px;
 }
@@ -1964,7 +1967,7 @@ dl, ul, ol, menu, li {
 		left: 215px;
 		margin-top: 25px;
 		width: 600px;
-		height: 160px;
+		height: 212px;
 		overflow: hidden;
 	}
 	#container>div.leftside {
@@ -1987,6 +1990,26 @@ dl, ul, ol, menu, li {
 		margin: 15px 0;
 		width: 612px;
 	}
+	
+	/* 여기부터 */
+	#popularPostsContainer>h3{
+		background-color: #fff;
+		border-radius: 40px;
+	}
+	#noticeBoardsContainer>h3{
+		background-color: #fff;
+		border-radius: 40px;
+	}
+	.card>div>h3{
+		background-color: royalblue;
+	}
+	.card>div>h3>a{
+		color: white;
+		font-weight: 300;
+	}
+	.pconly,.rightside{
+		margin-top: 10px;
+	}
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * *  /  mobile only  /  * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -2002,6 +2025,7 @@ dl, ul, ol, menu, li {
 	#container>div.rightside div.card, #container>div.leftside div.card,
 		#container>div.main div.card {
 		border: 0;
+
 	}
 	#container>div.main div.card {
 		margin: 0;
