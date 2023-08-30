@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class StudyList {
 	private int postId;
 	private int boardId;
+	private int studyId;
 	private String memberId;
 	private List<String> tag;
 	private String studyName;

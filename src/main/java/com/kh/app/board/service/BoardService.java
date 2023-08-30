@@ -159,5 +159,9 @@ public interface BoardService {
 
 	int createBoard(Study study);
 
+	int findByPostId();
+
+	int updatePostId(int postId, int boardId);
+
 
 }
