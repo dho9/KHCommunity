@@ -252,6 +252,9 @@ public interface BoardRepository {
 
 	@Insert("insert into study_info (study_id, member_id, introduce, study_application_at, application_check) values(#{studyId},#{appliId}, #{appliContent},default,default )")
 	int insertStudy(int studyId, String appliId, String appliContent);
+	
+	@Select("select count(*) from study_info where study_id = #{studyId} and member_Id = #{appliId}")
+	int checkStudy(int studyId, String appliId);
 
 
 	

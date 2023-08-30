@@ -1585,5 +1585,5 @@ WHERE
     p.post_id = 216;
     select * from study;
     select * from study_info;
-  
+    delete study_info;
   
