@@ -13,12 +13,15 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyList;
+import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
 import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
+import com.kh.app.board.entity.Study;
 
 public interface BoardService {
 
@@ -148,6 +151,22 @@ public interface BoardService {
 	int totalCountPreStudentBoard();
 
 	int totalCountEmployeeBoard();
+
+	List<StudyList> findAllStudy();
+
+	int createStudy(Study study);
+
+	int findBoarderId(Study study);
+
+	int createBoard(Study study);
+
+	int findByPostId();
+
+	int updatePostId(int postId, int boardId);
+
+	StudyListDto studyFindById(int id);
+
+	int insertStudy(int studyId, String appliId, String appliContent);
 
 
 }

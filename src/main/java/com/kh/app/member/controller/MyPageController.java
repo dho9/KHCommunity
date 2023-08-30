@@ -157,7 +157,6 @@ public class MyPageController {
 	@ResponseBody
 	public ResponseEntity<List<ChatMessage>> chatView(@RequestParam(value="chatId", required=false) int chatId) {
 	    List<ChatMessage> chatMsgs = memberService.getChatMessagesByChatId(chatId);
-	    System.out.println("받아오긴함 ??" + chatId);
 	    return ResponseEntity.ok(chatMsgs);
 	}
 }

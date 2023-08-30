@@ -1461,6 +1461,7 @@ select * from post;
 select * from chat_room;
 delete chat_room where chat_id between 119 and 140;
 
+
 select * from alarm;
 
 update alarm set read_check = 'n' where received_id = 'khendev23';
@@ -1473,3 +1474,145 @@ FROM (
     ORDER BY alarm_id DESC
 )
 WHERE ROWNUM <= 6;
+
+drop table study CASCADE CONSTRAINTS;
+
+
+CREATE TABLE study (
+    study_id NUMBER,
+    board_id number,
+    study_name varchar2(200),
+    member_id varchar2(20),
+    study_people number  default 1,
+    member_count number,
+    study_created_at  date   DEFAULT current_date,
+    study_end_at date,
+    PRIMARY KEY (study_id) ,
+    FOREIGN KEY ( member_id) REFERENCES member(member_id)
+);
+
+update study set study_people = 1 where study_id = 4;
+select * from member;
+select * from study;
+create sequence seq_study_id;
+insert into study (study_id,board_id,study_name,member_id,member_count,study_created_at ) values(seq_study_id.nextval, seq_board_id.nextval, '자바 빡시게 하자잉', 'eogh',5,default);
+select seq_board_id.CURRVAL from dual;
+
+select * from board order by board_id desc;
+
+INSERT INTO board (board_id, board_name, board_category, board_link)
+SELECT board_id, '스터디'||member_id, '스터디','study'
+FROM study
+WHERE board_id = 44;
+select * from study;
+select * from post order by post_id desc;
+SELECT seq_board_id.CURRVAL, study_name, '스터디', 'studyList'
+FROM study
+WHERE board_id = 44;
+select study_name from study where board_id = 44;
+CREATE TABLE study_info (
+    study_id NUMBER,
+    member_id varchar2(20),
+    study_application_at  date   DEFAULT current_date,
+    application_check number default 0,
+    PRIMARY KEY (study_id,member_id) ,
+    FOREIGN KEY ( member_id) REFERENCES member(member_id),
+    FOREIGN KEY ( study_id) REFERENCES study(study_id)
+);
+select * from study_info;
+select * from study;
+select * from study;
+select * from post order by post_id desc;
+select * from post;
+select * from post_content order by post_id desc;
+update post set tag= '#JAVA' where post_id = 198;
+INSERT INTO post (post_id, board_id, member_id, title)
+VALUES (seq_post_id.NEXTVAL, 44, 'eogh', '자바 빡시게 하자잉');
+INSERT INTO post_content (post_id, board_id, content)
+VALUES (197, 44, '저희스터디느 ?저희스터디느 ?저희스터디느 ?저희스터디느 ?저희스터디느 ?저희스터디느 ?저희스터디느 ?저희스터디느 ?저희스터디느 ?저희스터디느 ?');
+198	44	eogh	자바 빡시게 하자잉	23/08/30 02:10:35				#JAVA
+select * from post order by post_id desc;
+SELECT p.post_id, p.board_id,p.member_id,p.tag ,s.study_name ,s.study_people,s.member_count, s.study_created_at, s.study_end_at
+FROM post p
+JOIN study s ON p.board_id = s.board_id;
+SELECT p.post_id, p.board_id,p.member_id,p.tag ,s.study_name ,s.study_people,s.member_count, s.study_created_at, s.study_end_at FROM post p JOIN study s ON p.board_id = s.board_id;
+select s.*   from study s;
+select * from board;
+update board set board_name = '스터디전용' where board_id = 43;
+select * from post order by post_id desc;
+select * from post_content order by post_id desc;
+select * from board order by board_id desc;
+select * from study order by study_id desc;
+SELECT p.post_id, p.board_id,p.member_id,p.tag ,s.study_name ,s.study_people,s.member_count, s.study_created_at, s.study_end_at FROM post p JOIN study s ON p.board_id = s.board_id
+;
+select * from study;
+select * from post where member_id ='eogh' and title = (select study_name from study where study_id =6);
+select 
+ p.*
+ from 
+    post p
+where
+    p.title = (select study_name from study;
+    
+    select * from post order by post_id desc;
+    
+    alter table study add post_id number;
+    ALTER TABLE study drop CONSTRAINT FK_study_post_id;
+select * from post order by 1 desc;
+select * from study;
+select * from post where board_id = 6;
+update study set post_id = 203 where study_name='자바 빡시게하자';
+
+	select 
+  		p.post_id,
+  		p.member_id,
+	    p.title,
+	    p.post_created_at,
+	    p.tag,
+	    (select count (*) from post_like pl where pl.post_id = p.post_id) post_like,
+	    c.content,
+	    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
+  		p.board_id,
+  		p.anonymous_check,
+        m.member_name
+	from
+	    post p join post_content c
+	    	on p.post_id = c.post_id
+        left join member m
+            on p.member_id = m.member_id
+	where
+	    p.post_id=210;
+        
+        select * from post_content where post_id=210;
+        select * from post order by 1 desc;
+        delete from study where post_id is null ;
+        select * from study_info;
+        delete from study_info;
+        delete from study;
+        select * from study;
+        select * from post order by 1 desc;
+        
+        
+SELECT
+    p.post_id,
+    p.member_id,
+    p.title,
+    p.post_created_at,
+    p.tag,
+    c.content,
+    p.board_id,
+    m.member_name,
+    s.study_people,
+    s.member_count
+FROM
+    post p
+JOIN
+    post_content c ON p.post_id = c.post_id
+LEFT JOIN
+    member m ON p.member_id = m.member_id
+JOIN
+    study s ON p.post_id = s.post_id
+WHERE
+    p.post_id = 216;
+    select * from study;
+    select * from study_info;

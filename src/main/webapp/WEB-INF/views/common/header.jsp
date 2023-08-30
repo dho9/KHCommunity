@@ -96,9 +96,9 @@
     <link href="/favicon.ico" rel="shortcut icon">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<c:if test="${not empty message }">
+<c:if test="${not empty msg }">
 	<script>
-		alert('${message}'); 
+		alert('${msg}'); 
 	</script>
 </c:if>
 
@@ -160,7 +160,8 @@
         </div>
     </nav>
     <div id="submenu">
-		<div class="wrap">
+    <!-- style="display: none;" -->
+		<div class="wrap" id="boardSubmenu">
 			<div class="divider"></div>
 			<div class="group">
 				<ul>
