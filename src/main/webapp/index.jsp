@@ -45,7 +45,10 @@
                 </ol>
             </div>
         </aside>
-        <iframe id="pageFrame" name="pageFrame" src="http://www.jobkorea.co.kr/Starter/calendar/sub/week" scrolling="auto"></iframe>
+        <div class="banners">
+            <a href="https://www.iei.or.kr/company/company.kh"><img src="${pageContext.request.contextPath}/resources/images/banner.png"
+                    style="width: 600px; height: 200px;"></a>
+        </div>
         <sec:authentication property="principal" var="loginMember"/>
         <form:form name ="memberLogoutFrm" 
         	action="${pageContext.request.contextPath}/member/memberLogout.do" 
