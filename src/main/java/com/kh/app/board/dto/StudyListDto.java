@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudyList {
+public class StudyListDto {
 	private int postId;
 	private int boardId;
 	private int studyId;
 	private String memberId;
 	private List<String> tag;
-	private String studyName;
+	private String title;
 	private int studyPeople;
 	private int memberCount;
 	private LocalDateTime postCreatedAt;
