@@ -423,15 +423,16 @@
 		    
 		   
 		   
-			
+			// 웹소켓 연결
 			
 			const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
 			const stompClient = Stomp.over(ws);
 		
+			// 만약 연결되면
 			stompClient.connect({}, (frame) => {
 				console.log('open : ', frame);
 				
-				// 구독신청 
+				// 메세지 알림 받는 구독신청 
 				stompClient.subscribe(`/topic/msgnotice/\${memberId}`, (message) => {
 					console.log(`/topic/msgnotice/${memberId} : `, message);
 					renderMessage(message);
