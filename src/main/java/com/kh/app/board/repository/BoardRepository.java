@@ -19,6 +19,7 @@ import com.kh.app.board.dto.CreateCommentDto;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
@@ -259,11 +260,23 @@ public interface BoardRepository {
 	@Select("select * from study where study_id in ( select study_id from study_info where member_id =#{memberId} and APPLICATION_CHECK=1)")
 	List<StudyList> findStudyList(String memberId);
 	
-	@Select("select study_id from study where member_id = #{memberId} and board_id = #{boardId}")
-	int findStudyId(String memberId, int boardId);
+	@Select("select study_id from study where board_id = #{boardId}")
+	int findStudyId( int boardId);
 	
 	@Insert("insert into study_info (study_id, member_id,application_check) values(#{findStudyId},#{memberId}, 1)")
 	int insertStudyInfo(String memberId, int findStudyId);
+	
+	@Select("select * from study_info where study_id = #{findStudyId} and APPLICATION_CHECK = 0")
+	List<StudyInfo> finAllStudyAppli(int findStudyId);
+	
+	@Select("select * from study where board_id = #{id}")
+	Study myStudyFindById(int id);
+	
+	@Update("update study_info set APPLICATION_CHECK = 1 where member_Id = #{memberId} and study_Id = #{studyId} ")
+	int updateStudyInfo(String memberId, int studyId);
+	
+	@Delete("delete from study_info  where member_Id = #{memberId} and study_Id = #{studyId} ")
+	int deleteStudyInfo(String memberId, int studyId);
 
 
 	

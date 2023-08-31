@@ -128,7 +128,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 }
 .top_menu .title {
   text-align: center;
-  color: #bcbdc0;
   font-size: 20px;
 }
 
@@ -321,12 +320,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
 			<hr class="myPageHr"/>
 			
-			<!-- 성근님 코드 -->
-			<form:form name="consultReqFrm">
-				<input type="hidden" name="loginMemberId" id="loginMemberId" value="${loginMember.username}">
-				<p class="mypageBtn" id="consultRequest"><i class="bi bi-chat-right-dots"></i> &nbsp;&nbsp; 상담신청</p>
-			</form:form>
-			
 			<hr class="myPageHr"/>
 		</div>
 			
@@ -380,7 +373,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		</div>	
 		
 		
-		<!-- 상담내역 div -->
+		<!-- 신청현황 div -->
+		<c:if test="${myStudy.memberId eq loginMember.username}">
 		<div class="mypageContent">
 			<p class="infoTitles"><i class="bi bi-chat-right-text"></i> &nbsp;신청현황</p>
 			<div class="myPageDivs" id="chatQnAList" >	
@@ -389,10 +383,19 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<th scope="col">No</th>
                         <th scope="col">신청자</th>
                         <th scope="col">신청일자</th>
-                        <th scope="col">신청정보</th>
+                       <th scope="col"> 처리</th>
 					</thead>
 					<tbody id= "chatTblBody">
-						
+						<c:forEach var="info" items="${info}">
+                    <tr>
+                        <td>${status.index + 1}</td>
+                        <td>${info.memberId}</td>
+                        <td>${info.studyApplicationAt}</td> <!-- 실제 프로퍼티 이름 사용 -->
+                        <td> <button class="modal-button" data-bs-toggle="modal" data-bs-target="#chatModal" data-info-id="${info.memberId}">
+                    보기
+                </button></td>
+                    </tr>
+                </c:forEach>
 					</tbody>
 				</table>
 				<br/>
@@ -410,7 +413,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			</div>
 		
 		</div>
+		</c:if>
 			<!-- 리더만보이게 ! 버튼 클릭시 가입정보 조회 모달 -->
+		<c:forEach var="info" items="${info}">
+		<script >
+		 const studyId = "${info.studyId}";
+		</script>
 			<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -421,920 +429,83 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				        <div class="modal-body">
 				            <div class="chat_window">
 				              	<div class="top_menu">
-				               		<div class="title">KH TIME</div>
+				               		<div class="title"> 신청자 : ${info.memberId}</div>
 				               	</div>
 				               	<ul class="messages" id="modalMessages">
-						            
+						            ${info.introduce}
 				               	</ul>
 				                	
 				            </div>
 				                
 				        </div>
 				        <div class="modal-footer">
-				           	<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+				           	<button type="button" class="btn btn-primary" id="approveButton" data-bs-dismiss="modal" data-info-id="${info.memberId}">승인</button>
+				           	<button type="button" class="btn btn-danger" id="rejectButton" data-bs-dismiss="modal" data-info-id="${info.memberId}">반려</button>
 				        </div>
 				    </div>
 				</div>
 			</div>
+			</c:forEach>
 
-		
-		
-		<!-- 휴가신청 -->
-		<div id="vacationModal" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-	        	<div class="modal-content">
-	            	<div class="modal-body">
-	            		<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br>
-						<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
-							<div class="myPageDivs" id="vacationDiv" >		
-								<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
-									enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
-									<br/>
-									<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
-									<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
-										 <br/>
-										 <br/>
-										 <tr>
-											<th> 휴가시작날짜 : </th>
-											<td>
-												<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
-											</td>
-										</tr>
-										<br/>
-										<br/>
-									
-										<tr>
-											<th>휴가끝나는날짜 : </th>
-											<td>
-												<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
-											</td>
-										</tr>
-										
-										<br/>
-										<br/>
-										<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
-									<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId}" readonly>
-									
-									<div class="input-group" style="padding:0px;">
-						  				<div class="custom-file">
-						    				<input type="file" class="form-control" name="upFile" id="vcUpFile" multiple>
-						  				</div>		  				
-									</div>
-									<br/>
-									<br/>
-									<input type="submit"  class="btn btn-primary" id="vcSubmit" value="&nbsp;&nbsp;저장&nbsp;&nbsp;" >
-									<br/>
-									<br/>
-								</form:form>
-							</div>	
-						</div>
-					</div> 
-				</div>	
-			</div>
-		</div> 
-	
-	<!-- 메인컨테이너 div끝 -->
-
-	
-		<!-- 회원관리 모달 -->
-		<div class="modal fade" id="InfoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			  <div class="modal-dialog">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="memberModalLabel"></h1>
-			        <button type="button" class="btn-close infoClose" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body">
-			        <div id="update-container" class="myPageDivs">
-						<%-- principal을 변수 loginMember 저장 --%>
-						<form:form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post" id="memberUpdateFrm">
-						<tr>
-							<th>아이디 : </th>
-							<td>
-								<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
-							</td>
-						</tr>
-						<br/>
-						<div class="forHide">
-						<tr>
-							<th>패스워드 : </th>
-							<td>
-								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>패스워드 확인 : </th>
-							<td>
-								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
-							</td>
-						</tr>
-						<br/>
-						</div>
-						<tr>
-							<th>이름 : </th>
-							<td>
-								<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>생일 : </th>
-							<td>
-								<input type="date" class="form-control readChange" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>전화번호 : </th>
-							<td>
-								<input type="tel" class="form-control readChange" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>이메일 : </th>
-							<td>
-								<input type="email" class="form-control readChange" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
-							</td>
-						</tr>
-						<br/>
-						<hr class="myPageHr"/>
-						<div id="modalBtns" class="forHide">
-							<input type="submit" class="btn btn-primary" value="수정" >&nbsp;
-							<input type="reset" class="btn btn-outline-primary" value="초기화">
-						</div>
-						</form:form>
-						
-						<!-- 탈퇴폼 -->
-						<form:form name="memberDeleteFrm" action="${pageContext.request.contextPath}/member/memberDelete.do" id="memberDeleteFrm" method="post">
-						<tr>
-							<th>아이디 : </th>
-							<td>
-								<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${loginMember.username}' readonly required/>
-							</td>
-						</tr>
-						<br/>
-						
-						<tr>
-							<th>패스워드 : </th>
-							<td>
-								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
-							</td>
-						</tr>
-						<br/>
-						
-						<tr>
-							<th>패스워드 확인 : </th>
-							<td>
-								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>이름 : </th>
-							<td>
-								<input type="text" class="form-control" placeholder="이름" name="name" id="name" value='${loginMember.name}' readonly required/>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>생일 : </th>
-							<td>
-								<input type="date" class="form-control" placeholder="생일" name="birthday" id="birthday" value='<sec:authentication property="principal.birthday"/>'/>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>전화번호 : </th>
-							<td>
-								<input type="tel" class="form-control" placeholder="010-1234-5678" name=memberPhone id="phone" maxlength="13" value='<sec:authentication property="principal.memberPhone"/>' required>
-							</td>
-						</tr>
-						<br/>
-						<tr>
-							<th>이메일 : </th>
-							<td>
-								<input type="email" class="form-control" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
-							</td>
-						</tr>
-						<br/>
-						<hr class="myPageHr"/>
-							<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
-					</form:form>
-					</div>
-			      </div>
-			    </div>
-			  </div>
-		</div>
-		
-		<!-- 신고하기 모달 -->
-		<div id="reportModal" class="modal fade" role="dialog">
-		    <div class="modal-dialog">
-		    	<div class="modal-content">
-		    	<div class="modal-header">
-			        <h1 class="modal-title fs-5">신고하기</h1>
-			        <button type="button" class="btn-close reportClose" data-bs-dismiss="modal" aria-label="Close"></button>
-			    </div>
-		    	<div class="modal-body">
-				    <form:form 
-				    	id="reportForm"
-				    	name="reportForm"
-				    	action="${pageContext.request.contextPath}/message/messageReport.do"
-				    	method="post"
-				    >
-				      <input type="hidden" name="reportMessageId" id="reportMessageId" value=""> 
-				      <input type="hidden" name="reporterId" id="reporterId" value="${loginMember.username}">
-				      <input type="hidden" name="attackerId" id="attackerId" value="">
-				      <input type="hidden" id="reportType" name="reportType" value="">
-				      <br/>
-				      <label for="reportType">신고유형</label>
-				      <br/>
-				      <select name="reportType_" id="reportType_" >
-								<option value="선택없음">신고 유형을 선택해주세요</option>	      			
-								<option value="욕설/비하">욕설/비하</option>	      			
-								<option value="음란물/불건전한 만남 및 대화">음란물/불건전한 만남 및 대화</option>	      			
-								<option value="상업적 광고 및 판매">상업적 광고 및 판매</option>	      			
-								<option value="유출/사칭/사기">유출/사칭/사기</option>	      			
-								<option value="낚시/놀람/도배">낚시/놀람/도배</option>	      			
-								<option value="정당/정치인 비하 및 선거운동">정당/정치인 비하 및 선거운동</option>	      			
-			     	  </select><br/>
-			     	  <br/>
-				      <label for="reportContent">신고내용</label><br/>
-				      <textarea id="reportContent" name="reportContent" rows="4" required></textarea>
-				      <br/><br/><br/>
-				      <hr class="myPageHr"/>
-				      <button class="btn btn-outline-primary" type="submit" id="reportSubmit">&nbsp;&nbsp;&nbsp;제출&nbsp;&nbsp;&nbsp;</button>
-				    </form:form>
-				    </div>
-			    </div>
-			</div>
+	<!-- 메인컨테이너 div끝 -->		
 		</div>	
-		
+		<form:form name="hiddenForm"></form:form>
 </selction>
 <script>
 
-	window.onload=()=>{
-		msgList(1);
-		certification();
-		chatPageChange(1);
-	};
 
-	document.getElementById("logoutBtn").addEventListener("click", function(event) {
-		memberLogoutFrm.submit();
-	});
-	
-	
-	
-	// MH - 쪽지함 관련 기능 시작
-	let msgId = ""; // 전역 변수로 선언
-	
-	const msgList = (page) => {
-		
-		
-	    $.ajax({
-	        url: `${pageContext.request.contextPath}/message/messageList.do`,
-	        method: "GET",
-	        data : {
-	        	page : page,
-	        	size : 5
-	        	},
-	        success: function(responseData) {
-	            const messageBoxTbl = document.querySelector("#messageBoxTbl");
-	            
-	            const messageList =responseData.messageList;
-	            if (messageList.length !== 0) {
-	                let html = ""; 
-	                messageList.forEach(function(message) {
-	                    let readCk = ""
-						if(message.readCheck == 'y'){
-							readCk = `<i class="bi bi-envelope-paper-heart"></i>`;
-						}else{
-							readCk = `<i class="bi bi-envelope-heart"></i>`;
-						}
-	                    html += `
-					        <tr>
-					            <td class="msgId">\${message.messageId}</td>
-					            <td class="sender">\${message.sendId}</td>
-					            <td><span class="truncate-text">\${message.messageContent}</span></td>
-					            <td>\${message.sendAt}</td>
-					            <td class="readCheckColumn">\${readCk}</td>
-					        </tr>
-					    `;
-	                });
-	                
-	                messageBoxTbl.innerHTML = html; 
-	                
-					let readCheckValue ="";
-					let sender = "";
-					$(document).ready(function() {
-					    $(".truncate-text").click(function() {
-							let messageContent = $(this).text();
-							sender = $(this).closest("tr").find(".sender").html();
-					        $(".modal-message-content").text(messageContent);
-					        readCheckValue = $(this).closest("tr").find(".readCheckColumn").html();
-					        if(readCheckValue == `<i class="bi bi-envelope-heart"></i>`){
-					        	readCheckValue = 'n';
-					        } else {
-					        	readCheckValue = 'y';
-					        }
-					        msgId = $(this).closest("tr").find(".msgId").html();
-					        $("#messageDetail").modal("show");
-					        updateReadCheck(readCheckValue, msgId, page);
-					        
-					    });
-					    
-					    
-					    const totalPage = responseData.totalPages;
-					    
-					    
-					    $("#editButton").click(function() {
-					    	console.log("112121dddddd");
-					    	deleteMsg(msgId, page, totalPage);
-					    });
-					    $("#reportButton").click(function() {
-					    	reportMsg(msgId, sender);
-					    });
-					});
-					
-	            } else {
-	                messageBoxTbl.innerHTML = `
-	                    <tr>
-	                        <td colspan="5" class="text-center">받은 쪽지가 없습니다.</td>
-	                    </tr>	
-	                `;
-	            }
-	            let totalPages = responseData.totalPages;
-	            messagePagination(page, totalPages);
-	        }
-	    });
-	};
 
+
+
+    const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+    let currentInfoId = null; // 현재 클릭한 정보의 ID
+
+
+    const modalButtons = document.querySelectorAll('.modal-button');
+    modalButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            currentInfoId = button.getAttribute('data-info-id');
+            modal.show();
+        });
+    });
 	
-	function loadMsgPage(pageNumber) {
-		msgList(pageNumber);
-        currentPage = pageNumber;
+    const approve =document.querySelector("#approveButton");
+    const reject =document.querySelector("#rejectButton");
+    if(approve && reject){
+    	approve.addEventListener('click', (event) => {
+              currentInfoId = approve.getAttribute('data-info-id');
+              const check="approve";
+              sendActionToServer(currentInfoId,check);
+              //modal.hide();
+          });
+    	reject.addEventListener('click', (event) => {
+            currentInfoId = reject.getAttribute('data-info-id');
+            const check="reject";
+            sendActionToServer(currentInfoId,check);
+            //modal.hide();
+        });
     }
-	
-	
-	function messagePagination(currentPage, pages) {
-	    const paginationElement = document.querySelector('.msgPagination');
-	    paginationElement.innerHTML = ""; // 기존 페이지 바 내용 초기화
+    function sendActionToServer(memberId,check) {
+    	const token = document.hiddenForm._csrf.value;
+    	
+        $.ajax({
+            url: "${pageContext.request.contextPath}/board/appliCheck.do",
+            method: "POST",
+            data: { memberId: memberId, check: check ,studyId:studyId},
+            success: function (response) {
+                // 서버 응답에 따른 동작 수행
+            },
+            headers: {
+                "X-CSRF-TOKEN": token
+            },
+            error: function (error) {
+                // 오류 처리
+            }
+        });
+    }
+    
 
-	    // 이전 페이지 링크
-	    const prevButton = document.createElement('li');
-	    prevButton.classList.add('page-item');
-	    if (currentPage === 1) {
-	        prevButton.classList.add('disabled');
-	    }
-	    const prevLink = document.createElement('a');
-	    prevLink.classList.add('page-link');
-	    prevLink.textContent = '이전';
-	    prevLink.setAttribute('href', '#');
-	    prevLink.addEventListener('click', () => {
-	    	event.preventDefault();
-	    	loadMsgPage(currentPage - 1);
-	    });
-	    prevButton.appendChild(prevLink);
-	    paginationElement.appendChild(prevButton);
-
-	    // 페이지 번호 링크
-	    for (let i = 1; i <= pages; i++) {
-	        const pageButton = document.createElement('li');
-	        pageButton.classList.add('page-item');
-	        if (i === currentPage) {
-	            pageButton.classList.add('active');
-	        }
-	        const pageLink = document.createElement('a');
-	        pageLink.classList.add('page-link');
-	        pageLink.textContent = i;
-	        pageLink.setAttribute('href', '#');
-	        pageLink.setAttribute('data-page', i);
-	        pageLink.addEventListener('click', (event) => {
-	        	event.preventDefault();
-	            const clickedPage = event.target.getAttribute('data-page');
-	            if (clickedPage) {
-	            	loadMsgPage(parseInt(clickedPage));
-	            }
-	        });
-	        pageButton.appendChild(pageLink);
-	        paginationElement.appendChild(pageButton);
-	    }
-
-	    // 다음 페이지 링크
-	    const nextButton = document.createElement('li');
-	    nextButton.classList.add('page-item');
-	    if (currentPage === pages) {
-	        nextButton.classList.add('disabled');
-	    }
-	    const nextLink = document.createElement('a');
-	    nextLink.classList.add('page-link');
-	    nextLink.textContent = '다음';
-	    nextLink.setAttribute('href', '#');
-	    nextLink.addEventListener('click', () => {
-	    	loadMsgPage(currentPage + 1);
-	    });
-	    nextButton.appendChild(nextLink);
-	    paginationElement.appendChild(nextButton);
-	}
-	
-
-
-	// 쪽지 읽음 여부 업데이트
-	const updateReadCheck = (checked, msgId, page) =>{
-		console.log(checked, msgId);
-
-		if(checked == 'n'){
-			$.ajax({
-				url: "${pageContext.request.contextPath}/message/messageUpdate.do",
-				data :{
-					checked :checked,
-					messageId: msgId
-				},
-				method : "GET",
-				dataType : "json",
-				success(responseData){
-					msgList(page);
-				}
-			});
-		}
-	};
-	
-	let deletingMsg = false;
-	// 쪽지삭제
-	const deleteMsg = (msgId, page) => {
-	    if (deletingMsg) {
-	        console.log("Deletion in progress. Please wait.");
-			console.log("no.0");
-	        return; // 이미 삭제 처리 중이면 함수 종료
-	    }
-	
-	    console.log("delpage", page);
-	    $.ajax({
-	        url: "${pageContext.request.contextPath}/message/messageDelete.do",
-	        data: {
-	            messageId: msgId
-	        },
-	        method: "GET",
-	        dataType: "json",
-	        beforeSend: function() {
-	            deletingMsg = true; // 삭제 처리 시작 전에 상태 업데이트
-	            console.log("no.1");
-	        },
-	        success(responseData) {
-	            msgList(page);
-	            $('#messageDetail').modal('hide');
-	        	console.log("처리완료");
-	        	 console.log("no.2");
-	        },
-	        error(responseData) {
-	            alert("신고된 메세지는 처리 전에 삭제할 수 없습니다.");
-	            $('#messageDetail').modal('hide');
-	            console.log("no.3");
-	        },
-	        complete: function() {
-
-	            deletingMsg = false; // 삭제 처리 완료 후 상태 업데이
-	            console.log("no.4");
-	        }
-	    });
-	};
-	
-	// 쪽지신고 
-	const reportMsg = (msgId, sender) =>{
-		$('#messageDetail').modal('hide');
-		      
-	    const reportMessageId = document.querySelector("#reportMessageId");   
-	    const attackerId = document.querySelector("#attackerId");   
-	    reportMessageId.value = msgId;
-	    attackerId.value = sender;
-	    
-	    console.log(reportMessageId.value);
-		$('#reportModal').modal('show');
-		
-		const reportType_ = document.querySelector("#reportType_");
-		const reportType = document.querySelector("#reportType");
-		if(reportType_ !== null && reportType !== null){
-			reportType_.addEventListener('change', (e) => {
-				reportType.value = reportType_.value;
-				console.log(reportType.value);
-			});
-		}
-		
-
-	};
-	
-	// MH - 쪽지함 관련 기능 끝!	
-	
-	
-	// MH - 회원인증 관련 기능 시작
-	const certification = () =>{
-		const value = document.querySelector("#memberId").value;
-		let selectedStep = "";
-		console.log(value);
-		 $.ajax({
-			url: "${pageContext.request.contextPath}/member/certificate.do",
-			data :{
-				memberId :value
-			},
-			method : "GET",
-			dataType : "json",
-			success(responseData){
-				const {student} = responseData;
-				const {approveCompleteDate, approveRequestDate} = student;
-				const state = document.querySelector("#state");
-				const upFile = document.querySelector("#upFile");
-				if(approveCompleteDate ==null && approveRequestDate==null){
-					selectedStep = document.querySelector("#stepName1");
-				}
-				if(approveCompleteDate ==null && approveRequestDate!=null){
-					selectedStep = document.querySelector("#stepName2");
-					document.querySelector(".input-group").style.display="none";
-				}
-				if(approveCompleteDate !=null && approveRequestDate !=null){
-					selectedStep = document.querySelector("#stepName2");
-					document.querySelector(".input-group").style.display="none";
-				}
-				selectedStep.style.borderRadius="20px";	
-				selectedStep.style.color="white";
-				selectedStep.style.backgroundColor="royalblue";	
-			}
-			
-		}); 
-	};
-	// MH - 회원인증 관련 기능 끝
-	
-	
-	// 회원관련 기능 시작
-	
-	// 1. 조회
-	document.querySelector("#memberInfo").onclick=()=>{
-		document.querySelector("#memberDeleteFrm").style.display="none";
-		document .querySelector("#memberUpdateFrm").style.display="block";
-		const forHide = document.querySelectorAll(".forHide");
-		const modalTitle = document.querySelector("#memberModalLabel");
-		modalTitle.innerHTML="회원정보";
-		forHide.forEach((hideItem)=>{
-			hideItem.style.display="none";
-		});
-		$('.readChange').attr('readonly',true);
-		$("#InfoModal").modal("show");
-		
-	};
-
-	// 2. 수정
-	document.querySelector("#infoUdate").onclick=()=>{
-		document.querySelector("#memberDeleteFrm").style.display="none";
-		document .querySelector("#memberUpdateFrm").style.display="block";
-		const forHide= document.querySelectorAll(".forHide");
-		const modalTitle = document.querySelector("#memberModalLabel");
-		modalTitle.innerHTML="회원정보 수정";
-		forHide.forEach((hideItem)=>{
-			hideItem.style.display="block";
-		});
-		$('.readChange').attr('readonly',false);
-		$("#InfoModal").modal("show");
-		
-	};
-	
-	document.memberUpdateFrm.onsubmit = (e) => {
-		const password = document.querySelector("#memberPwd");
-		const passwordConfirmation = document.querySelector("#passwordConfirmation");
-		if(password.value !== passwordConfirmation.value) {
-			alert("비밀번호가 일치하지 않습니다.");
-			return false;
-		}else{
-			alert("회원정보가 정상적으로 수정되었습니다.");
-		}
-	};
-	
-	// 3. 삭제
-	document.querySelector("#memberDel").onclick=()=>{
-		const modalTitle = document.querySelector("#memberModalLabel");
-		modalTitle.innerHTML="회원탈퇴";
-		document.querySelector("#memberDeleteFrm").style.display="block";
-		document.querySelector("#memberUpdateFrm").style.display="none";
-		$("#InfoModal").modal("show");
-	};
-	
-	document.querySelector(".infoClose").onclick=()=>{		
-		$("#InfoModal").modal("hide");
-	};
-	document.querySelector(".reportClose").onclick=()=>{		
-		$("#reportModal").modal("hide");
-	};
-	document.querySelector(".vacation-close").onclick=()=>{		
-		$("#vacationModal").modal("hide");
-	};
-	document.querySelector(".msg-close").onclick=()=>{		
-		$("#messageDetail").modal("hide");
-	};
-
-	const deleteMember = () => {
-		
-		const result = confirm('정말 탈퇴하시겠습니까?');
-		if (result === true) {
-			document.memberDeleteFrm.submit();
-		}
-	};
-	
-	// 회원 관련 기능 끝
-	
-	document.querySelector("#vacationBtn").onclick=()=>{
-		$("#vacationModal").modal("show");
-		
-		
-	};
-
-
-</script>	
-
-<script>
-
-	// 성근 - 학생이 상담신청 누르면 구독신청 및 상담페이지 이동 
-	document.querySelector("#consultRequest").onclick = () => {
-		const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
-		const stompClient = Stomp.over(ws);
-	
-		stompClient.connect({}, (frame) => {
-			console.log('open : ', frame);
-			
-			// 구독신청 
-			stompClient.subscribe('/topic/chat', (message) => {
-				console.log('/topic/chat : ', message);
-				renderMessage(message);
-			});
-		});
-
-		const consultReqFrm = document.consultReqFrm; 
-		const loginMemberId = document.querySelector("#loginMemberId").value;
-		const token = consultReqFrm._csrf.value;
-		
-		console.log(consultReqFrm);
-		console.log(loginMemberId);
-		
-		$.ajax({
-			type : "POST",
-			url: "${pageContext.request.contextPath}/chat/chatConsultingRequest.do",
-			data :{
-				memberId: loginMemberId
-			},
-			headers: {
-	            "X-CSRF-TOKEN": token
-	        },
-			success(responseData){
-				console.log("ChatId: ", responseData)
-				const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
-				if (newWindow) {
-	                newWindow.focus();
-	            }
-			}
-		});
-	};
-	
-	
-	$(function(){
-		var accordionButton = $('.list .items > .a_title');
-	    accordionButton.on('click', function(e){
-	    	e.preventDefault();
-	        var $this = $(this);
-	        var target = $this.parent();
-	        var description = $this.siblings('.a_content');
-	        var other = target.siblings('.items');
-	        var otherDescription = other.find('.a_content');
-	        accordionToggle(target, description, other, otherDescription);
-	    });
-	        
-	    function accordionToggle(target, description, other, otherDescription){
-	    	if (target.hasClass('active')) {
-	          target.removeClass('active');
-	          description.stop().slideUp(300);
-	        } else {
-	          target.addClass('active');
-	          description.stop().slideDown(300);
-	        }
-	        if (other && otherDescription) {
-	          other.removeClass('active');
-	          otherDescription.stop().slideUp(300);
-	        }
-	    };
-	});
-	
-	function chatlogBtn() {
-		const chatViewButtons = document.querySelectorAll("#chatView");
-		chatViewButtons.forEach(button => {
-		    button.addEventListener("click", function () {
-		        const chatId = this.getAttribute("data-chatid");
-		        console.log(chatId);
-		        // 채팅 메시지를 가져오기 위한 AJAX 요청 수행
-		        $.ajax({
-		            type: "GET",
-		            url: "${pageContext.request.contextPath}/member/chatView.do",
-		            data: {
-		                chatId: chatId
-		            },
-		            success: function (responseData) {
-		                // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
-		                console.log(responseData)
-		                
-		                modalSend(responseData);
-		                
-		            },
-		            error: function () {
-		                console.log("실패");
-		            }
-		        });
-		    });
-		});
-	};
-	
-	function modalSend(responseData) {
-		
-		
-		   const modalMessages = document.getElementById("modalMessages");
-		    
-		   modalMessages.innerHTML = '';
-		   
-		    responseData.forEach(chat => {
-		    	
-		    	const chatSendAt = new Date(chat.chatSendAt);
-		    	console.log(chatSendAt);
-		    	const formattedSendAt = `\${chatSendAt.getFullYear()}/\${chatSendAt.getMonth() + 1}/\${chatSendAt.getDate()}/\${chatSendAt.getHours()}:\${chatSendAt.getMinutes()}:\${chatSendAt.getSeconds()}`;
-		    	console.log(formattedSendAt);
-		        const messageItem = document.createElement("li");
-		        messageItem.classList.add("message", chat.employeeId === null ? "right" : "left", "appeared");
-		        
-		        const studentImgUrl = "/kh/resources/images/usericon.png";
-		        const adminImgUrl = "/kh/resources/images/admin.png";
-		        
-		        const avatarBox = document.createElement("div");
-		        avatarBox.classList.add("avatarBox");
-		        const avatarImage = document.createElement("img");
-		        avatarImage.src = chat.employeeId === null ? studentImgUrl : adminImgUrl; // 대화 상대의 아바타 이미지 URL 설정
-		        avatarImage.style.marginTop = chat.employeeId === null ? '' : '20px';
-		        avatarBox.appendChild(avatarImage);
-		        
-		        const textWrapper = document.createElement("div");
-		        textWrapper.classList.add("text_wrapper");
-		        textWrapper.style.marginTop = chat.employeeId === null ? '10px' : '';
-		        const textDiv = document.createElement("div");
-		        textDiv.classList.add("text");
-		        
-		        if(chat.memberId === null){
-		            textDiv.innerHTML = `
-		                <span style="font-size:13px; color:black; font-weight:600;">
-		                    관리자
-		                </span> <br>
-		                <span>\${chat.chatContent}</span> <br>
-		                <span style="font-size:12px; color:black; font-weight:500;">
-		                	\${formattedSendAt}
-		                </span>`;
-		        }
-		        else {
-		           textDiv.innerHTML = `
-		                <span style="font-size:13px; color:black; font-weight:600;">
-		                    \${chat.memberId}
-		                </span> <br>
-		                <span>\${chat.chatContent}</span> <br>
-		                <span style="font-size:12px; color:black; font-weight:500;">
-		                	\${formattedSendAt}
-		                </span>`;
-		        }
-		        textWrapper.appendChild(textDiv);
-		        
-		        messageItem.appendChild(avatarBox);
-		        messageItem.appendChild(textWrapper);
-
-		        modalMessages.appendChild(messageItem);
-		   })
-		}
-	
-	
-	 function chatPageChange(pageNum) {
-			
-			$.ajax({
-	            type: "GET",
-	            url: "${pageContext.request.contextPath}/member/studentChatList.do",
-	            data: {
-	            	page: pageNum
-	            },
-	            success: function (responseData) {
-	                console.log(responseData);
-	                const studentChatList = responseData.studentChatList;
-	                const totalPages = responseData.totalPages;
-	                const currentPage = responseData.currentPage;
-	                
-	                let html ="";
-	                let index = 0;
-	                const chatTblBody = document.querySelector("#chatTblBody");
-	                
-	                
-	                if(studentChatList.length == 0) {
-	                	chatTblBody.innerHTML = `
-							<tr>
-					  			<th colspan="5">조회된 게시글이 존재하지 않습니다.</th>
-					  		</tr>
-						`;
-					} else {
-		                for(let i = 0; i < studentChatList.length; i++){
-		                	
-		                	console.log(pageNum, pageNum-1, (pageNum-1) * 5, (pageNum-1) * 5 + i, (pageNum-1) * 5 + i +1)
-		                	html+=`
-		                	<tr>
-				            <td>\${(pageNum-1) * 5 + i + 1}</td>
-				            <td>\${studentChatList[i].studentName}(\${studentChatList[i].studentId})</td>
-				            <td>\${studentChatList[i].chatType}</td>
-				            <td>\${studentChatList[i].chatDate}</td>
-				            <td>
-				                <button type="button" class="btn btn-outline-primary" id="chatView"
-				                        style="--bs-btn-padding-y: .0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .6rem;"
-				                        data-bs-toggle="modal" data-bs-target="#chatModal"
-				                        data-chatid="\${studentChatList[i].chatId}">
-				                    보기
-				                </button>
-				            </td>
-			            	<tr>` 
-			            	
-		                }
-	                	chatTblBody.innerHTML = html;
-		                renderPagination(currentPage, totalPages);
-		                chatlogBtn();
-					}
-	                
-	                
-	            },
-	            error: function () {
-	                console.log("실패");
-	            }
-	        });
-			
-		};
-		
-		function loadPage(pageNumber) {
-			chatPageChange(pageNumber);
-	        currentPage = pageNumber;
-	    }
-		
-		
-		function renderPagination(currentPage, totalPages) {
-		    const paginationElement = document.querySelector('.chatPagination');
-		    paginationElement.innerHTML = ""; // 기존 페이지 바 내용 초기화
-
-		    // 이전 페이지 링크
-		    const prevButton = document.createElement('li');
-		    prevButton.classList.add('page-item');
-		    if (currentPage === 1) {
-		        prevButton.classList.add('disabled');
-		    }
-		    const prevLink = document.createElement('a');
-		    prevLink.classList.add('page-link');
-		    prevLink.textContent = '이전';
-		    prevLink.setAttribute('href', '#');
-		    prevLink.addEventListener('click', () => {
-		    	loadPage(currentPage - 1);
-		    });
-		    prevButton.appendChild(prevLink);
-		    paginationElement.appendChild(prevButton);
-
-		    // 페이지 번호 링크
-		    for (let i = 1; i <= totalPages; i++) {
-		        const pageButton = document.createElement('li');
-		        pageButton.classList.add('page-item');
-		        if (i === currentPage) {
-		            pageButton.classList.add('active');
-		        }
-		        const pageLink = document.createElement('a');
-		        pageLink.classList.add('page-link');
-		        pageLink.textContent = i;
-		        pageLink.setAttribute('href', '#');
-		        pageLink.setAttribute('data-page', i);
-		        pageLink.addEventListener('click', (event) => {
-		            const clickedPage = event.target.getAttribute('data-page');
-		            if (clickedPage) {
-		            	loadPage(parseInt(clickedPage));
-		            }
-		        });
-		        pageButton.appendChild(pageLink);
-		        paginationElement.appendChild(pageButton);
-		    }
-
-		    // 다음 페이지 링크
-		    const nextButton = document.createElement('li');
-		    nextButton.classList.add('page-item');
-		    if (currentPage === totalPages) {
-		        nextButton.classList.add('disabled');
-		    }
-		    const nextLink = document.createElement('a');
-		    nextLink.classList.add('page-link');
-		    nextLink.textContent = '다음';
-		    nextLink.setAttribute('href', '#');
-		    nextLink.addEventListener('click', () => {
-		        loadPage(currentPage + 1);
-		    });
-		    nextButton.appendChild(nextLink);
-		    paginationElement.appendChild(nextButton);
-		}
-	
-</script>	
+   
+</script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
