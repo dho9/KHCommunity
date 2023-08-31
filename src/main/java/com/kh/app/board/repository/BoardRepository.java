@@ -24,6 +24,7 @@ import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.dto.StudyMemberDto;
+import com.kh.app.board.dto.StudyMemberId;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -297,5 +298,14 @@ public interface BoardRepository {
 	
 	@Select ("select * from study where study_id=#{studyId}")
 	Study findByStudyleaderName(int studyId);
+	
+	@Delete("delete study_info where study_id=#{studyId} and member_id = #{memberId}")
+	int studyDeleteMember(String memberId, int studyId);
+	
+	@Select("select member_id from study_info where study_id = #{studyId}")
+	List<StudyMemberId> findStudyMemberIdList(int studyId);
+	
+	@Update(" update study set study_people = study_people-1 where study_id =#{studyId}")
+	int minusStudyCount(int studyId);
 	
 }

@@ -48,6 +48,7 @@ import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.dto.StudyMemberDto;
+import com.kh.app.board.dto.StudyMemberId;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -500,6 +501,15 @@ public class BoardController {
 		Board boardInfo = boardService.findBoardName(boardId);
 		String returnValue = null;
 		if("스터디".equals(boardInfo.getBoardCategory())) {
+			int studyId = boardService.findStudyId(boardId);
+			List<StudyMemberId> idList = boardService.findStudyMemberIdList(studyId);
+			for (StudyMemberId studyMemberIds : idList) {
+			    String studyMemberId = studyMemberIds.getMemberId();
+			    System.out.println("Member Id: " + studyMemberId);
+			    String msg = "스터디 공지사항이 작성되었습니다. 지금바로 확인해보세요.";
+			    int alarmId = notificationService.notifyAlamSendFromMemberId(studyMemberId,msg);
+			    // memberId를 사용하여 원하는 작업 수행
+			}
 			returnValue = "redirect:/board/myStudy.do?id=" + board.getBoardId();
 		}else {
 			returnValue = "redirect:/board/boardDetail.do?id=" + board.getPostId();
@@ -1045,7 +1055,6 @@ public class BoardController {
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
 
 		List<JobKorea> jobKoreaList = boardService.getJobKoreaDatas(page, limit, keyword);
-		log.info("jobkoreaList = {}", jobKoreaList);
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
@@ -1059,12 +1068,8 @@ public class BoardController {
 
 			BoardListDto postDetail = boardService.findById(postId);
 			study.setTag(postDetail.getTag());  
-			System.out.println("wkwkwkwkwkwkwk"+study);
-			// 태그 목록 출력
 		}
 		model.addAttribute("studyBoardList", studyList);
-		//		List<StudyList> studyLists = boardService.findTagId(studyList); 
-		//		System.out.println(studyList);
 		return "/board/studyBoardList";
 	}
 	
@@ -1197,7 +1202,7 @@ public class BoardController {
 		System.out.println("info == " + info);
 	}
 	
-	@PostMapping("appliCheck.do")
+	@PostMapping("/appliCheck.do")
 	@ResponseBody
 	public ResponseEntity<?> appliCheck (@RequestParam String memberId, @RequestParam String check, @RequestParam  int studyId ){
 		System.out.println(check);
@@ -1221,5 +1226,32 @@ public class BoardController {
 		}
 
 	}
-
+	@PostMapping("/deleteStudyMember.do")
+	@ResponseBody
+	public String deleteStudyMember (@RequestParam String memberId, @RequestParam int studyId) {
+		Study study= boardService.findByStudyleaderName(studyId);
+		int result = boardService.studyDeleteMember(memberId,studyId);
+		String msg = study.getStudyName()+"의 스터디모임에서 추방되었습니다.";
+		if(result>0) {
+			int alarmId = notificationService.notifyAlamSendFromMemberId(memberId,msg);
+			int minus = boardService.minusStudyCount(studyId);
+			return msg;
+		}
+		return msg;
+	}
+	
+	@PostMapping("/quitStudyMember.do")
+	@ResponseBody
+	public String quitStudyMember (@AuthenticationPrincipal MemberDetails member, @RequestParam int studyId) {
+		int result = boardService.studyDeleteMember(member.getMemberId(),studyId);
+		Study studyName= boardService.findByStudyleaderName(studyId);
+		Study study = boardService.findByStudyleaderName(studyId);
+		String msg = member.getMemberId()+"님이 "+ studyName.getStudyName()+"에서 나가셨습니다.";
+		if(result>0) {
+			int alarmId = notificationService.notifyAlamSendFromMemberId(study.getMemberId(),msg);
+			int minus = boardService.minusStudyCount(studyId);
+			return msg;
+		}
+		return msg;
+	}
 }
