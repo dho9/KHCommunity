@@ -270,12 +270,10 @@ p.infoTitles {
 }
 
 /* 사이드 버튼 css */
-<<<<<<< HEAD
 #mypageBtns{width:90%; margin: 0 auto;}
 .mypageBtn{text-decoration: none; font-family: 'GmarketSansMedium';font-weight: 100; font-size: 15px; width: 60%; color: #4d4d4d;}
 .mypageBtn a{text-decoration: none;}
 .mypageBtn:hover{cursor: pointer; color: royalblue;}
-=======
 #mypageBtns {
 	width: 90%;
 	margin: 0 auto;
@@ -299,7 +297,6 @@ p.infoTitles {
 	cursor: pointer;
 	color: royalblue;
 }
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 
 /* 회원 관련 css */
 #InfoModal {
@@ -597,7 +594,6 @@ p.infoTitles {
 			<p />
 			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
-<<<<<<< HEAD
 			
 			<!-- 회원목록 추가할것.  리더는 강퇴버튼도 있게..-->
 			<div id="mypageBtns">
@@ -628,38 +624,7 @@ p.infoTitles {
         	action="${pageContext.request.contextPath}/member/memberLogout.do" 
         	method="POST">
 		</form:form>
-=======
-
-		<!-- 회원목록 추가할것.  리더는 강퇴버튼도 있게..-->
-		<div id="mypageBtns">
-			<p class="mypageBtn" id="memberInfo">
-				<i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보
-			</p>
-			<hr class="myPageHr" />
-			<p class="mypageBtn" id="infoUdate">
-				<i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정
-			</p>
-			<hr class="myPageHr" />
-			<p class="mypageBtn" id="memberDel">
-				<i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴
-			</p>
-			<hr class="myPageHr" />
-			<p class="mypageBtn" id="vacationBtn">
-				<i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청
-			</p>
-			<hr class="myPageHr" />
-
-			<hr class="myPageHr" />
-		</div>
-
-		<hr class="myPageHr" />
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 	</div>
-<<<<<<< HEAD
- 
- 	<!-- 메인 div 시작 -->
-	<div id= "main-container" >
-=======
 	<form:form name="memberLogoutFrm"
 		action="${pageContext.request.contextPath}/member/memberLogout.do"
 		method="POST">
@@ -668,7 +633,6 @@ p.infoTitles {
 
 	<!-- 메인 div 시작 -->
 	<div id="main-container">
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 		<!-- 나의 수강정보 div -->
 		<div class="mypageContent">
 			<span class="classInfo">스터디 이름 &nbsp;&nbsp;</span>
@@ -727,7 +691,6 @@ p.infoTitles {
         </c:forEach>
     </tbody>
 </table>
-=======
 					<thead>
 						<tr>
 							<th>제목</th>
@@ -743,7 +706,6 @@ p.infoTitles {
 						</tr>
 					</tbody>
 				</table>
->>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 				<div id="msgPagingDiv">
 					<ul class="pagination msgPagination">
 						<li class="page-item disabled" id="prevButton"><span
