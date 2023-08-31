@@ -72,7 +72,43 @@ color: black;
 			</c:if>
 	</div>
     <form:form name="tokenFrm"></form:form>
+    <div class="rightside">
+	<form action="${pageContext.request.contextPath}/board/boardSearch.do"
+		class="search" onsubmit="return  validateSearchForm()">
+		<input type="text" id="keyword" name="keyword" placeholder="원하는 스터디를 검색하세요!"
+			class="text" />
+	</form>
+	 <div class="card">
+        <div class="board" id="popularPostsContainer">
+            <h3>
+                <a>내가 참여한 스터디 목록</a>
+            </h3>
+        </div>
+    </div>
+    </div>
+	
 	<script>
+	
+	document.addEventListener('DOMContentLoaded', () => {
+	    $.ajax({
+	        url: "${pageContext.request.contextPath}/board/myStudyList.do",
+	        success: function(data) {
+	            console.log(JSON.stringify(data));
+	            
+	            const container = $("#popularPostsContainer");
+	            for (let i = 0; i < data.length; i++) {
+	                const post = data[i];
+	                const postHTML = `<a href="${pageContext.request.contextPath}/board/myStudy.do?id=\${post.boardId}" class="article">
+	                    <p class="title"> ▶ \${post.studyName}</p>
+	                    <hr>
+	                </a>`;
+	                container.append(postHTML);
+	            }
+	        }
+	    });
+	});
+	
+	
 	function showInputForm() {
 		 
 	    const writeButton = document.getElementById("writeArticleButton");
@@ -188,19 +224,5 @@ ex ) 위치, 스터디내용 ...
 	  createForm.remove();
 	}
 	  </script>
-	  <div class="rightside">
-		  <div class="card">
-	        <div class="board" id="popularPostsContainer">
-	            <h3>
-	                <a>내 스터디</a>
-	            </h3>
-	            <a href="${pageContext.request.contextPath}/board/boardDetail.do?id=\${post.postId}" class="article">
-                    <p class="title">${post.title}</p>
-                    <hr>
-                </a>
-	        </div>
-	      </div>
-      </div>
-      
-      
+
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

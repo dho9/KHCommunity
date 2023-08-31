@@ -469,6 +469,16 @@ CREATE TABLE alarm (
 );
 
 drop table alarm;
+CREATE TABLE alarm (
+    alarm_id number,
+    received_id varchar(30),
+    content varchar(400),
+    created_at date,
+    alarm_type char(1),
+    read_check char(1)
+);
+
+drop table alarm;
 
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);
@@ -1617,9 +1627,15 @@ WHERE
     p.post_id = 216;
     select * from study;
     select * from study_info;
-
-SELECT *
-  FROM user_sequences;
+    delete study_info;
+  select * from study_info;
+  select * from alarm; 
+  select * from message_box;
   
-  select seq_alarm_id.nextval from dual;
-  select seq_chat_id.currval from dual;
+  select * from study where study_id in ( select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1);
+    
+  
+  select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1;
+  
+  update study_info set APPLICATION_CHECK = 1 where member_id = 'eogh';
+  

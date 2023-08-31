@@ -168,5 +168,9 @@ public interface BoardService {
 
 	int insertStudy(int studyId, String appliId, String appliContent);
 
+	int checkStudy(int studyId, String appliId);
+
+	List<StudyList> findStudyList(String memberId);
+
 
 }
