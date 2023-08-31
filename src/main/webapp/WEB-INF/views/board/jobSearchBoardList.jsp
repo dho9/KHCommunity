@@ -106,31 +106,31 @@
 		      	<div id="collapseExample">
 			      	<div class="card card-body">
 					  	<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드" id="flexCheckDefault" >
+						  <input class="form-check-input" type="checkbox" name="jobType" value="1000229" id="flexCheckDefault" >
 						  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드" id="flexCheckChecked" >
+						  <input class="form-check-input" type="checkbox" name="jobType" value="1000230" id="flexCheckChecked" >
 						  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
 						</div>
 				      	<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="웹" id="flexCheckDefault" >
+						  <input class="form-check-input" type="checkbox" name="jobType" value="1000231" id="flexCheckDefault" >
 						  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="앱" id="flexCheckChecked" >
+						  <input class="form-check-input" type="checkbox" name="jobType" value="1000232" id="flexCheckChecked" >
 						  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어" id="flexCheckChecked" >
+						  <input class="form-check-input" type="checkbox" name="jobType" value="1000239" id="flexCheckChecked" >
 						  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="게임" id="flexCheckChecked" >
+						  <input class="form-check-input" type="checkbox" name="jobType" value="1000240" id="flexCheckChecked" >
 						  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어" id="flexCheckChecked" >
+						  <input class="form-check-input" type="checkbox" name="jobType" value="1000241" id="flexCheckChecked" >
 						  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
 						</div>
 					  </div>
