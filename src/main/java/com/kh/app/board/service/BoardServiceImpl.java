@@ -513,6 +513,12 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.findStudyList(memberId);
 	}
+	
+	
+	@Override
+	public List<BoardListDto> findAllByBoardId(int id) {
+		return boardRepository.findAllByBoardId(id);
+	}
 	@Override
 	public int findStudyId( int boardId) {
 		// TODO Auto-generated method stub

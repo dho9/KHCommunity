@@ -269,14 +269,17 @@ public interface BoardRepository {
 	@Select("select * from study_info where study_id = #{findStudyId} and APPLICATION_CHECK = 0")
 	List<StudyInfo> finAllStudyAppli(int findStudyId);
 	
-	@Select("select * from study where board_id = #{id}")
-	Study myStudyFindById(int id);
 	
 	@Update("update study_info set APPLICATION_CHECK = 1 where member_Id = #{memberId} and study_Id = #{studyId} ")
 	int updateStudyInfo(String memberId, int studyId);
 	
 	@Delete("delete from study_info  where member_Id = #{memberId} and study_Id = #{studyId} ")
 	int deleteStudyInfo(String memberId, int studyId);
+
+	@Select("select * from study where board_id=#{id}")
+	Study myStudyFindById(int id);
+
+	List<BoardListDto> findAllByBoardId(int id);
 
 
 	

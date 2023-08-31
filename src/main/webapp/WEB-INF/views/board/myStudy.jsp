@@ -287,6 +287,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 #vcSubmit{
 	margin-left: 40%;
 }
+#writeArticleButton{
+	background-color: #c62917;
+    width: 7%;
+    height: 3%;
+    border: none;
+    border-radius: 10px;
+    color: white;
+}
 
 </style>
 
@@ -335,10 +343,17 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	<div id= "main-container">
 		<!-- 나의 수강정보 div -->
 		<div class="mypageContent">
-			<span class="classInfo">스터디 이름 &nbsp;&nbsp;&nbsp;</span>
-			<c:if test="${not empty studentInfo.curriculumName}">
-			</c:if>
+			<span class="classInfo">스터디 이름 &nbsp;&nbsp;</span> ${myStudy.studyName}
 		</div>
+		
+		<%-- 팀장만 보이게 --%>
+		<c:if test="${loginMember.username eq myStudy.memberId}">
+			<div class="mypageContent" id="studyPostFrom" style="text-align: center;">
+				<span id="sub">공지사항 작성</span>
+				<button type="button" class="article" id="writeArticleButton" style="float: right;" onclick="showInputForm()" ><span class="material-symbols-outlined" >edit</span></button>
+			</div>
+		</c:if>
+		
 		
 		
 		<!-- 스터디 공지사항 리더만작성하게.. 리스트처럼 나오고 클릭시 세부 내용 나오게. div-->
@@ -349,10 +364,16 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					<thead>
 						<tr>
 						<th>제목</th>
+						<th>내용</th>
 						<th>작성날짜</th>
 						</tr>
 					</thead>
 					<tbody id= "messageBoxTbl">
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
 					</tbody>
 				</table>
 				<div id="msgPagingDiv">
@@ -452,60 +473,127 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		<form:form name="hiddenForm"></form:form>
 </selction>
 <script>
+<%-- 글작성 폼 --%>
 
+function showInputForm() {
+	 
+    const writeButton = document.getElementById("writeArticleButton");
+    const articlesContainer = document.querySelector("#studyPostFrom");
+    const sub = document.querySelector("#sub");
 
+    const formHtml = `
+      <form:form 
+      	name="createFrm" 
+      	class="hidden" 
+      	action="${pageContext.request.contextPath}/board/createPost.do" 
+      	id="createForm" 
+      	method="post" 
+  		enctype="multipart/form-data">
+      	<input type = "hidden" name="boardId" id="boardId" value="${myStudy.boardId}">
+      	<p>
+      		<input name="title" autocomplete="off" placeholder="공지사항 제목" class="title" id="title" style="width: 100%; border-radius: 10px;">
+      	</p>
+        <p>
+        	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
 
+아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
 
+※ 정치·사회 관련 행위 금지 
 
-    const modal = new bootstrap.Modal(document.getElementById('chatModal'));
-    let currentInfoId = null; // 현재 클릭한 정보의 ID
+※ 홍보 및 판매 관련 행위 금지 
 
+※ 불법촬영물 유통 금지
 
-    const modalButtons = document.querySelectorAll('.modal-button');
-    modalButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            currentInfoId = button.getAttribute('data-info-id');
-            modal.show();
-        });
-    });
-	
-    const approve =document.querySelector("#approveButton");
-    const reject =document.querySelector("#rejectButton");
-    if(approve && reject){
-    	approve.addEventListener('click', (event) => {
-              currentInfoId = approve.getAttribute('data-info-id');
-              const check="approve";
-              sendActionToServer(currentInfoId,check);
-              //modal.hide();
-          });
-    	reject.addEventListener('click', (event) => {
-            currentInfoId = reject.getAttribute('data-info-id');
-            const check="reject";
-            sendActionToServer(currentInfoId,check);
-            //modal.hide();
-        });
-    }
-    function sendActionToServer(memberId,check) {
-    	const token = document.hiddenForm._csrf.value;
-    	
-        $.ajax({
-            url: "${pageContext.request.contextPath}/board/appliCheck.do",
-            method: "POST",
-            data: { memberId: memberId, check: check ,studyId:studyId},
-            success: function (response) {
-                // 서버 응답에 따른 동작 수행
-            },
-            headers: {
-                "X-CSRF-TOKEN": token
-            },
-            error: function (error) {
-                // 오류 처리
-            }
-        });
-    }
+※ 그 밖의 규칙 위반 
+- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
+- 범죄, 불법 행위 등 법령을 위반하는 행위 
+- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
+- 음란물, 성적 수치심을 유발하는 행위 
+- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text" style="width: 100%; height: 50%; border-radius: 10px; resize: none;"></textarea>
+        </p>
+        <p style="display: flex;flex-direction: row;justify-content: center;">
+	    	<button class="createPostBtn" style="border: solid 2px #000000;background-color: #c62917;border-radius: 10px;width: 50px;height: 35px;margin-right: 20px;"><span class="material-symbols-outlined" >edit</span></button>
+	        <button type="button" class="cancel" onclick="hideInputForm()" style="border: solid 2px #000000; background-color: #0ca5af;border-radius: 10px;width: 50px;height: 35px;">취소</button>
+        </p>
+        
+      </form:form>
+    `;
     
-
    
-</script>
+    articlesContainer.insertAdjacentHTML("afterbegin", formHtml);
+    const createForm = document.getElementById("createForm");
+    const titleInput = document.getElementById("title");
+    const contentTextarea = document.getElementById("text");
+
+    writeButton.style.display = "none";
+    sub.style.display = "none"
+    createForm.classList.remove("hidden");
+    
+    
+ }
+//폼 숨기기
+function hideInputForm() {
+  const writeButton = document.getElementById("writeArticleButton");
+  const createForm = document.getElementById("createForm");
+  const sub = document.getElementById("sub");
+
+  writeButton.style.display = "block";
+  sub.style.display = "";
+  createForm.remove();
+}
+ 
+const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+let currentInfoId = null; // 현재 클릭한 정보의 ID
+
+
+const modalButtons = document.querySelectorAll('.modal-button');
+modalButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+        currentInfoId = button.getAttribute('data-info-id');
+        modal.show();
+    });
+});
+
+const approve =document.querySelector("#approveButton");
+const reject =document.querySelector("#rejectButton");
+if(approve && reject){
+	approve.addEventListener('click', (event) => {
+          currentInfoId = approve.getAttribute('data-info-id');
+          const check="approve";
+          sendActionToServer(currentInfoId,check);
+          //modal.hide();
+      });
+	reject.addEventListener('click', (event) => {
+        currentInfoId = reject.getAttribute('data-info-id');
+        const check="reject";
+        sendActionToServer(currentInfoId,check);
+        //modal.hide();
+    });
+}
+function sendActionToServer(memberId,check) {
+	const token = document.hiddenForm._csrf.value;
+	
+    $.ajax({
+        url: "${pageContext.request.contextPath}/board/appliCheck.do",
+        method: "POST",
+        data: { memberId: memberId, check: check ,studyId:studyId},
+        success: function (response) {
+            // 서버 응답에 따른 동작 수행
+        },
+        headers: {
+            "X-CSRF-TOKEN": token
+        },
+        error: function (error) {
+            // 오류 처리
+        }
+    });
+}
+
+
+
+
+	
+</script>	
+   
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

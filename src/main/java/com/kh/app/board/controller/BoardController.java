@@ -470,25 +470,27 @@ public class BoardController {
 		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!", boardId);
 		//log.debug("loginMember = {}", member);
 		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
-
+		
 		// 1. 파일저장
 		int result = 0;
 		List<PostAttachment> attachments = new ArrayList<>(); 
-		for(MultipartFile file : files) {
-			if(!file.isEmpty()) {
-				String originalFilename = file.getOriginalFilename();
-				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-				file.transferTo(destFile);	
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
 
-				PostAttachment attach = 
-						PostAttachment.builder()
-						.postOriginalFilename(originalFilename)
-						.postRenamedFilename(renamedFilename)
-						.boardId(boardId)
-						.build();
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.build();
 
-				attachments.add(attach);
+					attachments.add(attach);
+				}
 			}
 		}
 
@@ -1322,6 +1324,9 @@ public class BoardController {
 	public void myStudy(@RequestParam int id, Model model) {
 		Study myStudy = boardService.myStudyFindById(id);
 		model.addAttribute("myStudy",myStudy);
+		List<BoardListDto> myStudyNotice = boardService.findAllByBoardId(id);
+		System.out.println("myStudyNotice = " + myStudyNotice);
+		
 		BoardListDto postDetail = boardService.findById(id);
 		if(postDetail != null) {
 			Board board = boardService.findBoardName(postDetail.getBoardId());
@@ -1340,6 +1345,7 @@ public class BoardController {
 		model.addAttribute("info",info);
 		System.out.println(info);
 	}
+	
 	@PostMapping("appliCheck.do")
 	@ResponseBody
 	public ResponseEntity<?> appliCheck (@RequestParam String memberId, @RequestParam String check, @RequestParam  int studyId ){

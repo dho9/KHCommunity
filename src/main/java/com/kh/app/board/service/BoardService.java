@@ -172,7 +172,9 @@ public interface BoardService {
 	int checkStudy(int studyId, String appliId);
 
 	List<StudyList> findStudyList(String memberId);
+	
 
+	List<BoardListDto> findAllByBoardId(int id);
 	int findStudyId(int findId);
 
 	int insertStudyInfo(String memberId, int findStudyId);
