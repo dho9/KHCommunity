@@ -40,7 +40,7 @@ style> /* Add styling for the dropdown */
 	vertical-align: middle;
 	margin-right: 140px;
 	margin-bottom:;
-	/* 占쎈툡占쎌뒄占쎈퓠 占쎈뎡占쎌뵬 筌띾뜆彛� 鈺곌퀣�젟 */
+	/* �뜝�럥�닡�뜝�럩�뭵�뜝�럥�뱺 �뜝�럥�렊�뜝�럩逾� 嶺뚮씭�쐠壤쏉옙 �댖怨뚰�ｏ옙�젧 */
 }
 
 #menu {
@@ -51,8 +51,8 @@ style> /* Add styling for the dropdown */
 @charset "utf-8";
 /*
 CSS Hack
-IE6 占쎌뵠占쎈릭筌랃옙 : _color: white
-IE7 占쎌뵠占쎈릭筌랃옙 : *color: white
+IE6 �뜝�럩逾졾뜝�럥由�嶺뚮엪�삕 : _color: white
+IE7 �뜝�럩逾졾뜝�럥由�嶺뚮엪�삕 : *color: white
 */
 * {
 	margin: 0;
@@ -733,7 +733,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 		background-color: #f8f8f8;
 	}
 	aside>div.menu>ol>li>a.primary:after {
-		content: '疫꿸퀡�궚占쎈뻻揶쏄쑵紐�';
+		content: '�뼨轅명�∽옙沅싧뜝�럥六삥뤆�룄�뫓筌륅옙';
 		float: right;
 		color: #a6a6a6;
 		font-size: 12px;
@@ -1429,12 +1429,12 @@ aside>div.title>ol.buttons>li>a.image.setting {
 }
 
 
-/* 기본 파일 업로드 버튼을 감춤 */
+/* 湲곕낯 �뙆�씪 �뾽濡쒕뱶 踰꾪듉�쓣 媛먯땄 */
 .file {
   display: none;
 }
 
-/* 사용자 정의 스타일 적용한 버튼 */
+/* �궗�슜�옄 �젙�쓽 �뒪���씪 �쟻�슜�븳 踰꾪듉 */
 .custom-file-button {
   display: inline-block;
   padding: 10px 20px;
@@ -1445,7 +1445,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
   cursor: pointer;
 }
 
-/* 마우스 호버 효과 */
+/* 留덉슦�뒪 �샇踰� �슚怨� */
 .custom-file-button:hover {
   background-color: #45a049;
 }
@@ -1991,7 +1991,7 @@ dl, ul, ol, menu, li {
 		width: 612px;
 	}
 	
-	/* 여기부터 */
+	/* �뿬湲곕��꽣 */
 	#popularPostsContainer>h3{
 		background-color: #fff;
 		border-radius: 40px;

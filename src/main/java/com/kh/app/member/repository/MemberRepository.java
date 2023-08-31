@@ -65,7 +65,7 @@ public interface MemberRepository {
 	StudentMypageInfoDto findByMemberInfo(String memberId);
 
 	@Select("select * from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
-	List<TicketBuyDto> findByTicketInfo(String memberId);
+	List<TicketBuyDto> findByTicketInfo(String memberId,RowBounds rowBounds);
 
 	@Select("select * from curriculum where curriculum_id= #{curriculumId}")
 	Curriculum findByDdayInfo(int curriculumId);
@@ -136,6 +136,9 @@ public interface MemberRepository {
 
 	@Update("update alarm set read_check = 'y' where alarm_id = #{alarmId}")
 	int updateAlarmReadCheck(int alarmId);
+
+	@Select("select count(*) from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
+	int totalCountTicket(String memberId);
 
 
 }

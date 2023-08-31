@@ -1241,7 +1241,7 @@ select * from alarm;
 delete chat_room where chat_id between 75 and 77;
 
 select * from myclass;
-
+update authority set auth = 'STUDENT' where member_id = 'heejin';
 
 INSERT INTO post (post_id, board_id, member_id, title, comment_check,post_like, attach_check, status_check)
 VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n',30, 'n', 'y');
@@ -1252,7 +1252,6 @@ VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n', 'n', '
 
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
-
 
 
 

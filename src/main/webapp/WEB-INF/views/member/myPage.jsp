@@ -456,6 +456,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					 	<c:if test="${not empty studentTicketInfo}">
 							<c:forEach items="${studentTicketInfo}" var="studentTicketInfo" varStatus="vs">
 								<tr>
+									
 									<td>${studentTicketInfo.orderId}</td>
 									<td>${studentTicketInfo.storename}</td>
 									<td>${studentTicketInfo.amount}</td>
@@ -465,6 +466,39 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					 	</c:if>
 					</tbody>
 				</table>
+			
+			<!--식권페이징  -->
+			<div class="d-flex justify-content-center">
+				   
+				        <ul class="pagination">
+				            <c:if test="${currentPage > 1}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/member/myPage.do?page=${currentPage - 1}" aria-label="Previous">
+				                        <span aria-hidden="true">&laquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				            
+				            <c:forEach var="pageNum" begin="1" end="${totalPages}">
+				                <c:choose>
+				                    <c:when test="${pageNum eq currentPage}">
+				                        <li class="page-item active"><a class="page-link" href="#">${pageNum}</a></li>
+				                    </c:when>
+				                    <c:otherwise>
+				                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/member/myPage.do?page=${pageNum}">${pageNum}</a></li>
+				                    </c:otherwise>
+				                </c:choose>
+				            </c:forEach>
+				            
+				            <c:if test="${currentPage < totalPages}">
+				                <li class="page-item">
+				                    <a class="page-link" href="${pageContext.request.contextPath}/member/myPage.do?page=${currentPage + 1}" aria-label="Next">
+				                        <span aria-hidden="true">&raquo;</span>
+				                    </a>
+				                </li>
+				            </c:if>
+				        </ul>
+				</div>
 			</div>
 		</div>	
 		
