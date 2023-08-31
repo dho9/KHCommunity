@@ -23,6 +23,7 @@ import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyList;
+import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -490,6 +491,16 @@ public class BoardServiceImpl implements BoardService {
 	public int updatePostId(int postId, int boardId) {
 		// TODO Auto-generated method stub
 		return boardRepository.updatePostId(postId,boardId);
+	}
+	@Override
+	public StudyListDto studyFindById(int id) {
+		// TODO Auto-generated method stub
+		return boardRepository.studyFindById(id);
+	}
+	@Override
+	public int insertStudy(int studyId, String appliId, String appliContent) {
+		// TODO Auto-generated method stub
+		return boardRepository.insertStudy(studyId,appliId,appliContent);
 	}
 	
 }

@@ -142,7 +142,6 @@
                 <div class="board" id="sharingInformationBoardContainer">
                     <h3>
                         <a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do">정보게시판</a>
-                        <li><a href="${pageContext.request.contextPath}/board/study.do">sdasdsadas</a></li>
                     </h3>
                 </div>
             </div>
