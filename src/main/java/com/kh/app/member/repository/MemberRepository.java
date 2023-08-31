@@ -14,9 +14,9 @@ import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
-import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentDto;
 import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
@@ -137,8 +137,12 @@ public interface MemberRepository {
 	@Update("update alarm set read_check = 'y' where alarm_id = #{alarmId}")
 	int updateAlarmReadCheck(int alarmId);
 
+
 	@Select("select count(*) from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
 	int totalCountTicket(String memberId);
+
+	@Select("select c.curriculum_id, c.class_id, c.teacher_id, m.board_id from student s left join myclass m on s.curriculum_id = m.curriculum_id left join curriculum c on m.curriculum_id = c.curriculum_id where teacher_id = #{memberId}")
+	StudentDto findTeacher(String memberId);
 
 
 }

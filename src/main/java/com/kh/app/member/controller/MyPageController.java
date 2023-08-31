@@ -50,6 +50,7 @@ public class MyPageController {
 		model.addAttribute("studentInfo", studentInfo);
 		// 끝
 
+
 		// 식권정보 시작
 		int limit = 10;
 		Map<String, Object> params = Map.of(

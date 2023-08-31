@@ -3,7 +3,11 @@ style> /* Add styling for the dropdown */
 	/* Add styling for the dropdown */ #dropdown {
 	position: relative;
 }
-
+@font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
+*{
+	font-family: 'GmarketSansMedium';
+	
+}
 .dropdown-content {
 	display: none;
 	position: absolute;
@@ -586,6 +590,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	}
 	#submenu>div.wrap {
 		padding: 15px;
+    	z-index: 10;
 	}
 	#submenu>div.wrap>div.divider {
 		margin-right: 15px;
@@ -1174,7 +1179,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 }
 
 #container>div.rightside div.card h3>a {
-	color: #3744a5;
+	color: #fff;
 }
 
 #container div.card h3>a>span {
@@ -1187,6 +1192,7 @@ aside>div.title>ol.buttons>li>a.image.setting {
 
 #container div.card>form.logged {
 	padding: 15px;
+	height: 186px;
 }
 
 #container div.card>form.logged>img.picture {
@@ -1608,7 +1614,7 @@ dl, ul, ol, menu, li {
 
 #container>div.articles>article h2.medium {
 	margin-bottom: 5px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1679,7 +1685,7 @@ dl, ul, ol, menu, li {
 #container div.card>div.board>a.article>p {
 	margin-bottom: 5px;
 	height: 36px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	white-space: normal;
 	overflow: hidden;
 	color: #444444;
@@ -1821,7 +1827,7 @@ dl, ul, ol, menu, li {
 
 #container div.card>div.board>a.list>p {
 	height: 17px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1833,7 +1839,7 @@ dl, ul, ol, menu, li {
 	float: right;
 	margin-left: 10px;
 	height: 17px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	color: #a6a6a6;
 	font-size: 11px;
 	letter-spacing: 0;
@@ -1847,7 +1853,7 @@ dl, ul, ol, menu, li {
 
 #container div.card>div.board>div.needauth>p {
 	margin-bottom: 10px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	color: #a6a6a6;
 	font-size: 14px;
 }
@@ -1967,7 +1973,7 @@ dl, ul, ol, menu, li {
 		left: 215px;
 		margin-top: 25px;
 		width: 600px;
-		height: 212px;
+		height: 231px;
 		overflow: hidden;
 	}
 	#container>div.leftside {
@@ -1991,25 +1997,46 @@ dl, ul, ol, menu, li {
 		width: 612px;
 	}
 	
-	/* �뿬湲곕��꽣 */
-	#popularPostsContainer>h3{
-		background-color: #fff;
-		border-radius: 40px;
-	}
-	#noticeBoardsContainer>h3{
-		background-color: #fff;
-		border-radius: 40px;
-	}
-	.card>div>h3{
-		background-color: royalblue;
-	}
-	.card>div>h3>a{
-		color: white;
-		font-weight: 300;
-	}
-	.pconly,.rightside{
-		margin-top: 10px;
-	}
+	/* 여기부터 */
+   .card>div>h3{
+      background-color: royalblue;
+      border-radius: 8px 8px 0 0;
+   }
+   .card>div>h3>a{
+      color: white;
+      font-weight: 300;
+   }
+   .pconly,.rightside{
+      margin-top: 10px;
+   }
+   .card>div{
+      overflow: hidden;
+   }
+   #boardSubmenu {
+      border-bottom: 1px solid #f3f3f3;
+      position: relative;
+      display: none;
+      position: absolute;
+      text-align: center;
+      z-index: 1;
+      background-color: white;
+      width: 100%;
+      background-color: #f3f3f3;
+   }
+   
+   @keyframes slideIn {
+     from {
+       transform: translateY(-100%);
+     }
+     to {
+       transform: translateY(0);
+     }
+   }
+   
+   #boardSubmenu.show {
+        animation: slideIn 0.5s ease forwards;
+   }
+   
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * *  /  mobile only  /  * * * * * * * * * * * * * * * * * * * * * * * * */

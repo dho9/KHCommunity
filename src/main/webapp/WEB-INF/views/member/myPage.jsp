@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -42,6 +43,7 @@
 .myPageHr{color: #cecece; margin-top: -0.5rem; margin-bottom: 0.5rem; border: 0; border-top: 1px solid rgba(0,0,0,.8);}
 .mypageContent{width:90%; font-family: 'GmarketSansMedium'; margin: 40px 40px; color: #3c3c3c; padding: 20px 30px;; border: 0.5px solid #cecece; border-radius: 25px;}
 #myId{color:#606060; font-family: 'GmarketSansMedium';}
+.dDayInfo{width:127px; font-size: 30px; text-align: center;}
 
 /* 수강정보 css */
 p.classInfo{color:#606060;}
@@ -63,7 +65,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 .certiStep{display: inline-block; width: 24%; margin: 10px 2%; text-align: center; margin-top: 40px;}
 #msgPagingDiv .msgPagination{ margin: 0px auto; width: fit-content;}
 #reportModal label{margin-left: -80%;}
+
 #reportModal textarea,select{width:92%;}
+
 /* 회원인증 css */
 .input-group {margin: 1% 9%; text-align: center;}
 #upfile{width: 80%;}
@@ -338,21 +342,21 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		<!-- 나의 수강정보 div -->
 		<div class="mypageContent">
 			<span class="classInfo">나의 수강정보 &nbsp;&nbsp;&nbsp;</span>
-			<c:if test="${not empty studentInfo.curriculumName}">
+			<c:set var="now" value="<%= LocalDate.now() %>" />
+		 	<c:if test="${(studentInfo.curriculumStartAt).compareTo(now) <= 0 && not empty studentInfo}">
 				<p class="classInfo">${studentInfo.curriculumName}반</p>
 				<p class="classInfo">${studentInfo.memberName} 강사님 Class ${studentInfo.classId} &nbsp;</p>
 				<h2 class="classInfo">
-				<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
-				<c:if test="${not fn:contains(Ddays, '-')}">D - ${Ddays}</c:if>
+					<c:if test="${fn:contains(Ddays, '-')}">수료생</c:if>
+					<c:if test="${not fn:contains(Ddays, '-')}"><div class = "dDayInfo">D - ${Ddays}</div></c:if>
 				</h2>
-			</c:if>
-			<c:if test="${empty studentInfo.curriculumName}">
+ 			</c:if>
+			<c:if test="${(studentInfo.curriculumStartAt).compareTo(now) > 0 || studentInfo.curriculumId == 0}">
 				<span class="classInfo">배정된 반이 없습니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				<h2 class="classInfo">
 					&nbsp;예비생
 				</h2>							
 			</c:if>
-			</h2>
 		</div>
 		
 		<!-- 나의 인증현황 div -->
@@ -1065,18 +1069,18 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			dataType : "json",
 			success(responseData){
 				const {student} = responseData;
-				const {approveCompleteDate, approveRequestDate} = student;
+				const {approveCompleteDate, approveRequestDate, approveCheck} = student;
 				const state = document.querySelector("#state");
 				const upFile = document.querySelector("#upFile");
-				if(approveCompleteDate ==null && approveRequestDate==null){
+				if(approveCheck =='n'){
 					selectedStep = document.querySelector("#stepName1");
 				}
-				if(approveCompleteDate ==null && approveRequestDate!=null){
+				if(approveCheck =='i'){
 					selectedStep = document.querySelector("#stepName2");
 					document.querySelector(".input-group").style.display="none";
 				}
-				if(approveCompleteDate !=null && approveRequestDate !=null){
-					selectedStep = document.querySelector("#stepName2");
+				if(approveCheck =='y'){
+					selectedStep = document.querySelector("#stepName3");
 					document.querySelector(".input-group").style.display="none";
 				}
 				selectedStep.style.borderRadius="20px";	

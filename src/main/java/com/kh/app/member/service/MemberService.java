@@ -9,9 +9,9 @@ import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
-import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentDto;
 import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
@@ -74,6 +74,8 @@ public interface MemberService extends UserDetailsService{
 	int updateAlarmReadCheck(int alarmId);
 
 	int totalCountTicket(String memberId);
+	
+	StudentDto findTeacher(String memberId);
 
 
 }
