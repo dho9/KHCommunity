@@ -281,6 +281,9 @@ public interface BoardRepository {
 
 	List<BoardListDto> findAllByBoardId(int id);
 
+	@Select("select member_id as receivedId from post where post_id = #{postId}")
+	String findReceivedIdByPostId(int postId);
+
 
 	
 

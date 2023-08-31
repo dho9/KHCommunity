@@ -529,6 +529,12 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.insertStudyInfo(memberId,findStudyId);
 	}
+	
+	@Override
+	public String findReceivedIdByPostId(int postId) {
+		return boardRepository.findReceivedIdByPostId(postId);
+	}
+	
 	@Override
 	public List<StudyInfo> finAllStudyAppli(int findStudyId) {
 		// TODO Auto-generated method stub

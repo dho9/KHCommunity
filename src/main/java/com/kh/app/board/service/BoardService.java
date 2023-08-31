@@ -179,6 +179,8 @@ public interface BoardService {
 
 	int insertStudyInfo(String memberId, int findStudyId);
 
+	String findReceivedIdByPostId(int postId);
+
 	List<StudyInfo> finAllStudyAppli(int findStudyId);
 
 	Study myStudyFindById(int id);
