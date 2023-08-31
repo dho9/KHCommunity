@@ -171,8 +171,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<TicketBuyDto> findByTicketInfo(String memberId) {
-		return memberRepository.findByTicketInfo(memberId);
+	public List<TicketBuyDto> findByTicketInfo(String memberId, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberRepository.findByTicketInfo(memberId, rowBounds);
 	}
 
 	@Override
@@ -266,6 +270,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateAlarmReadCheck(int alarmId) {
 		return memberRepository.updateAlarmReadCheck(alarmId);
+	}
+
+	
+	@Override
+	public int totalCountTicket(String memberId) {
+		return  memberRepository.totalCountTicket(memberId);
 	}
 	
 	@Override

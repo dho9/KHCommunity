@@ -1266,7 +1266,6 @@ VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
 
 
 
-
 INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
 VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
