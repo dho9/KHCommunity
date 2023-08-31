@@ -11,15 +11,18 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-touch-callout: none;
+}
+@font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
+body {
+	font-family: 'GmarketSansMedium';
+}
 .card.card-body {
 	width: 300px;
 	height: 200px;
-}
-#type-div {
-	display: inline-block;
-}
-#typeBtn {
-	width: 300px;
 }
 #job {
 	margin-left: 28%;
@@ -32,33 +35,37 @@
 #loadPrevButton, #loadPrevButtonByFilter {
 	width: 70px;
     height: 55px;
-    /* margin-left: 28%;
-    margin-right: 36.5%; */
 }
-#loadMoreButton {
+#loadMoreButton, #loadMoreButtonByFilter {
 	margin-left: 36.5%;
+	background-color: royalblue;
 }
-#loadPrevButton {
+#loadPrevButton, #loadPrevButtonByFilter {
 	margin-left: 28%;
+	background-color: royalblue;
 }
 #searchBtn {
-    margin-left: 87%;
     width: 70px;
     height: 42px;
+    border-radius: 16px;
+    background-color: #f8f8f8;
+    margin-top: 4px;
 }
 #jobDetail {
 	display: flex;
-    border: 2px solid #007bff;
+    border: 2px solid #4169e173;
     border-radius: 20px;
     padding: 15px;
     width: 838px;
     margin-bottom: 1%;
+    height: 25%;
 }
 #jobDetail:hover {
 	background-color: #f9f9f9;
 }
 #jobDetail a {
 	font-weight: bold;
+    color: royalblue;
 }
 #jobDetailCompany {
 	width: 320px;
@@ -69,125 +76,50 @@
 	color: #495057;
     text-align: center;
     margin-left: -9px;
+    padding: 4px;
 }
-#jobDetailEtc {
-	color: #6c757d;
-	font-size: 15px;
+#keyword {
+    width: 80%;
+    margin-left: 7%;
+    border: none;
 }
-#locationBtn {
-    font-size: 14px;
+#keyword-div {
+	border: 2px solid royalblue;
+    border-radius: 20px;
+    width: 28%;
+    display: flex;
+    margin-right: 6px;
+    margin-left: 18px;
+}
+#search-div {
+    margin-top: 3%;
+    margin-bottom: -3%;
+    display: flex;
+    margin-left: 34%;
+}
+#searchKeyword-div {
+	width: 25%;
+    height: 5%;
+    margin-left: 36%;
+    border-radius: 20px;
+}
+input:focus {
+  outline: none;
 }
 </style>
-		
-	<div id="container">
-		<table class="table">
-		  <thead>
-		    <tr>
-		      <th scope="col">
-		      	<button id="typeBtn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-				    직무선택
-				</button>
-		      </th>
-		      <th scope="col">
-		      	<button id="typeBtn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-				    근무지역
-				</button>
-		      </th>
-		      <th scope="col">
-		      	<button id="typeBtn" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-				    경력
-				</button>
-		      </th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <td>
-		      	<div id="collapseExample">
-			      	<div class="card card-body">
-					  	<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="백엔드" id="flexCheckDefault" >
-						  <label class="form-check-label" for="flexCheckDefault">백엔드개발자</label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="프론트엔드" id="flexCheckChecked" >
-						  <label class="form-check-label" for="flexCheckChecked">프론트엔드개발자</label>
-						</div>
-				      	<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="웹" id="flexCheckDefault" >
-						  <label class="form-check-label" for="flexCheckDefault">웹개발자</label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="앱" id="flexCheckChecked" >
-						  <label class="form-check-label" for="flexCheckChecked">앱개발자</label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="소프트웨어" id="flexCheckChecked" >
-						  <label class="form-check-label" for="flexCheckChecked">소프트웨어개발자</label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="게임" id="flexCheckChecked" >
-						  <label class="form-check-label" for="flexCheckChecked">게임개발자</label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" name="jobType" value="하드웨어" id="flexCheckChecked" >
-						  <label class="form-check-label" for="flexCheckChecked">하드웨어개발자</label>
-						</div>
-					  </div>
-				  </div>
-		      </td>
-		      <td>
-		      	<div id="collapseExample">
-			        <div class="card card-body" style="text-align: center;">
-			        	<div>
-				            <button id="seoulBtn" class="btn btn-outline-primary" onclick="showLocations(['서울전체', '강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', 
-				            																'노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구	', '서초구', '성동구', '성북구', '송파구',
-				            																'양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구']);">서울</button>
-				            <button id="gyeonggiBtn" class="btn btn-outline-primary" onclick="showLocations(['경기전체', '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시',
-				            																'남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', 
-				            																'안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시',
-				            																'의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']);">경기</button>
-				            <button id="incheonBtn" class="btn btn-outline-primary" onclick="showLocations(['인천전체', '강화군', '계양구', '미추홀구', '남동구', '동구', '부평구', '서구', '연수구', '옹진군', '중구']);">인천</button>
-			        	</div>
-			            <div id="locationDetail" style="overflow: scroll; height: 150px; padding: 10px; text-align: left;"></div>
-			        </div>
-			    </div>
-		      </td>
-		      <td>
-		      	<div id="collapseExample">
-				  <div class="card card-body">
-				  	<div class="form-check">
-					  <input class="form-check-input" type="checkbox" name="career" value="신입" id="flexCheckDefault" >
-					  <label class="form-check-label" for="flexCheckDefault">신입</label>
-					</div>
-					<div class="form-check">
-					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
-					  <label class="form-check-label" for="flexCheckChecked">1~3년</label>
-					</div>
-			      	<div class="form-check">
-					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckDefault" >
-					  <label class="form-check-label" for="flexCheckDefault">4~6년</label>
-					</div>
-					<div class="form-check">
-					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
-					  <label class="form-check-label" for="flexCheckChecked">7~9년</label>
-					</div>
-					<div class="form-check">
-					  <input class="form-check-input" type="checkbox" name="career" value="경력" id="flexCheckChecked" >
-					  <label class="form-check-label" for="flexCheckChecked">10~15년</label>
-					</div>
-				  </div>
-				</div>
-		      </td>
-		    </tr>
-		  </tbody>
-		</table>
 	
-	<!-- 검색 버튼 -->
-	<button id="searchBtn" class="btn btn-primary" type="button" onclick="searchJobKorea()">
-	    검색
-	</button>
+	<!-- 검색 -->
+	<div id="search-div">
+		<a href="https://www.jobkorea.co.kr/">
+			<img style="width: 165px; margin-left: 6%;" alt="" src="${pageContext.request.contextPath}/resources/images/jobkorea.png">
+		</a>
+		<div id="keyword-div">
+			<input type="text" id="keyword" name="keyword" placeholder="NEW JOB, NEW ME!" class="text">
+			<img style="border-radius: 50px;" alt="" src="${pageContext.request.contextPath}/resources/images/looking.png">
+		</div>
+		<button id="searchBtn">검색</button>
 	</div>
+	
 	
 	<!-- 채용공고 -->
 	<div id="job"></div>
@@ -200,31 +132,51 @@
 	<button class="btn btn-primary" type="button" id="loadMoreButton">
 	    다음
 	</button>
-	<button style="display: none;" class="btn btn-primary" type="button" id="loadPrevButtonByFilter">
+	<button style="visibility: hidden;" class="btn btn-primary" type="button" id="loadPrevButtonByFilter">
 	    이전
 	</button>
-	<button style="display: none;" class="btn btn-primary" type="button" id="loadMoreButtonByFilter">
+	<button style="visibility: hidden;" class="btn btn-primary" type="button" id="loadMoreButtonByFilter">
 	    다음
 	</button>
 	
 	<script>
-	// 이전/다음
 	let currentPage = 1;
 	const itemsPerPage = 10;
 	
-	document.getElementById("loadPrevButton").addEventListener("click", () => {
-	    loadPrevJobPostings();
-	});
-	
-	document.getElementById("loadMoreButton").addEventListener("click", () => {
-	    loadMoreJobPostings();
-		document.getElementById("loadPrevButton").style.visibility = 'visible';
-	});
 	
 	window.onload = function () {
 	    jobSearch(currentPage);
 		document.getElementById("loadPrevButton").style.visibility = 'hidden';
 	};
+	
+	document.querySelector('#searchBtn').addEventListener('click', () => {
+		jobSearchByFilter(currentPage);
+	});
+	
+	document.querySelector('#keyword').addEventListener('keydown', (e) => {
+		if(e.key === 'Enter') {
+			e.preventDefault();
+			jobSearchByFilter(currentPage);
+		}
+	});
+	
+	// 이전
+	document.getElementById("loadPrevButton").addEventListener("click", () => {
+	    loadPrevJobPostings();
+	});
+	document.getElementById("loadPrevButtonByFilter").addEventListener("click", () => {
+	    loadPrevJobPostingsByFilter();
+	});
+	
+	//다음
+	document.getElementById("loadMoreButton").addEventListener("click", () => {
+	    loadMoreJobPostings();
+		document.getElementById("loadPrevButton").style.visibility = 'visible';
+	});
+	document.getElementById("loadMoreButtonByFilter").addEventListener("click", () => {
+	    loadMoreJobPostingsByFilter();
+		document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
+	});
 	
 	function loadMoreJobPostings() {
 	    currentPage++;
@@ -232,6 +184,13 @@
 	    	document.getElementById("loadMoreButton").style.visibility = 'hidden';
 	    }
 	    jobSearch(currentPage);
+	}
+	function loadMoreJobPostingsByFilter() {
+	    currentPage++;
+	    if(currentPage == 5) {
+	    	document.getElementById("loadMoreButtonByFilter").style.visibility = 'hidden';
+	    }
+	    jobSearchByFilter(currentPage);
 	}
 	
 	function loadPrevJobPostings() {
@@ -241,8 +200,16 @@
 	    }
 	    jobSearch(currentPage);
 	}
+	function loadPrevJobPostingsByFilter() {
+	    currentPage--;
+	    if(currentPage == 1) {
+	    	document.getElementById("loadPrevButtonByFilter").style.visibility = 'hidden';
+	    }
+	    jobSearchByFilter(currentPage);
+	}
+	
     function jobSearch(pageNumber) {
-    	console.log('!!!!!!!!!!!!!!!', pageNumber)
+    	/* console.log('jobSearch:pageNumber=', pageNumber) */
     	$.ajax({
             url: '${pageContext.request.contextPath}/board/jobSearch.do',
             type: 'GET',
@@ -251,19 +218,48 @@
             },
             dataType: 'json',
             success: function(response) {
-            	console.log(response)
+            	/* console.log(response) */
                 const jobKoreaList = response.jobKoreaList;
                 console.log(jobKoreaList);
-                if(jobKoreaList.length == 0) {
-                	jobSearch(pageNumber+1);
-            	}
+                
                 render(jobKoreaList);
             }
         });
     }
     
+    function jobSearchByFilter(pageNumber) {
+    	/* console.log(document.querySelector('#keyword').value); */
+		const keyword = document.querySelector('#keyword').value;
+		$.ajax({
+			url : "${pageContext.request.contextPath}/board/jobSearchByFilter.do",
+			data : {
+				keyword : keyword,
+				page : pageNumber
+			},
+			success(responseData) {
+				/* console.log(responseData); */
+				const {currentPage} = responseData;
+                const jobKoreaList = responseData.jobKoreaList;
+                console.log('111111111', jobKoreaList);
+               	document.getElementById("loadPrevButton").style.display = 'none';
+               	document.getElementById("loadMoreButton").style.display = 'none';
+               	/* document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
+               	document.getElementById("loadMoreButtonByFilter").style.visibility = 'visible'; */
+                if(currentPage == 1) {
+                	document.getElementById("loadPrevButtonByFilter").style.visibility = 'hidden';
+                	document.getElementById("loadMoreButtonByFilter").style.visibility = 'visible';
+                } 
+                if (currentPage == 50) {
+                	document.getElementById("loadMoreButtonByFilter").style.visibility = 'hidden';
+                	document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
+                }
+                render(jobKoreaList);
+			}
+		});	
+    }
+    
     function render(jobKoreaList) {
-    	console.log('???????????????????????', jobKoreaList);
+    	/* console.log('render:jobKoreaList=', jobKoreaList); */
     	const job = document.querySelector('#job');
     	job.innerHTML = "";
     	
@@ -273,163 +269,23 @@
     		const option = jobKoreaList[i].option;
     		let etc = jobKoreaList[i].etc;
     		const url = jobKoreaList[i].url;
+    		console.log('@@@', company, title, option, etc, url);
     		
-    		if(title != "") {
-    			if (etc.split(" ").length > 5) {
-                    etc = etc.split(" ").slice(0, 5).join(" ") + "...";
-                    
-		    		job.innerHTML += `<div id="jobDetail"><div id="jobDetailCompany"><a href="\${url}">\${company}</a></div>
-		    		<div style="width: 640px; height: 183px;">
-		    			<p class="medium" style="font-size: 22px;"><a href="\${url}">\${title}</a></p>
-					  	<p class="medium">\${option}</p>
-					  	<p class="medium" id="jobDetailEtc">\${etc}</p>
-					</div>
-					</div>
-	    		`;
-                }
-    		}
-    	}
-    };
-    
-    // 검색
-    function searchJobKorea(jobKoreaList) {
-    	document.querySelector('#loadPrevButton').style.visibility = 'hidden';
-    	document.querySelector('#loadMoreButton').style.visibility = 'hidden';
-    	document.querySelector('#loadPrevButtonByFilter').style.visibility = 'visible';
-    	document.querySelector('#loadMoreButtonByFilter').style.visibility = 'visible';
-    	
-		const filterList = [];
-	    const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
-	    jobTypeCheckboxes.forEach(checkbox => {
-	    	filterList.push(checkbox.value);
-	    });
-	    
-	    const locationCheckboxes = document.querySelectorAll('input[name="location"]:checked');
-	    locationCheckboxes.forEach(checkbox => {
-	    	filterList.push(checkbox.value);
-	    });
-	    
-	    const careerCheckboxes = document.querySelectorAll('input[name="career"]:checked');
-	    careerCheckboxes.forEach(checkbox => {
-	    	filterList.push(checkbox.value);
-	    });
-	    
-	    /* console.log(filterList); */
-	    filter(filterList, currentPage);
-	    
-	    document.getElementById("loadPrevButtonByFilter").addEventListener("click", () => {
-		    loadPrevJobPostingsByFilter();
-		});
-		
-		document.getElementById("loadMoreButtonByFilter").addEventListener("click", () => {
-		    loadMoreJobPostingsByFilter();
-			document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
-		});
-		
-		function loadMoreJobPostingsByFilter() {
-		    currentPage++;
-		    filter(filterList, currentPage);
-		}
-		
-		function loadPrevJobPostingsByFilter() {
-		    currentPage--;
-		    filter(filterList, currentPage);
-		}
-		
-	    function render(jobKoreaList) {
-	    	console.log(jobKoreaList);
-	    	const job = document.querySelector('#job');
-	    	job.innerHTML = "";
-	    	
-	    	for(let i=0; i<jobKoreaList.length; i++) {
-	    		const company = jobKoreaList[i].company;
-	    		const title = jobKoreaList[i].title;
-	    		const option = jobKoreaList[i].option;
-	    		const etc = jobKoreaList[i].etc;
-	    		const url = jobKoreaList[i].url;
-	    		
-	    		if(title != "") {
-	    			job.innerHTML += `<div id="jobDetail"><div id="jobDetailCompany"><a href="\${url}">\${company}</a></div>
+   			if (etc.split(" ").length > 5) {
+                etc = etc.split(" ").slice(0, 5).join(" ") + "...";
+                   
+	    		job.innerHTML += `
+	    			<div id="jobDetail"><div id="jobDetailCompany"><a href="\${url}">\${company}</a></div>
 			    		<div style="width: 640px; height: 183px;">
 			    			<p class="medium" style="font-size: 22px;"><a href="\${url}">\${title}</a></p>
 						  	<p class="medium">\${option}</p>
 						  	<p class="medium" id="jobDetailEtc">\${etc}</p>
 						</div>
-						</div>
-		    		`;
-	    		}
-	    	}
-	    };
-	    
-	}
-	
-	function filter(filterList, currentPage) {
-		$.ajax({
-            url: '${pageContext.request.contextPath}/board/jobSearchByFilter.do',
-            data : {
-            	page : currentPage,
-            	'filterList[]': filterList
-            },
-            dataType : "json",
-            success: function(response) {
-            	
-            	console.log('111111111', response);
-            	const {endPage, currentPage} = response;
-                const jobKoreaList = response.jobKoreaList;
-                console.log('111111111', jobKoreaList);
-                if(currentPage == 1) {
-                	document.getElementById("loadPrevButtonByFilter").style.visibility = 'hidden';
-                	document.getElementById("loadMoreButtonByFilter").style.visibility = 'visible';
-                } 
-                if (endPage == currentPage) {
-                	document.getElementById("loadMoreButtonByFilter").style.visibility = 'hidden';
-                	document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
-                } 
-                render(jobKoreaList);
-            }
-        });
-	}
-	// 전체체크박스
-	function showLocations(locations) {
-		const locationDetail = document.getElementById("locationDetail");
-	    locationDetail.innerHTML = "";
-	
-	    const mainLocation = locations[0];
-	
-	    const mainLocationCheckbox = document.createElement("input");
-	    mainLocationCheckbox.classList.add("form-check-input");
-	    mainLocationCheckbox.type = "checkbox";
-	    mainLocationCheckbox.value = mainLocation;
-	    mainLocationCheckbox.id = `flexCheck${mainLocation}`;
-	    mainLocationCheckbox.checked = false; // 처음에는 비활성화 상태로 설정
-	
-	    mainLocationCheckbox.addEventListener("change", () => {
-	        const subCheckboxes = locationDetail.querySelectorAll(".form-check-input");
-	        for (const checkbox of subCheckboxes) {
-	            checkbox.checked = mainLocationCheckbox.checked;
-	        }
-	    });
-	
-	    const mainLocationLabel = document.createElement("label");
-	    mainLocationLabel.classList.add("form-check-label");
-	    mainLocationLabel.htmlFor = `flexCheck${mainLocation}`;
-	    mainLocationLabel.textContent = mainLocation;
-	
-	    const mainLocationItem = document.createElement("div");
-	    mainLocationItem.classList.add("form-check");
-	    mainLocationItem.appendChild(mainLocationCheckbox);
-	    mainLocationItem.appendChild(mainLocationLabel);
-	    locationDetail.appendChild(mainLocationItem);
-	
-	    for (const subLocation of locations.slice(1)) {
-	        const subLocationItem = document.createElement("div");
-	        subLocationItem.classList.add("form-check");
-	        subLocationItem.innerHTML = `
-	            <input class="form-check-input" type="checkbox" value="\${subLocation}" name="location">
-	            <label class="form-check-label" for="flexCheck${subLocation}">\${subLocation}</label>
-	        `;
-	        locationDetail.appendChild(subLocationItem);
-	    }
-	}
+					</div>
+				`;
+               }
+    	}
+    };
+    
 	</script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
