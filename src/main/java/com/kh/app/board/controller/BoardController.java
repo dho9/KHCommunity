@@ -1216,16 +1216,8 @@ public class BoardController {
 
 			BoardListDto postDetail = boardService.findById(postId);
 			study.setTag(postDetail.getTag());  
-			System.out.println("wkwkwkwkwkwkwk"+study);
-			// 태그 목록 출력
 		}
-
-
-
-
 		model.addAttribute("studyBoardList", studyList);
-		//		List<StudyList> studyLists = boardService.findTagId(studyList); 
-		//		System.out.println(studyList);
 		return "/board/studyBoardList";
 	}
 

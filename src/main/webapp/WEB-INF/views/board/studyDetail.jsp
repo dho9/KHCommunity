@@ -573,9 +573,39 @@ button.updateBtn, button.deleteBtn{
 			</form:form>
 		</div>
 	</div>
-
+ <div class="rightside">
+	<form action="${pageContext.request.contextPath}/board/boardSearch.do"
+		class="search" onsubmit="return  validateSearchForm()">
+		<input type="text" id="keyword" name="keyword" placeholder="원하는 스터디를 검색하세요!"
+			class="text" />
+	</form>
+	 <div class="card">
+        <div class="board" id="popularPostsContainer">
+            <h3>
+                <a>내가 참여한 스터디 목록</a>
+            </h3>
+        </div>
+    </div>
+    </div>
 	<script>
-	
+	document.addEventListener('DOMContentLoaded', () => {
+	    $.ajax({
+	        url: "${pageContext.request.contextPath}/board/myStudyList.do",
+	        success: function(data) {
+	            console.log(JSON.stringify(data));
+	            
+	            const container = $("#popularPostsContainer");
+	            for (let i = 0; i < data.length; i++) {
+	                const post = data[i];
+	                const postHTML = `<a href="${pageContext.request.contextPath}/board/myStudy.do?id=\${post.boardId}" class="article">
+	                    <p class="title"> ▶ \${post.studyName}</p>
+	                    <hr>
+	                </a>`;
+	                container.append(postHTML);
+	            }
+	        }
+	    });
+	});
 	const studyModal = document.getElementById("studyModal");
 	const applicButton = document.getElementById("applic");
 
@@ -922,5 +952,4 @@ button.updateBtn, button.deleteBtn{
 	};
 	
 	</script>
-	<%@ include file="/WEB-INF/views/common/rightSide.jsp"%>
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
