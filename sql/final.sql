@@ -1628,4 +1628,14 @@ WHERE
     select * from study;
     select * from study_info;
     delete study_info;
+  select * from study_info;
+  select * from alarm; 
+  select * from message_box;
+  
+  select * from study where study_id in ( select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1);
+    
+  
+  select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1;
+  
+  update study_info set APPLICATION_CHECK = 1 where member_id = 'eogh';
   

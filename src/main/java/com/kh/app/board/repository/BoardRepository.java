@@ -255,6 +255,9 @@ public interface BoardRepository {
 	
 	@Select("select count(*) from study_info where study_id = #{studyId} and member_Id = #{appliId}")
 	int checkStudy(int studyId, String appliId);
+	
+	@Select("select * from study where study_id in ( select study_id from study_info where member_id =#{memberId} and APPLICATION_CHECK=1)")
+	List<StudyList> findStudyList(String memberId);
 
 
 	
