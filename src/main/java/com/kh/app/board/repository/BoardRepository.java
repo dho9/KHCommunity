@@ -258,6 +258,12 @@ public interface BoardRepository {
 	
 	@Select("select * from study where study_id in ( select study_id from study_info where member_id =#{memberId} and APPLICATION_CHECK=1)")
 	List<StudyList> findStudyList(String memberId);
+	
+	@Select("select study_id from study where member_id = #{memberId} and board_id = #{boardId}")
+	int findStudyId(String memberId, int boardId);
+	
+	@Insert("insert into study_info (study_id, member_id,application_check) values(#{findStudyId},#{memberId}, 1)")
+	int insertStudyInfo(String memberId, int findStudyId);
 
 
 	

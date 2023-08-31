@@ -1250,12 +1250,18 @@ public class BoardController {
 		//전용게시판 생성 
 		Study study= Study.builder().memberCount(count).studyName(title).memberId(member.getMemberId()).build();
 		result = boardService.createStudy(study);
+	
 		//전용게시판 board 테이블에 생성해주기.(impl)
 		int findId = boardService.findBoarderId(study);
-//		System.out.println("asdsadsad"+findId);
 		study.setBoardId(findId);
 		result = boardService.createBoard(study);
 		
+		// 스터디 인포에도 들어가게
+			//만들어진 스터디 아이디 조회하기.
+		int findStudyId = boardService.findStudyId(member.getMemberId(), findId);
+		result = boardService.insertStudyInfo(member.getMemberId(),findStudyId);
+		
+		System.out.println("findId" + findId);
 		// 스터디 original 게시판에 게시글 등록
 		BoardCreateDto board = BoardCreateDto.builder()
 				.boardId(boardId)
