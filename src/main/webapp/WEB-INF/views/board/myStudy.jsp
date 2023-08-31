@@ -690,21 +690,7 @@ p.infoTitles {
         </c:forEach>
     </tbody>
 </table>
-					<thead>
-						<tr>
-							<th>제목</th>
-							<th>내용</th>
-							<th>작성날짜</th>
-						</tr>
-					</thead>
-					<tbody id="messageBoxTbl">
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
+					
 				<div id="msgPagingDiv">
 					<ul class="pagination msgPagination">
 						<li class="page-item disabled" id="prevButton"><span
