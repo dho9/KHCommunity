@@ -515,6 +515,33 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findStudyList(memberId);
 	}
 	
+	@Override
+	public List<JobKorea> getJobKoreaDatas(int page, int limit, String keyword) throws IOException {
+		List<JobKorea> jobKoreaList = new ArrayList<>();
+
+		Document document = Jsoup.connect(BASE_URL + "/Search/?stext=" + keyword + "&tabType=recruit&Page_No=" + page).get();
+		Elements contents = document.select(".post");
+
+		int startIndex = (page - 1) * limit;
+		int endIndex = Math.min(startIndex + limit, contents.size());
+
+		for (int i = startIndex; i < endIndex; i++) {
+			Element content = contents.get(i);
+
+			String href = content.select(".post-list-corp .name").attr("href");
+			String fullUrl = BASE_URL + href;
+			JobKorea jobKorea = JobKorea.builder()
+					.company(content.select(".post-list-corp .name").text())
+					.title(content.select(".post-list-info .title").text())
+					.option(content.select(".post-list-info .option").text())
+					.etc(content.select(".post-list-info .etc").text())
+					.url(fullUrl)
+					.build();
+
+			jobKoreaList.add(jobKorea);
+		}
+		return jobKoreaList;
+	}
 	
 	@Override
 	public List<BoardListDto> findAllByBoardId(int id) {

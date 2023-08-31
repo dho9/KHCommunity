@@ -16,7 +16,6 @@
 .new {
 	text-decoration: none;
 }
-
 #alarmTextBox{
 	font-size:15px;
 	display: inherit;
@@ -151,7 +150,7 @@
             <ul id="menu">
                 <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
-                <li id="myClass"><a>우리반</a></li>
+                <li id="myClass" style="cursor: pointer;"><a>우리반</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
@@ -202,27 +201,48 @@
 	<script>
 	document.querySelector('#myClass').addEventListener('click', () => {
 		const _memberId = '<sec:authentication property="name"/>';
+		const _authority = '<sec:authentication property="authorities"/>';
  	    const memberId = _memberId.replace(/&#64;/g, '@');
+ 	    const authority = _authority.replace(/&#91;/g, '').replace(/&#93;/g, '');
+		console.log('!!!!!!!!', authority);
 	    if(_memberId === 'anonymousUser') {
 	        alert('로그인이 필요합니다.');
 	    }
         else {
-	        $.ajax({
-	           url : "${pageContext.request.contextPath}/member/findStudentType.do",
-	           data : {
-	               memberId : memberId
-	           },
-	           success(responseData) {
-	               const {student} = responseData;
-	               const {curriculumId, studentType, boardId} = student;
-	               if(studentType != 's' || boardId == 0) {
-	                   alert('수강중인 학생만 이용가능합니다.');
-	               }
-	               else {
-	                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
-	               }
-	           }
-	        });
+        	if(authority === 'STUDENT') {
+        		console.log('학생입니다.');
+		        $.ajax({
+		           url : "${pageContext.request.contextPath}/member/findStudentType.do",
+		           data : {
+		               memberId : memberId
+		           },
+		           success(responseData) {
+		               const {student} = responseData;
+		               const {curriculumId, studentType, boardId} = student;
+		               if(studentType != 's' || boardId == 0) {
+		                   alert('수강중인 학생만 이용가능합니다.');
+		               }
+		               else {
+		                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+		               }
+		           }
+		        });
+        	}
+        	else {
+        		console.log('직원입니다.');
+        		$.ajax({
+ 		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
+ 		           data : {
+ 		               memberId : memberId
+ 		           },
+ 		           success(responseData) {
+ 		               const {teacher} = responseData;
+ 		               console.log(teacher);
+ 		               const {boardId} = teacher;
+	        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+ 		           }
+ 		        });
+        	}
         }
    });
 	

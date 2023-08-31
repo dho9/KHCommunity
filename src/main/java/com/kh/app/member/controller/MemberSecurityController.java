@@ -40,6 +40,7 @@ import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.member.dto.MemberCreateDto;
 import com.kh.app.member.dto.MemberLoginDto;
 import com.kh.app.member.dto.MemberUpdateDto;
+import com.kh.app.member.dto.StudentDto;
 import com.kh.app.member.entity.Employee;
 import com.kh.app.member.entity.Member;
 import com.kh.app.member.entity.MemberDetails;
@@ -343,6 +344,15 @@ public class MemberSecurityController {
 //		log.info("student={}", student);
 	
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student));
+	} 
+	
+	@GetMapping("/findTeacher.do")
+	@ResponseBody
+	public ResponseEntity<?> findTeacher(@RequestParam String memberId) {
+		StudentDto teacher = memberService.findTeacher(memberId);
+//		log.info("teacher={}", teacher);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(Map.of("teacher", teacher));
 	} 
 
 }
