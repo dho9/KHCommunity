@@ -180,6 +180,8 @@ public interface BoardService {
 
 	int insertStudyInfo(String memberId, int findStudyId);
 
+	String findReceivedIdByPostId(int postId);
+
 	List<StudyInfo> finAllStudyAppli(int findStudyId);
 
 	Study myStudyFindById(int id);
@@ -189,6 +191,10 @@ public interface BoardService {
 	int deleteStudyInfo(String memberId, int studyId);
 
 	List<StudyMemberDto> findStudyMember(int studyId);
+	
+	int updateStudyCount(int studyId);
+
+	Study findByStudyleaderName(int studyId);
 
 
 }

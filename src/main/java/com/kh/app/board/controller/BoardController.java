@@ -59,6 +59,7 @@ import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
+import com.kh.app.notification.service.NotificationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,6 +74,8 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
 	@Autowired
+	private NotificationService notificationService;
+	@Autowired
 	private BoardService boardService;
 
 	@Autowired
@@ -80,7 +83,7 @@ public class BoardController {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
-
+	
 	@Value("${spring.servlet.multipart.location}")
 	private String multipartLocation;
 
@@ -645,46 +648,51 @@ public class BoardController {
 
 	@PostMapping("/createComment.do")
 	public ResponseEntity<?> createComment(
-			@Valid CreateCommentDto _comment, BindingResult bindingResult, @AuthenticationPrincipal MemberDetails member) {
-		log.debug("commentttttttttttt={}", _comment);
-
-		if (bindingResult.hasErrors()) { // 유효성 검사 에러가 있는 경우
-			return ResponseEntity
-					.status(HttpStatus.BAD_REQUEST)
-					.body("댓글 또는 대댓글 내용이 유효하지 않습니다.");
-		}
-
-		if (member != null && _comment.getCommentRef() != null && !_comment.getCommentRef().isEmpty()) {
-			// 대댓글용
-			int ref = Integer.parseInt(_comment.getCommentRef()); 
-			Comment comment = Comment.builder()
-					.postId(_comment.getPostId())
-					.boardId(_comment.getBoardId())
-					.memberId(member.getMemberId())
-					.commentContent(_comment.getCommentContent())
-					.commentLevel(2)
-					.commentRef(ref)
-					.anonymousCheck(_comment.isAnonymousCheck()).build();
-			int result = boardService.createComment(comment);
-			return ResponseEntity
-					.status(HttpStatus.OK).body(null);
-		} else if (member != null && (_comment.getCommentRef() == null || _comment.getCommentRef().isEmpty())) {
-			// 댓글용
-			Comment comment = Comment.builder()
-					.postId(_comment.getPostId())
-					.boardId(_comment.getBoardId())
-					.memberId(member.getMemberId())
-					.commentContent(_comment.getCommentContent())
-					.commentLevel(1)
-					.commentRef(0)
-					.anonymousCheck(_comment.isAnonymousCheck()).build();
-			int result = boardService.createComment(comment);
-			return ResponseEntity
-					.status(HttpStatus.OK).body(null);
-		} else {
-			return ResponseEntity
-					.status(HttpStatus.OK).body("댓글 작성에 실패했습니다.");
-		}
+	        @Valid CreateCommentDto _comment, BindingResult bindingResult, @AuthenticationPrincipal MemberDetails member) {
+	    log.debug("commentttttttttttt={}", _comment);
+	    
+	    if (bindingResult.hasErrors()) { // 유효성 검사 에러가 있는 경우
+	        return ResponseEntity
+	                .status(HttpStatus.BAD_REQUEST)
+	                .body("댓글 또는 대댓글 내용이 유효하지 않습니다.");
+	    }
+	    
+	    if (member != null && _comment.getCommentRef() != null && !_comment.getCommentRef().isEmpty()) {
+	        // 대댓글용
+	        int ref = Integer.parseInt(_comment.getCommentRef()); 
+	        Comment comment = Comment.builder()
+	                .postId(_comment.getPostId())
+	                .boardId(_comment.getBoardId())
+	                .memberId(member.getMemberId())
+	                .commentContent(_comment.getCommentContent())
+	                .commentLevel(2)
+	                .commentRef(ref)
+	                .anonymousCheck(_comment.isAnonymousCheck()).build();
+	        int result = boardService.createComment(comment);
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body(null);
+	    } else if (member != null && (_comment.getCommentRef() == null || _comment.getCommentRef().isEmpty())) {
+	        // 댓글용
+	        Comment comment = Comment.builder()
+	                .postId(_comment.getPostId())
+	                .boardId(_comment.getBoardId())
+	                .memberId(member.getMemberId())
+	                .commentContent(_comment.getCommentContent())
+	                .commentLevel(1)
+	                .commentRef(0)
+	                .anonymousCheck(_comment.isAnonymousCheck()).build();
+	        int result = boardService.createComment(comment);
+	        
+	        String receivedId = boardService.findReceivedIdByPostId(_comment.getPostId());
+	        
+	        result = notificationService.notifyComment(comment, receivedId);
+	        
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body(null);
+	    } else {
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body("댓글 작성에 실패했습니다.");
+	    }
 	}
 
 
@@ -1303,8 +1311,11 @@ public class BoardController {
 			int result = boardService.insertStudy(studyId,appliId,appliContent);
 			if(result>0) {
 				String msg ="지원이 완료 되었습니다.";
-
 				redirectAttr.addFlashAttribute("msg",msg);
+				Study study= boardService.findByStudyleaderName(studyId);
+				String mssage = study.getStudyName()+"의 스터디모임에 신청요청이 들어왔습니다.";
+				
+				int alarmId = notificationService.notifyAlamSendFromMemberId(study.getMemberId(),mssage);
 				return "redirect:/board/studyDetail.do?id=" + postId;
 			}else {
 				String msg ="지원신청을 다시 해주세요.";
@@ -1365,12 +1376,22 @@ public class BoardController {
 	@PostMapping("appliCheck.do")
 	@ResponseBody
 	public ResponseEntity<?> appliCheck (@RequestParam String memberId, @RequestParam String check, @RequestParam  int studyId ){
-		if(check =="approve") {
-			int result = boardService.updateStudyInfo(memberId,studyId);
+		System.out.println(check);
+		int result=0;
+		int alarmId=0;
+		if(check.equals("approve")) {
+			result = boardService.updateStudyInfo(memberId,studyId);
+			result = boardService.updateStudyCount(studyId);
+			String msg = "스터디지원이 승인되었습니다. 나의 스터디 목록에서 스터디 게시판을 이용 할 수 있습니다.";
+			alarmId = notificationService.notifyAlamSendFromMemberId(memberId,msg);
 			return ResponseEntity
 					.status(HttpStatus.OK).body(null);
 		}else {
-			int result = boardService.deleteStudyInfo(memberId,studyId);
+			result = boardService.deleteStudyInfo(memberId,studyId);
+			// 알림
+			String msg = "스터디지원이 반려되었습니다.";
+			alarmId = notificationService.notifyAlamSendFromMemberId(memberId,msg);
+			
 			return ResponseEntity
 					.status(HttpStatus.OK).body(null);
 		}

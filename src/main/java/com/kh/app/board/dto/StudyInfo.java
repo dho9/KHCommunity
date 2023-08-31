@@ -19,7 +19,7 @@ public class StudyInfo {
 	private String memberId;
 	private String introduce;
 	private LocalDateTime studyApplicationAt;
-	private boolean applcationCheck;
+	private int applcationCheck;
 	
 	
 }
