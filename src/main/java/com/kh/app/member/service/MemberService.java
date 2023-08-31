@@ -42,7 +42,7 @@ public interface MemberService extends UserDetailsService{
 
 	StudentMypageInfoDto findByMemberInfo(String memberId);
 
-	List<TicketBuyDto> findByTicketInfo(String memberId);
+	List<TicketBuyDto> findByTicketInfo(String memberId, Map<String, Object> params);
 
 	Curriculum findByDdayInfo(int curriculumId);
 
@@ -73,6 +73,8 @@ public interface MemberService extends UserDetailsService{
 
 	int updateAlarmReadCheck(int alarmId);
 
+	int totalCountTicket(String memberId);
+	
 	StudentDto findTeacher(String memberId);
 
 

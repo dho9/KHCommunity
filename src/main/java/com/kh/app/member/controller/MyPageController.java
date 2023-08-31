@@ -44,16 +44,30 @@ public class MyPageController {
 	private MemberService memberService;
 
 	@GetMapping("/myPage.do")
-	public void myPage(Model model, @AuthenticationPrincipal MemberDetails principal) throws Exception {
+	public void myPage(Model model, @AuthenticationPrincipal MemberDetails principal, @RequestParam(defaultValue = "1") int page) throws Exception {
 		// 시작
 		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
-		
-		// 식권정보 끝
+		// 끝
+
 
 		// 식권정보 시작
-		List<TicketBuyDto> studentTicketInfo = memberService.findByTicketInfo(principal.getMemberId());
+		int limit = 10;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+			);
+		
+		List<TicketBuyDto> studentTicketInfo = memberService.findByTicketInfo(principal.getMemberId(), params);
 		model.addAttribute("studentTicketInfo", studentTicketInfo);
+		
+		model.addAttribute("currentPage", page);
+		
+		int totalCount = memberService.totalCountTicket(principal.getMemberId());
+		
+		 int totalPages = (int) Math.ceil((double) totalCount / limit);
+		 model.addAttribute("totalPages", totalPages);
+		    
 		// 식권정보 끝
 
 		// Dday 시작
@@ -108,7 +122,7 @@ public class MyPageController {
 
 		List<StudentListDto> studentList = memberService.findStudentByTeacher(principal.getMemberId());
 		model.addAttribute("studentList", studentList);
-		log.info("★★employeeInfo = {} ", studentList);
+		log.info("★★studentList = {} ", studentList);
 		
 		EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
 
