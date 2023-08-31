@@ -191,5 +191,7 @@ public interface BoardService {
 
 	int updateStudyCount(int studyId);
 
+	Study findByStudyleaderName(int studyId);
+
 
 }

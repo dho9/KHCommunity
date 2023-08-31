@@ -1302,8 +1302,11 @@ public class BoardController {
 			int result = boardService.insertStudy(studyId,appliId,appliContent);
 			if(result>0) {
 				String msg ="지원이 완료 되었습니다.";
-
 				redirectAttr.addFlashAttribute("msg",msg);
+				Study study= boardService.findByStudyleaderName(studyId);
+				String mssage = study.getStudyName()+"의 스터디모임에 신청요청이 들어왔습니다.";
+				
+				int alarmId = notificationService.notifyAlamSendFromMemberId(study.getMemberId(),mssage);
 				return "redirect:/board/studyDetail.do?id=" + postId;
 			}else {
 				String msg ="지원신청을 다시 해주세요.";
