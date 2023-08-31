@@ -497,7 +497,20 @@
 					renderMessage(message);
 				});
 				
+				// 댓글, 대댓글 알림 받는 구독신청
 				stompClient.subscribe(`/topic/commentNotice/\${memberId}`, (message) => {
+					console.log(`/topic/commentNotice/${memberId} : `, message);
+					renderMessage(message);
+				});
+				
+				// 수강생 승인 여부 알림 받는 구독신청
+				stompClient.subscribe(`/topic/stdAppCheck/\${memberId}`, (message) => {
+					console.log(`/topic/commentNotice/${memberId} : `, message);
+					renderMessage(message);
+				});
+				
+				// 휴가 처리 관련 알림 받는 구독신청
+				stompClient.subscribe(`/topic/vacCheck/\${memberId}`, (message) => {
 					console.log(`/topic/commentNotice/${memberId} : `, message);
 					renderMessage(message);
 				});

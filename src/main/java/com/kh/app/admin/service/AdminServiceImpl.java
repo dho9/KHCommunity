@@ -420,4 +420,14 @@ public class AdminServiceImpl implements AdminService {
 	public int updateMyClass(String boardId, String selectedCurriculumId) {
 		return adminRepository.updateMyClass(boardId, selectedCurriculumId);
 	}
+	
+	@Override
+	public int updateVacationOkById(int vacationId) {
+		return adminRepository.updateVacationOkById(vacationId);
+	}
+	
+	@Override
+	public int updateVacationByNoId(int vacationId) {
+		return adminRepository.updateVacationByNoId(vacationId);
+	}
 }

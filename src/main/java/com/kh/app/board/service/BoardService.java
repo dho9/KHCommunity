@@ -192,11 +192,15 @@ public interface BoardService {
 
 	int deleteStudyInfo(String memberId, int studyId);
 
+
+	String findReceivedIdByCommentRef(int ref);
+
 	List<StudyMemberDto> findStudyMember(int studyId);
 	
 	int updateStudyCount(int studyId);
 
 	Study findByStudyleaderName(int studyId);
+
 
 
 }
