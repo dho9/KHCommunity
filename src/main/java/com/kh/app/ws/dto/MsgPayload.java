@@ -22,6 +22,7 @@ public class MsgPayload {
 	private long createdAt;
 	private int messageId;
 	private AlarmType alarmType;
+	private int postId;
 	
 	
 }

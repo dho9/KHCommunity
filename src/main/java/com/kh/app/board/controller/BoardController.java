@@ -44,6 +44,7 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
@@ -59,6 +60,7 @@ import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
+import com.kh.app.notification.service.NotificationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,7 +82,10 @@ public class BoardController {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
-
+	
+	@Autowired
+	private NotificationService notificationService;
+	
 	@Value("${spring.servlet.multipart.location}")
 	private String multipartLocation;
 
@@ -172,26 +177,26 @@ public class BoardController {
 		return "/board/askCodeBoardList";
 	}
 
-//	@GetMapping("/studyBoardList.do")
-//	public String studyBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
-//		int limit = 6;
-//		Map<String, Object> params = Map.of(
-//				"page", page,
-//				"limit", limit
-//		);
-//		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll(params);
-//		
-//		int totalCount = boardService.totalCountStudyBoard();
-//		
-//		// totalPages 계산
-//	    int totalPages = (int) Math.ceil((double) totalCount / limit);
-//	    model.addAttribute("totalPages", totalPages);
-//
-//        
-//        model.addAttribute("studyBoardList", studyBoardList);
-//        
-//        return "/board/studyBoardList";
-//	}
+	//	@GetMapping("/studyBoardList.do")
+	//	public String studyBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+	//		int limit = 6;
+	//		Map<String, Object> params = Map.of(
+	//				"page", page,
+	//				"limit", limit
+	//		);
+	//		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll(params);
+	//		
+	//		int totalCount = boardService.totalCountStudyBoard();
+	//		
+	//		// totalPages 계산
+	//	    int totalPages = (int) Math.ceil((double) totalCount / limit);
+	//	    model.addAttribute("totalPages", totalPages);
+	//
+	//        
+	//        model.addAttribute("studyBoardList", studyBoardList);
+	//        
+	//        return "/board/studyBoardList";
+	//	}
 
 	@GetMapping("/graduateBoardList.do")
 	public String graduateBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
@@ -284,7 +289,6 @@ public class BoardController {
 		List<BoardSearchDto> boards = boardService.findAllByMemberId(memberId);
 		// log.debug("boards = {}", boards);
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("boards", boards));
-
 	}
 
 	/**
@@ -434,40 +438,59 @@ public class BoardController {
 			@RequestParam(value = "file", required = false) List<MultipartFile> files)
 			throws IllegalStateException, IOException {
 		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!", boardId);
-		// log.debug("loginMember = {}", member);
-		List<String> tags = _tags != null ? Arrays.asList(_tags) : null;
-
+		//log.debug("loginMember = {}", member);
+		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
+		
 		// 1. 파일저장
 		int result = 0;
-		List<PostAttachment> attachments = new ArrayList<>();
-		for (MultipartFile file : files) {
-			if (!file.isEmpty()) {
-				String originalFilename = file.getOriginalFilename();
-				String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
-				File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
-				file.transferTo(destFile);
+		List<PostAttachment> attachments = new ArrayList<>(); 
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String originalFilename = file.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenameFilename(originalFilename); // 20230807_142828888_123.jpg
+					File destFile = new File(renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+					file.transferTo(destFile);	
 
-				PostAttachment attach = PostAttachment.builder().postOriginalFilename(originalFilename)
-						.postRenamedFilename(renamedFilename).boardId(boardId).build();
+					PostAttachment attach = 
+							PostAttachment.builder()
+							.postOriginalFilename(originalFilename)
+							.postRenamedFilename(renamedFilename)
+							.boardId(boardId)
+							.build();
 
-				attachments.add(attach);
+					attachments.add(attach);
+				}
 			}
 		}
 
 		BoardCreateDto board = null;
 
-		if (grade == null || grade.equals("")) {
-			board = BoardCreateDto.builder().title(title).content(text).boardId(boardId).memberId(member.getMemberId())
-					.tags(tags).attachments(attachments).anonymousCheck(anonymousCheck).build();
+		if(grade == null || grade.equals("")) {
+			board = BoardCreateDto.builder()
+					.title(title)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments)
+					.anonymousCheck(anonymousCheck)
+					.build();
 
 		} else {
 			String realGrade = " [평점 : " + grade + "]";
-			board = BoardCreateDto.builder().title(title + realGrade).content(text).boardId(boardId)
-					.memberId(member.getMemberId()).tags(tags).attachments(attachments).anonymousCheck(anonymousCheck)
+			board = BoardCreateDto.builder()
+					.title(title + realGrade)
+					.content(text)
+					.boardId(boardId)
+					.memberId(member.getMemberId())
+					.tags(tags)
+					.attachments(attachments)
+					.anonymousCheck(anonymousCheck)
 					.build();
 		}
 
-		if (board.getAttachments().isEmpty() || board.getAttachments() == null) {
+		if(board.getAttachments().isEmpty() || board.getAttachments() == null) {
 			result = boardService.insertBoardNofiles(board);
 		} else {
 			result = boardService.insertBoard(board);
@@ -558,32 +581,52 @@ public class BoardController {
 	}
 
 	@PostMapping("/createComment.do")
-	public ResponseEntity<?> createComment(@Valid CreateCommentDto _comment, BindingResult bindingResult,
-			@AuthenticationPrincipal MemberDetails member) {
-		log.debug("commentttttttttttt={}", _comment);
-
-		if (bindingResult.hasErrors()) { // 유효성 검사 에러가 있는 경우
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 또는 대댓글 내용이 유효하지 않습니다.");
-		}
-
-		if (member != null && _comment.getCommentRef() != null && !_comment.getCommentRef().isEmpty()) {
-			// 대댓글용
-			int ref = Integer.parseInt(_comment.getCommentRef());
-			Comment comment = Comment.builder().postId(_comment.getPostId()).boardId(_comment.getBoardId())
-					.memberId(member.getMemberId()).commentContent(_comment.getCommentContent()).commentLevel(2)
-					.commentRef(ref).anonymousCheck(_comment.isAnonymousCheck()).build();
-			int result = boardService.createComment(comment);
-			return ResponseEntity.status(HttpStatus.OK).body(null);
-		} else if (member != null && (_comment.getCommentRef() == null || _comment.getCommentRef().isEmpty())) {
-			// 댓글용
-			Comment comment = Comment.builder().postId(_comment.getPostId()).boardId(_comment.getBoardId())
-					.memberId(member.getMemberId()).commentContent(_comment.getCommentContent()).commentLevel(1)
-					.commentRef(0).anonymousCheck(_comment.isAnonymousCheck()).build();
-			int result = boardService.createComment(comment);
-			return ResponseEntity.status(HttpStatus.OK).body(null);
-		} else {
-			return ResponseEntity.status(HttpStatus.OK).body("댓글 작성에 실패했습니다.");
-		}
+	public ResponseEntity<?> createComment(
+	        @Valid CreateCommentDto _comment, BindingResult bindingResult, @AuthenticationPrincipal MemberDetails member) {
+	    log.debug("commentttttttttttt={}", _comment);
+	    
+	    if (bindingResult.hasErrors()) { // 유효성 검사 에러가 있는 경우
+	        return ResponseEntity
+	                .status(HttpStatus.BAD_REQUEST)
+	                .body("댓글 또는 대댓글 내용이 유효하지 않습니다.");
+	    }
+	    
+	    if (member != null && _comment.getCommentRef() != null && !_comment.getCommentRef().isEmpty()) {
+	        // 대댓글용
+	        int ref = Integer.parseInt(_comment.getCommentRef()); 
+	        Comment comment = Comment.builder()
+	                .postId(_comment.getPostId())
+	                .boardId(_comment.getBoardId())
+	                .memberId(member.getMemberId())
+	                .commentContent(_comment.getCommentContent())
+	                .commentLevel(2)
+	                .commentRef(ref)
+	                .anonymousCheck(_comment.isAnonymousCheck()).build();
+	        int result = boardService.createComment(comment);
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body(null);
+	    } else if (member != null && (_comment.getCommentRef() == null || _comment.getCommentRef().isEmpty())) {
+	        // 댓글용
+	        Comment comment = Comment.builder()
+	                .postId(_comment.getPostId())
+	                .boardId(_comment.getBoardId())
+	                .memberId(member.getMemberId())
+	                .commentContent(_comment.getCommentContent())
+	                .commentLevel(1)
+	                .commentRef(0)
+	                .anonymousCheck(_comment.isAnonymousCheck()).build();
+	        int result = boardService.createComment(comment);
+	        
+	        String receivedId = boardService.findReceivedIdByPostId(_comment.getPostId());
+	        
+	        result = notificationService.notifyComment(comment, receivedId);
+	        
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body(null);
+	    } else {
+	        return ResponseEntity
+	                .status(HttpStatus.OK).body("댓글 작성에 실패했습니다.");
+	    }
 	}
 
 	@PostMapping("/loadComment.do")
@@ -605,9 +648,9 @@ public class BoardController {
 			Model model) {
 		List<EmployeeInfoDto> employeeInfo = new ArrayList<EmployeeInfoDto>();
 		if(principal.getAuthorities().equals("[TEACHER]")) {
-			studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-		} else {
 			employeeInfo = memberService.findByEmployeeInfo(principal.getMemberId());
+		} else {
+			studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		}
 		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("employeeInfo", employeeInfo);
@@ -703,11 +746,11 @@ public class BoardController {
 	public void myClassBoardDetail(@RequestParam int id, @AuthenticationPrincipal MemberDetails principal,
 			@Valid StudentMypageInfoDto studentInfo, Model model) {
 		BoardListDto postDetail = boardService.findById(id);
-//		log.info("postDetail = {}", postDetail);
+		//		log.info("postDetail = {}", postDetail);
 		PostAttachment postAttach = boardService.findAttachById(id);
-//		log.info("postAttach = {}", postAttach);
+		//		log.info("postAttach = {}", postAttach);
 		List<Comment> comments = boardService.findByCommentByPostId(id);
-//		log.info("comments = {}", comments);
+		//		log.info("comments = {}", comments);
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 //	    log.info("studentInfo = {}", studentInfo);
 
@@ -993,7 +1036,6 @@ public class BoardController {
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
-
 	}
 
 	@GetMapping("/studyBoardList.do")
@@ -1003,23 +1045,22 @@ public class BoardController {
 			int postId = study.getPostId(); // StudyList 객체의 id 가져오기
 
 			BoardListDto postDetail = boardService.findById(postId);
-			study.setTag(postDetail.getTag());
-			System.out.println("wkwkwkwkwkwkwk" + study);
+			study.setTag(postDetail.getTag());  
+			System.out.println("wkwkwkwkwkwkwk"+study);
 			// 태그 목록 출력
 		}
-
 		model.addAttribute("studyBoardList", studyList);
-//		List<StudyList> studyLists = boardService.findTagId(studyList); 
-//		System.out.println(studyList);
+		//		List<StudyList> studyLists = boardService.findTagId(studyList); 
+		//		System.out.println(studyList);
 		return "/board/studyBoardList";
 	}
 
 	@GetMapping("/studyDetail.do")
 	public void studyDetail(@RequestParam int id, Model model) {
 		StudyListDto postDetail = boardService.studyFindById(id);
-//		System.out.println(id);
-		// log.debug("postDetail = {}", postDetail);
-//		System.out.println(postDetail);
+		//		System.out.println(id);
+		//log.debug("postDetail = {}", postDetail);
+		//		System.out.println(postDetail);
 		Board board = boardService.findBoardName(postDetail.getBoardId());
 		log.debug("boardddddddddddd={}", board);
 		// log.debug("boardddddddddddd={}",postDetail);
@@ -1038,22 +1079,34 @@ public class BoardController {
 		Study study = Study.builder().memberCount(count).studyName(title).memberId(member.getMemberId()).build();
 		result = boardService.createStudy(study);
 		// 전용게시판 board 테이블에 생성해주기.(impl)
+
+		//전용게시판 board 테이블에 생성해주기.(impl)
 		int findId = boardService.findBoarderId(study);
-//		System.out.println("asdsadsad"+findId);
 		study.setBoardId(findId);
 		result = boardService.createBoard(study);
 
+		// 스터디 인포에도 들어가게
+		//만들어진 스터디 아이디 조회하기.
+		int findStudyId = boardService.findStudyId(findId);
+		result = boardService.insertStudyInfo(member.getMemberId(),findStudyId);
+
+		//		System.out.println("findId" + findId);
 		// 스터디 original 게시판에 게시글 등록
 		BoardCreateDto board = BoardCreateDto.builder().boardId(boardId).title(title).content(text)
 				.memberId(member.getMemberId()).tags(tags).build();
 		result = boardService.insertBoard(board);
 //		System.out.println(board);
+		//		System.out.println(board);
 
 		int postId = boardService.findByPostId();
 //		System.out.println(postId+"ASdsadsadsad");
 		study = Study.builder().postId(postId).build();
 
 		result = boardService.updatePostId(postId, findId);
+		//		System.out.println(postId+"ASdsadsadsad");
+		study= Study.builder().postId(postId).build();
+
+		result = boardService.updatePostId(postId,findId);
 
 		result = boardService.insertPostContent(board);
 		return "redirect:/board/studyDetail.do?id=" + board.getPostId();
@@ -1064,15 +1117,73 @@ public class BoardController {
 	public String studyApply(@RequestParam int studyId, @RequestParam int postId, @RequestParam String appliId,
 			@RequestParam String appliContent, RedirectAttributes redirectAttr) {
 
-		int result = boardService.insertStudy(studyId, appliId, appliContent);
-		if (result > 0) {
-			String msg = "지원이 완료 되었습니다.";
-			redirectAttr.addFlashAttribute("msg", msg);
-			return "redirect:/board/studyDetail.do?id=" + postId;
-		} else {
-			String msg = "지원신청을 다시 해주세요.";
-			redirectAttr.addFlashAttribute("msg", msg);
-			return "redirect:/board/studyDetail.do?id=" + postId;
+		int memberCnt = boardService.checkStudy(studyId,appliId);
+		if (memberCnt ==0) {
+
+			int result = boardService.insertStudy(studyId,appliId,appliContent);
+			if(result>0) {
+				String msg ="지원이 완료 되었습니다.";
+
+				redirectAttr.addFlashAttribute("msg",msg);
+				return "redirect:/board/studyDetail.do?id=" + postId;
+			}else {
+				String msg ="지원신청을 다시 해주세요.";
+				redirectAttr.addFlashAttribute("msg",msg);
+				return "redirect:/board/studyDetail.do?id=" +postId;
+			}
+		}else {
+			String msg ="지원 후 리더의 승인 대기 상태입니다. .";
+			redirectAttr.addFlashAttribute("msg",msg);
+			return "redirect:/board/studyDetail.do?id=" +postId;
+		}
+	}
+
+	@GetMapping("/myStudyList.do")
+	@ResponseBody
+	public List<StudyList> myStudyList(@AuthenticationPrincipal MemberDetails member ) {
+		List<StudyList> post = boardService.findStudyList(member.getMemberId());
+		log.debug("post = {}",post);
+		//	    model.addAttribute("post", post);
+		return post;
+	}
+
+	@GetMapping("/myStudy.do")
+	public void myStudy(@RequestParam int id, Model model) {
+		Study myStudy = boardService.myStudyFindById(id);
+		model.addAttribute("myStudy",myStudy);
+		List<BoardListDto> myStudyNotice = boardService.findAllByBoardId(id);
+		System.out.println("myStudyNotice = " + myStudyNotice);
+		
+		BoardListDto postDetail = boardService.findById(id);
+		if(postDetail != null) {
+			Board board = boardService.findBoardName(postDetail.getBoardId());
+			model.addAttribute("board",board );
+			System.out.println(board);
+		}
+
+		PostAttachment postAttach = boardService.findAttachById(id);
+		model.addAttribute("postDetail", postDetail);
+
+		System.out.println(postDetail);
+		model.addAttribute("postAttach",postAttach);
+
+		int findStudyId = boardService.findStudyId(id);
+		List<StudyInfo> info = boardService.finAllStudyAppli(findStudyId);
+		model.addAttribute("info",info);
+		System.out.println(info);
+	}
+	
+	@PostMapping("appliCheck.do")
+	@ResponseBody
+	public ResponseEntity<?> appliCheck (@RequestParam String memberId, @RequestParam String check, @RequestParam  int studyId ){
+		if(check =="approve") {
+			int result = boardService.updateStudyInfo(memberId,studyId);
+			return ResponseEntity
+					.status(HttpStatus.OK).body(null);
+		}else {
+			int result = boardService.deleteStudyInfo(memberId,studyId);
+			return ResponseEntity
+					.status(HttpStatus.OK).body(null);
 		}
 
 	}

@@ -13,6 +13,7 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
@@ -169,6 +170,26 @@ public interface BoardService {
 	int insertStudy(int studyId, String appliId, String appliContent);
 
 	List<JobKorea> getJobKoreaDatas (int page, int limit, String keyword) throws IOException;
+	
+	int checkStudy(int studyId, String appliId);
+
+	List<StudyList> findStudyList(String memberId);
+	
+
+	List<BoardListDto> findAllByBoardId(int id);
+	int findStudyId(int findId);
+
+	int insertStudyInfo(String memberId, int findStudyId);
+
+	String findReceivedIdByPostId(int postId);
+
+	List<StudyInfo> finAllStudyAppli(int findStudyId);
+
+	Study myStudyFindById(int id);
+
+	int updateStudyInfo(String memberId, int studyId);
+
+	int deleteStudyInfo(String memberId, int studyId);
 
 
 }
