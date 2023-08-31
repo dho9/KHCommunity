@@ -660,7 +660,6 @@ p.infoTitles {
 			</p>
 			<div class="myPageDivs" id="messageBoxDiv">
 				<table class="table table-hover" id="messageTbl">
-<<<<<<< HEAD
     <thead>
         <tr>
             <th>제목</th>
