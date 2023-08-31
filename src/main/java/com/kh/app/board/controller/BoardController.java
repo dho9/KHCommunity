@@ -1280,20 +1280,58 @@ public class BoardController {
 	
 	@PostMapping("/studyApply.do")
 	public String studyApply(@RequestParam int studyId,@RequestParam int postId, @RequestParam String appliId,@RequestParam String appliContent,RedirectAttributes redirectAttr) {
-
-		int result = boardService.insertStudy(studyId,appliId,appliContent);
-		if(result>0) {
-			String msg ="지원이 완료 되었습니다.";
-			redirectAttr.addFlashAttribute("msg",msg);
-			return "redirect:/board/studyDetail.do?id=" + postId;
+		
+		int memberCnt = boardService.checkStudy(studyId,appliId);
+		if (memberCnt ==0) {
+			
+			int result = boardService.insertStudy(studyId,appliId,appliContent);
+			if(result>0) {
+				String msg ="지원이 완료 되었습니다.";
+				
+				redirectAttr.addFlashAttribute("msg",msg);
+				return "redirect:/board/studyDetail.do?id=" + postId;
+			}else {
+				String msg ="지원신청을 다시 해주세요.";
+				redirectAttr.addFlashAttribute("msg",msg);
+				return "redirect:/board/studyDetail.do?id=" +postId;
+			}
 		}else {
-			String msg ="지원신청을 다시 해주세요.";
+			String msg ="지원 후 리더의 승인 대기 상태입니다. .";
 			redirectAttr.addFlashAttribute("msg",msg);
 			return "redirect:/board/studyDetail.do?id=" +postId;
 		}
 				
 				
 	}
+	
+	@GetMapping("/myStudyList.do")
+	@ResponseBody
+	public List<StudyList> myStudyList(@AuthenticationPrincipal MemberDetails member ) {
+		List<StudyList> post = boardService.findStudyList(member.getMemberId());
+		log.debug("post = {}",post);
+		//	    model.addAttribute("post", post);
+		return post;
+	}
+	
+	@GetMapping("/myStudy.do")
+	public void myStudy(@RequestParam int id, Model model) {
+		
+		BoardListDto postDetail = boardService.findById(id);
+		if(postDetail != null) {
+			
+			Board board = boardService.findBoardName(postDetail.getBoardId());
+			model.addAttribute("board",board );
+			System.out.println(board);
+		}
+		
+		PostAttachment postAttach = boardService.findAttachById(id);
+		model.addAttribute("postDetail", postDetail);
+		
+		System.out.println(postDetail);
+		model.addAttribute("postAttach",postAttach);
+		
+	}
+
 	
 }
 
