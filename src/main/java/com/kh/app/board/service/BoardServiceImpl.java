@@ -585,6 +585,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public String findReceivedIdByCommentRef(int ref) {
+		// TODO Auto-generated method stub
+		return boardRepository.findReceivedIdByCommentRef(ref);
+	}
+	
 	public List<StudyMemberDto> findStudyMember(int studyId) {
 		return boardRepository.findStudyMember(studyId);
 	}

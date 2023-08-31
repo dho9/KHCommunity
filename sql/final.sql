@@ -1471,9 +1471,10 @@ select * from post;
 select * from chat_room;
 delete chat_room where chat_id between 119 and 140;
 
-
+select * from post_comment;
 select * from alarm;
-
+select * from student;
+select * from post_comment where comment_id = 295;
 update alarm set read_check = 'n' where received_id = 'khendev23';
 
 SELECT *
@@ -1654,6 +1655,7 @@ WHERE
   select * from study;
   select * from study_info;
   
+<<<<<<< HEAD
   select * from post where board_id = 6 order by 1 desc;
   select * from post order by 2 desc;
   select * from study order by 1 desc;
@@ -1671,47 +1673,5 @@ WHERE
 			s.study_id=26 and si.application_check = 1
         order by
             4 desc;
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  select * from report;
+  select * from vacation;

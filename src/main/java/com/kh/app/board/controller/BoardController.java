@@ -611,6 +611,11 @@ public class BoardController {
 	                .commentRef(ref)
 	                .anonymousCheck(_comment.isAnonymousCheck()).build();
 	        int result = boardService.createComment(comment);
+	        
+	        String receivedId = boardService.findReceivedIdByCommentRef(ref);
+	        
+	        result = notificationService.notifyCocomment(comment, receivedId);
+	        
 	        return ResponseEntity
 	                .status(HttpStatus.OK).body(null);
 	    } else if (member != null && (_comment.getCommentRef() == null || _comment.getCommentRef().isEmpty())) {
