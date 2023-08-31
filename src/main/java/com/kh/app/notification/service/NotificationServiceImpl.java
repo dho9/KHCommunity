@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.app.board.entity.Comment;
 import com.kh.app.chat.entity.Talker;
 import com.kh.app.messageBox.entity.AnonymousCheck;
 import com.kh.app.messageBox.entity.MessageBox;
@@ -63,6 +64,7 @@ public class NotificationServiceImpl implements NotificationService {
 		String realSendID = message.getSendId();
 		
 		MsgPayload payload = MsgPayload.builder()
+				.alarmId(0)
 				.sendId(sendId)
 				.receivedId(to)
 				.anonymousCheck(message.getAnonymousCheck())
@@ -70,15 +72,13 @@ public class NotificationServiceImpl implements NotificationService {
 				.createdAt(System.currentTimeMillis())
 				.alarmType(AlarmType.m)
 				.build();
-		
+
+		// db저장
+		int alarmId = notificationRepository.insertMessageAlarm(payload);
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/msgnotice/" + to, payload);
 		
-		payload.setSendId(realSendID);
-		payload.setContent(realSendID + "님이 쪽지를 보냈습니다.");
-		// db저장
-		int result = notificationRepository.insertMessageAlarm(payload);
-		return result;
+		return alarmId;
 	}
 	
 	// 관리자 페이지에서 쪽지 보낼 때 받는 사람에게 알림
@@ -101,7 +101,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.build();
 				
 		// db저장
-		int alarmId = notificationRepository.insertMessageAlarmFromAdmin(payload);
+		int alarmId = notificationRepository.insertMessageAlarm(payload);
 		
 //		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		
@@ -149,4 +149,38 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 
+	// 댓글쓰면 게시글 게시자에게 알림
+	@Override
+	public int notifyComment(Comment comment, String receivedId) {
+		// 알림 받을 대상
+		String to = receivedId;
+						
+		// 알림 보내는 대상(관리자)
+		String sendId = "";
+		
+		// 익명인지 아닌지
+		if(comment.isAnonymousCheck()) {
+			sendId = "익명";
+		} else {
+			sendId = comment.getMemberId();
+		}
+				
+		MsgPayload payload = MsgPayload.builder()
+				.alarmId(0)
+				.sendId(sendId)
+				.receivedId(to)
+				.content(sendId + "님이 댓글을 남겼습니다.")
+				.createdAt(System.currentTimeMillis())
+				.alarmType(AlarmType.c)
+				.postId(comment.getPostId())
+				.build();
+		
+		int alarmId = notificationRepository.insertCommentAlarm(payload);
+		
+		// 특정 사용자에게 알림
+		simpMessagingTemplate.convertAndSend("/topic/commentNotice/" + to, payload);
+		
+		return 0;
+	}
+	
 }
