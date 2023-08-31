@@ -1655,7 +1655,6 @@ WHERE
   select * from study;
   select * from study_info;
   
-<<<<<<< HEAD
   select * from post where board_id = 6 order by 1 desc;
   select * from post order by 2 desc;
   select * from study order by 1 desc;
