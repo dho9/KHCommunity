@@ -259,6 +259,11 @@ public interface BoardRepository {
 	@Select("select * from study where study_id in ( select study_id from study_info where member_id =#{memberId} and APPLICATION_CHECK=1)")
 	List<StudyList> findStudyList(String memberId);
 
+	@Select("select * from study where board_id=#{id}")
+	Study myStudyFindById(int id);
+
+	List<BoardListDto> findAllByBoardId(int id);
+
 
 	
 

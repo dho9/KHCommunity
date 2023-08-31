@@ -172,5 +172,9 @@ public interface BoardService {
 
 	List<StudyList> findStudyList(String memberId);
 
+	Study myStudyFindById(int id);
+
+	List<BoardListDto> findAllByBoardId(int id);
+
 
 }
