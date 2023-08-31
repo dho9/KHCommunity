@@ -169,6 +169,8 @@ public interface BoardService {
 
 	int insertStudy(int studyId, String appliId, String appliContent);
 
+	List<JobKorea> getJobKoreaDatas (int page, int limit, String keyword) throws IOException;
+	
 	int checkStudy(int studyId, String appliId);
 
 	List<StudyList> findStudyList(String memberId);

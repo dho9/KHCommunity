@@ -13,6 +13,15 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-touch-callout: none;
+}
+@font-face {font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight: normal;font-style: normal;}
+body {
+	font-family: 'GmarketSansMedium';
+}
 #myClassBoard-div2 {
 	border: 4px solid #fff;
     border-radius: 63px;
@@ -98,7 +107,7 @@
 		<div id="post-div" class="d-flex justify-content-center">
 			<div class="card border-primary mb-3">
 			  <div class="card-header">
-			  	<h3>${postDetail.title}</h3>
+			  	<h3 style="background-color: #4169e100;">${postDetail.title}</h3>
 			  	<h5>${postDetail.memberName} | 
 				  	<fmt:parseDate value="${postDetail.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 					<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd" />
@@ -128,7 +137,12 @@
 					<c:forEach items="${comments}" var="comment">
 						<c:if test="${comment.commentLevel eq 1}">
 						  <li class="list-group-item">
+						  <c:if test="${postDetail.memberId eq comment.memberId}">
+						  	<b>${comment.memberName} (작성자)</b>
+						  </c:if>
+						  <c:if test="${postDetail.memberId ne comment.memberId}">
 						  	<b>${comment.memberName}</b>
+						  </c:if>
 						  	<span>
 						  		<fmt:parseDate value="${comment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
 							  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
@@ -144,7 +158,12 @@
 							<c:if test="${childComment.commentLevel eq 2 && childComment.commentRef eq comment.commentId}">
 							  <li class="list-group-item ml-2">
 							  	<i class="bi bi-arrow-return-right"></i>
-							    <b>${childComment.memberName}</b>
+							  	<c:if test="${postDetail.memberId eq childComment.memberId}">
+							  	  <b>${childComment.memberName} (작성자)</b>
+							    </c:if>
+							    <c:if test="${postDetail.memberId ne childComment.memberId}">
+							      <b>${childComment.memberName}</b>
+							    </c:if>
 							    <span>
 							  		<fmt:parseDate value="${childComment.commentCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
 								  	<fmt:formatDate value="${createdAt}" pattern="yyyy.MM.dd HH:mm" />
