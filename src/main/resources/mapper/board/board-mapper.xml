@@ -365,6 +365,8 @@
 			s.study_id = si.study_id
 		where 
 			s.study_id=#{studyId} and si.application_check = 1
+		order by
+			4 desc
 	</select>
 	
   <resultMap type="studyMemberDto" id="studyMemberDtoMap">

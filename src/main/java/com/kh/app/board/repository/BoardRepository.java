@@ -293,5 +293,14 @@ public interface BoardRepository {
 	
 	@Select ("select * from study where study_id=#{studyId}")
 	Study findByStudyleaderName(int studyId);
+
+	@Delete ("delete from post where board_id=#{deleteStudyBoardId}")
+	int deleteStudyBoard(int deleteStudyBoardId);
+
+	@Delete("delete from study where study_id=#{deleteStudyId}")
+	int deleteStudy(int deleteStudyId);
+
+	@Delete("delete from board where board_id=#{deleteStudyBoardId}")
+	int deleteBoardType(int deleteStudyBoardId);
 	
 }

@@ -1216,5 +1216,22 @@ public class BoardController {
 		}
 
 	}
+	
+	@PostMapping("deleteStudy.do")
+	public String deleteStudy(
+			@RequestParam int deleteStudyId,
+			@RequestParam int deleteStudyBoardId,
+			@RequestParam int deleteStudyPostId
+			) {
+		
+		int result = 0;
+		result = boardService.deleteBoard(deleteStudyPostId);
+		result = boardService.deleteStudyBoard(deleteStudyBoardId);
+		result = boardService.deleteStudy(deleteStudyId);
+		result = boardService.deleteBoardType(deleteStudyBoardId);
+		
+		
+		return "redirect:/board/studyBoardList.do";
+	}
 
 }
