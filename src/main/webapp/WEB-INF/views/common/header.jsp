@@ -153,7 +153,7 @@
                 <li id="myClass" style="cursor: pointer;"><a>우리반</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/studyBoardList.do" style="text-decoration: none;">스터디</a></li>
                 <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
             </ul>
         </div>
@@ -181,7 +181,6 @@
 				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do" class="new" style="text-decoration: none;">정보공유</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/askCodeBoardList.do" class="new" style="text-decoration: none;">코드질문</a></li>
-				<li><a href="${pageContext.request.contextPath}/board/studyBoardList.do" class="new" style="text-decoration: none;">스터디</a></li>
 				</ul>
 			</div>
 			<div class="divider"></div>
@@ -441,6 +440,9 @@
 					                alarmContent.style.borderColor = "grey";
 					                checkBtn.style.display="none";
 					                alarmImg.style.animation = "";
+					                if(alarmType=='s'){
+						          		 window.location.href = '/kh/board/studyBoardList.do';
+						          	}
 					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
 					            },
 					            error: function() {

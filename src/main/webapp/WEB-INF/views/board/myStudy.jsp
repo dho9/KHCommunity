@@ -638,8 +638,12 @@ p.infoTitles {
 							👨‍🦲&nbsp; ${studyMember.memberId}
 							</p>
 							<c:if test="${loginMember.username eq studyMember.readerId}">
-								<button type="button" onclick="console.log('추방')" style="border-radius: 8px;background-color: #c62917;border: none; width: 18%;color: white;font-weight: bold;margin-bottom: 13px;">추방</button>
+								 <button type="button" onclick="deleteStudyMember('${studyMember.memberId}','${studyMember.studyId }')" style="border-radius: 8px;background-color: #c62917;border: none; width: 18%;color: white;font-weight: bold;margin-bottom: 13px;">추방</button>
 							</c:if>
+							<c:if test="${loginMember.username eq studyMember.memberId}">
+								 <button type="button" onclick="quitStudyMember('${studyMember.studyId }')" style="border-radius: 8px;background-color: #c62917;border: none; width: 18%;color: white;font-weight: bold;margin-bottom: 13px;">탈퇴</button>
+							</c:if>
+							
 						</div>
 						<hr class="myPageHr"/>
 					</c:if>
@@ -670,6 +674,10 @@ p.infoTitles {
 					style="float: right;" onclick="showInputForm()">
 					<span class="material-symbols-outlined">edit</span>
 				</button>
+				<form:form name ="memberLogoutFrm" 
+        	action="${pageContext.request.contextPath}/member/memberLogout.do" 
+        	method="POST">
+		</form:form>
 			</div>
 		</c:if>
 
@@ -787,6 +795,8 @@ p.infoTitles {
 		<!-- 메인컨테이너 div끝 -->
 	</div>
 	<form:form name="hiddenForm"></form:form>
+	<form:form name="memberDeleteForm"></form:form>
+	<form:form name="quitStudyMemberFrm"></form:form>
 	</selction>
 	<script>
 	<%-- 스터디 끝내기 --%>
@@ -802,6 +812,10 @@ p.infoTitles {
 		
 	});
 	
+	document.getElementById("logoutBtn").addEventListener("click", function(event) {
+		memberLogoutFrm.submit();
+	});
+	
 	var rows = document.getElementById('chatTblBody').getElementsByTagName('tr');
 	  for (let i = 0; i < rows.length; i++) {
 	    rows[i].addEventListener('click', function() {
@@ -813,6 +827,7 @@ p.infoTitles {
 	      }
 	    });
 	  }
+	  
 <%-- 글작성 폼 --%>
 function showInputForm() {
 	 
@@ -913,6 +928,56 @@ function sendActionToServer(memberId,check) {
             // 오류 처리
         }
     });
+}
+
+	
+function deleteStudyMember(memberid, studyid) {
+    console.log(memberid, studyid);
+
+    if(confirm('정말 추방하시겠습니까?')){
+    	
+	const token = document.memberDeleteForm._csrf.value;
+    
+    $.ajax({
+        url: "${pageContext.request.contextPath}/board/deleteStudyMember.do",
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": token
+        }, 
+        data: { memberId: memberid, studyId: studyid },
+        success: function (response) {
+        	alert('정상적으로 추방되었습니다.');	
+        	 location.reload();
+        },
+        error: function (error) {
+            console.error("에라에라");
+        }
+    });
+    }
+}
+function quitStudyMember(studyid) {
+    console.log(studyid);
+
+    if(confirm('정말 탈퇴하시겠습니까?')){
+    	
+	const token = document.quitStudyMemberFrm._csrf.value;
+    
+    $.ajax({
+        url: "${pageContext.request.contextPath}/board/quitStudyMember.do",
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": token
+        }, 
+        data: {  studyId: studyid },
+        success: function (response) {
+        	alert('정상적으로 탈퇴되었습니다.');	
+        	 window.location.href = '${pageContext.request.contextPath}/board/studyBoardList.do';
+        },
+        error: function (error) {
+            console.error("에라에라");
+        }
+    });
+    }
 }
 
 </script>

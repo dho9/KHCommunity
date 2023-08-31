@@ -17,6 +17,7 @@ import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.dto.StudyMemberDto;
+import com.kh.app.board.dto.StudyMemberId;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -206,7 +207,12 @@ public interface BoardService {
 	int deleteStudy(int deleteStudyId);
 
 	int deleteBoardType(int deleteStudyBoardId);
+	
+	int studyDeleteMember(String memberId, int studyid);
 
+	List<StudyMemberId> findStudyMemberIdList(int studyId);
+
+	int minusStudyCount(int studyId);
 
 
 }
