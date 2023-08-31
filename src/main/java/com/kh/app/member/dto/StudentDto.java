@@ -1,4 +1,4 @@
-package com.kh.app.member.controller;
+package com.kh.app.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

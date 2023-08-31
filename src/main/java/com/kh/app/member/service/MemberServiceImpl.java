@@ -20,9 +20,9 @@ import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
-import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentDto;
 import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
@@ -266,6 +266,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateAlarmReadCheck(int alarmId) {
 		return memberRepository.updateAlarmReadCheck(alarmId);
+	}
+	
+	@Override
+	public StudentDto findTeacher(String memberId) {
+		return memberRepository.findTeacher(memberId);
 	}
 	
 }

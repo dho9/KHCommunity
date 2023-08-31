@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -30,12 +31,25 @@ body {
 			<h2 class="title">우리반 게시판</h2>
 			<p>${loginMember.name}님, 반갑습니다. 'KH소통할까?'에 오신 걸 환영합니다.</p>
 		</div>
-		<div class="myClassBoard-subTitle">
-			<ul>
-				<li>${studentInfo.curriculumName}반</li>
-				<li>[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
-			</ul>
-		</div>
+		<c:if test="${authority eq '[STUDENT]'}">
+			<div class="myClassBoard-subTitle">
+				<ul>
+					<li>${studentInfo.curriculumName}반</li>
+					<li>[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
+				</ul>
+			</div>
+		</c:if>
+		<c:forEach items="${employeeInfo}" var="info">
+	  		<c:set var="now" value="<%= LocalDate.now() %>" />
+	   		<c:if test="${authority eq '[TEACHER]' and info.curriculumStartAt.compareTo(now) <= 0 && info.curriculumEndAt.compareTo(now) >= 0}">
+	   			<div class="myClassBoard-subTitle">
+					<ul>
+						<li>${info.curriculumName}반</li>
+						<li>[${info.classId}] ${loginMember.name} 강사님</li>
+					</ul>
+				</div>
+	   		</c:if>
+		</c:forEach>
 		
 		<!-- Button trigger modal -->
 		<button id="writePost" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">글쓰기</button>
@@ -91,12 +105,12 @@ body {
 				  <div class="input-group-prepend">
 				    <input style="width: 105px; height: 43px; background-color: #a6a6a6;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="게시판"/>
 				    <div class="dropdown-menu">
-				      <c:if test="${authority eq '[ADMIN]'}">
+				      <c:if test="${authority eq '[ADMIN]' or authority eq '[TEACHER]'}">
 				        <a class="dropdown-item">공지사항</a>
 				        <a class="dropdown-item">과제공유</a>
 				        <a class="dropdown-item">게시판</a>
 				      </c:if>
-					  <c:if test="${authority ne '[ADMIN]'}">
+					  <c:if test="${authority eq '[STUDENT]'}">
 					  	<a class="dropdown-item">과제공유</a>
 				        <a class="dropdown-item">게시판 </a>
 					  </c:if>

@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -22,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -55,11 +55,11 @@ import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.entity.Study;
 import com.kh.app.board.service.BoardService;
 import com.kh.app.common.HelloSpringUtils;
+import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
 
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -601,12 +601,17 @@ public class BoardController {
 
 	@GetMapping("/myClassBoardList.do")
 	public String myClassBoardList(@AuthenticationPrincipal MemberDetails principal,
-			@Valid StudentMypageInfoDto studentInfo, Model model) {
-		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-//        log.info("studentInfo = {}", studentInfo);
+			@Valid StudentMypageInfoDto studentInfo,
+			Model model) {
+		List<EmployeeInfoDto> employeeInfo = new ArrayList<EmployeeInfoDto>();
+		if(principal.getAuthorities().equals("[TEACHER]")) {
+			studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+		} else {
+			employeeInfo = memberService.findByEmployeeInfo(principal.getMemberId());
+		}
 		model.addAttribute("studentInfo", studentInfo);
+		model.addAttribute("employeeInfo", employeeInfo);
 		model.addAttribute("authority", principal.getAuthorities());
-
 		return "/board/myClassBoardList";
 	}
 
