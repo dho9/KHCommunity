@@ -19,5 +19,6 @@ public class VacationNonApprovementListDto {
 	private String classId;
 	private String teacherId;
 	private String teacherName;
+	private String studentId;
 	
 }

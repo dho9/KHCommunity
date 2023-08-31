@@ -189,5 +189,7 @@ public interface BoardService {
 
 	int deleteStudyInfo(String memberId, int studyId);
 
+	String findReceivedIdByCommentRef(int ref);
+
 
 }

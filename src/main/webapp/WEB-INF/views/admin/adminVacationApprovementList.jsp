@@ -31,7 +31,7 @@
 						
                     	<tr data-bs-toggle="modal" data-bs-target="#vacationDetailModal" data-row-id="${vs.count}" 
                     		data-vacationid="${student.vacationId}" data-teachername="${student.teacherName}" data-classid="${student.classId}"
-                    		data-curriculumname="${student.curriculumName}" data-studentname="${student.memberName}"
+                    		data-curriculumname="${student.curriculumName}" data-studentname="${student.memberName}" data-studentid="${student.studentId}"
                     		data-curriculum-startdate="${student.curriculumStartAt}" data-curriculum-enddate="${student.curriculumEndAt}"
                     		data-vacation-senddate="${student.vacationSendDate}" data-vacation-startdate="${student.vacationStartDate}"
                     		data-vacation-enddate="${student.vacationEndDate}" data-teacherid="${student.teacherId}" data-vacation-duration="${endDate - strDate + 1}" data-handle="@mdo">
@@ -88,7 +88,7 @@
         			<h1 class="modal-title fs-5" id="exampleModalLabel">휴가 승인</h1>
         			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       			</div>
-      			<form:form>
+      			<form:form name="modalFrm">
 	      			<div class="modal-body">
 	        			<div>
 	        				<span id="modalCurriculumName" style="font-size:17px; font-weight:700;"></span> <br>
@@ -96,17 +96,19 @@
 	        				<span id="modalEducateDuration" style="font-size:13px; color:darkgrey;"></span>
 	        			</div> <br>
 	        			<div>
-		        			<p>이름: <span id="modalStudentName"></span></p>
+		        			<p>이름: <span id="modalStudentName"></span>(<span id="modalStudentId"></span>)</p>
 		        			<p>1차 승인자(강사): <span id="modalTeacherName"></span></p>
 		        			<p>휴가 신청일: <span id="modalVacationSendDate"></span></p>
 		        			<p>휴가일: <span id="modalVacationDate"></span>&nbsp;
 		        			(<span id="modalVacationDuration"></span>일)</p>
-		        			<input type="hidden" id="modalVacationId">
+		        			<input type="hidden" id="modalVacationId" name="vacationId">
+		        			<input type="hidden" id="modalVacationStartDate" name="vacationStartDate">
+		        			<input type="hidden" id="modalVacationEndDate" name="vacationEndDate">
 	        			</div>
 	      			</div>
 	      			<div class="modal-footer">
-	        			<button type="button" class="btn btn-primary">승인</button>
-	        			<button type="button" class="btn btn-danger">반려</button>
+	        			<button type="button" id="btnOk" class="btn btn-primary">승인</button>
+	        			<button type="button" id="btnNo" class="btn btn-danger">반려</button>
 	      			</div>
       			</form:form>
     		</div>
@@ -160,6 +162,7 @@
           const vacationEndDate = row.getAttribute("data-vacation-enddate");
           const vacationDuration = row.getAttribute("data-vacation-duration");
           const vacationId = row.getAttribute("data-vacationid");
+          const studentId = row.getAttribute("data-studentid");
   
           // 모달 내의 입력 필드에 데이터 설정
           document.getElementById("modalCurriculumName").innerHTML = curriculumName;
@@ -170,18 +173,21 @@
           document.getElementById("modalVacationSendDate").innerHTML = vacationSendDate;
           document.getElementById("modalVacationDate").innerHTML = vacationStartDate + " ~ " + vacationEndDate;
           document.getElementById("modalVacationDuration").innerHTML = vacationDuration;
-          document.getElementById("modalVacationId").innerHTML = vacationId;
+          document.getElementById("modalVacationId").value = vacationId;
+          document.getElementById("modalStudentId").innerHTML = studentId;
+          document.getElementById("modalVacationStartDate").value = vacationStartDate;
+          document.getElementById("modalVacationEndDate").value = vacationEndDate;
         });
       });
     
       // 승인 버튼 클릭 이벤트 처리
-      $("#btnEdit").on("click", function () {
-        showConfirmation("${pageContext.request.contextPath}/admin/adminStudentUpdate.do");
+      $("#btnOk").on("click", function () {
+        showConfirmation("${pageContext.request.contextPath}/admin/adminVacationOk.do");
       });
   
       // 반려 버튼 클릭 이벤트 처리
-      $("#btnBan").on("click", function () {
-        showConfirmation("${pageContext.request.contextPath}/admin/adminStudentDelete.do");
+      $("#btnNo").on("click", function () {
+        showConfirmation("${pageContext.request.contextPath}/admin/adminVacationNo.do");
       });
       
       // 확인 메시지 표시 후 데이터 전송 함수 호출
@@ -194,21 +200,25 @@
       // 서버로 데이터를 전송하는 함수
       function sendDataToServer(url) {
         const modalFrm = document.modalFrm;
-        const studentId = modalFrm.firstId.value;
-        const studentType = modalFrm.studentType.value;
-        const receiveId = document.getElementById("receiveStudent").value;
-        const messageContent = document.getElementById("messageContent").value;
-  	  console.log(studentId);
+        const studentId = document.getElementById("modalStudentId").innerHTML;
+        const vacationId = modalFrm.vacationId.value;
+        const vacationStartDate = modalFrm.vacationStartDate.value;
+        const vacationEndDate = modalFrm.vacationEndDate.value;
+        
+        console.log(modalFrm);
+        console.log(studentId);
+        console.log(vacationId);
+        
         const token = document.modalFrm._csrf.value;
-        console.log(url);
+        
         $.ajax({
           type: "POST",
-          url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
+          url: url, // 승인 또는 반려에 따라 다른 URL 지정
           data: {
           	studentId,
-          	studentType,
-          	receiveId,
-          	messageContent,
+          	vacationId,
+          	vacationStartDate,
+          	vacationEndDate
           },
           headers: {
               "X-CSRF-TOKEN": token
@@ -218,7 +228,10 @@
             // 예: 성공 메시지를 표시하거나 다른 동작 수행
             
             alert('성공적으로 처리되었습니다.')
-            location.href="${pageContext.request.contextPath}/admin/adminStudentList.do";
+            location.href="${pageContext.request.contextPath}/admin/adminVacationApprovementList.do";
+          },
+          error(error) {
+        	  console.log("실패")
           }
         });
       }

@@ -284,6 +284,9 @@ public interface BoardRepository {
 	@Select("select member_id as receivedId from post where post_id = #{postId}")
 	String findReceivedIdByPostId(int postId);
 
+	@Select("select member_id as receivedId from post_comment where comment_id = #{ref}")
+	String findReceivedIdByCommentRef(int ref);
+
 
 	
 

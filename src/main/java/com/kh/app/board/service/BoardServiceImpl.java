@@ -555,5 +555,12 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.deleteStudyInfo(memberId,studyId);
 	}
+	
+	@Override
+	public String findReceivedIdByCommentRef(int ref) {
+		// TODO Auto-generated method stub
+		return boardRepository.findReceivedIdByCommentRef(ref);
+	}
+	
 }
 
