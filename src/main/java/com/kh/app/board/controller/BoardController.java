@@ -1062,6 +1062,7 @@ public class BoardController {
 		//		System.out.println(studyList);
 		return "/board/studyBoardList";
 	}
+	
 
 	@GetMapping("/studyDetail.do")
 	public void studyDetail(@RequestParam int id, Model model) {
