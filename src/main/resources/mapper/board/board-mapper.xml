@@ -337,6 +337,24 @@
 			1 desc
 	</select>
 	
+	<select id="findAllByBoardId" resultType="boardListDto">
+		select 
+	  		p.post_id,
+	  		p.member_id,
+		    p.title,
+		    p.post_created_at,
+		    c.content,
+		    p.board_id
+		from
+		    post p join post_content c
+		    	on
+		    p.post_id = c.post_id
+		where
+		    p.board_id=#{boardId}
+		order by
+			1 desc
+	</select>
+	
   <resultMap type="boardListDto" id="boardListDtoMap">
   	<id column="post_id" property="postId"/>
   	<result column="member_id" property="memberId"/>
