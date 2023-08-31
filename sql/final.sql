@@ -96,6 +96,7 @@
 --drop sequence seq_chat_message_no;
 --drop sequence seq_curriculum_id;
 --drop sequence seq_cal;
+--drop sequence seq_alarm_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -458,6 +459,16 @@ CREATE TABLE myclass (
     FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
 );
 
+CREATE TABLE alarm (
+    alarm_id number,
+    received_id varchar(30),
+    content varchar(400),
+    created_at date,
+    alarm_type char(1),
+    read_check char(1)
+);
+
+drop table alarm;
 CREATE TABLE alarm (
     alarm_id number,
     received_id varchar(30),
@@ -1616,3 +1627,15 @@ WHERE
     p.post_id = 216;
     select * from study;
     select * from study_info;
+    delete study_info;
+  select * from study_info;
+  select * from alarm; 
+  select * from message_box;
+  
+  select * from study where study_id in ( select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1);
+    
+  
+  select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1;
+  
+  update study_info set APPLICATION_CHECK = 1 where member_id = 'eogh';
+  

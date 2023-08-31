@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MsgPayload {
 
+	private int alarmId;
 	private String sendId;
 	private String receivedId;
 	private AnonymousCheck anonymousCheck;

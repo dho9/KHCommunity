@@ -502,6 +502,25 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.insertStudy(studyId,appliId,appliContent);
 	}
-	
+	@Override
+	public int checkStudy(int studyId, String appliId) {
+		// TODO Auto-generated method stub
+		return boardRepository.checkStudy(studyId,appliId);
+	}
+	@Override
+	public List<StudyList> findStudyList(String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findStudyList(memberId);
+	}
+	@Override
+	public int findStudyId(String memberId, int boardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findStudyId(memberId,boardId);
+	}
+	@Override
+	public int insertStudyInfo(String memberId, int findStudyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.insertStudyInfo(memberId,findStudyId);
+	}
 }
 

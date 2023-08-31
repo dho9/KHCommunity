@@ -383,7 +383,7 @@ public class AdminController {
 		int result = adminService.sendMessageToStudent(message);
 		
 		// 알림
-		result = notificationService.notifyMsgSendFromAdmin(message);
+		int alarmId = notificationService.notifyMsgSendFromAdmin(message);
 		
 		return "redirect:/admin/adminStudentList.do";
 	}

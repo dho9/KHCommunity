@@ -440,7 +440,7 @@
 			});
 			
 			const renderMessage = (message) => {
-				const {sendId, recieveId, content, createdAt, alarmType} = JSON.parse(message.body);
+				const {alarmId, sendId, recieveId, content, createdAt, alarmType} = JSON.parse(message.body);
 				console.log(sendId, recieveId, content, createdAt, alarmType);
 				
 				const alarmImgBox = document.querySelector("#alarmImgBox");
@@ -469,12 +469,17 @@
 				alarmContent.classList.add="alarmContainer"
 				const alarmBr = document.createElement('br');
 				
+				const uniqueId = Math.random().toString(36).substring(2, 15);
+				
 				if(alarmType === 'm'){
 					alarmContent.innerHTML = `
-				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-				        	✉️ 쪽지 <br>
-				        	\${content}
-				      	</div>
+						<form:form name="readCheckFrm">
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	✉️ 쪽지 <br>
+					        	\${content}
+					      	</div>
+					        <button type="button" id="isChecked-\${uniqueId}">확인</button>
+		    			</form:form>
 				    `;
 				} else if(alarmType === 'r') {
 		    		alarmContent.innerHTML = `
@@ -509,7 +514,42 @@
 				alarmContentBox.prepend(alarmBr);
 				alarmContentBox.prepend(alarmContent);
 				
+				const checkBtn = document.querySelector(`#isChecked-\${uniqueId}`);
+				const readCheckFrm = document.readCheckFrm;
 				
+				if(checkBtn){
+					checkBtn.addEventListener("click", function(){
+				      
+				    	const token = '${_csrf.token}';
+				        	
+				        $.ajax({
+				            type: "POST",
+				            url: "${pageContext.request.contextPath}/common/updateAlarmReadCheck.do",
+				            data: {
+				                alarmId
+				            },
+				            headers: {
+				                "X-CSRF-TOKEN": token
+				            },
+				            success: function(data) {
+					           	alarmContent.style.color="grey";
+					           	alarmContent.style.borderColor = "grey";
+					           	checkBtn.style.display="none";
+					           	alarmImg.style.animation = "";
+					           	window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
+				            },
+				            error: function() {
+				                console.log("실패")
+				            }
+				         });
+				        
+				    });
+				}
+				
+				/* alarmContent.addEventListener('click', () => {
+			        // 클릭 시 "마이 페이지"로 이동
+			        window.location.href = '/kh/member/myPage.do'; // 실제 주소로 대체해주세요
+			    }); */
 			    
 			}
 			
