@@ -1639,3 +1639,7 @@ WHERE
   
   update study_info set APPLICATION_CHECK = 1 where member_id = 'eogh';
   
+  select * from study where board_id =59;
+  select * from post where board_id = 59;
+  select * from study;
+  select * from study_info;

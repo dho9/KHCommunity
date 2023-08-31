@@ -223,11 +223,6 @@ ex ) 위치, 스터디내용 ...
 	  writeButton.style.display = "block";
 	  createForm.remove();
 	}
-	
-	
-	
-	  
 	  </script>
-	  
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

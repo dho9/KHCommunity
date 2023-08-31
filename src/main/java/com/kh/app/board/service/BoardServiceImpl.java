@@ -22,6 +22,7 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
@@ -512,10 +513,16 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.findStudyList(memberId);
 	}
+	
+	
 	@Override
-	public int findStudyId(String memberId, int boardId) {
+	public List<BoardListDto> findAllByBoardId(int id) {
+		return boardRepository.findAllByBoardId(id);
+	}
+	@Override
+	public int findStudyId( int boardId) {
 		// TODO Auto-generated method stub
-		return boardRepository.findStudyId(memberId,boardId);
+		return boardRepository.findStudyId(boardId);
 	}
 	@Override
 	public int insertStudyInfo(String memberId, int findStudyId) {
@@ -528,5 +535,25 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findReceivedIdByPostId(postId);
 	}
 	
+	@Override
+	public List<StudyInfo> finAllStudyAppli(int findStudyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.finAllStudyAppli(findStudyId);
+	}
+	@Override
+	public Study myStudyFindById(int id) {
+		// TODO Auto-generated method stub
+		return boardRepository.myStudyFindById(id);
+	}
+	@Override
+	public int updateStudyInfo(String memberId, int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.updateStudyInfo(memberId,studyId);
+	}
+	@Override
+	public int deleteStudyInfo(String memberId, int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudyInfo(memberId,studyId);
+	}
 }
 

@@ -13,6 +13,7 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.entity.Board;
@@ -171,12 +172,22 @@ public interface BoardService {
 	int checkStudy(int studyId, String appliId);
 
 	List<StudyList> findStudyList(String memberId);
+	
 
-	int findStudyId(String memberId, int findId);
+	List<BoardListDto> findAllByBoardId(int id);
+	int findStudyId(int findId);
 
 	int insertStudyInfo(String memberId, int findStudyId);
 
 	String findReceivedIdByPostId(int postId);
+
+	List<StudyInfo> finAllStudyAppli(int findStudyId);
+
+	Study myStudyFindById(int id);
+
+	int updateStudyInfo(String memberId, int studyId);
+
+	int deleteStudyInfo(String memberId, int studyId);
 
 
 }
