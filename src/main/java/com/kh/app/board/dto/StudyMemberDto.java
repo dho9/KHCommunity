@@ -1,9 +1,6 @@
 package com.kh.app.board.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,12 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudyInfo {
+public class StudyMemberDto {
+	private String readerId;
 	private int studyId;
 	private String memberId;
 	private String introduce;
 	private LocalDateTime studyApplicationAt;
-	private int applcationCheck;
-	
-	
+	private boolean applcationCheck;
 }

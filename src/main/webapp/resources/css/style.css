@@ -1614,7 +1614,7 @@ dl, ul, ol, menu, li {
 
 #container>div.articles>article h2.medium {
 	margin-bottom: 5px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1685,7 +1685,7 @@ dl, ul, ol, menu, li {
 #container div.card>div.board>a.article>p {
 	margin-bottom: 5px;
 	height: 36px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	white-space: normal;
 	overflow: hidden;
 	color: #444444;
@@ -1827,7 +1827,7 @@ dl, ul, ol, menu, li {
 
 #container div.card>div.board>a.list>p {
 	height: 17px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1839,7 +1839,7 @@ dl, ul, ol, menu, li {
 	float: right;
 	margin-left: 10px;
 	height: 17px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	color: #a6a6a6;
 	font-size: 11px;
 	letter-spacing: 0;
@@ -1853,7 +1853,7 @@ dl, ul, ol, menu, li {
 
 #container div.card>div.board>div.needauth>p {
 	margin-bottom: 10px;
-	line-height: 18px;
+	/* line-height: 18px; */
 	color: #a6a6a6;
 	font-size: 14px;
 }

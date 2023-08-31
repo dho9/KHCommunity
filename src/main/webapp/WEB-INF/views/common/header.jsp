@@ -16,7 +16,6 @@
 .new {
 	text-decoration: none;
 }
-
 #alarmTextBox{
 	font-size:15px;
 	display: inherit;
@@ -151,7 +150,7 @@
             <ul id="menu">
                 <li id="BoardHeaderBtn"><a href="#" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
-                <li id="myClass"><a>우리반</a></li>
+                <li id="myClass" style="cursor: pointer;"><a>우리반</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
@@ -202,27 +201,48 @@
 	<script>
 	document.querySelector('#myClass').addEventListener('click', () => {
 		const _memberId = '<sec:authentication property="name"/>';
+		const _authority = '<sec:authentication property="authorities"/>';
  	    const memberId = _memberId.replace(/&#64;/g, '@');
+ 	    const authority = _authority.replace(/&#91;/g, '').replace(/&#93;/g, '');
+		console.log('!!!!!!!!', authority);
 	    if(_memberId === 'anonymousUser') {
 	        alert('로그인이 필요합니다.');
 	    }
         else {
-	        $.ajax({
-	           url : "${pageContext.request.contextPath}/member/findStudentType.do",
-	           data : {
-	               memberId : memberId
-	           },
-	           success(responseData) {
-	               const {student} = responseData;
-	               const {curriculumId, studentType, boardId} = student;
-	               if(studentType != 's' || boardId == 0) {
-	                   alert('수강중인 학생만 이용가능합니다.');
-	               }
-	               else {
-	                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
-	               }
-	           }
-	        });
+        	if(authority === 'STUDENT') {
+        		console.log('학생입니다.');
+		        $.ajax({
+		           url : "${pageContext.request.contextPath}/member/findStudentType.do",
+		           data : {
+		               memberId : memberId
+		           },
+		           success(responseData) {
+		               const {student} = responseData;
+		               const {curriculumId, studentType, boardId} = student;
+		               if(studentType != 's' || boardId == 0) {
+		                   alert('수강중인 학생만 이용가능합니다.');
+		               }
+		               else {
+		                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+		               }
+		           }
+		        });
+        	}
+        	else {
+        		console.log('직원입니다.');
+        		$.ajax({
+ 		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
+ 		           data : {
+ 		               memberId : memberId
+ 		           },
+ 		           success(responseData) {
+ 		               const {teacher} = responseData;
+ 		               console.log(teacher);
+ 		               const {boardId} = teacher;
+	        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+ 		           }
+ 		        });
+        	}
         }
    });
 	
@@ -337,6 +357,16 @@
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
 					    		</form:form>
 						    `;
+				    	}else if(alarmType ==='s'){
+				    		alarmContent.innerHTML = `
+				    			<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	✏ 스터디 <br>
+							        	\${content}
+							      	</div>
+							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
+						    `;
 				    	}
 				    	
 				    } else {
@@ -376,7 +406,14 @@
 						        	\${content}
 						      	</div>
 						    `;
-			    		}
+			    		} else if(alarmType === 's') {
+			    			alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    		✏ 스터디 <br>
+						        	\${content}
+						      	</div>
+						    `;
+			    		} 
 				    }
 				    
 				    alarmContentBox.appendChild(alarmContent);
@@ -404,9 +441,7 @@
 					                alarmContent.style.borderColor = "grey";
 					                checkBtn.style.display="none";
 					                alarmImg.style.animation = "";
-					                if (readCheck === 'n'){
-					                	window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
-					                }
+					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
 					            },
 					            error: function() {
 					                console.log("실패")
@@ -550,6 +585,16 @@
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
 				      	</form:form>
 				    `;
+		    	}else if(alarmType === 's') {
+		    		alarmContent.innerHTML = `
+		    			<form:form name="readCheckFrm">	
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	✏스터디 <br>
+					        	\${content}
+					      	</div>
+					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+				      	</form:form>
+				    `;
 		    	}
 				
 				alarmContentBox.prepend(alarmBr);
@@ -573,11 +618,15 @@
 				                "X-CSRF-TOKEN": token
 				            },
 				            success: function(data) {
+				            	console.log(data+"asdsadsadsadsad");
 					           	alarmContent.style.color="grey";
 					           	alarmContent.style.borderColor = "grey";
 					           	checkBtn.style.display="none";
 					           	alarmImg.style.animation = "";
-					           	window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
+					          	if(alarmType=='s'){
+					          		 window.location.href = '/kh/board/studyBoardList.do';
+					          	}
+				            	
 				            },
 				            error: function() {
 				                console.log("실패")
@@ -595,6 +644,5 @@
 			}
 			
 		</script>
-		
 	</sec:authorize>
 	
