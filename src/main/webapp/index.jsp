@@ -179,12 +179,20 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
     const container  = $("#"+boardContainer);
     for (let i = 0; i < data.length; i++) {
         const post = data[i];
-        const postHTML = `<a href="${pageContext.request.contextPath}/board/boardDetail.do?id=\${post.postId}" class="article">
-            <p class="title">\${post.title}</p>
-            <p class="small">\${post.content}</p>
-            <h4>\${post.boardName} 게시판</h4>
-            <hr>
-        </a>`;
+        const postCreatedAt = post.postCreatedAt;
+        const date = new Date(postCreatedAt);
+
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+
+        const formattedDate = `\${month}/\${day} \${hours}:\${minutes}`;
+        const postHTML = `
+	        <a style="display: flex;" href="${pageContext.request.contextPath}/board/boardDetail.do?id=\${post.postId}" class="article">
+	            <p style="width: 60%;" class="title">\${post.title}</p>
+	            <p style="width: 30%; height: 1%; margin-left: 11%;" class="small">\${formattedDate}</p>
+	        </a>`;
         container.append(postHTML);
     }
 }

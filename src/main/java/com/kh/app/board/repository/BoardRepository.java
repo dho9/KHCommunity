@@ -16,6 +16,7 @@ import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
@@ -180,13 +181,13 @@ public interface BoardRepository {
 	        "values(seq_report_id.nextval, #{commentId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
 	int insertCommentReport(CommentReportDto commentReport);
 
-	@Select("SELECT p.post_id, p.title, pc.content, b.board_name\r\n"
+	@Select("SELECT p.post_id, p.title, pc.content, b.board_name, p.post_created_at\r\n"
 			+ "FROM post p\r\n"
 			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
 			+ "left join board b on b.board_id = p.board_id\r\n"
 			+ "WHERE p.board_id = #{boardId}\r\n"
 			+ "ORDER BY p.post_created_at DESC\r\n"
-			+ "FETCH FIRST 3 ROWS ONLY")
+			+ "FETCH FIRST 5 ROWS ONLY")
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
 	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=#{boardId} and tag =#{tag}")
@@ -252,7 +253,6 @@ public interface BoardRepository {
 
 	@Insert("insert into study_info (study_id, member_id, introduce, study_application_at, application_check) values(#{studyId},#{appliId}, #{appliContent},default,default )")
 	int insertStudy(int studyId, String appliId, String appliContent);
-
 
 	
 
