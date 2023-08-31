@@ -729,6 +729,7 @@ p.infoTitles {
 				</div>
 
 			</div>
+			
 		</c:if>
 		<c:forEach var="info" items="${info}">
 			<script>
