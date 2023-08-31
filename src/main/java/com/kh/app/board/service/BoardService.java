@@ -176,5 +176,7 @@ public interface BoardService {
 
 	int insertStudyInfo(String memberId, int findStudyId);
 
+	String findReceivedIdByPostId(int postId);
+
 
 }

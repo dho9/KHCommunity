@@ -265,6 +265,9 @@ public interface BoardRepository {
 	@Insert("insert into study_info (study_id, member_id,application_check) values(#{findStudyId},#{memberId}, 1)")
 	int insertStudyInfo(String memberId, int findStudyId);
 
+	@Select("select member_id as receivedId from post where post_id = #{postId}")
+	String findReceivedIdByPostId(int postId);
+
 
 	
 

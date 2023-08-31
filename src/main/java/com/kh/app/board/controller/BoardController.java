@@ -58,6 +58,7 @@ import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.service.MemberService;
+import com.kh.app.notification.service.NotificationService;
 
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +81,9 @@ public class BoardController {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@Value("${spring.servlet.multipart.location}")
 	private String multipartLocation;
@@ -669,6 +673,11 @@ public class BoardController {
 	                .commentRef(0)
 	                .anonymousCheck(_comment.isAnonymousCheck()).build();
 	        int result = boardService.createComment(comment);
+	        
+	        String receivedId = boardService.findReceivedIdByPostId(_comment.getPostId());
+	        
+	        result = notificationService.notifyComment(comment, receivedId);
+	        
 	        return ResponseEntity
 	                .status(HttpStatus.OK).body(null);
 	    } else {
