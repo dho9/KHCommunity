@@ -346,6 +346,16 @@
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
 					    		</form:form>
 						    `;
+				    	}else if(alarmType ==='s'){
+				    		alarmContent.innerHTML = `
+				    			<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	✏ 스터디 <br>
+							        	\${content}
+							      	</div>
+							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
+						    `;
 				    	}
 				    	
 				    } else {
@@ -385,7 +395,14 @@
 						        	\${content}
 						      	</div>
 						    `;
-			    		}
+			    		} else if(alarmType === 's') {
+			    			alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    		✏ 스터디 <br>
+						        	\${content}
+						      	</div>
+						    `;
+			    		} 
 				    }
 				    
 				    alarmContentBox.appendChild(alarmContent);
@@ -413,9 +430,7 @@
 					                alarmContent.style.borderColor = "grey";
 					                checkBtn.style.display="none";
 					                alarmImg.style.animation = "";
-					                if (readCheck === 'n'){
-					                	window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
-					                }
+					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
 					            },
 					            error: function() {
 					                console.log("실패")
@@ -559,6 +574,16 @@
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
 				      	</form:form>
 				    `;
+		    	}else if(alarmType === 's') {
+		    		alarmContent.innerHTML = `
+		    			<form:form name="readCheckFrm">	
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	✏스터디 <br>
+					        	\${content}
+					      	</div>
+					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+				      	</form:form>
+				    `;
 		    	}
 				
 				alarmContentBox.prepend(alarmBr);
@@ -582,11 +607,15 @@
 				                "X-CSRF-TOKEN": token
 				            },
 				            success: function(data) {
+				            	console.log(data+"asdsadsadsadsad");
 					           	alarmContent.style.color="grey";
 					           	alarmContent.style.borderColor = "grey";
 					           	checkBtn.style.display="none";
 					           	alarmImg.style.animation = "";
-					           	window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
+					          	if(alarmType=='s'){
+					          		 window.location.href = '/kh/board/studyBoardList.do';
+					          	}
+				            	
 				            },
 				            error: function() {
 				                console.log("실패")
@@ -604,6 +633,5 @@
 			}
 			
 		</script>
-		
 	</sec:authorize>
 	

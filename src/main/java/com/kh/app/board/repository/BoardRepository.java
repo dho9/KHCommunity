@@ -285,8 +285,10 @@ public interface BoardRepository {
 	@Select("select member_id as receivedId from post where post_id = #{postId}")
 	String findReceivedIdByPostId(int postId);
 
+	@Update(" update study set study_people = study_people+1 where study_id =#{studyId}")
+	int updateStudyCount(int studyId);
 	
-
-	
+	@Select ("select * from study where study_id=#{studyId}")
+	Study findByStudyleaderName(int studyId);
 	
 }

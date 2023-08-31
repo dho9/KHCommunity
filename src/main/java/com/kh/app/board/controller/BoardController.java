@@ -75,6 +75,8 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
 	@Autowired
+	private NotificationService notificationService;
+	@Autowired
 	private BoardService boardService;
 
 	@Autowired
@@ -82,9 +84,6 @@ public class BoardController {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
-	
-	@Autowired
-	private NotificationService notificationService;
 	
 	@Value("${spring.servlet.multipart.location}")
 	private String multipartLocation;
@@ -1123,8 +1122,11 @@ public class BoardController {
 			int result = boardService.insertStudy(studyId,appliId,appliContent);
 			if(result>0) {
 				String msg ="지원이 완료 되었습니다.";
-
 				redirectAttr.addFlashAttribute("msg",msg);
+				Study study= boardService.findByStudyleaderName(studyId);
+				String mssage = study.getStudyName()+"의 스터디모임에 신청요청이 들어왔습니다.";
+				
+				int alarmId = notificationService.notifyAlamSendFromMemberId(study.getMemberId(),mssage);
 				return "redirect:/board/studyDetail.do?id=" + postId;
 			}else {
 				String msg ="지원신청을 다시 해주세요.";
@@ -1176,12 +1178,22 @@ public class BoardController {
 	@PostMapping("appliCheck.do")
 	@ResponseBody
 	public ResponseEntity<?> appliCheck (@RequestParam String memberId, @RequestParam String check, @RequestParam  int studyId ){
-		if(check =="approve") {
-			int result = boardService.updateStudyInfo(memberId,studyId);
+		System.out.println(check);
+		int result=0;
+		int alarmId=0;
+		if(check.equals("approve")) {
+			result = boardService.updateStudyInfo(memberId,studyId);
+			result = boardService.updateStudyCount(studyId);
+			String msg = "스터디지원이 승인되었습니다. 나의 스터디 목록에서 스터디 게시판을 이용 할 수 있습니다.";
+			alarmId = notificationService.notifyAlamSendFromMemberId(memberId,msg);
 			return ResponseEntity
 					.status(HttpStatus.OK).body(null);
 		}else {
-			int result = boardService.deleteStudyInfo(memberId,studyId);
+			result = boardService.deleteStudyInfo(memberId,studyId);
+			// 알림
+			String msg = "스터디지원이 반려되었습니다.";
+			alarmId = notificationService.notifyAlamSendFromMemberId(memberId,msg);
+			
 			return ResponseEntity
 					.status(HttpStatus.OK).body(null);
 		}

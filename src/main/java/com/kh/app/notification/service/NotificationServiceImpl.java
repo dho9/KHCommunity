@@ -117,6 +117,38 @@ public class NotificationServiceImpl implements NotificationService {
 		return alarmId;
 	}
 	
+	@Override
+	public int notifyAlamSendFromMemberId(String memberId, String msg) {
+		String to = memberId;
+		String sendId = "system";
+		
+		MsgPayload payload = MsgPayload.builder()
+				.alarmId(0)
+				.sendId(sendId)
+				.receivedId(to)
+				.content(msg)
+				.createdAt(System.currentTimeMillis())
+				.alarmType(AlarmType.s)
+				.build();
+				
+		// db저장
+		int alarmId = notificationRepository.insertMessageAlarm(payload);
+		
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		
+//		resultMap.put("alarmId", payload.getAlarmId());
+//		
+//		System.out.println(resultMap);
+//		System.out.println(payload.getAlarmId());
+//		payload.setAlarmId(payload.getAlarmId());
+		
+		// 특정 사용자에게 알림
+		simpMessagingTemplate.convertAndSend("/topic/msgnotice/" + to, payload);
+		
+		return alarmId;
+	}
+
+
 	// 댓글쓰면 게시글 게시자에게 알림
 	@Override
 	public int notifyComment(Comment comment, String receivedId) {
