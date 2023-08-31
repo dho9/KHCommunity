@@ -25,6 +25,7 @@ import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
+import com.kh.app.board.dto.StudyMemberDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -581,6 +582,11 @@ public class BoardServiceImpl implements BoardService {
 	public int deleteStudyInfo(String memberId, int studyId) {
 		// TODO Auto-generated method stub
 		return boardRepository.deleteStudyInfo(memberId,studyId);
+	}
+	
+	@Override
+	public List<StudyMemberDto> findStudyMember(int studyId) {
+		return boardRepository.findStudyMember(studyId);
 	}
 	@Override
 	public int updateStudyCount(int studyId) {

@@ -270,6 +270,12 @@ p.infoTitles {
 }
 
 /* 사이드 버튼 css */
+<<<<<<< HEAD
+#mypageBtns{width:90%; margin: 0 auto;}
+.mypageBtn{text-decoration: none; font-family: 'GmarketSansMedium';font-weight: 100; font-size: 15px; width: 60%; color: #4d4d4d;}
+.mypageBtn a{text-decoration: none;}
+.mypageBtn:hover{cursor: pointer; color: royalblue;}
+=======
 #mypageBtns {
 	width: 90%;
 	margin: 0 auto;
@@ -293,6 +299,7 @@ p.infoTitles {
 	cursor: pointer;
 	color: royalblue;
 }
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 
 /* 회원 관련 css */
 #InfoModal {
@@ -590,6 +597,38 @@ p.infoTitles {
 			<p />
 			<button type="button" id="logoutBtn">로그아웃</button>
 		</div>
+<<<<<<< HEAD
+			
+			<!-- 회원목록 추가할것.  리더는 강퇴버튼도 있게..-->
+			<div id="mypageBtns">
+				<c:forEach items="${studyMembers}" var="studyMember">
+					<c:if test="${studyMember.readerId eq studyMember.memberId}">
+					<div style="display: flex;flex-direction: row;align-items: center;">
+						<p class="mypageBtn" id="memberInfo">🤴&nbsp; ${studyMember.readerId}</p>
+					</div>
+						<hr class="myPageHr"/>
+					</c:if>
+					<c:if test="${studyMember.readerId ne studyMember.memberId}">
+						<div style="display: flex;flex-direction: row;align-items: center;">
+							<p class="mypageBtn" id="memberInfo">
+							👨‍🦲&nbsp; ${studyMember.memberId}
+							</p>
+							<c:if test="${loginMember.username eq studyMember.readerId}">
+								<button type="button" onclick="console.log('추방')" style="border-radius: 8px;background-color: #c62917;border: none; width: 18%;color: white;font-weight: bold;">추방</button>
+							</c:if>
+						</div>
+						<hr class="myPageHr"/>
+					</c:if>
+				</c:forEach>
+				<hr class="myPageHr"/>
+			</div>
+			<hr class="myPageHr"/>
+		</div>
+		<form:form name ="memberLogoutFrm" 
+        	action="${pageContext.request.contextPath}/member/memberLogout.do" 
+        	method="POST">
+		</form:form>
+=======
 
 		<!-- 회원목록 추가할것.  리더는 강퇴버튼도 있게..-->
 		<div id="mypageBtns">
@@ -614,7 +653,13 @@ p.infoTitles {
 		</div>
 
 		<hr class="myPageHr" />
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 	</div>
+<<<<<<< HEAD
+ 
+ 	<!-- 메인 div 시작 -->
+	<div id= "main-container" >
+=======
 	<form:form name="memberLogoutFrm"
 		action="${pageContext.request.contextPath}/member/memberLogout.do"
 		method="POST">
@@ -623,6 +668,7 @@ p.infoTitles {
 
 	<!-- 메인 div 시작 -->
 	<div id="main-container">
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 		<!-- 나의 수강정보 div -->
 		<div class="mypageContent">
 			<span class="classInfo">스터디 이름 &nbsp;&nbsp;</span>
@@ -650,6 +696,38 @@ p.infoTitles {
 			</p>
 			<div class="myPageDivs" id="messageBoxDiv">
 				<table class="table table-hover" id="messageTbl">
+<<<<<<< HEAD
+    <thead>
+        <tr>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성날짜</th>
+        </tr>
+    </thead>
+    <tbody id="messageBoxTbl">
+        <c:forEach items="${myStudyNotice}" var="studyNotice" varStatus="loop">
+            <tr>
+                <td class="studyNoticeTitle">${studyNotice.title}</td>
+                <td><span class="truncate-text">${studyNotice.content}</span></td>
+                <td>${studyNotice.postCreatedAt}</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div id="detailModal${loop.index}" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <div>
+                                <div>제목: ${studyNotice.title}</div>
+                                <div>내용: ${studyNotice.content}</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
+=======
 					<thead>
 						<tr>
 							<th>제목</th>
@@ -665,6 +743,7 @@ p.infoTitles {
 						</tr>
 					</tbody>
 				</table>
+>>>>>>> branch 'master' of https://github.com/MinHeeJ/KHCommunity.git
 				<div id="msgPagingDiv">
 					<ul class="pagination msgPagination">
 						<li class="page-item disabled" id="prevButton"><span
@@ -854,11 +933,5 @@ function sendActionToServer(memberId,check) {
     });
 }
 
-
-
-
-	
 </script>
-
-
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

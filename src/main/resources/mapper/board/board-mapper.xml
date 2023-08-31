@@ -355,6 +355,28 @@
 			1 desc
 	</select>
 	
+	<select id="findStudyMember" resultType="studyMemberDto">
+		select 
+		    s.member_id reader_id,
+		    si.*
+		from 
+			study s join study_info si
+			on
+			s.study_id = si.study_id
+		where 
+			s.study_id=#{studyId} and si.application_check = 1
+	</select>
+	
+  <resultMap type="studyMemberDto" id="studyMemberDtoMap">
+  	<result column="reader_id" property="readerId"/>
+  	<result column="studyId" property="study_id"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="introduce" property="introduce"/>
+  	<result column="study_application_at" property="studyApplicationAt"/>
+  	<result column="applcation_check" property="applcationCheck"/>
+  </resultMap> 		
+	
+	
   <resultMap type="boardListDto" id="boardListDtoMap">
   	<id column="post_id" property="postId"/>
   	<result column="member_id" property="memberId"/>
