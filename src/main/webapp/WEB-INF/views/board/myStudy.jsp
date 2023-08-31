@@ -128,7 +128,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 }
 .top_menu .title {
   text-align: center;
-  color: #bcbdc0;
   font-size: 20px;
 }
 
@@ -395,7 +394,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		</div>	
 		
 		
-		<!-- 상담내역 div -->
+		<!-- 신청현황 div -->
+		<c:if test="${myStudy.memberId eq loginMember.username}">
 		<div class="mypageContent">
 			<p class="infoTitles"><i class="bi bi-chat-right-text"></i> &nbsp;신청현황</p>
 			<div class="myPageDivs" id="chatQnAList" >	
@@ -404,10 +404,19 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<th scope="col">No</th>
                         <th scope="col">신청자</th>
                         <th scope="col">신청일자</th>
-                        <th scope="col">신청정보</th>
+                       <th scope="col"> 처리</th>
 					</thead>
 					<tbody id= "chatTblBody">
-						
+						<c:forEach var="info" items="${info}">
+                    <tr>
+                        <td>${status.index + 1}</td>
+                        <td>${info.memberId}</td>
+                        <td>${info.studyApplicationAt}</td> <!-- 실제 프로퍼티 이름 사용 -->
+                        <td> <button class="modal-button" data-bs-toggle="modal" data-bs-target="#chatModal" data-info-id="${info.memberId}">
+                    보기
+                </button></td>
+                    </tr>
+                </c:forEach>
 					</tbody>
 				</table>
 				<br/>
@@ -425,7 +434,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			</div>
 		
 		</div>
+		</c:if>
 			<!-- 리더만보이게 ! 버튼 클릭시 가입정보 조회 모달 -->
+		<c:forEach var="info" items="${info}">
+		<script >
+		 const studyId = "${info.studyId}";
+		</script>
 			<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -436,25 +450,27 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				        <div class="modal-body">
 				            <div class="chat_window">
 				              	<div class="top_menu">
-				               		<div class="title">KH TIME</div>
+				               		<div class="title"> 신청자 : ${info.memberId}</div>
 				               	</div>
 				               	<ul class="messages" id="modalMessages">
-						            
+						            ${info.introduce}
 				               	</ul>
 				                	
 				            </div>
 				                
 				        </div>
 				        <div class="modal-footer">
-				           	<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+				           	<button type="button" class="btn btn-primary" id="approveButton" data-bs-dismiss="modal" data-info-id="${info.memberId}">승인</button>
+				           	<button type="button" class="btn btn-danger" id="rejectButton" data-bs-dismiss="modal" data-info-id="${info.memberId}">반려</button>
 				        </div>
 				    </div>
 				</div>
 			</div>
-		</div> 
-	
-	<!-- 메인컨테이너 div끝 -->
+			</c:forEach>
 
+	<!-- 메인컨테이너 div끝 -->		
+		</div>	
+		<form:form name="hiddenForm"></form:form>
 </selction>
 <script>
 <%-- 글작성 폼 --%>
@@ -515,8 +531,7 @@ function showInputForm() {
     
     
  }
-
-// 폼 숨기기
+//폼 숨기기
 function hideInputForm() {
   const writeButton = document.getElementById("writeArticleButton");
   const createForm = document.getElementById("createForm");
@@ -526,7 +541,59 @@ function hideInputForm() {
   sub.style.display = "";
   createForm.remove();
 }
+ 
+const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+let currentInfoId = null; // 현재 클릭한 정보의 ID
+
+
+const modalButtons = document.querySelectorAll('.modal-button');
+modalButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+        currentInfoId = button.getAttribute('data-info-id');
+        modal.show();
+    });
+});
+
+const approve =document.querySelector("#approveButton");
+const reject =document.querySelector("#rejectButton");
+if(approve && reject){
+	approve.addEventListener('click', (event) => {
+          currentInfoId = approve.getAttribute('data-info-id');
+          const check="approve";
+          sendActionToServer(currentInfoId,check);
+          //modal.hide();
+      });
+	reject.addEventListener('click', (event) => {
+        currentInfoId = reject.getAttribute('data-info-id');
+        const check="reject";
+        sendActionToServer(currentInfoId,check);
+        //modal.hide();
+    });
+}
+function sendActionToServer(memberId,check) {
+	const token = document.hiddenForm._csrf.value;
+	
+    $.ajax({
+        url: "${pageContext.request.contextPath}/board/appliCheck.do",
+        method: "POST",
+        data: { memberId: memberId, check: check ,studyId:studyId},
+        success: function (response) {
+            // 서버 응답에 따른 동작 수행
+        },
+        headers: {
+            "X-CSRF-TOKEN": token
+        },
+        error: function (error) {
+            // 오류 처리
+        }
+    });
+}
+
+
+
+
 	
 </script>	
+   
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
