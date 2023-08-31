@@ -148,7 +148,7 @@
 
             </div>
             <ul id="menu">
-                <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
+                <li id="BoardHeaderBtn"><a href="#" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
                 <li id="myClass" style="cursor: pointer;"><a>우리반</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
@@ -246,6 +246,17 @@
         }
    });
 	
+	document.querySelector('#BoardHeaderBtn').onclick = () => {
+        const boardSubmenu = document.getElementById('boardSubmenu');
+          boardSubmenu.classList.toggle('show');
+     };
+     document.querySelector('#boardSubmenu').mouseleave =() => {
+        const boardSubmenu = document.getElementById('boardSubmenu');
+        boardSubmenu.style.display = 'none';
+        boardSubmenu.style.animation = '';
+          
+     };
+
 	
 	</script>
 	<sec:authorize access="isAuthenticated()">
