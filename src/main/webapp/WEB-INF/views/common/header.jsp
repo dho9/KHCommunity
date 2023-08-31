@@ -440,6 +440,9 @@
 					                alarmContent.style.borderColor = "grey";
 					                checkBtn.style.display="none";
 					                alarmImg.style.animation = "";
+					                if(alarmType=='s'){
+						          		 window.location.href = '/kh/board/studyBoardList.do';
+						          	}
 					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
 					            },
 					            error: function() {

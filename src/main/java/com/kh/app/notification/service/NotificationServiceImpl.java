@@ -133,16 +133,6 @@ public class NotificationServiceImpl implements NotificationService {
 				
 		// db저장
 		int alarmId = notificationRepository.insertMessageAlarm(payload);
-		
-//		Map<String, Object> resultMap = new HashMap<String, Object>();
-//		
-//		resultMap.put("alarmId", payload.getAlarmId());
-//		
-//		System.out.println(resultMap);
-//		System.out.println(payload.getAlarmId());
-//		payload.setAlarmId(payload.getAlarmId());
-		
-		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/msgnotice/" + to, payload);
 		
 		return alarmId;
