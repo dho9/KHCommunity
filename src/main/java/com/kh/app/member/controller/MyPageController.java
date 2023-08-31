@@ -48,6 +48,7 @@ public class MyPageController {
 		// 시작
 		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
+		
 		// 식권정보 끝
 
 		// 식권정보 시작
