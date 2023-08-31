@@ -549,5 +549,10 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.deleteStudyInfo(memberId,studyId);
 	}
+	@Override
+	public int updateStudyCount(int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.updateStudyCount(studyId);
+	}
 }
 

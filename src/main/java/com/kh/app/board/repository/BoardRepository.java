@@ -280,10 +280,8 @@ public interface BoardRepository {
 	Study myStudyFindById(int id);
 
 	List<BoardListDto> findAllByBoardId(int id);
-
-
 	
-
-	
+	@Update(" update study set study_people = study_people+1 where study_id =#{studyId}")
+	int updateStudyCount(int studyId);
 	
 }

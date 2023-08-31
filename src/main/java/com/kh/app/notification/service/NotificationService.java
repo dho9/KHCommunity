@@ -12,5 +12,7 @@ public interface NotificationService {
 
 	int notifyMsgSendFromAdmin(MessageBox message);
 
+	int notifyAlamSendFromMemberId(String memberId, String msg);
+
 
 }
