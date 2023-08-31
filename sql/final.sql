@@ -1521,6 +1521,7 @@ SELECT seq_board_id.CURRVAL, study_name, '스터디', 'studyList'
 FROM study
 WHERE board_id = 44;
 select study_name from study where board_id = 44;
+
 CREATE TABLE study_info (
     study_id NUMBER,
     member_id varchar2(20),
@@ -1530,6 +1531,16 @@ CREATE TABLE study_info (
     FOREIGN KEY ( member_id) REFERENCES member(member_id),
     FOREIGN KEY ( study_id) REFERENCES study(study_id)
 );
+
+ALTER TABLE study_info
+DROP CONSTRAINT SYS_C0026955;
+
+ALTER TABLE study_info
+ADD CONSTRAINT fk_sutdyinfo_study_id
+FOREIGN KEY (study_id)
+REFERENCES study(study_id)
+ON DELETE CASCADE;
+
 select * from study_info;
 select * from study;
 select * from study;
@@ -1644,5 +1655,22 @@ WHERE
   select * from study;
   select * from study_info;
   
+  select * from post where board_id = 6 order by 1 desc;
+  select * from post order by 2 desc;
+  select * from study order by 1 desc;
+  select * from study_info order by 1 desc;
+  select * from board order by 1 desc;
+  
+  select 
+		    s.member_id reader_id,
+		    si.*
+		from 
+			study s join study_info si
+			on
+			s.study_id = si.study_id
+		where 
+			s.study_id=26 and si.application_check = 1
+        order by
+            4 desc;
   select * from report;
   select * from vacation;

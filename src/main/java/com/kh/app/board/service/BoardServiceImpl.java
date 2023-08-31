@@ -604,6 +604,24 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.findByStudyleaderName(studyId);
 	}
+	
+	@Override
+	public int deleteStudyBoard(int deleteStudyBoardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudyBoard(deleteStudyBoardId);
+	}
+	
+	@Override
+	public int deleteStudy(int deleteStudyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudy(deleteStudyId);
+	}
+	
+	@Override
+	public int deleteBoardType(int deleteStudyBoardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteBoardType(deleteStudyBoardId);
+	}
 	@Override
 	public int studyDeleteMember(String memberId, int studyId) {
 		// TODO Auto-generated method stub

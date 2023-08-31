@@ -202,12 +202,17 @@ public interface BoardService {
 
 	Study findByStudyleaderName(int studyId);
 
+	int deleteStudyBoard(int deleteStudyBoardId);
+
+	int deleteStudy(int deleteStudyId);
+
+	int deleteBoardType(int deleteStudyBoardId);
+	
 	int studyDeleteMember(String memberId, int studyid);
 
 	List<StudyMemberId> findStudyMemberIdList(int studyId);
 
 	int minusStudyCount(int studyId);
-
 
 
 }
