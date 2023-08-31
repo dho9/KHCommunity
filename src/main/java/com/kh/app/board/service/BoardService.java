@@ -193,6 +193,9 @@ public interface BoardService {
 
 	int deleteStudyInfo(String memberId, int studyId);
 
+
+	String findReceivedIdByCommentRef(int ref);
+
 	List<StudyMemberDto> findStudyMember(int studyId);
 	
 	int updateStudyCount(int studyId);
@@ -204,6 +207,7 @@ public interface BoardService {
 	List<StudyMemberId> findStudyMemberIdList(int studyId);
 
 	int minusStudyCount(int studyId);
+
 
 
 }

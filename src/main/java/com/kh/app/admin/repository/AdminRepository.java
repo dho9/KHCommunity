@@ -233,7 +233,8 @@ public interface AdminRepository {
 			+ "    c.curriculum_name AS curriculumName,\r\n"
 			+ "    c.class_id AS classId,\r\n"
 			+ "    v.teacher_id,\r\n"
-			+ "    t.member_name AS teacherName\r\n"
+			+ "    t.member_name AS teacherName,\r\n"
+			+ "    v.student_id AS studentId\r\n"
 			+ "FROM\r\n"
 			+ "    student s\r\n"
 			+ "LEFT JOIN\r\n"
@@ -326,6 +327,12 @@ public interface AdminRepository {
 
 	@Update("update myclass set curriculum_id = #{selectedCurriculumId} where board_id = #{boardId}")
 	int updateMyClass(String boardId, String selectedCurriculumId);
+
+	@Update("update vacation set employee_id = 'admin', vacation_approve_check = '3' where vacation_id = #{vacationId} ")
+	int updateVacationOkById(int vacationId);
+
+	@Update("update vacation set employee_id = 'admin', vacation_approve_check = '0' where vacation_id = #{vacationId} ")
+	int updateVacationByNoId(int vacationId);
 
 	
 }
