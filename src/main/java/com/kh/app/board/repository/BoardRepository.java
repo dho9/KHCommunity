@@ -16,12 +16,14 @@ import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
+import com.kh.app.board.dto.StudyMemberDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -181,13 +183,13 @@ public interface BoardRepository {
 	        "values(seq_report_id.nextval, #{commentId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
 	int insertCommentReport(CommentReportDto commentReport);
 
-	@Select("SELECT p.post_id, p.title, pc.content, b.board_name\r\n"
+	@Select("SELECT p.post_id, p.title, pc.content, b.board_name, p.post_created_at\r\n"
 			+ "FROM post p\r\n"
 			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
 			+ "left join board b on b.board_id = p.board_id\r\n"
 			+ "WHERE p.board_id = #{boardId}\r\n"
 			+ "ORDER BY p.post_created_at DESC\r\n"
-			+ "FETCH FIRST 3 ROWS ONLY")
+			+ "FETCH FIRST 5 ROWS ONLY")
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
 	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=#{boardId} and tag =#{tag}")
@@ -281,6 +283,8 @@ public interface BoardRepository {
 
 	List<BoardListDto> findAllByBoardId(int id);
 
+	List<StudyMemberDto> findStudyMember(int studyId);
+
 	@Select("select member_id as receivedId from post where post_id = #{postId}")
 	String findReceivedIdByPostId(int postId);
 
@@ -288,8 +292,10 @@ public interface BoardRepository {
 	String findReceivedIdByCommentRef(int ref);
 
 
+	@Update(" update study set study_people = study_people+1 where study_id =#{studyId}")
+	int updateStudyCount(int studyId);
 	
-
-	
+	@Select ("select * from study where study_id=#{studyId}")
+	Study findByStudyleaderName(int studyId);
 	
 }

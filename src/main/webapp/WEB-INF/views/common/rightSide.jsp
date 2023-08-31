@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <div class="rightside">
 	<form action="${pageContext.request.contextPath}/board/boardSearch.do"
-		class="search" onsubmit="return  validateSearchForm()">
+		class="search" onsubmit="return validateSearchForm()">
 		<input type="text" id="keyword" name="keyword" placeholder="전체 게시판의 글을 검색하세요!"
 			class="text" />
 	</form>

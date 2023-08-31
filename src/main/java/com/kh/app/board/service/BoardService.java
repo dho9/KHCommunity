@@ -16,6 +16,7 @@ import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
+import com.kh.app.board.dto.StudyMemberDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -169,6 +170,8 @@ public interface BoardService {
 
 	int insertStudy(int studyId, String appliId, String appliContent);
 
+	List<JobKorea> getJobKoreaDatas (int page, int limit, String keyword) throws IOException;
+	
 	int checkStudy(int studyId, String appliId);
 
 	List<StudyList> findStudyList(String memberId);
@@ -189,7 +192,15 @@ public interface BoardService {
 
 	int deleteStudyInfo(String memberId, int studyId);
 
+
 	String findReceivedIdByCommentRef(int ref);
+
+	List<StudyMemberDto> findStudyMember(int studyId);
+	
+	int updateStudyCount(int studyId);
+
+	Study findByStudyleaderName(int studyId);
+
 
 
 }

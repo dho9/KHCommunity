@@ -16,6 +16,8 @@ public interface NotificationService {
 
 	int notifyMsgSendFromAdmin(MessageBox message);
 
+	int notifyAlamSendFromMemberId(String memberId, String msg);
+	
 	int notifyComment(Comment comment, String receivedId);
 
 	int notifyCocomment(Comment comment, String receivedId);
