@@ -529,7 +529,7 @@ button.updateBtn, button.deleteBtn{
 		</div>
 	</div>
 
-	<%-- 신고 모달 --%>
+	<%-- 모달 --%>
 	<div id="reportModal" class="modal">
 		<div class="modal-content">
 			<span class="close">&times;</span>

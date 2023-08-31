@@ -46,6 +46,7 @@ import com.kh.app.board.dto.PostReportDto;
 import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
+import com.kh.app.board.dto.StudyMemberDto;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -526,8 +527,16 @@ public class BoardController {
 			result = boardService.insertBoard(board);
 		}
 		result = boardService.insertPostContent(board);
+		
+		Board boardInfo = boardService.findBoardName(boardId);
+		String returnValue = null;
+		if("스터디".equals(boardInfo.getBoardCategory())) {
+			returnValue = "redirect:/board/myStudy.do?id=" + board.getBoardId();
+		}else {
+			returnValue = "redirect:/board/boardDetail.do?id=" + board.getPostId();
+		}
 
-		return "redirect:/board/boardDetail.do?id=" + board.getPostId();
+		return returnValue;
 
 	}
 
@@ -1323,9 +1332,16 @@ public class BoardController {
 	@GetMapping("/myStudy.do")
 	public void myStudy(@RequestParam int id, Model model) {
 		Study myStudy = boardService.myStudyFindById(id);
+		System.out.println("myStudy == " + myStudy);
 		model.addAttribute("myStudy",myStudy);
+		
 		List<BoardListDto> myStudyNotice = boardService.findAllByBoardId(id);
-		System.out.println("myStudyNotice = " + myStudyNotice);
+		model.addAttribute("myStudyNotice",myStudyNotice);
+		System.out.println("myStudyNotice == " + myStudyNotice);
+		
+		List<StudyMemberDto> studyMembers = boardService.findStudyMember(myStudy.getStudyId());
+		System.out.println("studyMembers == " + studyMembers);
+		model.addAttribute("studyMembers",studyMembers);
 		
 		BoardListDto postDetail = boardService.findById(id);
 		if(postDetail != null) {
@@ -1343,7 +1359,7 @@ public class BoardController {
 		int findStudyId = boardService.findStudyId(id);
 		List<StudyInfo> info = boardService.finAllStudyAppli(findStudyId);
 		model.addAttribute("info",info);
-		System.out.println(info);
+		System.out.println("info == " + info);
 	}
 	
 	@PostMapping("appliCheck.do")

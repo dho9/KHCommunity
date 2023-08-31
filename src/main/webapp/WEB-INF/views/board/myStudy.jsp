@@ -70,7 +70,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 /* 사이드 버튼 css */
 #mypageBtns{width:90%; margin: 0 auto;}
-.mypageBtn{text-decoration: none; font-family: 'GmarketSansMedium';font-weight: 100; font-size: 21px; width: 60%; margin: 15px auto; color: #4d4d4d;}
+.mypageBtn{text-decoration: none; font-family: 'GmarketSansMedium';font-weight: 100; font-size: 15px; width: 60%; color: #4d4d4d;}
 .mypageBtn a{text-decoration: none;}
 .mypageBtn:hover{cursor: pointer; color: royalblue;}
 
@@ -319,18 +319,27 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			
 			<!-- 회원목록 추가할것.  리더는 강퇴버튼도 있게..-->
 			<div id="mypageBtns">
-			<p class="mypageBtn" id="memberInfo"><i class="bi bi-person-circle"></i> &nbsp;&nbsp; 회원정보</p>
-			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</p>
-			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
-			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
-			<hr class="myPageHr"/>
-			
-			<hr class="myPageHr"/>
-		</div>
-			
+				<c:forEach items="${studyMembers}" var="studyMember">
+					<c:if test="${studyMember.readerId eq studyMember.memberId}">
+					<div style="display: flex;flex-direction: row;align-items: center;">
+						<p class="mypageBtn" id="memberInfo">🤴&nbsp; ${studyMember.readerId}</p>
+					</div>
+						<hr class="myPageHr"/>
+					</c:if>
+					<c:if test="${studyMember.readerId ne studyMember.memberId}">
+						<div style="display: flex;flex-direction: row;align-items: center;">
+							<p class="mypageBtn" id="memberInfo">
+							👨‍🦲&nbsp; ${studyMember.memberId}
+							</p>
+							<c:if test="${loginMember.username eq studyMember.readerId}">
+								<button type="button" onclick="console.log('추방')" style="border-radius: 8px;background-color: #c62917;border: none; width: 18%;color: white;font-weight: bold;">추방</button>
+							</c:if>
+						</div>
+						<hr class="myPageHr"/>
+					</c:if>
+				</c:forEach>
+				<hr class="myPageHr"/>
+			</div>
 			<hr class="myPageHr"/>
 		</div>
 		<form:form name ="memberLogoutFrm" 
@@ -340,7 +349,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	</div>
  
  	<!-- 메인 div 시작 -->
-	<div id= "main-container">
+	<div id= "main-container" >
 		<!-- 나의 수강정보 div -->
 		<div class="mypageContent">
 			<span class="classInfo">스터디 이름 &nbsp;&nbsp;</span> ${myStudy.studyName}
@@ -361,21 +370,36 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<p class="infoTitles"><i class="bi bi-envelope"></i> &nbsp;공지사항</p>
 			<div class="myPageDivs" id="messageBoxDiv" >	
 				<table class="table table-hover" id="messageTbl">
-					<thead>
-						<tr>
-						<th>제목</th>
-						<th>내용</th>
-						<th>작성날짜</th>
-						</tr>
-					</thead>
-					<tbody id= "messageBoxTbl">
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
+    <thead>
+        <tr>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성날짜</th>
+        </tr>
+    </thead>
+    <tbody id="messageBoxTbl">
+        <c:forEach items="${myStudyNotice}" var="studyNotice" varStatus="loop">
+            <tr>
+                <td class="studyNoticeTitle">${studyNotice.title}</td>
+                <td><span class="truncate-text">${studyNotice.content}</span></td>
+                <td>${studyNotice.postCreatedAt}</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div id="detailModal${loop.index}" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <div>
+                                <div>제목: ${studyNotice.title}</div>
+                                <div>내용: ${studyNotice.content}</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
 				<div id="msgPagingDiv">
 					<ul class="pagination msgPagination">
 						<li class="page-item disabled" id="prevButton">
@@ -467,14 +491,18 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				</div>
 			</div>
 			</c:forEach>
+			<c:forEach items="${myStudyNotice}" var="studyNotice">
+				
+			</c:forEach>
 
 	<!-- 메인컨테이너 div끝 -->		
 		</div>	
 		<form:form name="hiddenForm"></form:form>
+		
 </selction>
 <script>
-<%-- 글작성 폼 --%>
 
+<%-- 글작성 폼 --%>
 function showInputForm() {
 	 
     const writeButton = document.getElementById("writeArticleButton");
