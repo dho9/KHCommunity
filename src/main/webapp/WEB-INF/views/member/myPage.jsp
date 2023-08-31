@@ -65,6 +65,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 .certiStep{display: inline-block; width: 24%; margin: 10px 2%; text-align: center; margin-top: 40px;}
 #msgPagingDiv .msgPagination{ margin: 0px auto; width: fit-content;}
 #reportModal label{margin-left: -80%;}
+
 #reportModal textarea,select{width:92%;}
 
 /* 회원인증 css */
