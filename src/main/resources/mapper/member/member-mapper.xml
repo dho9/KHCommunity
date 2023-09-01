@@ -135,7 +135,7 @@
      left outer join myclass mc
             on mc.curriculum_id = c.curriculum_id
   where	
-	m.member_id = #{memberId} and mc.board_id is not null 
+	m.member_id = #{memberId}
 </select>
 
 <resultMap id="findByEmployeeInfoMap" type="EmployeeInfoDto">

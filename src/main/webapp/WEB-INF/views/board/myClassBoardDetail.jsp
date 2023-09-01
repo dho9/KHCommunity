@@ -13,6 +13,9 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+a {
+  text-decoration: none;
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -298,7 +301,7 @@ body {
 						commentRef : e.target.closest('li').querySelector('input[name=commentId]').value
 					},
 					success(responseData) {
-						console.log(responseData);
+						/* console.log(responseData); */
 						window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId
 					}
 				})

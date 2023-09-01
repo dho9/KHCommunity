@@ -718,7 +718,7 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
    
     emailBtn.addEventListener('click', function(event) {
     	var requiredCheckboxes = document.querySelectorAll('input[type="checkbox"][required]');
-		console.log(requiredCheckboxes);
+		/* console.log(requiredCheckboxes); */
         // 필수 체크박스 중에서 하나라도 빠짐이 있으면 경고 메시지 출력
         var allChecked = true;
         for (var i = 0; i < requiredCheckboxes.length; i++) {
@@ -752,7 +752,7 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 		
 		if(userEmail.value != "" && userEmail.value != null){
 			const email = $('#userEmail1').val() + $('#userEmail2').val();
-			console.log('완성된 이메일 : ' + email);
+			/* console.log('완성된 이메일 : ' + email); */
 			const checkInput = $('#verificationCode');
 			document.querySelector("[name = fullEmail]").value = email;
 			
@@ -760,7 +760,7 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 				type : 'get',
 				url : '<c:url value ="/member/mailCheck?email="/>'+email,
 				success : function (data) {
-					console.log("data : " +  data);
+					/* console.log("data : " +  data); */
 					checkInput.attr('disabled',false);
 					code =data;
 					alert('인증번호가 전송되었습니다.')
@@ -795,7 +795,7 @@ button{color:#fff;font-weight:bold;background-color:#5B91BD}
 	
 	document.getElementById("enrollInfo").onclick=(e)=>{
 		// e.preventDefault();
-		console.log(document.querySelector("[name = fullEmail]").value);
+		/* console.log(document.querySelector("[name = fullEmail]").value); */
 		
 		
 	}
