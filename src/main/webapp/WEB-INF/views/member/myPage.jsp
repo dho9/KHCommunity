@@ -43,7 +43,7 @@
 .myPageHr{color: #cecece; margin-top: -0.5rem; margin-bottom: 0.5rem; border: 0; border-top: 1px solid rgba(0,0,0,.8);}
 .mypageContent{width:90%; font-family: 'GmarketSansMedium'; margin: 40px 40px; color: #3c3c3c; padding: 20px 30px;; border: 0.5px solid #cecece; border-radius: 25px;}
 #myId{color:#606060; font-family: 'GmarketSansMedium';}
-.dDayInfo{width:127px; font-size: 30px; text-align: center;}
+.dDayInfo{width:73px; font-size: 19px; text-align: center;}
 
 /* 수강정보 css */
 p.classInfo{color:#606060;}
@@ -54,7 +54,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 /*  메세지 css */
 @font-face { font-family: 'Pretendard-Regular'; src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff'); font-weight: 400; font-style: normal;}
-#messageBoxDiv,#messageDetail,#reportModal,#vacationModal{font-family: 'Pretendard-Regular'; text-align: center; font-weight: 100;}
+#messageBoxDiv,#messageDetail,#reportModal,#vacationModal{font-family: 'GmarketSansMedium'; text-align: center; font-weight: 100;}
 .truncate-text {max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; display: inline-block;}
 #messageDetail,#reportModal,#vacationModal {background-color: rgba(0, 0, 0, 0.2);}
 #messageTbl td,tr,th{text-align: center;}
@@ -85,7 +85,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 #memberDelBtn{display: inline-block; margin: 3px 40%;}
 
 /* 구매내역 css */
-#messageTbl td,tr,th{text-align: center; font-family: 'Pretendard-Regular';}
+#messageTbl td,tr,th{text-align: center; font-family: 'GmarketSansMedium';}
 
 
 /* 휴가신청 css */
@@ -284,7 +284,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 #chatTbl td,th{
  	padding: 5px;
  	vertical-align: baseline;
- 	font-family: 'Pretendard-Regular';
+ 	font-family: 'GmarketSansMedium';
 }
 #chatView{
 	padding: 3px 12px;
@@ -683,7 +683,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>이메일 : </th>
 							<td>
-								<input type="email" class="form-control readChange" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
+								<input type="email" class="form-control" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
 							</td>
 						</tr>
 						<br/>
@@ -755,6 +755,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			    </div>
 			  </div>
 		</div>
+
+		
 		
 		<!-- 신고하기 모달 -->
 		<div id="reportModal" class="modal fade" role="dialog">
@@ -952,7 +954,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	    // 다음 페이지 링크
 	    const nextButton = document.createElement('li');
 	    nextButton.classList.add('page-item');
-	    if (currentPage === pages) {
+	    if (currentPage === pages || pages == 0) {
 	        nextButton.classList.add('disabled');
 	    }
 	    const nextLink = document.createElement('a');
@@ -1248,8 +1250,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	    };
 	});
 	
-	function chatlogBtn() {
+	 function chatlogBtn() { 
 		const chatViewButtons = document.querySelectorAll("#chatView");
+	
+		console.log("이게 나와야 정상이잖아?", chatViewButtons);
+		
+		
 		chatViewButtons.forEach(button => {
 		    button.addEventListener("click", function () {
 		        const chatId = this.getAttribute("data-chatid");
@@ -1263,7 +1269,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		            },
 		            success: function (responseData) {
 		                // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
-		                /* console.log(responseData) */
+
 		                
 		                modalSend(responseData);
 		                
@@ -1274,8 +1280,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		        });
 		    });
 		});
-	};
+ 	};
 	
+
 	function modalSend(responseData) {
 		
 		
@@ -1360,9 +1367,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	                if(studentChatList.length == 0) {
 	                	chatTblBody.innerHTML = `
 							<tr>
-					  			<th colspan="5">조회된 게시글이 존재하지 않습니다.</th>
+					  			<th colspan="5">조회된 상담내역이 존재하지 않습니다.</th>
 					  		</tr>
 						`;
+
+
 					} else {
 		                for(let i = 0; i < studentChatList.length; i++){
 		                	
@@ -1385,9 +1394,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			            	
 		                }
 	                	chatTblBody.innerHTML = html;
-		                renderPagination(currentPage, totalPages);
-		                chatlogBtn();
+	                	
+	                	chatlogBtn();
+
 					}
+		            renderPagination(currentPage, totalPages);
 	                
 	                
 	            },
@@ -1407,7 +1418,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		function renderPagination(currentPage, totalPages) {
 		    const paginationElement = document.querySelector('.chatPagination');
 		    paginationElement.innerHTML = ""; // 기존 페이지 바 내용 초기화
-
 		    // 이전 페이지 링크
 		    const prevButton = document.createElement('li');
 		    prevButton.classList.add('page-item');
@@ -1449,7 +1459,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		    // 다음 페이지 링크
 		    const nextButton = document.createElement('li');
 		    nextButton.classList.add('page-item');
-		    if (currentPage === totalPages) {
+		    if (currentPage === totalPages || totalPages == 0) {
 		        nextButton.classList.add('disabled');
 		    }
 		    const nextLink = document.createElement('a');
