@@ -91,7 +91,7 @@
 	        	
 	        	
 	        	const payload = JSON.parse(message.body);
-				/* console.log(payload); */
+
 	            // 수신한 메시지를 화면에 표시하는 함수 호출
 	            displayReceivedMessage(payload.message, payload.createdAt, payload.sender);
 	            
@@ -160,7 +160,7 @@
                 
             },
             error: function(error) {
-                console.error("에러", error);
+            	
             }
         });
     }

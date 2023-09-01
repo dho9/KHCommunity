@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().mvcMatchers("/resources/**");
+		web.ignoring().antMatchers("/favicon.ico", "/resources/**", "/error");
 	}
 	
 	@Autowired
@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.loginProcessingUrl("/member/memberLogin.do")
 		.usernameParameter("memberId")
 		.passwordParameter("memberPwd")
-		.defaultSuccessUrl("/")
+		.defaultSuccessUrl("/", true)
 		.permitAll();
 	
 		http.logout()
