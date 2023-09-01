@@ -13,5 +13,6 @@ public class Notification {
 	private LocalDate createdAt;
 	private AlarmType alarmType;
 	private AlarmReadCheck readCheck;
+	private int postId;
 	
 }

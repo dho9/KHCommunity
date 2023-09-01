@@ -27,7 +27,6 @@ public class StringListTypeHandler extends BaseTypeHandler<List<String>> {
 				value += ",";
 		}
 		ps.setString(i, value);
-		
 	}
 	
 	@Override

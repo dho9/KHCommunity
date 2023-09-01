@@ -623,8 +623,9 @@ public class BoardController {
 	                .anonymousCheck(_comment.isAnonymousCheck()).build();
 	        int result = boardService.createComment(comment);
 	        
+	        // 받는 사람 받아오기
 	        String receivedId = boardService.findReceivedIdByCommentRef(ref);
-	        
+	        // 실시간 알림
 	        result = notificationService.notifyCocomment(comment, receivedId);
 	        
 	        return ResponseEntity
@@ -641,8 +642,9 @@ public class BoardController {
 	                .anonymousCheck(_comment.isAnonymousCheck()).build();
 	        int result = boardService.createComment(comment);
 	        
+	        // 받는 사람 받아오기
 	        String receivedId = boardService.findReceivedIdByPostId(_comment.getPostId());
-	        
+	        // 실시간 알림
 	        result = notificationService.notifyComment(comment, receivedId);
 	        
 	        return ResponseEntity
@@ -1067,7 +1069,7 @@ public class BoardController {
 		List<StudyList> studyList = boardService.findAllStudy();
 		for (StudyList study : studyList) {
 			int postId = study.getPostId(); // StudyList 객체의 id 가져오기
-
+			
 			BoardListDto postDetail = boardService.findById(postId);
 				
 				study.setTag(postDetail.getTag());  

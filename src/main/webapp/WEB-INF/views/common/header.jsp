@@ -30,11 +30,12 @@
 	border:2px solid black;
 	border-radius:15px;
 	padding:10px;
-	margin-top:5px;
+	margin-left:20px;
 	width:fit-content;
 	margin-right:30px;
 	opacity:0;
 	transition: opacity 0.5s ease;
+	height: fit-content;
 }
 
 #alarmImgBox {
@@ -48,6 +49,7 @@
 
 #alarmImg {
   transform-origin: top;
+  margin-left: 30px;
 }
 
 @keyframes bell{
@@ -149,7 +151,7 @@
 	            	</a>
             	</sec:authorize>
             	<sec:authorize access="isAuthenticated()">
-            		<div style="width:65px;" id="alarmBox">
+            		<div style="width:65px; display:flex;" id="alarmBox">
             			<div id="alarmImgBox" style="display:flex; padding-top:10px;">
             				<img id="alarmImg" style="width:30px;" alt="" src="${pageContext.request.contextPath}/resources/images/alarmicon.png">
 							
@@ -205,7 +207,9 @@
 				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do" class="new" style="text-decoration: none;">수료생게시판</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/preStudentBoardList.do" class="new" style="text-decoration: none;">예비생게시판</a></li>
-				<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+				<sec:authorize access="hasAuthority('ADMIN')">
+					<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+            	</sec:authorize>
 				</ul>
 			</div>
 			<div class="divider"></div>
@@ -361,7 +365,7 @@
 						memberId
 					},
 					success: function(data) {
-						/* console.log("성공") */
+
 						renderNotifications(data);
 					},
 					error: function() {
@@ -377,7 +381,7 @@
 
 				  
 				notifications.forEach(notification => {
-					const { alarmId, content, readCheck, alarmType } = notification;
+					const { alarmId, content, readCheck, alarmType, postId } = notification;
 					
 					const alarmContentBox = document.querySelector("#alarmContentBox");
 					const alarmContent = document.createElement('div');
@@ -392,7 +396,7 @@
 				    	if(alarmType === 'm'){
 				    		alarmContent.innerHTML = `
 					    		<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✉️ 쪽지 <br>
 							        	\${content}
 							        <button type="button" id="isChecked-\${uniqueId}">확인</button>
@@ -402,7 +406,7 @@
 				    	} else if(alarmType === 'r') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	⛔ 신고 <br>
 							        	\${content}
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
@@ -412,7 +416,7 @@
 				    	} else if(alarmType === 'c') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	🌐 댓글 <br>
 							        	\${content}
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
@@ -422,7 +426,7 @@
 				    	} else if(alarmType === 'a') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✔️ 승인관련 <br>
 							        	\${content}
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
@@ -432,7 +436,7 @@
 				    	} else if(alarmType === 'v') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	🗓️ 휴가관련 <br>
 							        	\${content}
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
@@ -442,7 +446,7 @@
 				    	}else if(alarmType ==='s'){
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✏ 스터디 <br>
 							        	\${content}
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
@@ -455,42 +459,42 @@
 				    	
 				    	if(alarmType === 'm') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	✉️ 쪽지 <br>
 						        	\${content}
 						      	</div>
 						    `;
 				    	} else if(alarmType === 'r') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	⛔ 신고 <br>
 						        	\${content}
 						      	</div>
 						    `;			    		
 			    		} else if(alarmType === 'c') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	🌐 댓글 <br>
 						        	\${content}
 						      	</div>
 						    `;
 			    		} else if(alarmType === 'a') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	✔️ 승인관련 <br>
 						        	\${content}
 						      	</div>
 						    `;
 			    		} else if(alarmType === 'v') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	🗓️ 휴가관련 <br>
 						        	\${content}
 						      	</div>
 						    `;
 			    		} else if(alarmType === 's') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						    		✏ 스터디 <br>
 						        	\${content}
 						      	</div>
@@ -500,6 +504,21 @@
 				    
 				    alarmContentBox.appendChild(alarmContent);
 				    alarmContentBox.appendChild(contentBr);
+				    
+					const alarmText = document.getElementById(`alarmText-\${uniqueId}`);
+					
+					if(readCheck == 'y'){
+						alarmText.addEventListener('click', () => {
+							if(alarmType === 'm') {
+						        // 클릭 시 "마이 페이지"로 이동
+						        window.location.href = '/kh/member/myPage.do'; // 실제 주소로 대체해주세요
+							} else if(alarmType=='s'){
+				          		window.location.href = '/kh/board/studyBoardList.do';
+				          	} else if(alarmType == 'c') {
+				          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
+				          	}
+				    	}); 
+					}
 				    
 					const checkBtn = document.querySelector(`#isChecked-\${uniqueId}`);
 					const readCheckFrm = document.readCheckFrm;
@@ -524,9 +543,12 @@
 					                checkBtn.style.display="none";
 					                alarmImg.style.animation = "";
 					                if(alarmType=='s'){
-						          		 window.location.href = '/kh/board/studyBoardList.do';
+						          		window.location.href = '/kh/board/studyBoardList.do';
+						          	} else if(alarmType == 'c') {
+						          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
+						          	} else {
+						          		location.reload();
 						          	}
-					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
 					            },
 					            error: function() {
 					                console.log("실패")
@@ -534,6 +556,8 @@
 					        });
 					    });
 					}
+					
+					
 					
 				});
 				
@@ -564,6 +588,8 @@
 			    
 			    isContentVisible = !isContentVisible;
 			});
+			
+			
 		    
 		   
 		   
@@ -597,6 +623,12 @@
 				// 휴가 처리 관련 알림 받는 구독신청
 				stompClient.subscribe(`/topic/vacCheck/\${memberId}`, (message) => {
 					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
+					renderMessage(message);
+				});
+				
+				// 휴가 처리 관련 알림 받는 구독신청
+				stompClient.subscribe(`/topic/reportCheck/\${memberId}`, (message) => {
+					console.log(`/topic/commentNotice/${memberId} : `, message);
 					renderMessage(message);
 				});
 			});
@@ -723,6 +755,10 @@
 					           	alarmImg.style.animation = "";
 					          	if(alarmType=='s'){
 					          		 window.location.href = '/kh/board/studyBoardList.do';
+					          	} else if(alarmType == 'c') {
+					          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
+					          	} else {
+					          		location.reload();
 					          	}
 				            	
 				            },

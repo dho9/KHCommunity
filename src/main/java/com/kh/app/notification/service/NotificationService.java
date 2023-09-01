@@ -30,5 +30,9 @@ public interface NotificationService {
 
 	int notifyVacationCheckNo(String studentId, String vacationStartDate, String vacationEndDate);
 
+	int notifyReportAlarmToReporterId(String reporterId, String messageContent);
+
+	int notifyReportAlarmToAttackerId(String attackerId, String messageContent);
+
 
 }
