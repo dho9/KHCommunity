@@ -1067,7 +1067,7 @@ public class BoardController {
 		List<StudyList> studyList = boardService.findAllStudy();
 		for (StudyList study : studyList) {
 			int postId = study.getPostId(); // StudyList 객체의 id 가져오기
-
+			
 			BoardListDto postDetail = boardService.findById(postId);
 				
 				study.setTag(postDetail.getTag());  

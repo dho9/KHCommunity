@@ -205,7 +205,9 @@
 				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do" class="new" style="text-decoration: none;">수료생게시판</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/preStudentBoardList.do" class="new" style="text-decoration: none;">예비생게시판</a></li>
-				<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+				<sec:authorize access="hasAuthority('ADMIN')">
+					<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+            	</sec:authorize>
 				</ul>
 			</div>
 			<div class="divider"></div>

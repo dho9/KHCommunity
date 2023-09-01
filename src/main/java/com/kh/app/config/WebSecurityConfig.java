@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		    .antMatchers("/", "/index.jsp","/member/mailCheck").permitAll()
 			.antMatchers("/board/**").permitAll()
 			.antMatchers("/admin/**").hasAuthority("ADMIN")
+			.antMatchers("/board/employeeBoardList/**").hasAuthority("ADMIN")
 			.antMatchers("/board/*").permitAll()
 			.antMatchers("/ticket/*").permitAll()
 			.antMatchers("/member/memberCreate.do").permitAll()
