@@ -12,15 +12,15 @@ import com.kh.app.ws.dto.MsgPayload;
 @Mapper
 public interface NotificationRepository {
 
-	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check) values (seq_alarm_id.nextval, #{receivedId}, #{content}, current_date, 'm', 'n')")
+	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check, post_id) values (seq_alarm_id.nextval, #{receivedId}, #{content}, current_date, #{alarmType}, 'n', null)")
 	@SelectKey(
 			before = false, 
 			keyProperty = "alarmId", 
 			resultType = int.class,
 			statement = " select seq_alarm_id.currval from dual")
-	int insertMessageAlarm(MsgPayload payload);
+	int insertAlarm(MsgPayload payload);
 
-	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check) values (seq_alarm_id.nextval, #{receivedId}, #{content}, current_date, 'c', 'n')")
+	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check, post_id) values (seq_alarm_id.nextval, #{receivedId}, #{content},current_date, #{alarmType}, 'n', #{postId})")
 	@SelectKey(
 			before = false, 
 			keyProperty = "alarmId", 
@@ -28,28 +28,5 @@ public interface NotificationRepository {
 			statement = " select seq_alarm_id.currval from dual")
 	int insertCommentAlarm(MsgPayload payload);
 
-	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check) values (seq_alarm_id.nextval, #{receivedId}, #{content}, current_date, 'a', 'n')")
-	@SelectKey(
-			before = false, 
-			keyProperty = "alarmId", 
-			resultType = int.class,
-			statement = " select seq_alarm_id.currval from dual")
-	int insertStudentApproveCheckAlarm(MsgPayload payload);
-
-	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check) values (seq_alarm_id.nextval, #{receivedId}, #{content}, current_date, 'v', 'n')")
-	@SelectKey(
-			before = false, 
-			keyProperty = "alarmId", 
-			resultType = int.class,
-			statement = " select seq_alarm_id.currval from dual")
-	int insertStudentVacationCheckAlarm(MsgPayload payload);
-	
-	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check) values (seq_alarm_id.nextval, #{receivedId}, #{content}, current_date, 's', 'n')")
-	@SelectKey(
-			before = false, 
-			keyProperty = "alarmId", 
-			resultType = int.class,
-			statement = " select seq_alarm_id.currval from dual")
-	int insertStudyAlarm(MsgPayload payload);
 
 }

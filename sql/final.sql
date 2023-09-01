@@ -463,16 +463,7 @@ CREATE TABLE alarm (
     alarm_id number,
     received_id varchar(30),
     content varchar(400),
-    created_at date,
-    alarm_type char(1),
-    read_check char(1)
-);
-
-drop table alarm;
-CREATE TABLE alarm (
-    alarm_id number,
-    received_id varchar(30),
-    content varchar(400),
+    post_id number,
     created_at date,
     alarm_type char(1),
     read_check char(1)
@@ -934,8 +925,8 @@ alter table message_box add constraint CK_messagebox_anonymous_check check (anon
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
 -- 댓글삭제여부
 alter table post_comment add constraint ck_post_comment_delete_ck check (delete_ck in ('0','1'));
--- 알림 타입(r:신고, m:쪽지, c:댓글, a:승인관련, v:휴가관련)
-alter table alarm add constraint ck_alarm_alarm_type check (alarm_type in ('m', 'r', 'c', 'a', 'v'));
+-- 알림 타입(r:신고, m:쪽지, c:댓글, a:승인관련, v:휴가관련, s:스터디 관련)
+alter table alarm add constraint ck_alarm_alarm_type check (alarm_type in ('m', 'r', 'c', 'a', 'v', 's'));
 -- 알림 읽음 여부
 alter table alarm add constraint ck_alarm_read_check check (read_check in ('y', 'n'));
 --=================================
@@ -1673,5 +1664,10 @@ WHERE
         order by
             4 desc;
   select * from report;
+
+  select * from alarm;
+
+insert into member
+
   select * from vacation;
 select * from post;

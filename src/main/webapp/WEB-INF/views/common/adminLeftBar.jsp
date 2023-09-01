@@ -102,7 +102,7 @@
 				                        // 새 창 열기
 				                        const newWindow = window.open(
 				                            "${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + chatId,
-				                            '_blank'
+				                            '_blank', 'width=700, height=800'
 				                        );
 
 				                        if (newWindow) {
