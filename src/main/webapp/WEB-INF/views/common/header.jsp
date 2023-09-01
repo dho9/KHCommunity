@@ -194,7 +194,6 @@
 						href="${pageContext.request.contextPath}/board/todayFoodBoardList.do"
 						class="new" style="text-decoration: none;">오늘 뭐 먹지?</a></li>
 				</ul>
-
 			</div>
 			<div class="divider"></div>
 			<div class="group">
@@ -214,15 +213,71 @@
 			<div class="divider"></div>
 			<hr>
 		</div>
+		<div class="wrap" id="myClassBoardSubmenu">
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=27"
+						class="new" style="text-decoration: none;">221</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=28"
+						class="new"style="text-decoration: none;">222</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=29"
+						class="new" style="text-decoration: none;">223</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=30"
+						class="new" style="text-decoration: none;">224</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=31"
+						class="new"style="text-decoration: none;">231</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=32"
+						class="new" style="text-decoration: none;">232</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=21"
+						class="new" style="text-decoration: none;">351</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=22"
+						class="new"style="text-decoration: none;">352</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=23"
+						class="new" style="text-decoration: none;">353</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=24"
+						class="new" style="text-decoration: none;">361</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=25"
+						class="new" style="text-decoration: none;">362</a></li>
+				</ul>
+			</div>
+			<hr>
+		</div>
 	</div>
 	<div id="jangjun">
 	<sec:authentication property="principal" var="loginMember" />
 	<script>
+	const _authority = '<sec:authentication property="authorities"/>';
+    const authority = _authority.replace(/&#91;/g, '').replace(/&#93;/g, '');
 	document.querySelector('#myClass').addEventListener('click', () => {
 		const _memberId = '<sec:authentication property="name"/>';
-		const _authority = '<sec:authentication property="authorities"/>';
  	    const memberId = _memberId.replace(/&#64;/g, '@');
- 	    const authority = _authority.replace(/&#91;/g, '').replace(/&#93;/g, '');
 		console.log('!!!!!!!!', authority);
 	    if(_memberId === 'anonymousUser') {
 	        alert('로그인이 필요합니다.');
@@ -275,6 +330,19 @@
         boardSubmenu.style.animation = '';
           
      };
+     
+    if(authority === 'ADMIN') {
+		document.querySelector('#myClass').onclick = () => {
+	        const myClassBoardSubmenu = document.getElementById('myClassBoardSubmenu');
+	        myClassBoardSubmenu.classList.toggle('show');
+	     };
+	     document.querySelector('#myClassBoardSubmenu').mouseleave =() => {
+	        const myClassBoardSubmenu = document.getElementById('myClassBoardSubmenu');
+	        myClassBoardSubmenu.style.display = 'none';
+	        myClassBoardSubmenu.style.animation = '';
+	          
+	     };
+    }
 
 	
 	</script>

@@ -668,18 +668,19 @@ public class BoardController {
 	}
 
 	@GetMapping("/myClassBoardList.do")
-	public String myClassBoardList(@AuthenticationPrincipal MemberDetails principal,
-			@Valid StudentMypageInfoDto studentInfo,
-			Model model) {
-		List<EmployeeInfoDto> employeeInfo = new ArrayList<EmployeeInfoDto>();
-		if(principal.getAuthorities().equals("[TEACHER]")) {
-			employeeInfo = memberService.findByEmployeeInfo(principal.getMemberId());
+	public String myClassBoardList(@AuthenticationPrincipal MemberDetails principal, @RequestParam("boardId") int boardId, Model model) {
+		String auth = principal.getAuthorities() + "";
+		if("[TEACHER]".equals(auth) || "[ADMIN]".equals(auth)) {
+			List<EmployeeInfoDto> employeeInfo = memberService.findByEmployeeInfo(principal.getMemberId());
+			log.info("employeeInfo={}",employeeInfo);
+			model.addAttribute("employeeInfo", employeeInfo);
 		} else {
-			studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+			StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
+			log.info("studentInfo={}",studentInfo);
+			model.addAttribute("studentInfo", studentInfo);
 		}
-		model.addAttribute("studentInfo", studentInfo);
-		model.addAttribute("employeeInfo", employeeInfo);
 		model.addAttribute("authority", principal.getAuthorities());
+		model.addAttribute("boardId", boardId);
 		return "/board/myClassBoardList";
 	}
 

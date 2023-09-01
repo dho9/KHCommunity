@@ -48,7 +48,7 @@
 #kakao{width:60%; display: inline-block; margin: 3% 0;}
 #loginTitle{font-size: 60px; font-family: 'MBC1961GulimM'; font-weight: bold; color : #4870ef; text-shadow: 1px 1px 0 grey; margin: 5% 0;}
 #loginBtns {width: 100%}
-#loginBtns button{width: 35%; display: inline-black; margin: 5%}
+#loginBtns button{width: 35%; display: inline-black; margin: 5%; border: 1px solid #007bff; float: none;}
 </style>
 <body>
 
@@ -73,15 +73,13 @@
 			<div class="d-flex flex-column"
 				style="align-items: unset;">
 				<div>
+					<br/>
 					<a href="${pageContext.request.contextPath}/oauth2/authorization/kakao">
 					<img id="kakao" alt="kakao" src="${pageContext.request.contextPath}/resources/images/kakaowide.png"></a>
 				</div>
 				<div class="d-flex justify-content-between">
-					
 					<div id="loginBtns">
-					<input type="checkbox" class="form-check-input" name="remember-me"
-							id="remember-me" /> <label for="remember-me"
-							class="form-check-label">Remember me</label></br></br>
+						<br/>
 						<button type="button" class="btn btn-outline-primary btn-lg"  onclick="window.location.href='${pageContext.request.contextPath}/member/memberCreate.do'">회원가입</button>
 						<button type="submit" class="btn btn-outline-primary btn-lg">로그인</button>
 					</div>

@@ -1229,6 +1229,26 @@ aside>div.title>ol.buttons>li>a.image.setting {
 #container div.card>form.logged>ul.buttons>li {
 	float: left;
 	width: 50%;
+	height: 50px;
+}
+.anonymousBtn {
+	margin-right: 5px;
+    border-radius: 10px !important;
+    line-height: 25px;
+    color: #737373;
+    background-color: white;
+    font-size: 13px;
+    text-align: center;
+    height: 31px;
+    padding-top: 10px;
+	
+}
+.anonymousBtn:hover{
+	background-color: #d6d6d6;
+	border: 1px solid #d6d6d6;
+	border-radius: 10px;
+	cursor: pointer;
+	color: white !important;
 }
 
 #container div.card>form.logged>ul.buttons>li>a {
@@ -1243,9 +1263,8 @@ aside>div.title>ol.buttons>li>a.image.setting {
 }
 
 #container div.card>form.logged>ul.buttons>li:last-child>a {
-	margin-right: 0;
+	margin-right: 5;
 }
-
 #container div.card>form.login {
 	padding: 30px 15px 15px 15px;
 }
@@ -2012,7 +2031,7 @@ dl, ul, ol, menu, li {
    .card>div{
       overflow: hidden;
    }
-   #boardSubmenu {
+   #boardSubmenu, #myClassBoardSubmenu {
       border-bottom: 1px solid #f3f3f3;
       position: relative;
       display: none;
@@ -2033,7 +2052,7 @@ dl, ul, ol, menu, li {
      }
    }
    
-   #boardSubmenu.show {
+   #boardSubmenu.show, #myClassBoardSubmenu.show {
         animation: slideIn 0.5s ease forwards;
    }
    
