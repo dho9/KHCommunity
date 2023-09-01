@@ -836,7 +836,7 @@ p.infoTitles {
 	
 	for (let i = 0; i < rows.length; i++) {
 	  noticeRows[i].addEventListener('click', function() {
-	      var noticeCollapseElement = this.nextElementSibling.querySelector(`#collapse\${i}`);
+	      var noticeCollapseElement = this.nextElementSibling.firstElementChild;
     	  if (noticeCollapseElement.style.display === 'none' || noticeCollapseElement.style.display === '') {
     		  noticeCollapseElement.style.display = 'revert';
   	      } else {
@@ -848,7 +848,7 @@ p.infoTitles {
 	
 	  for (let i = 0; i < rows.length; i++) {
 	    rows[i].addEventListener('click', function() {
-	      var collapseElement = this.nextElementSibling.querySelector(`#collapse\${i}`);
+	      var collapseElement = this.nextElementSibling.firstElementChild;
     	  if (collapseElement.style.display === 'none' || collapseElement.style.display === '') {
   	        collapseElement.style.display = 'revert';
   	      } else {
