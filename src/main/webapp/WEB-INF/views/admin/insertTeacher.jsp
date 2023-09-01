@@ -95,7 +95,6 @@ a{text-decoration: none;}
             const email = $("input[name='email']").val();
             const phone = $("input[name='phone']").val();
             const subject = $("input[name='subject']:checked").val(); // 선택된 부서 값 가져오기
-			console.log(subject);
             // 가져온 값들을 폼에 설정
             $("form[name='insertTeacherFrm'] input[name='id']").val(id);
             $("form[name='insertTeacherFrm'] input[name='pw']").val(pw);

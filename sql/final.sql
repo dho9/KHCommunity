@@ -1664,6 +1664,10 @@ WHERE
         order by
             4 desc;
   select * from report;
+
   select * from alarm;
 
 insert into member
+
+  select * from vacation;
+select * from post;

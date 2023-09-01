@@ -43,7 +43,7 @@ import com.kh.app.vacation.dto.VacationNonApprovementListDto;
 @Mapper
 public interface AdminRepository {
 	
-	@Select("select count(*) from student where substr(to_char(student_enroll_date), 1, 9) = to_date(sysdate, 'yy/MM/dd')")
+	@Select("select count(*) from student where substr(to_char(student_enroll_date), 1, 9) = to_date(current_date, 'yy/MM/dd')")
 	int todayNewStudentCount();
 
 	@Select("select count(*) from student where approve_check = 'i'")
@@ -52,13 +52,13 @@ public interface AdminRepository {
 	@Select("select count(*) from vacation where vacation_approve_check = '2'")
 	int approvementStudentVacationCount();
 
-	@Select("select count(*) from employee where substr(to_char(employee_enroll_date), 1, 9) = to_date(sysdate, 'yy/MM/dd')")
+	@Select("select count(*) from employee where substr(to_char(employee_enroll_date), 1, 9) = to_date(current_date, 'yy/MM/dd')")
 	int todayNewEmployee();
 
-	@Select("select count(*) from teacher where substr(to_char(teacher_enroll_date), 1, 9) = to_date(sysdate, 'yy/MM/dd')")
+	@Select("select count(*) from teacher where substr(to_char(teacher_enroll_date), 1, 9) = to_date(current_date, 'yy/MM/dd')")
 	int todayNewTeacher();
 	
-	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(sysdate, 'yy/MM/dd')")
+	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(current_date, 'yy/MM/dd')")
 	int todayNewPostCount();
 
 	@Select("select count(*) from report where report_action is null")
@@ -72,13 +72,13 @@ public interface AdminRepository {
 			+ "OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY")
 	List<BoardChartDto> findBoardNameAndPostCount();
 
-	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(sysdate-3, 'yy/MM/dd')")
+	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(current_date-3, 'yy/MM/dd')")
 	int threeDaysAgoPostCount();
 
-	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(sysdate-2, 'yy/MM/dd')")
+	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(current_date-2, 'yy/MM/dd')")
 	int twoDaysAgoPostCount();
 
-	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(sysdate-1, 'yy/MM/dd')")
+	@Select("select count(*) from post where substr(to_char(post_created_at), 1, 9) = to_date(current_date-1, 'yy/MM/dd')")
 	int yesterdayPostCount();
 
 	@Select("select s.student_id, approve_request_date, (select curriculum_name from curriculum c where c.curriculum_id = s.curriculum_id) curriculum_name from (select rownum, student_id, curriculum_id, approve_check, approve_request_date from student) s where approve_check = 'i' and (rownum between 1 and 3)")
@@ -110,7 +110,7 @@ public interface AdminRepository {
 	@Select("SELECT m.* FROM member m INNER JOIN authority a ON m.member_id = a.member_id WHERE a.auth = 'ADMIN' AND m.member_id = #{id}")
 	Member findById(String id);
 
-	@Insert("insert into employee values (#{id}, #{dept}, sysdate)")
+	@Insert("insert into employee values (#{id}, #{dept}, current_date)")
 	int insertEmployee(EmployeeCreateDto employee);
 
 	@Insert("insert into member values (#{memberId}, #{memberPwd}, #{memberName}, #{memberPhone}, #{email}, #{birthday})")
@@ -157,7 +157,7 @@ public interface AdminRepository {
 	@Delete("delete from authority where member_id = #{memberId}")
 	int deleteAdminAuthority(String memberId);
 
-	@Insert("insert into teacher values (#{teacherId}, sysdate)")
+	@Insert("insert into teacher values (#{teacherId}, current_date)")
 	int insertTeacher(TeacherCreateDto teacher);
 	@Insert("insert into message_box values (seq_message_id.NEXTVAL, #{sendId}, #{receiveId}, #{messageContent}, default, default, 'n')")
 	int sendMessageToStudent(MessageBox message);
@@ -171,7 +171,7 @@ public interface AdminRepository {
 	@Select("SELECT count(*) FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
 	int totalCountNonApprovementStudents();
 
-	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', approve_complete_date = sysdate where student_id = #{studentId}")
+	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', approve_complete_date = current_date where student_id = #{studentId}")
 	int approvementStudent(AdminStudentListDto student);
 
 	@Update("update student set approve_check = 'n' where student_id = #{studentId} ")
@@ -193,7 +193,7 @@ public interface AdminRepository {
 	@Insert("insert into curriculum (curriculum_id, class_id, teacher_id, subject, curriculum_name, curriculum_start_at, curriculum_end_at) values (seq_curriculum_id.nextval, #{classId}, #{teacherId}, #{subject}, #{curriculumName}, #{startDate}, #{endDate})")
 	int addCurriculum(CurriculumRegDto curriculum);	
 	
-	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'y', 'y', #{tags, typeHandler=stringListTypeHandler})")
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, current_date, 'n', 'y', 'y', #{tags, typeHandler=stringListTypeHandler})")
 	@SelectKey(
 			before = false, 
 			keyProperty = "postId", 
@@ -204,7 +204,7 @@ public interface AdminRepository {
 	@Insert("insert into post_content (post_id, board_id, content) values(#{postId}, #{boardId}, #{content})")
 	int insertPostContent(BoardCreateDto board);
 
-	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler})")
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, current_date, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler})")
 	@SelectKey(
 			before = false, 
 			keyProperty = "postId", 
@@ -321,7 +321,7 @@ public interface AdminRepository {
 	@Select("SELECT c.curriculum_id, c.class_id, c.teacher_id, c.subject, c.curriculum_name, c.curriculum_start_at, c.curriculum_end_at\r\n"
 			+ "FROM curriculum c\r\n"
 			+ "LEFT JOIN myclass mc ON c.curriculum_id = mc.curriculum_id\r\n"
-			+ "WHERE c.curriculum_start_at >= TRUNC(SYSDATE)\r\n"
+			+ "WHERE c.curriculum_start_at >= TRUNC(current_date)\r\n"
 			+ "    AND mc.curriculum_id IS NULL")
 	List<Curriculum> findRecentCurriculum();
 
