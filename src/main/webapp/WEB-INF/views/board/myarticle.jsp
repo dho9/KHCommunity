@@ -5,9 +5,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <style>
-article a.article{
-height:10%;}
+a.article{
+color: black;
+}
 article ul.status{
 margin-top: -1%;
 }
@@ -26,24 +29,24 @@ color: black;}
 .anonymousImg{
 	width: 59px;
 }
-  .pagination {
-    text-align: center;
-    margin-top: 20px;
-  }
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
 
-  .pagination ul {
-    display: inline-block;
-    padding: 0;
-  }
+.pagination ul {
+  display: inline-block;
+  padding: 0;
+}
 
-  .pagination ul li {
-    display: inline;
-    margin: 0 5px;
-  }
+.pagination ul li {
+  display: inline;
+  margin: 0 5px;
+}
 
-  .pagination ul li.active a {
-    font-weight: bold;
-  }]7[]
+.pagination ul li.active a {
+  font-weight: bold;
+}
 </style>
 <div id="container" class="community" style="margin-top: 25px;">
   <div class="wrap title">
@@ -90,28 +93,37 @@ color: black;}
           </a>
         </c:forEach>
       </article>
-      <div class="pagination">
-        <ul>
-          <c:if test="${currentPage > 1}">
-            <li><a href="${pageContext.request.contextPath}/board/myarticle.do?page=${currentPage - 1}" >&laquo;</a></li>
-          </c:if>
-
-          <c:forEach var="pageNum" begin="1" end="${totalPages}">
-            <c:choose>
-              <c:when test="${pageNum eq currentPage}">
-                <li class="active"><a href="#">${pageNum}</a></li>
-              </c:when>
-              <c:otherwise>
-                <li><a href="${pageContext.request.contextPath}/board/myarticle.do?page=${pageNum}">${pageNum}</a></li>
-              </c:otherwise>
-            </c:choose>
-          </c:forEach>
-
-          <c:if test="${currentPage < totalPages}">
-            <li><a href="${pageContext.request.contextPath}/board/myarticle.do?page=${currentPage + 1}" ></a></li>
-          </c:if>
-        </ul>
-      </div>
+      <ul class="pagination justify-content-center">
+	      	<c:if test="${currentPage > 1}">
+			    <li class="page-item">
+			        <li>
+			        	<a class="page-link" href="${pageContext.request.contextPath}/board/myarticle.do?page=${currentPage - 1}" aria-label="Previous">
+			        		&laquo;
+			        	</a>
+			        </li>
+			        <span aria-hidden="true">&laquo;</span>
+	        </c:if>
+		    <li class="page-item">
+		    	<c:forEach var="pageNum" begin="1" end="${totalPages}">
+		            <c:choose>
+		              <c:when test="${pageNum eq currentPage}">
+		                <li class="active"><a class="page-link" href="#">${pageNum}</a></li>
+		              </c:when>
+		              <c:otherwise>
+		                <li><a class="page-link" href="${pageContext.request.contextPath}/board/myarticle.do?page=${pageNum}">${pageNum}</a></li>
+		              </c:otherwise>
+		            </c:choose>
+		        </c:forEach>
+		    </li>
+		    <li class="page-item">
+		      <a class="page-link" href="#" aria-label="Next">
+		      	  <c:if test="${currentPage < totalPages}">
+		            <li><a href="${pageContext.request.contextPath}/board/myarticle.do?page=${currentPage + 1}" ></a></li>
+		          </c:if>
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		    </li>
+		  </ul>
     </c:if>
   </div>
   <%@ include file="/WEB-INF/views/common/rightSide.jsp" %>

@@ -105,7 +105,7 @@ ex ) 위치, 스터디내용 ...
 	        </p>
 	        <div>
 	        	<label for="hashTag">해시태그</label><br>
-	        	<input type="text" class="hashTag" placeholder="Enter로 스터디 해시태그를 등록해주세요"/>
+	        	<input type="text" class="hashTag" placeholder="Enter로 스터디 해시태그를 등록해주세요"/><br>
 	        	<input type="number"  name="count" id="count" style="width: 150px; font-size: 20px;" placeholder="스터디 인원"/ />
 	        	<div class="hashTag-container"></div>
 	        </div>

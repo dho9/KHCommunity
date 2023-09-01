@@ -43,5 +43,13 @@ public interface NotificationRepository {
 			resultType = int.class,
 			statement = " select seq_alarm_id.currval from dual")
 	int insertStudentVacationCheckAlarm(MsgPayload payload);
+	
+	@Insert("insert into alarm (alarm_id, received_id, content, created_at, alarm_type, read_check) values (seq_alarm_id.nextval, #{receivedId}, #{content}, current_date, 's', 'n')")
+	@SelectKey(
+			before = false, 
+			keyProperty = "alarmId", 
+			resultType = int.class,
+			statement = " select seq_alarm_id.currval from dual")
+	int insertStudyAlarm(MsgPayload payload);
 
 }
