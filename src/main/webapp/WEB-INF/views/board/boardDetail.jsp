@@ -625,7 +625,6 @@ button.updateBtn, button.deleteBtn{
 	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 	      	id="updateForm" 
 	      	method="post" 
-	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -647,11 +646,12 @@ button.updateBtn, button.deleteBtn{
 	        	<textarea id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag">해시태그</label><br>
+	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
+	        <label class="custom-file-button" for="fileInput">파일 선택</label>
+	        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
         	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
         	<button type="button" class="anonymous">
@@ -667,7 +667,6 @@ button.updateBtn, button.deleteBtn{
 		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 		  	      	id="updateForm" 
 		  	      	method="post" 
-		  	      	style="height: 66%;"
 		        		enctype="multipart/form-data">
 		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -705,11 +704,13 @@ button.updateBtn, button.deleteBtn{
 		  	        </p>
 		  	        	
 		  	        <div>
-		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	         
+		  	        
+		  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+			        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;"> 
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
@@ -730,7 +731,6 @@ button.updateBtn, button.deleteBtn{
 	  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 	  	      	id="updateForm" 
 	  	      	method="post" 
-	  	      	style="height: 71.2%;"
 	        		enctype="multipart/form-data">
 	  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 	  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -777,11 +777,12 @@ button.updateBtn, button.deleteBtn{
 	  	        </p>
 	  	        	
 	  	        <div>
-	  	        	<label for="hashTag">해시태그</label><br>
+	  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	  	        	<div class="hashTag-container"></div>
 	  	        </div>
-	  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+	  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+		        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 	  	      	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
 	          	<button type="button" class="anonymous">
@@ -798,7 +799,6 @@ button.updateBtn, button.deleteBtn{
 		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 		  	      	id="updateForm" 
 		  	      	method="post" 
-		  	      	style="height: 66%;"
 		        		enctype="multipart/form-data">
 		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -836,13 +836,13 @@ button.updateBtn, button.deleteBtn{
 		  	        </p>
 		  	        	
 		  	        <div>
-		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
 		  	        
-		  	      	
+		  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+			        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="anonymous">

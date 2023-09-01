@@ -37,8 +37,6 @@ color: black;
   font-weight: bold;
 }
 </style>
-
-
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>

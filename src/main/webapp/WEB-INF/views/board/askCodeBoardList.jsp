@@ -129,7 +129,7 @@ color: black;
 		  </ul>
 		</c:if>
 	</div>
-	</c:if>>
+	</c:if>
     <form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
