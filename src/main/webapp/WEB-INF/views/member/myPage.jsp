@@ -295,6 +295,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 </style>
 
+	<c:if test="${not empty msg}">
+		<script>
+			alert('${msg}'); 
+		</script>
+	</c:if>
 <section>
 
 	<!-- 상단 파란부분 div  -->
@@ -318,7 +323,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</p>
 			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
+			<p class="mypageBtn" id="memberDel" onclick="logoutFrm();"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
 			<hr class="myPageHr"/>
@@ -572,8 +577,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<div class="modal-dialog">
 	        	<div class="modal-content">
 	            	<div class="modal-body">
-	            		<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br>
+	            	<c:if test="${student.studentType eq 's'}">
+	            	 	<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br> 
 						<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
+					</c:if>
 							<div class="myPageDivs" id="vacationDiv" >		
 								<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
 									enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
@@ -619,6 +626,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</div> 
 				</div>	
 			</div>
+			
 		</div> 
 	
 	<!-- 메인컨테이너 div끝 -->
@@ -647,14 +655,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>패스워드 : </th>
 							<td>
-								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+								<input type="password" class="form-control" name="memberPwd" id="memberPwd"  required>
 							</td>
 						</tr>
 						<br/>
 						<tr>
 							<th>패스워드 확인 : </th>
 							<td>
-								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+								<input type="password" class="form-control" id="passwordConfirmation"  required>
 							</td>
 						</tr>
 						<br/>
@@ -1134,6 +1142,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			alert("비밀번호가 일치하지 않습니다.");
 			return false;
 		}else{
+			
 			alert("회원정보가 정상적으로 수정되었습니다.");
 		}
 	};
@@ -1164,7 +1173,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		
 		const result = confirm('정말 탈퇴하시겠습니까?');
 		if (result === true) {
+			
 			document.memberDeleteFrm.submit();
+			document.memberLogoutFrm.submit();
 		}
 	};
 	
@@ -1474,5 +1485,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		}
 	
 </script>	
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

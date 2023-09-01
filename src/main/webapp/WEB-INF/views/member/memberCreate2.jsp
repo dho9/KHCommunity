@@ -34,13 +34,19 @@ div#memberId-container span.error { color:red; }
 #mainbutton{text-align:center; margin-top:15px;}
 #mainbutton button{display:inline-block; margin: 1.5%; width: 15%;}
 </style>
+<c:if test="${not empty msg}">
+	<script>
+		alert('${msg}'); 
+	</script>
+</c:if>
+
 <div id="mainbutton">
 	<button type="button" class="btn btn-outline-primary btn-lg" id="mainbutton1">약관동의</button>
 	<button type="button" class="btn btn-outline-primary btn-lg" id="mainbutton2">이메일인증</button>
 	<button type="button" class="btn btn-primary btn-lg" id="mainbutton3">회원정보입력</button>
 </div>
 <div id="enroll-container" class="mx-auto text-center">
-	<form:form name="memberCreateFrm" action="" method="POST">
+	<form:form name="memberCreateFrm" action="${pageContext.request.contextPath}/member/memberCreate2.do" method="POST">
 		<table class="mx-auto w-75">
 			<tr>
 				<th>아이디</th>
@@ -165,6 +171,11 @@ document.memberCreateFrm.onsubmit = (e) => {
 		return false;
 	}
 	
+	
+	if(password.value !== passwordConfirmation.value) {
+		alert("비밀번호가 일치하지 않습니다.");
+		return false;
+	}
 	
 	if(password.value !== passwordConfirmation.value) {
 		alert("비밀번호가 일치하지 않습니다.");
