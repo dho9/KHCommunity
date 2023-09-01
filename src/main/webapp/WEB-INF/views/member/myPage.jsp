@@ -748,7 +748,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						</tr>
 						<br/>
 						<hr class="myPageHr"/>
-							<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
+							<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="deleteMember();" />
 					</form:form>
 					</div>
 			      </div>
@@ -879,7 +879,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					    
 					    
 					    $("#editButton").click(function() {
-					    	console.log("112121dddddd");
+					    	/* console.log("112121dddddd"); */
 					    	deleteMsg(msgId, page, totalPage);
 					    });
 					    $("#reportButton").click(function() {
@@ -972,7 +972,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 	// 쪽지 읽음 여부 업데이트
 	const updateReadCheck = (checked, msgId, page) =>{
-		console.log(checked, msgId);
+		/* console.log(checked, msgId); */
 
 		if(checked == 'n'){
 			$.ajax({
@@ -994,12 +994,12 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	// 쪽지삭제
 	const deleteMsg = (msgId, page) => {
 	    if (deletingMsg) {
-	        console.log("Deletion in progress. Please wait.");
-			console.log("no.0");
+	        /* console.log("Deletion in progress. Please wait."); */
+			/* console.log("no.0"); */
 	        return; // 이미 삭제 처리 중이면 함수 종료
 	    }
 	
-	    console.log("delpage", page);
+	    /* console.log("delpage", page); */
 	    $.ajax({
 	        url: "${pageContext.request.contextPath}/message/messageDelete.do",
 	        data: {
@@ -1009,13 +1009,13 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	        dataType: "json",
 	        beforeSend: function() {
 	            deletingMsg = true; // 삭제 처리 시작 전에 상태 업데이트
-	            console.log("no.1");
+	            /* console.log("no.1"); */
 	        },
 	        success(responseData) {
 	            msgList(page);
 	            $('#messageDetail').modal('hide');
-	        	console.log("처리완료");
-	        	 console.log("no.2");
+	        	/* console.log("처리완료"); */
+	        	 /* console.log("no.2"); */
 	        },
 	        error(responseData) {
 	            alert("신고된 메세지는 처리 전에 삭제할 수 없습니다.");
@@ -1025,7 +1025,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	        complete: function() {
 
 	            deletingMsg = false; // 삭제 처리 완료 후 상태 업데이
-	            console.log("no.4");
+	            /* console.log("no.4"); */
 	        }
 	    });
 	};
@@ -1039,7 +1039,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	    reportMessageId.value = msgId;
 	    attackerId.value = sender;
 	    
-	    console.log(reportMessageId.value);
+	    /* console.log(reportMessageId.value); */
 		$('#reportModal').modal('show');
 		
 		const reportType_ = document.querySelector("#reportType_");
@@ -1047,7 +1047,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		if(reportType_ !== null && reportType !== null){
 			reportType_.addEventListener('change', (e) => {
 				reportType.value = reportType_.value;
-				console.log(reportType.value);
+				/* console.log(reportType.value); */
 			});
 		}
 		
@@ -1061,7 +1061,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	const certification = () =>{
 		const value = document.querySelector("#memberId").value;
 		let selectedStep = "";
-		console.log(value);
+		/* console.log(value); */
 		 $.ajax({
 			url: "${pageContext.request.contextPath}/member/certificate.do",
 			data :{
@@ -1187,11 +1187,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		const stompClient = Stomp.over(ws);
 	
 		stompClient.connect({}, (frame) => {
-			console.log('open : ', frame);
+			/* console.log('open : ', frame); */
 			
 			// 구독신청 
 			stompClient.subscribe('/topic/chat', (message) => {
-				console.log('/topic/chat : ', message);
+				/* console.log('/topic/chat : ', message); */
 				renderMessage(message);
 			});
 		});
@@ -1200,8 +1200,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		const loginMemberId = document.querySelector("#loginMemberId").value;
 		const token = consultReqFrm._csrf.value;
 		
-		console.log(consultReqFrm);
-		console.log(loginMemberId);
+		/* console.log(consultReqFrm); */
+		/* console.log(loginMemberId); */
 		
 		$.ajax({
 			type : "POST",
@@ -1213,7 +1213,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            "X-CSRF-TOKEN": token
 	        },
 			success(responseData){
-				console.log("ChatId: ", responseData)
+				/* console.log("ChatId: ", responseData) */
 				const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
 				if (newWindow) {
 	                newWindow.focus();
@@ -1259,7 +1259,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		chatViewButtons.forEach(button => {
 		    button.addEventListener("click", function () {
 		        const chatId = this.getAttribute("data-chatid");
-		        console.log(chatId);
+		        /* console.log(chatId); */
 		        // 채팅 메시지를 가져오기 위한 AJAX 요청 수행
 		        $.ajax({
 		            type: "GET",
@@ -1269,7 +1269,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		            },
 		            success: function (responseData) {
 		                // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
-		                console.log("됐나요?????????????", responseData)
+
 		                
 		                modalSend(responseData);
 		                
@@ -1293,9 +1293,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		    responseData.forEach(chat => {
 		    	
 		    	const chatSendAt = new Date(chat.chatSendAt);
-		    	console.log(chatSendAt);
+		    	/* console.log(chatSendAt); */
 		    	const formattedSendAt = `\${chatSendAt.getFullYear()}/\${chatSendAt.getMonth() + 1}/\${chatSendAt.getDate()}/\${chatSendAt.getHours()}:\${chatSendAt.getMinutes()}:\${chatSendAt.getSeconds()}`;
-		    	console.log(formattedSendAt);
+		    	/* console.log(formattedSendAt); */
 		        const messageItem = document.createElement("li");
 		        messageItem.classList.add("message", chat.employeeId === null ? "right" : "left", "appeared");
 		        
@@ -1354,7 +1354,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            	page: pageNum
 	            },
 	            success: function (responseData) {
-	                console.log(responseData);
+	                /* console.log(responseData); */
 	                const studentChatList = responseData.studentChatList;
 	                const totalPages = responseData.totalPages;
 	                const currentPage = responseData.currentPage;
@@ -1375,7 +1375,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					} else {
 		                for(let i = 0; i < studentChatList.length; i++){
 		                	
-		                	console.log(pageNum, pageNum-1, (pageNum-1) * 5, (pageNum-1) * 5 + i, (pageNum-1) * 5 + i +1)
+		                	/* console.log(pageNum, pageNum-1, (pageNum-1) * 5, (pageNum-1) * 5 + i, (pageNum-1) * 5 + i +1) */
 		                	html+=`
 		                	<tr>
 				            <td>\${(pageNum-1) * 5 + i + 1}</td>

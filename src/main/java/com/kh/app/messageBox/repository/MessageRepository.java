@@ -35,7 +35,7 @@ public interface MessageRepository {
 	List<MessageBox> getMessageList(String memberId);
 
 	@Insert("insert into report(report_id, message_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
-	        "values(seq_report_id.nextval, #{messageId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+	        "values(seq_report_id.nextval, #{messageId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, current_date, 'n')")
 	int insertMessageReport(MessageReportDto messageReport);
 
 }

@@ -32,8 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().mvcMatchers("/resources/**");
-		
+		web.ignoring().antMatchers("/favicon.ico", "/resources/**", "/error");
 	}
 	
 	@Autowired
@@ -56,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		    .antMatchers("/", "/index.jsp","/member/mailCheck").permitAll()
 			.antMatchers("/board/**").permitAll()
 			.antMatchers("/admin/**").hasAuthority("ADMIN")
+			.antMatchers("/board/employeeBoardList/**").hasAuthority("ADMIN")
 			.antMatchers("/board/*").permitAll()
 			.antMatchers("/ticket/*").permitAll()
 			.antMatchers("/member/memberCreate.do").permitAll()
@@ -83,6 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.userInfoEndpoint()
 		.userService(oauth2UserService);
 		
+		
 	}
 	
 	@Override
@@ -91,6 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
 	
 	}
+	
 	
 	
 }

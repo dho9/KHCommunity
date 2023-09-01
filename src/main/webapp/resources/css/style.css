@@ -1346,23 +1346,26 @@ aside>div.title>ol.buttons>li>a.image.setting {
 	border-radius: 10px;
 }
 
-#container>div.wrap.articles>form#createForm {
-	position: relative;
-	margin-bottom: 5px;
-	border: 2px solid #d6d6d6;
-	box-sizing: border-box;
-	padding-bottom: 135px;
-	padding-right: 3px;
-}
 
 #container>div.wrap.articles>form#createForm {
     position: relative;
     margin-bottom: 5px;
     border: 1px solid #BAD7F1;
     box-sizing: border-box;
-    padding-bottom: 135px;
+    padding-bottom: 19px;
     padding-right: 3px;
     border-radius: 10px;
+    height: fit-content;
+}
+#container>div.wrap.articles>form#updateForm {
+    position: relative;
+    margin-bottom: 5px;
+    border: 1px solid #BAD7F1;
+    box-sizing: border-box;
+    padding-bottom: 19px;
+    padding-right: 3px;
+    border-radius: 10px;
+    height: fit-content;
 }
 
 #container>div.wrap.articles>form#createForm p {
@@ -1454,12 +1457,10 @@ aside>div.title>ol.buttons>li>a.image.setting {
 }
 
 
-/* 湲곕낯 �뙆�씪 �뾽濡쒕뱶 踰꾪듉�쓣 媛먯땄 */
 .file {
   display: none;
 }
 
-/* �궗�슜�옄 �젙�쓽 �뒪���씪 �쟻�슜�븳 踰꾪듉 */
 .custom-file-button {
   display: inline-block;
   padding: 10px 20px;
@@ -1468,9 +1469,9 @@ aside>div.title>ol.buttons>li>a.image.setting {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-left: 7px;
 }
 
-/* 留덉슦�뒪 �샇踰� �슚怨� */
 .custom-file-button:hover {
   background-color: #45a049;
 }
@@ -1485,14 +1486,15 @@ aside>div.title>ol.buttons>li>a.image.setting {
 }
 
 .hashTag {
-	width: 23%;
-	height: 5%;
-	
-	margin-left: 1%;
+	width: 32%;
+    height: 6.5%;
+    margin-left: 1%;
+    border-radius: 7px;
 }
 
 .hashTag-container {
 	height: 6%;
+	margin-bottom: 7px;
 	margin-top: 1%;
 	margin-left: 1%;
 	display: flex;
@@ -1518,6 +1520,7 @@ input[name=_tags] {
 	text-align: center;
 	height: 15px;
 	border: none;
+	margin-top: 4px;
 }
 
 .tag-container {
@@ -1530,6 +1533,7 @@ input[name=_tags] {
 }
 
 #container>div.articles>article>a.article {
+	
     display: block;
     padding: 15px;
     border: solid 0.7px lightgray;

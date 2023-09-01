@@ -8,6 +8,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <style>
+a {
+  text-decoration: none;
+}
 a.article{
 color: black;
 }
@@ -38,7 +41,13 @@ color: black;
   font-weight: bold;
 }
 </style>
-
+	<c:if test="${student.studentType eq 'c'}">
+		<script>
+			alert("수강생 인증 후 이용해 주세요~!")
+			window.history.back();
+		</script>
+	</c:if>
+	<c:if test="${student.studentType ne 'c'}">
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -121,6 +130,7 @@ color: black;
 		  </ul>
 		</c:if>
 	</div>
+	</c:if>
     <form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
@@ -137,7 +147,7 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
+	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="4">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -173,11 +183,12 @@ color: black;
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag">해시태그</label><br>
+	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
+	        <label class="custom-file-button" for="fileInput">파일 선택</label>
+	        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af;">취소</button>
         	<button class="createPostBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="anonymous" onclick="anonymousCheck()">
@@ -204,12 +215,12 @@ color: black;
 		    if (anonymousImg.src.endsWith('/anonymous.png')) {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
 		    	anonymousCheck.value = "true";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		        
 		    } else {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
 		    	anonymousCheck.value = "false";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		    }
 		});
 	    
@@ -239,7 +250,7 @@ color: black;
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
@@ -285,7 +296,7 @@ color: black;
 	  
     // 내가 즐겨찾기한 게시판인지 확인
 	function isFovorite() {
-    	console.log(document.querySelector('.bi').dataset.value);
+    	/* console.log(document.querySelector('.bi').dataset.value); */
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
     		data : {
@@ -312,7 +323,7 @@ color: black;
    	// 공감(좋아요) 했는지 확인
     function isLike() {
     	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
+	    	/* console.log(e.dataset.value); */
 	   		$.ajax({
 	   			url : "${pageContext.request.contextPath}/board/postLike.do",
 	   			data : {
@@ -345,7 +356,7 @@ color: black;
    	
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
-    	console.log(e.target.dataset.value);
+    	/* console.log(e.target.dataset.value); */
     	
     	const token = document.tokenFrm._csrf.value;
     	
@@ -360,7 +371,7 @@ color: black;
             method : "POST",
             dataType : "json",
             success(responseData) {
-                console.log(responseData);
+                /* console.log(responseData); */
                 const {available} = responseData;
                 
                 const star = document.querySelector('.bi');

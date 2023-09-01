@@ -205,7 +205,9 @@
 				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do" class="new" style="text-decoration: none;">수료생게시판</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/preStudentBoardList.do" class="new" style="text-decoration: none;">예비생게시판</a></li>
-				<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+				<sec:authorize access="hasAuthority('ADMIN')">
+					<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+            	</sec:authorize>
 				</ul>
 			</div>
 			<div class="divider"></div>
@@ -216,13 +218,13 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=27"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=11"
 						class="new" style="text-decoration: none;">221</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=28"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=12"
 						class="new"style="text-decoration: none;">222</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=29"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=13"
 						class="new" style="text-decoration: none;">223</a></li>
 				</ul>
 			</div>
@@ -230,13 +232,10 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=30"
-						class="new" style="text-decoration: none;">224</a></li>
-					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=31"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=14"
 						class="new"style="text-decoration: none;">231</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=32"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=15"
 						class="new" style="text-decoration: none;">232</a></li>
 				</ul>
 			</div>
@@ -244,13 +243,13 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=21"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=16"
 						class="new" style="text-decoration: none;">351</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=22"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=17"
 						class="new"style="text-decoration: none;">352</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=23"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=18"
 						class="new" style="text-decoration: none;">353</a></li>
 				</ul>
 			</div>
@@ -258,10 +257,10 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=24"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=19"
 						class="new" style="text-decoration: none;">361</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=25"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=20"
 						class="new" style="text-decoration: none;">362</a></li>
 				</ul>
 			</div>
@@ -276,13 +275,13 @@
 	document.querySelector('#myClass').addEventListener('click', () => {
 		const _memberId = '<sec:authentication property="name"/>';
  	    const memberId = _memberId.replace(/&#64;/g, '@');
-		console.log('!!!!!!!!', authority);
+		/* console.log('!!!!!!!!', authority); */
 	    if(_memberId === 'anonymousUser') {
 	        alert('로그인이 필요합니다.');
 	    }
         else {
         	if(authority === 'STUDENT') {
-        		console.log('학생입니다.');
+        		/* console.log('학생입니다.'); */
 		        $.ajax({
 		           url : "${pageContext.request.contextPath}/member/findStudentType.do",
 		           data : {
@@ -301,7 +300,7 @@
 		        });
         	}
         	else {
-        		console.log('직원입니다.');
+        		/* console.log('직원입니다.'); */
         		$.ajax({
  		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
  		           data : {
@@ -309,7 +308,7 @@
  		           },
  		           success(responseData) {
  		               const {teacher} = responseData;
- 		               console.log(teacher);
+ 		               /* console.log(teacher); */
  		               const {boardId} = teacher;
 	        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
  		           }
@@ -364,7 +363,7 @@
 						memberId
 					},
 					success: function(data) {
-						console.log("성공")
+						/* console.log("성공") */
 						renderNotifications(data);
 					},
 					error: function() {
@@ -577,36 +576,36 @@
 		
 			// 만약 연결되면
 			stompClient.connect({}, (frame) => {
-				console.log('open : ', frame);
+				/* console.log('open : ', frame); */
 				
 				// 메세지 알림 받는 구독신청 
 				stompClient.subscribe(`/topic/msgnotice/\${memberId}`, (message) => {
-					console.log(`/topic/msgnotice/${memberId} : `, message);
+					/* console.log(`/topic/msgnotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 댓글, 대댓글 알림 받는 구독신청
 				stompClient.subscribe(`/topic/commentNotice/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 수강생 승인 여부 알림 받는 구독신청
 				stompClient.subscribe(`/topic/stdAppCheck/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 휴가 처리 관련 알림 받는 구독신청
 				stompClient.subscribe(`/topic/vacCheck/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 			});
 			
 			const renderMessage = (message) => {
 				const {alarmId, sendId, recieveId, content, createdAt, alarmType, postId} = JSON.parse(message.body);
-				console.log(sendId, recieveId, content, createdAt, alarmType);
+				/* console.log(sendId, recieveId, content, createdAt, alarmType); */
 				
 				const alarmImgBox = document.querySelector("#alarmImgBox");
 				
@@ -719,7 +718,7 @@
 				                "X-CSRF-TOKEN": token
 				            },
 				            success: function(data) {
-				            	console.log(data+"asdsadsadsadsad");
+				            	/* console.log(data+"asdsadsadsadsad"); */
 					           	alarmContent.style.color="grey";
 					           	alarmContent.style.borderColor = "grey";
 					           	checkBtn.style.display="none";

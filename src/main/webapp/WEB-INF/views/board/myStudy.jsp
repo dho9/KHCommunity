@@ -49,6 +49,9 @@
 	crossorigin="anonymous"></script>
 
 <style>
+a {
+  text-decoration: none;
+}
 @font-face {
 	font-family: 'GmarketSansMedium';
 	src:
@@ -589,6 +592,14 @@ p.infoTitles {
 	border-radius: 10px;
 	color: white;
 }
+
+#memberInfo {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 135px; /* 조절할 최대 길이를 지정하세요 */
+}
+
 </style>
 
 <section>
@@ -699,24 +710,19 @@ p.infoTitles {
 				    </thead>
 				    <tbody id="messageBoxTbl">
 				        <c:forEach items="${myStudyNotice}" var="studyNotice" varStatus="loop">
-				            <tr>
+				       		<tr data-bs-target="#collapse${loop.index}" style="cursor: pointer;">
 				                <td class="studyNoticeTitle">${studyNotice.title}</td>
 				                <td><span class="truncate-text">${studyNotice.content}</span></td>
-				                <td>${studyNotice.postCreatedAt}</td>
-				            </tr>
-				            <tr>
-				                <td colspan="3">
-				                    <div id="detailModal${loop.index}" class="modal">
-				                        <div class="modal-content">
-				                            <span class="close">&times;</span>
-				                            <div>
-				                                <div>제목: ${studyNotice.title}</div>
-				                                <div>내용: ${studyNotice.content}</div>
-				                            </div>
-				                        </div>
-				                    </div>
+				                <td>
+				                <fmt:parseDate value="${studyNotice.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+						  		<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
 				                </td>
-				            </tr>
+					        </tr>
+					        <tr>
+								<td colspan="3" style="display: none; font-size: 20px; text-align: left;" id="collapse${loop.index}">
+								&nbsp; &nbsp; &nbsp; &nbsp; ↳ &nbsp;  &nbsp; ${studyNotice.content}
+								</td>
+							</tr>
 				        </c:forEach>
 				    </tbody>
 				</table>
@@ -753,10 +759,13 @@ p.infoTitles {
 						</thead>
 						<tbody id="chatTblBody">
 							<c:forEach var="info" items="${info}" varStatus="loop">
-								<tr  data-bs-target="#collapse${loop.index}" style="cursor: pointer;">
+								<tr data-bs-target="#collapse${loop.index}" style="cursor: pointer;">
 									<td>${loop.index + 1}</td>
 									<td>${info.memberId}</td>
-									<td>${info.studyApplicationAt}</td>
+									<td>
+										<fmt:parseDate value="${info.studyApplicationAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+							  			<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
+									</td>
 									<td>
 										<button type="button" class="btn btn-primary"
 											id="approveButton" data-bs-dismiss="modal"
@@ -766,9 +775,10 @@ p.infoTitles {
 									</td>
 								</tr>
 								<tr>
-								 <td colspan="4" style="display: none; font-size: 20px; text-align: left;" id="collapse${loop.index}">
-								&nbsp; &nbsp; &nbsp; &nbsp; ↳ &nbsp;  &nbsp; ${info.introduce}</td>
-									</tr>
+									<td colspan="4" style="display: none; font-size: 20px; text-align: left;" id="collapse${loop.index}">
+									&nbsp; &nbsp; &nbsp; &nbsp; ↳ &nbsp;  &nbsp; ${info.introduce}
+									</td>
+								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
@@ -786,10 +796,13 @@ p.infoTitles {
 
 			</div>
 		</c:if>
+		<script>
+		let studyId="0";
+		</script>
 		<c:forEach var="info" items="${info}">
 			<script>
-		 const studyId = "${info.studyId}";
-		</script>
+			 	studyId = "${info.studyId}";
+			</script>
 		</c:forEach>
 
 		<!-- 메인컨테이너 div끝 -->
@@ -817,16 +830,37 @@ p.infoTitles {
 	});
 	
 	var rows = document.getElementById('chatTblBody').getElementsByTagName('tr');
+	console.log("신청현황 = ", rows);
+	var noticeRows = document.getElementById('messageBoxTbl').getElementsByTagName('tr');
+	console.log("공지사항= ", noticeRows);
+	
+	for (let i = 0; i < rows.length; i++) {
+	  noticeRows[i].addEventListener('click', function() {
+	      var noticeCollapseElement = this.nextElementSibling.querySelector(`#collapse\${i}`);
+    	  if (noticeCollapseElement.style.display === 'none' || noticeCollapseElement.style.display === '') {
+    		  noticeCollapseElement.style.display = 'revert';
+  	      } else {
+  	    	noticeCollapseElement.style.display = 'none';
+  	      }
+	      
+	    });
+	  }
+	
 	  for (let i = 0; i < rows.length; i++) {
 	    rows[i].addEventListener('click', function() {
 	      var collapseElement = this.nextElementSibling.querySelector(`#collapse\${i}`);
-	      if (collapseElement.style.display === 'none' || collapseElement.style.display === '') {
-	        collapseElement.style.display = 'revert';
-	      } else {
-	        collapseElement.style.display = 'none';
-	      }
+    	  if (collapseElement.style.display === 'none' || collapseElement.style.display === '') {
+  	        collapseElement.style.display = 'revert';
+  	      } else {
+  	        collapseElement.style.display = 'none';
+  	      }
+	      
 	    });
 	  }
+	  
+	  
+	  
+	  
 	  
 <%-- 글작성 폼 --%>
 function showInputForm() {
@@ -932,7 +966,7 @@ function sendActionToServer(memberId,check) {
 
 	
 function deleteStudyMember(memberid, studyid) {
-    console.log(memberid, studyid);
+    /* console.log(memberid, studyid); */
 
     if(confirm('정말 추방하시겠습니까?')){
     	
@@ -950,13 +984,13 @@ function deleteStudyMember(memberid, studyid) {
         	 location.reload();
         },
         error: function (error) {
-            console.error("에라에라");
+            /* console.error("에라에라"); */
         }
     });
     }
 }
 function quitStudyMember(studyid) {
-    console.log(studyid);
+    /* console.log(studyid); */
 
     if(confirm('정말 탈퇴하시겠습니까?')){
     	
@@ -974,7 +1008,7 @@ function quitStudyMember(studyid) {
         	 window.location.href = '${pageContext.request.contextPath}/board/studyBoardList.do';
         },
         error: function (error) {
-            console.error("에라에라");
+            /* console.error("에라에라"); */
         }
     });
     }
