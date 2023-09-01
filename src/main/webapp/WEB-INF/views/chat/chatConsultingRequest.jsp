@@ -83,7 +83,6 @@
 	    const stompClient = Stomp.over(new SockJS('/kh/ws'));
 	
 	    stompClient.connect({}, (frame) => {
-	        console.log('Connected: ' + frame);
 	
 	        // 특정 주제로 구독신청
 	        const topic = '/topic/chat/chatId='+chatId;
@@ -91,8 +90,8 @@
 	        	
 	        	
 	        	const payload = JSON.parse(message.body);
-				console.log(payload);
-	            // 수신한 메시지를 화면에 표시하는 함수 호출
+	           
+	        	// 수신한 메시지를 화면에 표시하는 함수 호출
 	            displayReceivedMessage(payload.message, payload.createdAt, payload.sender);
 	            
 	            if(payload.quitMsg != undefined) {
@@ -156,11 +155,10 @@
                 "X-CSRF-TOKEN": token
             },
             success: function(responseData) {
-                console.log("성공");
                 
             },
             error: function(error) {
-                console.error("에러", error);
+            	
             }
         });
     }
@@ -225,7 +223,6 @@
 	               "X-CSRF-TOKEN": token
 	        },
 	    	success(responseData){
-	    		console.log("성공")
 	    	}
 	    });
 	}
@@ -281,12 +278,10 @@
 		dateElement.innerHTML = '<div class="text-center" style="color:darkgrey;">'+today+'</div><br>';
 		chatBody.appendChild(dateElement);
 	    
-	    console.log(chatId);
 	    // WebSocket 연결
 	    const stompClient = Stomp.over(new SockJS('/kh/ws'));
 	
 	    stompClient.connect({}, (frame) => {
-	        console.log('Connected: ' + frame);
 	
 	        // 특정 주제로 구독신청
 	        const topic = '/topic/chat/chatId='+chatId;
@@ -350,7 +345,6 @@
 	        const chatFrm = document.forms.chatFrm;
 	        const token = chatFrm._csrf.value;
 	        
-	        console.log(token);
 	        
 	        $.ajax({
 	    		type : "POST",
@@ -365,7 +359,6 @@
 	                "X-CSRF-TOKEN": token
 	            },
 	    		success(responseData){
-	    			console.log("성공")
 	    		}
 	    	});
 	    

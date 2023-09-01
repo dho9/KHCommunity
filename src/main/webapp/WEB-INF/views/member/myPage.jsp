@@ -295,6 +295,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 
 </style>
 
+	<c:if test="${not empty msg}">
+		<script>
+			alert('${msg}'); 
+		</script>
+	</c:if>
 <section>
 
 	<!-- 상단 파란부분 div  -->
@@ -318,7 +323,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="infoUdate"><i class="bi bi-pencil-fill"></i> &nbsp;&nbsp; 정보수정</p>
 			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="memberDel"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
+			<p class="mypageBtn" id="memberDel" onclick="logoutFrm();"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
 			<hr class="myPageHr"/>
@@ -647,14 +652,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>패스워드 : </th>
 							<td>
-								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+								<input type="password" class="form-control" name="memberPwd" id="memberPwd"  required>
 							</td>
 						</tr>
 						<br/>
 						<tr>
 							<th>패스워드 확인 : </th>
 							<td>
-								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+								<input type="password" class="form-control" id="passwordConfirmation"  required>
 							</td>
 						</tr>
 						<br/>
@@ -683,7 +688,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>이메일 : </th>
 							<td>
-								<input type="email" class="form-control readChange" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
+								<input type="email" class="form-control" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'readonly required/>
 							</td>
 						</tr>
 						<br/>
@@ -1162,7 +1167,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		
 		const result = confirm('정말 탈퇴하시겠습니까?');
 		if (result === true) {
+			
 			document.memberDeleteFrm.submit();
+			document.memberLogoutFrm.submit();
 		}
 	};
 	
@@ -1464,5 +1471,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		}
 	
 </script>	
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

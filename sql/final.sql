@@ -1227,7 +1227,6 @@ select * from vacation;
 select * from vacation_attachment;
 select * from board order by 1;
 select * from post order by 1;
-delete post where post_id = 42;
 select * from post_content order by 1;
 select * from post_comment;
 select * from favorite;

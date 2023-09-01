@@ -67,7 +67,6 @@ public class MyPageController {
 		
 		 int totalPages = (int) Math.ceil((double) totalCount / limit);
 		 model.addAttribute("totalPages", totalPages);
-		    
 		// 식권정보 끝
 
 		// Dday 시작
@@ -102,9 +101,6 @@ public class MyPageController {
 			@RequestParam(value = "employeeId", required = false) String employeeId,
 			@RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
 
-		
-		
-		
 		String auth = principal.getAuthorities() + "";
 		if("[TEACHER]".equals(auth)) {
 			
@@ -113,19 +109,16 @@ public class MyPageController {
 		}
 
 
-		List<StudentVacationApproveDto> studentVacationApprove = memberService
-				.findAllVacationApproveList(principal.getMemberId());
+		List<StudentVacationApproveDto> studentVacationApprove = memberService.findAllVacationApproveList(principal.getMemberId());
 		model.addAttribute("vacationApprove", studentVacationApprove);
-		log.info("★★vacationApprove = {} ", studentVacationApprove);
+	
 		LocalDate currentDate = LocalDate.now();
 		model.addAttribute("currentDate", currentDate);
 
 		List<StudentListDto> studentList = memberService.findStudentByTeacher(principal.getMemberId());
 		model.addAttribute("studentList", studentList);
-		log.info("★★studentList = {} ", studentList);
 		
 		EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
-
 		model.addAttribute("adminInfo", adminInfo);
 		
 		
@@ -160,8 +153,6 @@ public class MyPageController {
 			@RequestParam String vacationId ,
 			@RequestParam String approveResult
 			) {
-		
-		log.info("vacationId = {} {}", vacationId, approveResult);
 		
 		int result = memberService.updateVacationApprove(vacationId, approveResult);
 		

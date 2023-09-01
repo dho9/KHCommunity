@@ -33,8 +33,6 @@ public class ChatController {
 	@ResponseBody
 	public int chatConsultingRequest(@RequestParam(value = "memberId", required=false) String memberId) {
 		
-//		System.out.println(memberId);
-		
 		int chatId = chatService.insertNewChatRoom(memberId);
 		
 		Talker talker = new Talker();
@@ -67,7 +65,6 @@ public class ChatController {
 							@RequestParam(value = "message", required=false) String message
 							) {
 		
-		System.out.println(chatId +"/"+ studentId +"/"+ message);
 		
 		// 채팅 메세지 db에 저장
 		int result = chatService.insertStudentChatMsg(chatId, studentId, message);
