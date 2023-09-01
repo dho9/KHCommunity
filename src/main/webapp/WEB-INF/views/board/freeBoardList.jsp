@@ -137,7 +137,6 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -173,7 +172,7 @@ color: black;
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag" class="hashTag">해시태그</label><br>
+	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
