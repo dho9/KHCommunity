@@ -510,7 +510,6 @@
 					const alarmText = document.getElementById(`alarmText-\${uniqueId}`);
 					
 					if(readCheck == 'y'){
-						console.log("되냐?");
 						alarmText.addEventListener('click', () => {
 							if(alarmType === 'm') {
 						        // 클릭 시 "마이 페이지"로 이동
