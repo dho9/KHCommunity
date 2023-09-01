@@ -87,45 +87,33 @@ color: black;
 					</a>
 				</c:forEach>
 			</article>
-			
-			<%-- <div class="pagination">
-		        <ul>
-		          <c:if test="${currentPage > 1}">
-		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" >&laquo;</a></li>
-		          </c:if>
-		
-		          <c:forEach var="pageNum" begin="1" end="${totalPages}">
+		  <ul class="pagination justify-content-center">
+	      	<c:if test="${currentPage > 1}">
+			    <li class="page-item">
+			        <li>
+			        	<a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" aria-label="Previous">
+			        		&laquo;
+			        	</a>
+			        </li>
+			        <span aria-hidden="true">&laquo;</span>
+	        </c:if>
+		    <li class="page-item">
+		    	<c:forEach var="pageNum" begin="1" end="${totalPages}">
 		            <c:choose>
 		              <c:when test="${pageNum eq currentPage}">
-		                <li class="active"><a href="#">${pageNum}</a></li>
+		                <li class="active"><a class="page-link" href="#">${pageNum}</a></li>
 		              </c:when>
 		              <c:otherwise>
-		                <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${pageNum}">${pageNum}</a></li>
+		                <li><a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${pageNum}">${pageNum}</a></li>
 		              </c:otherwise>
 		            </c:choose>
-		          </c:forEach>
-		
-		          <c:if test="${currentPage < totalPages}">
-		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage + 1}" ></a></li>
-		          </c:if>
-		        </ul>
-	        </div>  --%>
-	        
-		   
-		  <ul class="pagination justify-content-center">
-		    
-		    <li class="page-item">
-		      <a class="page-link" href="#" aria-label="Previous">
-		        <span aria-hidden="true">&laquo;</span>
-		      </a>
+		        </c:forEach>
 		    </li>
-		    
-		    <li class="page-item"><a class="page-link" href="#">1</a></li>
-		    <li class="page-item"><a class="page-link" href="#">2</a></li>
-		    <li class="page-item"><a class="page-link" href="#">3</a></li>
-		    
 		    <li class="page-item">
 		      <a class="page-link" href="#" aria-label="Next">
+		      	  <c:if test="${currentPage < totalPages}">
+		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage + 1}" ></a></li>
+		          </c:if>
 		        <span aria-hidden="true">&raquo;</span>
 		      </a>
 		    </li>

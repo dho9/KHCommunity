@@ -133,7 +133,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.build();
 				
 		// db저장
-		int alarmId = notificationRepository.insertMessageAlarm(payload);
+		int alarmId = notificationRepository.insertStudyAlarm(payload);
 		simpMessagingTemplate.convertAndSend("/topic/msgnotice/" + to, payload);
 		
 		return alarmId;
