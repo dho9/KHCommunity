@@ -49,6 +49,9 @@
 	crossorigin="anonymous"></script>
 
 <style>
+a {
+  text-decoration: none;
+}
 @font-face {
 	font-family: 'GmarketSansMedium';
 	src:
@@ -963,7 +966,7 @@ function sendActionToServer(memberId,check) {
 
 	
 function deleteStudyMember(memberid, studyid) {
-    console.log(memberid, studyid);
+    /* console.log(memberid, studyid); */
 
     if(confirm('정말 추방하시겠습니까?')){
     	
@@ -981,13 +984,13 @@ function deleteStudyMember(memberid, studyid) {
         	 location.reload();
         },
         error: function (error) {
-            console.error("에라에라");
+            /* console.error("에라에라"); */
         }
     });
     }
 }
 function quitStudyMember(studyid) {
-    console.log(studyid);
+    /* console.log(studyid); */
 
     if(confirm('정말 탈퇴하시겠습니까?')){
     	
@@ -1005,7 +1008,7 @@ function quitStudyMember(studyid) {
         	 window.location.href = '${pageContext.request.contextPath}/board/studyBoardList.do';
         },
         error: function (error) {
-            console.error("에라에라");
+            /* console.error("에라에라"); */
         }
     });
     }

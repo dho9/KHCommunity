@@ -16,6 +16,9 @@
   'GRAD' 0,
   'opsz' 24
 }
+a {
+  text-decoration: none;
+}
 .listCallBack{
     display: block;
     margin-top: 5px;
@@ -506,7 +509,7 @@ button.updateBtn, button.deleteBtn{
 
 				<script>
 				 const memberId = '<sec:authentication property="principal.username"/>';
-				  console.log(memberId);
+				  /* console.log(memberId); */
 				</script>
 				<div class="mb-3">
                  <label for="toInput" class="form-label">To</label>
@@ -625,7 +628,6 @@ button.updateBtn, button.deleteBtn{
 	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 	      	id="updateForm" 
 	      	method="post" 
-	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -647,11 +649,12 @@ button.updateBtn, button.deleteBtn{
 	        	<textarea id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag">해시태그</label><br>
+	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
+	        <label class="custom-file-button" for="fileInput">파일 선택</label>
+	        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
         	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
         	<button type="button" class="anonymous">
@@ -667,7 +670,6 @@ button.updateBtn, button.deleteBtn{
 		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 		  	      	id="updateForm" 
 		  	      	method="post" 
-		  	      	style="height: 66%;"
 		        		enctype="multipart/form-data">
 		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -705,11 +707,13 @@ button.updateBtn, button.deleteBtn{
 		  	        </p>
 		  	        	
 		  	        <div>
-		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	         
+		  	        
+		  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+			        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;"> 
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
@@ -730,7 +734,6 @@ button.updateBtn, button.deleteBtn{
 	  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 	  	      	id="updateForm" 
 	  	      	method="post" 
-	  	      	style="height: 71.2%;"
 	        		enctype="multipart/form-data">
 	  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 	  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -777,11 +780,12 @@ button.updateBtn, button.deleteBtn{
 	  	        </p>
 	  	        	
 	  	        <div>
-	  	        	<label for="hashTag">해시태그</label><br>
+	  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	  	        	<div class="hashTag-container"></div>
 	  	        </div>
-	  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+	  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+		        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 	  	      	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
 	          	<button type="button" class="anonymous">
@@ -798,7 +802,6 @@ button.updateBtn, button.deleteBtn{
 		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 		  	      	id="updateForm" 
 		  	      	method="post" 
-		  	      	style="height: 66%;"
 		        		enctype="multipart/form-data">
 		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -836,13 +839,13 @@ button.updateBtn, button.deleteBtn{
 		  	        </p>
 		  	        	
 		  	        <div>
-		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
 		  	        
-		  	      	
+		  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+			        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="anonymous">
@@ -897,7 +900,7 @@ button.updateBtn, button.deleteBtn{
 	    if(grade_ !== null && grade !== null){
 	    	grade_.addEventListener('change', (e) => {
 	 	       grade.value = grade_.value;
-	 	       console.log(grade);
+	 	       /* console.log(grade); */
 	 	    });
 	    }
 	    
@@ -916,12 +919,12 @@ button.updateBtn, button.deleteBtn{
 		    if (anonymousImg.src.endsWith('/anonymous.png')) {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
 		    	anonymousCheck.value = "true";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		        
 		    } else {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
 		    	anonymousCheck.value = "false";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		    }
 		});
 		
@@ -954,7 +957,7 @@ button.updateBtn, button.deleteBtn{
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
@@ -1077,7 +1080,7 @@ button.updateBtn, button.deleteBtn{
 	  
     // 내가 즐겨찾기한 게시판인지 확인
 	function isFovorite() {
-    	console.log(document.querySelector('.bi').dataset.value);
+    	/* console.log(document.querySelector('.bi').dataset.value); */
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
     		data : {
@@ -1104,7 +1107,7 @@ button.updateBtn, button.deleteBtn{
    	// 공감(좋아요) 했는지 확인
     function isLike() {
     	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
+	    	/* console.log(e.dataset.value); */
 	   		$.ajax({
 	   			url : "${pageContext.request.contextPath}/board/postLike.do",
 	   			data : {
@@ -1137,7 +1140,7 @@ button.updateBtn, button.deleteBtn{
    	
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
-    	console.log(e.target.dataset.value);
+    	/* console.log(e.target.dataset.value); */
     	
     	const token = document.tokenFrm._csrf.value;
     	
@@ -1250,7 +1253,7 @@ button.updateBtn, button.deleteBtn{
 	// 공감(좋아요) 누르기
 	function like() {
 		document.querySelector('.vote').onclick = (e) => {
-			console.log('!!!!!!!!!!!!!');
+			/* console.log('!!!!!!!!!!!!!'); */
 			const token = document.tokenFrm._csrf.value;
 			
 			$.ajax({
@@ -1301,7 +1304,7 @@ button.updateBtn, button.deleteBtn{
 	    	},
 	    	method : "POST",
 	    	success(data){
-	    		console.log(data);
+	    		/* console.log(data); */
 	    		renderComments(data);
 	    		loadCommentLike();
 	    		
@@ -1397,7 +1400,7 @@ button.updateBtn, button.deleteBtn{
 	    childCommentsContainer.className = 'child-comments';
 	    
 	    childComments.forEach(childComment => {
-	    console.log(childComment.memberId);
+	    /* console.log(childComment.memberId); */
 	    const showAuthor = childComment.memberId !==postAuthor; 	
 	    
 	    	const commentCreatedAt = childComment.commentCreatedAt;
@@ -1469,7 +1472,7 @@ function loadCommentLike() {
 
 let anonyCk = false;
 document.querySelector('#commnetContainer').addEventListener('click', (event) => {
-	console.log("클릭!")
+	/* console.log("클릭!") */
   const clickedElement = event.target;
   const value = clickedElement.getAttribute('data-value');
   
@@ -1539,7 +1542,7 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
   }
   if (clickedElement.classList.contains('deleteComment')){
 	  const commentId = clickedElement.getAttribute('data-commentid');
-	  console.log(commentId);
+	  /* console.log(commentId); */
 	  deleteComment(commentId);
   }
   
@@ -1564,7 +1567,7 @@ function deleteComment(commentId){
 		        },
 		        method: "GET",
 		        success(responseData) {
-		        	console.log(responseData);
+		        	/* console.log(responseData); */
 		        	loadComment();
 		        	
 		        }

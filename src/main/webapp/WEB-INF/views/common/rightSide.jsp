@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $.ajax({
         url: "${pageContext.request.contextPath}/board/popularPost.do",
         success: function(data) {
-            console.log(data);
+            /* console.log(data); */
             const container = $("#popularPostsContainer");
             for (let i = 0; i < data.length; i++) {
                 const post = data[i];

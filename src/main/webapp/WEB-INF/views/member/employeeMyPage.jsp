@@ -47,7 +47,7 @@
 
 /* 수강정보 css */
 p.classInfo{color:#606060;}
-p.adminInfo{color:#606060; font-size: 20px; display: inline-block; margin:0px 10px;}
+p.adminInfo{color:#606060; font-size: 17px; display: inline-block; margin:0px 10px;}
 span.classInfo{font-size: 1.3rem; border-right: 2px solid #cecece}
 h2.classInfo{font-weight: bold; color:royalblue;}
 p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
@@ -454,7 +454,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</tr>
 					<br/>
 					<hr class="myPageHr"/>
-						<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
+						<input type="button" id="memberDelBtn" class="btn btn-outline-primary" value="탈퇴하기" onclick="deleteMember();" />
 				</form:form>
 				</div>
 		      </div>
@@ -809,7 +809,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	
 	// 쪽지 읽음 여부 업데이트
 	const updateReadCheck = (checked, msgId, page) =>{
-		console.log(checked, msgId);
+		/* console.log(checked, msgId); */
 		if(checked == 'n'){
 			$.ajax({
 				url: "${pageContext.request.contextPath}/message/messageUpdate.do",
@@ -852,7 +852,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	    reportMessageId.value = msgId;
 	    attackerId.value = sender;
 	    
-	    console.log(reportMessageId.value);
+	    /* console.log(reportMessageId.value); */
 		$('#reportModal').modal('show');
 		
 		const reportType_ = document.querySelector("#reportType_");
@@ -860,7 +860,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		if(reportType_ !== null && reportType !== null){
 			reportType_.addEventListener('change', (e) => {
 				reportType.value = reportType_.value;
-				console.log(reportType.value);
+				/* console.log(reportType.value); */
 			});
 		}
 		
@@ -965,11 +965,11 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			const vcContents = document.querySelectorAll(".vcContent");
 			let studentRenamedFilename ="";
 			for(let i = 0; i < tdElements.length; i++){
-				console.log(i, tdElements[i]);
-				console.log(i, vcContents[i]);
+				/* console.log(i, tdElements[i]); */
+				/* console.log(i, vcContents[i]); */
 				vcContents[i].innerHTML = tdElements[i].innerHTML;
 				studentRenamedFilename = tdElements[tdElements.length -1].innerHTML;
-				console.log(tdElements[tdElements.length -1].innerHTML);
+				/* console.log(tdElements[tdElements.length -1].innerHTML); */
 			}
 			
             const iframe = document.getElementById("studentPdf"); // "iframeElement"을 실제 iframe의 ID로 변경해주세요

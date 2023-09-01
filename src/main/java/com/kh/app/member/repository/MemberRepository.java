@@ -136,7 +136,17 @@ public interface MemberRepository {
 	@Select("select count(*) from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
 	int totalCountTicket(String memberId);
 
-	@Select("select c.curriculum_id, c.class_id, c.teacher_id, m.board_id from student s left join myclass m on s.curriculum_id = m.curriculum_id left join curriculum c on m.curriculum_id = c.curriculum_id where teacher_id = #{memberId}")
+	@Select("SELECT \r\n"
+			+ "     mc.board_id\r\n"
+			+ " FROM\r\n"
+			+ "      member m \r\n"
+			+ " LEFT OUTER JOIN curriculum c ON c.teacher_id = m.member_id\r\n"
+			+ " RIGHT OUTER JOIN authority a ON m.member_id = a.member_id \r\n"
+			+ " LEFT OUTER JOIN employee e ON employee_id = m.member_id\r\n"
+			+ " LEFT OUTER JOIN myclass mc ON mc.curriculum_id = c.curriculum_id\r\n"
+			+ " WHERE	\r\n"
+			+ "     m.member_id = 'rudqls'\r\n"
+			+ "     and current_date between c.curriculum_start_at and c.curriculum_end_at")
 	StudentDto findTeacher(String memberId);
 
 

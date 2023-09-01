@@ -122,7 +122,7 @@ div#memberId-container span.error { color:red; }
 <script>
 document.querySelector("#memberId").onkeyup = (e) => {
 	const value = e.target.value;
-	console.log(value);
+	/* console.log(value); */
 	
 	const guideOk = document.querySelector(".guide.ok");
 	const guideError = document.querySelector(".guide.error");
@@ -137,7 +137,7 @@ document.querySelector("#memberId").onkeyup = (e) => {
 			method : "GET",
 			dataType : "json",
 			success(responseData) {
-				console.log(responseData);
+				/* console.log(responseData); */
 				const {available} = responseData;
 				if(available) {
 					guideOk.style.display = "inline";

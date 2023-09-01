@@ -197,27 +197,6 @@ public class BoardController {
 		return "/board/askCodeBoardList";
 	}
 
-	//	@GetMapping("/studyBoardList.do")
-	//	public String studyBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
-	//		int limit = 6;
-	//		Map<String, Object> params = Map.of(
-	//				"page", page,
-	//				"limit", limit
-	//		);
-	//		List<BoardListDto> studyBoardList = boardService.studyBoardFindAll(params);
-	//		
-	//		int totalCount = boardService.totalCountStudyBoard();
-	//		
-	//		// totalPages 계산
-	//	    int totalPages = (int) Math.ceil((double) totalCount / limit);
-	//	    model.addAttribute("totalPages", totalPages);
-	//
-	//        
-	//        model.addAttribute("studyBoardList", studyBoardList);
-	//        
-	//        return "/board/studyBoardList";
-	//	}
-
 	@GetMapping("/graduateBoardList.do")
 	public String graduateBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
@@ -607,7 +586,7 @@ public class BoardController {
 	@ResponseBody
 	public List<PopularBoardDto> popularPost() {
 		List<PopularBoardDto> post = boardService.findByPopularPost();
-		log.debug("post = {}", post);
+//		log.debug("post = {}", post);
 		// model.addAttribute("post", post);
 		return post;
 	}
@@ -616,14 +595,14 @@ public class BoardController {
 	@ResponseBody
 	public List<NoticeBoardDto> noticeBoard() {
 		List<NoticeBoardDto> post = boardService.findThreeNotice();
-		log.debug("post = {}", post);
+//		log.debug("post = {}", post);
 		return post;
 	}
 
 	@PostMapping("/createComment.do")
 	public ResponseEntity<?> createComment(
 	        @Valid CreateCommentDto _comment, BindingResult bindingResult, @AuthenticationPrincipal MemberDetails member) {
-	    log.debug("commentttttttttttt={}", _comment);
+//	    log.debug("commentttttttttttt={}", _comment);
 	    
 	    if (bindingResult.hasErrors()) { // 유효성 검사 에러가 있는 경우
 	        return ResponseEntity
@@ -678,7 +657,7 @@ public class BoardController {
 	@ResponseBody
 	public List<Comment> commentList(@RequestParam int postId, @AuthenticationPrincipal MemberDetails principal,
 			Model model) {
-		log.debug("idddddddddddd = {}", postId);
+//		log.debug("idddddddddddd = {}", postId);
 		// //log.debug("idddddddddddd = {}",postId);
 		List<Comment> comments = boardService.findByCommentByPostId(postId);
 		model.addAttribute("memberId", principal.getMemberId());
@@ -692,11 +671,11 @@ public class BoardController {
 		String auth = principal.getAuthorities() + "";
 		if("[TEACHER]".equals(auth) || "[ADMIN]".equals(auth)) {
 			List<EmployeeInfoDto> employeeInfo = memberService.findByEmployeeInfo(principal.getMemberId());
-			log.info("employeeInfo={}",employeeInfo);
+//			log.info("employeeInfo={}",employeeInfo);
 			model.addAttribute("employeeInfo", employeeInfo);
 		} else {
 			StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
-			log.info("studentInfo={}",studentInfo);
+//			log.info("studentInfo={}",studentInfo);
 			model.addAttribute("studentInfo", studentInfo);
 		}
 		model.addAttribute("authority", principal.getAuthorities());
@@ -718,7 +697,7 @@ public class BoardController {
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
 		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag, params, boardId);
 		log.info("myClassBoardList ={}", myClassBoardList);
-		log.info("totalPages = {}", totalPages);
+//		log.info("totalPages = {}", totalPages);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(Map.of("board", myClassBoardList, "currentPage", page, "totalPages", totalPages));
 	}
@@ -759,7 +738,7 @@ public class BoardController {
 		String memberId = principal.getMemberId();
 
 		CommentLike commentLike = boardService.findCommentLikeByMemberId(commentId, memberId);
-		log.debug("commentLike = {}", commentLike);
+//		log.debug("commentLike = {}", commentLike);
 
 		boolean available = true;
 		if (commentLike == null)
@@ -768,14 +747,14 @@ public class BoardController {
 		int result = 0;
 		if (available) {
 			result = boardService.deleteCommentLikeByMemberId(commentId, memberId);
-			log.debug("availalbe = {}", available);
+//			log.debug("availalbe = {}", available);
 		} else {
 			result = boardService.insertCommentLikeByMemberId(commentId, memberId);
-			log.debug("availalbe = {}", available);
+//			log.debug("availalbe = {}", available);
 		}
 
 		CommentLike likeCount = boardService.findCommentLikeCount(commentId);
-		log.debug("likeCount = {}", likeCount);
+//		log.debug("likeCount = {}", likeCount);
 
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("available", available, "likeCount", likeCount));
 	}
@@ -783,8 +762,8 @@ public class BoardController {
 	@PostMapping("/boardDelete.do")
 	public String boardDelete(@RequestParam int deletePostId, @RequestParam String postBoardLink) {
 		int result = boardService.deleteBoard(deletePostId);
-		log.debug("보드링크={}", postBoardLink);
-		log.debug("포스트아이디={}", deletePostId);
+//		log.debug("보드링크={}", postBoardLink);
+//		log.debug("포스트아이디={}", deletePostId);
 		return "redirect:/board/" + postBoardLink + ".do";
 	}
 
@@ -854,9 +833,9 @@ public class BoardController {
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 		List<BoardListDto> mycommentarticle = boardService.AllBoardFindMycommentarticle(principal.getMemberId(),
 				params);
-		log.debug("sdsdsdsdsdsdsd={}", mycommentarticle);
+//		log.debug("sdsdsdsdsdsdsd={}", mycommentarticle);
 		int totalCount = boardService.totalCountMycommentarticle(principal.getMemberId());
-		log.debug("토탈카운트에요.={}", totalCount);
+//		log.debug("토탈카운트에요.={}", totalCount);
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("comment", mycommentarticle);
@@ -867,7 +846,7 @@ public class BoardController {
 	@PostMapping("/createMyClassBoardComment.do")
 	public String createMyClassBoardComment(CreateCommentDto _comment, @AuthenticationPrincipal MemberDetails member,
 			Model model) {
-		log.debug("_comment = {}", _comment);
+//		log.debug("_comment = {}", _comment);
 		if (member != null && _comment.getCommentRef() == "") { // 댓글용
 			Comment comment = Comment.builder().postId(_comment.getPostId()).boardId(_comment.getBoardId())
 					.memberId(member.getMemberId()).commentContent(_comment.getCommentContent()).commentLevel(1)
@@ -926,7 +905,7 @@ public class BoardController {
 
 		// totalPage 계산
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
-		log.info("jobKoreaList={}", jobKoreaList);
+//		log.info("jobKoreaList={}", jobKoreaList);
 		Gson gson = new Gson();
 		String jobKoreaListAsJson = gson.toJson(jobKoreaList);
 		model.addAttribute("jobKoreaListAsJson", jobKoreaListAsJson);
@@ -941,7 +920,7 @@ public class BoardController {
 	@ResponseBody
 	public List<PopularBoardDto> threePostByBoardId(@RequestParam int boardId) {
 		List<PopularBoardDto> post = boardService.findThreePostByBoardId(boardId);
-		log.info("post = {}", post);
+//		log.info("post = {}", post);
 		return post;
 	}
 
@@ -1088,9 +1067,10 @@ public class BoardController {
 		List<StudyList> studyList = boardService.findAllStudy();
 		for (StudyList study : studyList) {
 			int postId = study.getPostId(); // StudyList 객체의 id 가져오기
-
+			
 			BoardListDto postDetail = boardService.findById(postId);
-			study.setTag(postDetail.getTag());  
+				
+				study.setTag(postDetail.getTag());  
 		}
 		model.addAttribute("studyBoardList", studyList);
 		return "/board/studyBoardList";
@@ -1104,7 +1084,7 @@ public class BoardController {
 		//log.debug("postDetail = {}", postDetail);
 		//		System.out.println(postDetail);
 		Board board = boardService.findBoardName(postDetail.getBoardId());
-		log.debug("boardddddddddddd={}", board);
+//		log.debug("boardddddddddddd={}", board);
 		// log.debug("boardddddddddddd={}",postDetail);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board", board);
@@ -1187,7 +1167,7 @@ public class BoardController {
 	@ResponseBody
 	public List<StudyList> myStudyList(@AuthenticationPrincipal MemberDetails member ) {
 		List<StudyList> post = boardService.findStudyList(member.getMemberId());
-		log.debug("post = {}",post);
+//		log.debug("post = {}",post);
 		//	    model.addAttribute("post", post);
 		return post;
 	}
@@ -1195,40 +1175,40 @@ public class BoardController {
 	@GetMapping("/myStudy.do")
 	public void myStudy(@RequestParam int id, Model model) {
 		Study myStudy = boardService.myStudyFindById(id);
-		System.out.println("myStudy == " + myStudy);
+//		System.out.println("myStudy == " + myStudy);
 		model.addAttribute("myStudy",myStudy);
 		
 		List<BoardListDto> myStudyNotice = boardService.findAllByBoardId(id);
 		model.addAttribute("myStudyNotice",myStudyNotice);
-		System.out.println("myStudyNotice == " + myStudyNotice);
+//		System.out.println("myStudyNotice == " + myStudyNotice);
 		
 		List<StudyMemberDto> studyMembers = boardService.findStudyMember(myStudy.getStudyId());
-		System.out.println("studyMembers == " + studyMembers);
+//		System.out.println("studyMembers == " + studyMembers);
 		model.addAttribute("studyMembers",studyMembers);
 		
 		BoardListDto postDetail = boardService.findById(id);
 		if(postDetail != null) {
 			Board board = boardService.findBoardName(postDetail.getBoardId());
 			model.addAttribute("board",board );
-			System.out.println(board);
+//			System.out.println(board);
 		}
 
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 
-		System.out.println(postDetail);
+//		System.out.println(postDetail);
 		model.addAttribute("postAttach",postAttach);
 
 		int findStudyId = boardService.findStudyId(id);
 		List<StudyInfo> info = boardService.finAllStudyAppli(findStudyId);
 		model.addAttribute("info",info);
-		System.out.println("info == " + info);
+//		System.out.println("info == " + info);
 	}
 	
 	@PostMapping("/appliCheck.do")
 	@ResponseBody
 	public ResponseEntity<?> appliCheck (@RequestParam String memberId, @RequestParam String check, @RequestParam  int studyId ){
-		System.out.println(check);
+//		System.out.println(check);
 		int result=0;
 		int alarmId=0;
 		if(check.equals("approve")) {

@@ -13,6 +13,9 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+a {
+  text-decoration: none;
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -236,9 +239,9 @@ body {
 				page : pageNumber // 페이지 번호 전달
 			},
 			success(reponseData) {
-				console.log(reponseData);
+				/* console.log(reponseData); */
 				const {board, currentPage, totalPages} = reponseData;
-				console.log('sss'+board, currentPage, totalPages);
+				/* console.log('sss'+board, currentPage, totalPages); */
 				
 				const tbody = document.querySelector('tbody');
 				tbody.innerHTML = "";
@@ -369,9 +372,9 @@ body {
 				tag : btnValue
 			},
 			success(reponseData) {
-				console.log(reponseData);
+				/* console.log(reponseData); */
 				const {board, currentPage, totalPages} = reponseData;
-				console.log(board, currentPage, totalPages);
+				/* console.log(board, currentPage, totalPages); */
 				
 				const tbody = document.querySelector('tbody');
 				tbody.innerHTML = "";
@@ -391,7 +394,7 @@ body {
 							<tr data-value="\${board[i].postId}">
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
-						      <td>\${board[i].memberId}</td>
+						      <td>\${board[i].memberName}</td>
 						      <td>\${createdAt}</td>
 						    </tr>
 						`;
