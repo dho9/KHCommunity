@@ -30,11 +30,12 @@
 	border:2px solid black;
 	border-radius:15px;
 	padding:10px;
-	margin-top:5px;
+	margin-left:20px;
 	width:fit-content;
 	margin-right:30px;
 	opacity:0;
 	transition: opacity 0.5s ease;
+	height: fit-content;
 }
 
 #alarmImgBox {
@@ -48,6 +49,7 @@
 
 #alarmImg {
   transform-origin: top;
+  margin-left: 30px;
 }
 
 @keyframes bell{
@@ -131,7 +133,7 @@
 	            	</a>
             	</sec:authorize>
             	<sec:authorize access="isAuthenticated()">
-            		<div style="width:65px;" id="alarmBox">
+            		<div style="width:65px; display:flex;" id="alarmBox">
             			<div id="alarmImgBox" style="display:flex; padding-top:10px;">
             				<img id="alarmImg" style="width:30px;" alt="" src="${pageContext.request.contextPath}/resources/images/alarmicon.png">
 							

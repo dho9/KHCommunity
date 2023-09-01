@@ -1212,7 +1212,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	        },
 			success(responseData){
 				console.log("ChatId: ", responseData)
-				const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank');
+				const newWindow = window.open("${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + responseData, '_blank', 'width=700, height=800');
 				if (newWindow) {
 	                newWindow.focus();
 	            }
