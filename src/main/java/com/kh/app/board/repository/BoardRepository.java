@@ -32,6 +32,7 @@ import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.entity.Study;
+import com.kh.app.member.entity.Student;
 
 @Mapper
 public interface BoardRepository {
@@ -316,5 +317,8 @@ public interface BoardRepository {
 	
 	@Update(" update study set study_people = study_people-1 where study_id =#{studyId}")
 	int minusStudyCount(int studyId);
+
+	@Select("select * from student where student_id=#{memberId}")
+	Student findStudentById(String memberId);
 	
 }
