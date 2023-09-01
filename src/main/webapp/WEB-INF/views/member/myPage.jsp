@@ -577,8 +577,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<div class="modal-dialog">
 	        	<div class="modal-content">
 	            	<div class="modal-body">
-	            		<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br>
+	            	<c:if test="${student.studentType eq 's'}">
+	            	 	<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br> 
 						<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
+					</c:if>
 							<div class="myPageDivs" id="vacationDiv" >		
 								<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
 									enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
@@ -624,6 +626,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</div> 
 				</div>	
 			</div>
+			
 		</div> 
 	
 	<!-- 메인컨테이너 div끝 -->
@@ -1137,6 +1140,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			alert("비밀번호가 일치하지 않습니다.");
 			return false;
 		}else{
+			
 			alert("회원정보가 정상적으로 수정되었습니다.");
 		}
 	};

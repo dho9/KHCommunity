@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.member.dto.MemberCreateDto;
@@ -243,6 +244,7 @@ public class MemberSecurityController {
 	public ResponseEntity<?> studnetVacationSubmit(@RequestParam String memberId) {
 
 		Student student = memberService.findStudentById(memberId);
+	
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
 	}
 
