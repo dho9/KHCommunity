@@ -170,7 +170,6 @@
             document.getElementById("modalReporterId").value = reporterId;
             document.getElementById("modalReportContent").value = reportContent;
             document.getElementById("reportId").value = reportId;  
-               console.log(reportId); // 확인을 위해 로그 출력
           });
         });
 		const sendButton = document.querySelectorAll("#messageButton");

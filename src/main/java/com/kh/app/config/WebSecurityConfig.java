@@ -53,12 +53,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.authorizeRequests()
-			.antMatchers("/", "/index.jsp").permitAll()
+		    .antMatchers("/", "/index.jsp","/member/mailCheck").permitAll()
 			.antMatchers("/board/**").permitAll()
 			.antMatchers("/admin/**").hasAuthority("ADMIN")
 			.antMatchers("/board/*").permitAll()
 			.antMatchers("/ticket/*").permitAll()
 			.antMatchers("/member/memberCreate.do").permitAll()
+			.antMatchers("/member/memberCreate2.do").permitAll()
 			.antMatchers("/member/*").authenticated()
 			.antMatchers("/store/*").permitAll()
 			.antMatchers("/calendar/**").authenticated()
