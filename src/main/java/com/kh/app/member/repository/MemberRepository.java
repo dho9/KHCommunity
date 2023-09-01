@@ -55,7 +55,7 @@ public interface MemberRepository {
 	@Insert("insert into student_attachment values(seq_student_attach_id.nextval, #{memberId}, #{studentOriginalFilename}, #{studentRenamedFilename})")
 	int insertStudentAttach(StudentAttachment attach);
 
-	@Update("update student set approve_request_date = sysdate, approve_check = 'i' where student_id = #{memberId}")
+	@Update("update student set approve_request_date = current_date, approve_check = 'i' where student_id = #{memberId}")
 	int updateApproveRequestDate(StudentAttachment attach);
 
 	@Delete("delete from member where member_id=#{memberId}")
@@ -75,7 +75,7 @@ public interface MemberRepository {
 
 	List<StudentVacationApproveDto> findAllVacationApproveList(String memberId);
 	 
-	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', sysdate, '1' )")
+	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', current_date, '1' )")
 	@SelectKey(before = false, keyProperty = "vacationId", resultType = int.class, statement = "select seq_vacation_id.currval from dual")
 	int insertVacation(StudentVacation vacation);
 

@@ -61,6 +61,7 @@ import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.entity.MemberDetails;
+import com.kh.app.member.entity.Student;
 import com.kh.app.member.service.MemberService;
 import com.kh.app.notification.service.NotificationService;
 
@@ -91,7 +92,7 @@ public class BoardController {
 	private String multipartLocation;
 
 	@GetMapping("/freeBoardList.do")
-	public String freeBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+	public String freeBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 
@@ -104,12 +105,17 @@ public class BoardController {
 
 		model.addAttribute("freeBoardLists", freeBoardLists);
 		model.addAttribute("totalPages", totalPages);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
+		
+		
 
 		return "/board/freeBoardList";
 	}
 
 	@GetMapping("/marketBoardList.do")
-	public String marketBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+	public String marketBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 
@@ -122,12 +128,16 @@ public class BoardController {
 		model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("marketBoardLists", marketBoardLists);
+		
+
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
 
 		return "/board/marketBoardList";
 	}
 
 	@GetMapping("/todayFoodBoardList.do")
-	public String todayFoodBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+	public String todayFoodBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 
@@ -140,12 +150,15 @@ public class BoardController {
 		model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("todayFoodBoardList", todayFoodBoardList);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
 
 		return "/board/todayFoodBoardList";
 	}
 
 	@GetMapping("/sharingInformationBoardList.do")
-	public String sharingInformationBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+	public String sharingInformationBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 
@@ -157,12 +170,15 @@ public class BoardController {
 		model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("sharingInformationBoardList", sharingInformationBoardList);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
 
 		return "/board/sharingInformationBoardList";
 	}
 
 	@GetMapping("/askCodeBoardList.do")
-	public String askCodeBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+	public String askCodeBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 		List<BoardListDto> askCodeBoardList = boardService.askCodeBoardFindAll(params);
@@ -174,6 +190,9 @@ public class BoardController {
 		model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("askCodeBoardList", askCodeBoardList);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
 
 		return "/board/askCodeBoardList";
 	}
@@ -200,7 +219,7 @@ public class BoardController {
 	//	}
 
 	@GetMapping("/graduateBoardList.do")
-	public String graduateBoardList(Model model, @RequestParam(defaultValue = "1") int page) {
+	public String graduateBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 		List<BoardListDto> graduateBoardList = boardService.graduateBoardFindAll(params);
@@ -212,6 +231,9 @@ public class BoardController {
 		model.addAttribute("totalPages", totalPages);
 
 		model.addAttribute("graduateBoardList", graduateBoardList);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
 
 		return "/board/graduateBoardList";
 	}

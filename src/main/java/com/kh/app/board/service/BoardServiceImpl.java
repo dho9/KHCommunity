@@ -35,6 +35,7 @@ import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.entity.Study;
 import com.kh.app.board.repository.BoardRepository;
+import com.kh.app.member.entity.Student;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -636,6 +637,11 @@ public class BoardServiceImpl implements BoardService {
 	public int minusStudyCount(int studyId) {
 		// TODO Auto-generated method stub
 		return boardRepository.minusStudyCount(studyId);
+	}
+	
+	@Override
+	public Student findStudentById(String memberId) {
+		return boardRepository.findStudentById(memberId);
 	}
 }
 

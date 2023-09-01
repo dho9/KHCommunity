@@ -315,9 +315,7 @@
     	  // 테이블 row 클릭
     	    $('.table tbody tr').click(function() {
     	        const classId = $(this).data('classid');
-    	        console.log(classId);
     	        const curriculumId = $(this).data('curriculumid');
-    	        console.log(curriculumId);
     	        const teacherName = $(this).data('teachername');
     	        document.querySelector("#teacherName").innerHTML = '강사 : ' + teacherName;
     	        
@@ -334,13 +332,9 @@
     	                // data에는 서버로부터 받아온 데이터가 들어있습니다.
     	                // 이를 이용하여 모달 창에 내용을 채우는 작업을 수행할 수 있습니다.
     	                // 예: 모달 띄우기 및 데이터 채우기 함수 호출
-    	                console.log("success");
-    	            	console.log(data);
     	                openModalWithData(data)
     	            },
     	            error : function(error){
-    	            	console.log("error");
-    	            	console.log(error);
     	            }
     	            
     	        });
@@ -434,14 +428,6 @@
     	        const teacherId = button.data('button-teacherid');
     	        const curriculumId = button.data('button-curriculumid');
     	        
-    	        console.log('subject='+subject);
-    	        console.log('curriculumName='+curriculumName);
-    	        console.log('classId='+classId);
-    	        console.log('teacherName='+teacherName);
-    	        console.log('startDateAsString='+startDateAsString);
-    	        console.log('endDateAsString='+endDateAsString);
-    	        console.log('teacherId='+teacherId);
-    	        console.log('curriculumId='+curriculumId);
     	        
     	        // 모달 내부의 필드에 가져온 정보 입력하기
     	        const modal = $(this);
@@ -471,14 +457,6 @@
     	        
     	        const token = upCourseFrm._csrf.value;
     	        
-    	        console.log(upCourseFrm);
-    	        console.log(curriculumId)
-    	        console.log('subject='+subject);
-    	        console.log('curriculumName='+curriculumName);
-    	        console.log('classId='+classId);
-    	        console.log('startDateAsString='+startDateAsString);
-    	        console.log('endDateAsString='+endDateAsString);
-    	        console.log('teacherId='+teacherId);
     	        
     	        if (confirm("수정 하시겠습니까?")) {
 	    	        // AJAX를 사용하여 서버에 데이터 전송

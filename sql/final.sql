@@ -1674,3 +1674,4 @@ WHERE
             4 desc;
   select * from report;
   select * from vacation;
+select * from post;

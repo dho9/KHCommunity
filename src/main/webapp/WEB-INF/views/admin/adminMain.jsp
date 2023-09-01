@@ -171,9 +171,7 @@
       });
 
       var boardChartData = ${boardChartData};
-      console.log(boardChartData);
       var propertyCount = Object.keys(boardChartData).length;
-      console.log("boardChartData의 속성 수: " + propertyCount);
       
       var chartColumns = [];
 

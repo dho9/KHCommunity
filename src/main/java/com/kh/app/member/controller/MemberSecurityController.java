@@ -119,7 +119,6 @@ public class MemberSecurityController {
 	@GetMapping("/mailCheck")
 	@ResponseBody
 	public String mailCheck(String email, Model model) {
-
 		model.addAttribute("email", email);
 		return memberService.joinEmail(email);
 	}
