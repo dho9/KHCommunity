@@ -398,7 +398,9 @@ public class AdminController {
 		int result1 = adminService.deleteReport(reportId);
 		
 		// 알림
-		result = notificationService.notifyReportAlarm(reporterId, attackerId, messageContent);
+		result = notificationService.notifyReportAlarmToReporterId(reporterId, messageContent);
+		
+		result = notificationService.notifyReportAlarmToAttackerId(attackerId, messageContent);
 		
 		return "redirect:/admin/reportList.do";
 	}

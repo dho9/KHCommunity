@@ -299,6 +299,7 @@
 					},
 					success: function(data) {
 						console.log("성공")
+						
 						renderNotifications(data);
 					},
 					error: function() {
@@ -314,7 +315,7 @@
 
 				  
 				notifications.forEach(notification => {
-					const { alarmId, content, readCheck, alarmType } = notification;
+					const { alarmId, content, readCheck, alarmType, postId } = notification;
 					
 					const alarmContentBox = document.querySelector("#alarmContentBox");
 					const alarmContent = document.createElement('div');
@@ -461,9 +462,10 @@
 					                checkBtn.style.display="none";
 					                alarmImg.style.animation = "";
 					                if(alarmType=='s'){
-						          		 window.location.href = '/kh/board/studyBoardList.do';
+						          		window.location.href = '/kh/board/studyBoardList.do';
+						          	} else if(alarmType == 'c') {
+						          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
 						          	}
-					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
 					            },
 					            error: function() {
 					                console.log("실패")
@@ -533,6 +535,12 @@
 				
 				// 휴가 처리 관련 알림 받는 구독신청
 				stompClient.subscribe(`/topic/vacCheck/\${memberId}`, (message) => {
+					console.log(`/topic/commentNotice/${memberId} : `, message);
+					renderMessage(message);
+				});
+				
+				// 휴가 처리 관련 알림 받는 구독신청
+				stompClient.subscribe(`/topic/reportCheck/\${memberId}`, (message) => {
 					console.log(`/topic/commentNotice/${memberId} : `, message);
 					renderMessage(message);
 				});
@@ -660,6 +668,8 @@
 					           	alarmImg.style.animation = "";
 					          	if(alarmType=='s'){
 					          		 window.location.href = '/kh/board/studyBoardList.do';
+					          	} else if(alarmType == 'c') {
+					          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
 					          	}
 				            	
 				            },
