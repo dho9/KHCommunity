@@ -120,8 +120,8 @@ public class MemberSecurityController {
 	@GetMapping("/mailCheck")
 	@ResponseBody
 	public String mailCheck(String email, Model model) {
-
-		log.debug("email = {}", email);
+		
+		log.info("email = {}", email);
 		model.addAttribute("email", email);
 		return memberService.joinEmail(email);
 	}

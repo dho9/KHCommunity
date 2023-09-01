@@ -382,7 +382,7 @@ button.updateBtn, button.deleteBtn{
 								id="openMessageBtn"
 								onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지
 								|</li>
-							<li class="abuse">신고</li>
+							<li class="abuse" style="margin-top: 3px">신고</li>
 						</c:if>
 					</ul>
 					<hr>

@@ -32,6 +32,7 @@ import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.entity.Study;
+import com.kh.app.member.entity.Student;
 
 @Mapper
 public interface BoardRepository {
@@ -85,7 +86,7 @@ public interface BoardRepository {
 
 	PostLike findPostLikeCount(int postId);
 	
-	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag, anonymous_check) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler}, #{anonymousCheck})")
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag, anonymous_check) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, current_date, 'n', 'n', 'y', #{tags, typeHandler=stringListTypeHandler}, #{anonymousCheck})")
 	@SelectKey(
 			before = false, 
 			keyProperty = "postId", 
@@ -93,7 +94,7 @@ public interface BoardRepository {
 			statement = "select seq_post_id.currval from dual")
 	int insertBoardNofiles(BoardCreateDto board);
 	
-	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag, anonymous_check) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, sysdate, 'n', 'y', 'y', #{tags, typeHandler=stringListTypeHandler}, #{anonymousCheck})")
+	@Insert("INSERT INTO post (post_id, board_id, member_id, title, post_created_at, comment_check, attach_check, status_check, tag, anonymous_check) VALUES (seq_post_id.NEXTVAL, #{boardId}, #{memberId}, #{title}, current_date, 'n', 'y', 'y', #{tags, typeHandler=stringListTypeHandler}, #{anonymousCheck})")
 	@SelectKey(
 			before = false, 
 			keyProperty = "postId", 
@@ -177,11 +178,11 @@ public interface BoardRepository {
 
 
 	@Insert("insert into report(report_id, post_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
-	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+	        "values(seq_report_id.nextval, #{postId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, current_date, 'n')")
 	int insertPostReport(PostReportDto postReport);
 	
 	@Insert("insert into report(report_id, comment_id, reporter_id, attacker_id, report_content, report_type, REPORT_SEND_DATE, REPORT_CHECK)" +
-	        "values(seq_report_id.nextval, #{commentId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
+	        "values(seq_report_id.nextval, #{commentId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, current_date, 'n')")
 	int insertCommentReport(CommentReportDto commentReport);
 
 	@Select("SELECT p.post_id, p.title, pc.content, b.board_name, p.post_created_at\r\n"
@@ -316,5 +317,8 @@ public interface BoardRepository {
 	
 	@Update(" update study set study_people = study_people-1 where study_id =#{studyId}")
 	int minusStudyCount(int studyId);
+
+	@Select("select * from student where student_id=#{memberId}")
+	Student findStudentById(String memberId);
 	
 }
