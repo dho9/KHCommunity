@@ -611,7 +611,7 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
         });
     });
     document.querySelector('.favorite').addEventListener('mouseleave', (e) => {
-        console.log(e+'ㅋㅋㅋㅋ');
+        /* console.log(e+'ㅋㅋㅋㅋ'); */
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
     });

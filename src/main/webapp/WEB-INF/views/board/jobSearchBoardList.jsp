@@ -224,7 +224,7 @@ input:focus {
             success: function(response) {
             	/* console.log(response) */
                 const jobKoreaList = response.jobKoreaList;
-                console.log(jobKoreaList);
+                /* console.log(jobKoreaList); */
                 
                 render(jobKoreaList);
             }
@@ -244,7 +244,7 @@ input:focus {
 				/* console.log(responseData); */
 				const {currentPage} = responseData;
                 const jobKoreaList = responseData.jobKoreaList;
-                console.log('111111111', jobKoreaList);
+                /* console.log('111111111', jobKoreaList); */
                	document.getElementById("loadPrevButton").style.display = 'none';
                	document.getElementById("loadMoreButton").style.display = 'none';
                	/* document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';

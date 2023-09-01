@@ -334,7 +334,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 					<br/>
 					<td>
 	   					
-	   					<input type="button" class="btn btn-outline-success" value="탈퇴하기" onclick="console.log('버튼 클릭 확인'); deleteMember();" />
+	   					<input type="button" class="btn btn-outline-success" value="탈퇴하기" onclick="deleteMember();" />
 	   				</td>
 				</form:form>
 			</div>
@@ -606,12 +606,12 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 			dataType : "json",
 			success(responseData){
 				const messageBoxTbl = document.querySelector("#messageBoxTbl");
-				console.log(responseData.length, "123121");
+				/* console.log(responseData.length, "123121"); */
 				
 				if(responseData.length != 0){
 					let html = ""; 
 					responseData.forEach(function(message) {
-						console.log(message);
+						/* console.log(message); */
 				        html += `
 				        <tr>
 				            <td class="msgId">\${message.messageId}</td>
@@ -642,7 +642,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 					    });
 					});
 				} else{
-					console.log();
+					/* console.log(); */
 					messageBoxTbl.innerHTMl += `
 						<tr>
 						<td colspan="5" class="text-center">받은 쪽지가 없습니다.</td>
@@ -659,7 +659,7 @@ div#update-container input, div#update-container select {margin-bottom:10px;}
 	
 	
 	const updateReadCheck = (checked, msgId) =>{
-		console.log(checked, msgId);
+		/* console.log(checked, msgId); */
 		if(checked == 'n'){
 			$.ajax({
 				url: "${pageContext.request.contextPath}/message/messageUpdate.do",
@@ -741,11 +741,11 @@ document.querySelector("#consultRequest").onclick = () => {
 	const stompClient = Stomp.over(ws);
 
 	stompClient.connect({}, (frame) => {
-		console.log('open : ', frame);
+		/* console.log('open : ', frame); */
 		
 		// 구독신청 
 		stompClient.subscribe('/topic/chat', (message) => {
-			console.log('/topic/notice : ', message);
+			/* console.log('/topic/notice : ', message); */
 			renderMessage(message);
 		});
 	});
@@ -754,8 +754,8 @@ document.querySelector("#consultRequest").onclick = () => {
 	const loginMemberId = document.querySelector("#loginMemberId").value;
 	const token = consultReqFrm._csrf.value;
 	
-	console.log(consultReqFrm);
-	console.log(loginMemberId);
+	/* console.log(consultReqFrm); */
+	/* console.log(loginMemberId); */
 	
 	$.ajax({
 		type : "POST",
@@ -767,7 +767,7 @@ document.querySelector("#consultRequest").onclick = () => {
             "X-CSRF-TOKEN": token
         },
 		success(responseData){
-			console.log("성공")
+			/* console.log("성공") */
 			/* location.href="${pageContext.request.contextPath}/chat/chatConsultingRequest.do"; */
 			
 		},

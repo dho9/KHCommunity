@@ -150,7 +150,7 @@ ex ) 위치, 스터디내용 ...
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";

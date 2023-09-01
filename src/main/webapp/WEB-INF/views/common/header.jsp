@@ -276,13 +276,13 @@
 	document.querySelector('#myClass').addEventListener('click', () => {
 		const _memberId = '<sec:authentication property="name"/>';
  	    const memberId = _memberId.replace(/&#64;/g, '@');
-		console.log('!!!!!!!!', authority);
+		/* console.log('!!!!!!!!', authority); */
 	    if(_memberId === 'anonymousUser') {
 	        alert('로그인이 필요합니다.');
 	    }
         else {
         	if(authority === 'STUDENT') {
-        		console.log('학생입니다.');
+        		/* console.log('학생입니다.'); */
 		        $.ajax({
 		           url : "${pageContext.request.contextPath}/member/findStudentType.do",
 		           data : {
@@ -301,7 +301,7 @@
 		        });
         	}
         	else {
-        		console.log('직원입니다.');
+        		/* console.log('직원입니다.'); */
         		$.ajax({
  		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
  		           data : {
@@ -309,7 +309,7 @@
  		           },
  		           success(responseData) {
  		               const {teacher} = responseData;
- 		               console.log(teacher);
+ 		               /* console.log(teacher); */
  		               const {boardId} = teacher;
 	        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
  		           }
@@ -364,7 +364,7 @@
 						memberId
 					},
 					success: function(data) {
-						console.log("성공")
+						/* console.log("성공") */
 						renderNotifications(data);
 					},
 					error: function() {
@@ -577,36 +577,36 @@
 		
 			// 만약 연결되면
 			stompClient.connect({}, (frame) => {
-				console.log('open : ', frame);
+				/* console.log('open : ', frame); */
 				
 				// 메세지 알림 받는 구독신청 
 				stompClient.subscribe(`/topic/msgnotice/\${memberId}`, (message) => {
-					console.log(`/topic/msgnotice/${memberId} : `, message);
+					/* console.log(`/topic/msgnotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 댓글, 대댓글 알림 받는 구독신청
 				stompClient.subscribe(`/topic/commentNotice/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 수강생 승인 여부 알림 받는 구독신청
 				stompClient.subscribe(`/topic/stdAppCheck/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 휴가 처리 관련 알림 받는 구독신청
 				stompClient.subscribe(`/topic/vacCheck/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 			});
 			
 			const renderMessage = (message) => {
 				const {alarmId, sendId, recieveId, content, createdAt, alarmType, postId} = JSON.parse(message.body);
-				console.log(sendId, recieveId, content, createdAt, alarmType);
+				/* console.log(sendId, recieveId, content, createdAt, alarmType); */
 				
 				const alarmImgBox = document.querySelector("#alarmImgBox");
 				
@@ -719,7 +719,7 @@
 				                "X-CSRF-TOKEN": token
 				            },
 				            success: function(data) {
-				            	console.log(data+"asdsadsadsadsad");
+				            	/* console.log(data+"asdsadsadsadsad"); */
 					           	alarmContent.style.color="grey";
 					           	alarmContent.style.borderColor = "grey";
 					           	checkBtn.style.display="none";

@@ -96,7 +96,7 @@ color: black;
 	    $.ajax({
 	        url: "${pageContext.request.contextPath}/board/myStudyList.do",
 	        success: function(data) {
-	            console.log(JSON.stringify(data));
+	            /* console.log(JSON.stringify(data)); */
 	            
 	            const container = $("#popularPostsContainer");
 	            for (let i = 0; i < data.length; i++) {
@@ -189,7 +189,7 @@ ex ) 위치, 스터디내용 ...
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
