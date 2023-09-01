@@ -142,7 +142,6 @@ const chatViewButtons = document.querySelectorAll("#chatView");
 chatViewButtons.forEach(button => {
     button.addEventListener("click", function () {
         const chatId = this.getAttribute("data-chatid");
-        console.log(chatId);
         // 채팅 메시지를 가져오기 위한 AJAX 요청 수행
         $.ajax({
             type: "GET",
@@ -152,13 +151,11 @@ chatViewButtons.forEach(button => {
             },
             success: function (responseData) {
                 // responseData에 채팅 메시지가 포함되어 있다고 가정합니다.
-                console.log(responseData)
                 
                 modalSend(responseData);
                 
             },
             error: function () {
-                console.log("실패");
             }
         });
     });
@@ -172,9 +169,7 @@ function modalSend(responseData) {
 	    responseData.forEach(chat => {
 	    	
 	    	const chatSendAt = new Date(chat.chatSendAt);
-	    	console.log(chatSendAt);
 	    	const formattedSendAt = `\${chatSendAt.getFullYear()}/\${chatSendAt.getMonth() + 1}/\${chatSendAt.getDate()}/\${chatSendAt.getHours()}:\${chatSendAt.getMinutes()}:\${chatSendAt.getSeconds()}`;
-	    	console.log(formattedSendAt);
 	        const messageItem = document.createElement("li");
 	        messageItem.classList.add("message", chat.employeeId === null ? "right" : "left", "appeared");
 	        

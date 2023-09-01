@@ -205,10 +205,6 @@
         const vacationStartDate = modalFrm.vacationStartDate.value;
         const vacationEndDate = modalFrm.vacationEndDate.value;
         
-        console.log(modalFrm);
-        console.log(studentId);
-        console.log(vacationId);
-        
         const token = document.modalFrm._csrf.value;
         
         $.ajax({
@@ -231,7 +227,6 @@
             location.href="${pageContext.request.contextPath}/admin/adminVacationApprovementList.do";
           },
           error(error) {
-        	  console.log("실패")
           }
         });
       }

@@ -232,9 +232,7 @@
           const studentType = modalFrm.studentType.value;
           const receiveId = document.getElementById("receiveStudent").value;
           const messageContent = document.getElementById("messageContent").value;
-    	  console.log(studentId);
           const token = document.modalFrm._csrf.value;
-          console.log(url);
           $.ajax({
             type: "POST",
             url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
