@@ -16,10 +16,15 @@ import com.kh.app.board.dto.BoardListDto;
 import com.kh.app.board.dto.BoardSearchDto;
 import com.kh.app.board.dto.CommentReportDto;
 import com.kh.app.board.dto.CreateCommentDto;
+import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
+import com.kh.app.board.dto.StudyListDto;
+import com.kh.app.board.dto.StudyMemberDto;
+import com.kh.app.board.dto.StudyMemberId;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -179,13 +184,13 @@ public interface BoardRepository {
 	        "values(seq_report_id.nextval, #{commentId}, #{reporterId}, #{attackerId}, #{reportContent}, #{reportType}, sysdate, 'n')")
 	int insertCommentReport(CommentReportDto commentReport);
 
-	@Select("SELECT p.post_id, p.title, pc.content, b.board_name\r\n"
+	@Select("SELECT p.post_id, p.title, pc.content, b.board_name, p.post_created_at\r\n"
 			+ "FROM post p\r\n"
 			+ "JOIN post_content pc ON p.post_id = pc.post_id\r\n"
 			+ "left join board b on b.board_id = p.board_id\r\n"
 			+ "WHERE p.board_id = #{boardId}\r\n"
 			+ "ORDER BY p.post_created_at DESC\r\n"
-			+ "FETCH FIRST 3 ROWS ONLY")
+			+ "FETCH FIRST 5 ROWS ONLY")
 	List<PopularBoardDto> findThreePostByBoardId(int boardId);
 
 	@Select("select count(*) from post p join post_content c on p.post_id = c.post_id where p.board_id=#{boardId} and tag =#{tag}")
@@ -247,9 +252,69 @@ public interface BoardRepository {
 	@Update("update study set post_id = #{postId} where board_Id = #{boardId}")
 	int updatePostId(int postId, int boardId);
 
+	StudyListDto studyFindById(int id);
 
+	@Insert("insert into study_info (study_id, member_id, introduce, study_application_at, application_check) values(#{studyId},#{appliId}, #{appliContent},default,default )")
+	int insertStudy(int studyId, String appliId, String appliContent);
 	
+	@Select("select count(*) from study_info where study_id = #{studyId} and member_Id = #{appliId}")
+	int checkStudy(int studyId, String appliId);
+	
+	@Select("select * from study where study_id in ( select study_id from study_info where member_id =#{memberId} and APPLICATION_CHECK=1)")
+	List<StudyList> findStudyList(String memberId);
+	
+	@Select("select study_id from study where board_id = #{boardId}")
+	int findStudyId( int boardId);
+	
+	@Insert("insert into study_info (study_id, member_id,application_check) values(#{findStudyId},#{memberId}, 1)")
+	int insertStudyInfo(String memberId, int findStudyId);
+	
+	@Select("select * from study_info where study_id = #{findStudyId} and APPLICATION_CHECK = 0")
+	List<StudyInfo> finAllStudyAppli(int findStudyId);
+	
+	
+	@Update("update study_info set APPLICATION_CHECK = 1 where member_Id = #{memberId} and study_Id = #{studyId} ")
+	int updateStudyInfo(String memberId, int studyId);
+	
+	@Delete("delete from study_info  where member_Id = #{memberId} and study_Id = #{studyId} ")
+	int deleteStudyInfo(String memberId, int studyId);
 
+	@Select("select * from study where board_id=#{id}")
+	Study myStudyFindById(int id);
+
+	List<BoardListDto> findAllByBoardId(int id);
+
+	List<StudyMemberDto> findStudyMember(int studyId);
+
+	@Select("select member_id as receivedId from post where post_id = #{postId}")
+	String findReceivedIdByPostId(int postId);
+
+	@Select("select member_id as receivedId from post_comment where comment_id = #{ref}")
+	String findReceivedIdByCommentRef(int ref);
+
+
+	@Update(" update study set study_people = study_people+1 where study_id =#{studyId}")
+	int updateStudyCount(int studyId);
 	
+	@Select ("select * from study where study_id=#{studyId}")
+	Study findByStudyleaderName(int studyId);
+
+	@Delete ("delete from post where board_id=#{deleteStudyBoardId}")
+	int deleteStudyBoard(int deleteStudyBoardId);
+
+	@Delete("delete from study where study_id=#{deleteStudyId}")
+	int deleteStudy(int deleteStudyId);
+
+	@Delete("delete from board where board_id=#{deleteStudyBoardId}")
+	int deleteBoardType(int deleteStudyBoardId);
+	
+	@Delete("delete study_info where study_id=#{studyId} and member_id = #{memberId}")
+	int studyDeleteMember(String memberId, int studyId);
+	
+	@Select("select member_id from study_info where study_id = #{studyId}")
+	List<StudyMemberId> findStudyMemberIdList(int studyId);
+	
+	@Update(" update study set study_people = study_people-1 where study_id =#{studyId}")
+	int minusStudyCount(int studyId);
 	
 }

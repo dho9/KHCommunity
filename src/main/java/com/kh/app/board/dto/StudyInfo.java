@@ -14,18 +14,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudyList {
-	private int postId;
-	private int boardId;
+public class StudyInfo {
 	private int studyId;
 	private String memberId;
-	private List<String> tag;
-	private String studyName;
-	private int studyPeople;
-	private int memberCount;
-	private LocalDateTime postCreatedAt;
-	private LocalDateTime studyEndAt;
-	private String content;
+	private String introduce;
+	private LocalDateTime studyApplicationAt;
+	private int applcationCheck;
 	
 	
 }

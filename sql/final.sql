@@ -96,6 +96,7 @@
 --drop sequence seq_chat_message_no;
 --drop sequence seq_curriculum_id;
 --drop sequence seq_cal;
+--drop sequence seq_alarm_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -114,6 +115,7 @@ create sequence seq_store_id;
 create sequence seq_ticket_id;
 create sequence seq_chat_message_no;
 create sequence seq_curriculum_id;
+create sequence seq_alarm_id;
 create sequence seq_cal
 	start with 1
 	increment by 1
@@ -359,6 +361,8 @@ CREATE TABLE delete_post (
    content   varchar2(4000)      
 );
 
+
+
 ALTER TABLE delete_post
 MODIFY title VARCHAR2(2000);
 
@@ -455,6 +459,26 @@ CREATE TABLE myclass (
     FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
 );
 
+CREATE TABLE alarm (
+    alarm_id number,
+    received_id varchar(30),
+    content varchar(400),
+    created_at date,
+    alarm_type char(1),
+    read_check char(1)
+);
+
+drop table alarm;
+CREATE TABLE alarm (
+    alarm_id number,
+    received_id varchar(30),
+    content varchar(400),
+    created_at date,
+    alarm_type char(1),
+    read_check char(1)
+);
+
+drop table alarm;
 
 alter table post add anonymous_check char(1);
 alter table post_comment add anonymous_check char(1);
@@ -910,7 +934,10 @@ alter table message_box add constraint CK_messagebox_anonymous_check check (anon
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
 -- 댓글삭제여부
 alter table post_comment add constraint ck_post_comment_delete_ck check (delete_ck in ('0','1'));
-
+-- 알림 타입(r:신고, m:쪽지, c:댓글, a:승인관련, v:휴가관련)
+alter table alarm add constraint ck_alarm_alarm_type check (alarm_type in ('m', 'r', 'c', 'a', 'v'));
+-- 알림 읽음 여부
+alter table alarm add constraint ck_alarm_read_check check (read_check in ('y', 'n'));
 --=================================
 --트리거
 --==================================
@@ -1219,7 +1246,7 @@ select * from delete_post;
 select * from delete_comment;
 select * from authority;
 select * from calendar;
-
+select * from alarm;
 
 delete chat_room where chat_id between 75 and 77;
 
@@ -1235,7 +1262,6 @@ VALUES (seq_post_id.NEXTVAL, 2, 'gmlwls', '여긴 자유게시판?', 'n', 'n', '
 
 INSERT INTO post_content (post_id, board_id, content)
 VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
-
 
 
 
@@ -1444,6 +1470,22 @@ select * from post;
 
 select * from chat_room;
 delete chat_room where chat_id between 119 and 140;
+
+select * from post_comment;
+select * from alarm;
+select * from student;
+select * from post_comment where comment_id = 295;
+update alarm set read_check = 'n' where received_id = 'khendev23';
+
+SELECT *
+FROM (
+    SELECT *
+    FROM alarm
+    WHERE received_id = 'khendev23'
+    ORDER BY alarm_id DESC
+)
+WHERE ROWNUM <= 6;
+
 drop table study CASCADE CONSTRAINTS;
 
 
@@ -1479,6 +1521,7 @@ SELECT seq_board_id.CURRVAL, study_name, '스터디', 'studyList'
 FROM study
 WHERE board_id = 44;
 select study_name from study where board_id = 44;
+
 CREATE TABLE study_info (
     study_id NUMBER,
     member_id varchar2(20),
@@ -1488,6 +1531,16 @@ CREATE TABLE study_info (
     FOREIGN KEY ( member_id) REFERENCES member(member_id),
     FOREIGN KEY ( study_id) REFERENCES study(study_id)
 );
+
+ALTER TABLE study_info
+DROP CONSTRAINT SYS_C0026955;
+
+ALTER TABLE study_info
+ADD CONSTRAINT fk_sutdyinfo_study_id
+FOREIGN KEY (study_id)
+REFERENCES study(study_id)
+ON DELETE CASCADE;
+
 select * from study_info;
 select * from study;
 select * from study;
@@ -1550,7 +1603,74 @@ update study set post_id = 203 where study_name='자바 빡시게하자';
         left join member m
             on p.member_id = m.member_id
 	where
-	    p.post_id=205;
+	    p.post_id=210;
         
-        select * from post_content where post_id=205;
+        select * from post_content where post_id=210;
+        select * from post order by 1 desc;
+        delete from study where post_id is null ;
+        select * from study_info;
+        delete from study_info;
+        delete from study;
+        select * from study;
+        select * from post order by 1 desc;
         
+        
+SELECT
+    p.post_id,
+    p.member_id,
+    p.title,
+    p.post_created_at,
+    p.tag,
+    c.content,
+    p.board_id,
+    m.member_name,
+    s.study_people,
+    s.member_count
+FROM
+    post p
+JOIN
+    post_content c ON p.post_id = c.post_id
+LEFT JOIN
+    member m ON p.member_id = m.member_id
+JOIN
+    study s ON p.post_id = s.post_id
+WHERE
+    p.post_id = 216;
+    select * from study;
+    select * from study_info;
+    delete study_info;
+  select * from study_info;
+  select * from alarm; 
+  select * from message_box;
+  
+  select * from study where study_id in ( select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1);
+    
+  
+  select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1;
+  
+  update study_info set APPLICATION_CHECK = 1 where member_id = 'eogh';
+  
+  select * from study where board_id =59;
+  select * from post where board_id = 59;
+  select * from study;
+  select * from study_info;
+  
+  select * from post where board_id = 6 order by 1 desc;
+  select * from post order by 2 desc;
+  select * from study order by 1 desc;
+  select * from study_info order by 1 desc;
+  select * from board order by 1 desc;
+  
+  select 
+		    s.member_id reader_id,
+		    si.*
+		from 
+			study s join study_info si
+			on
+			s.study_id = si.study_id
+		where 
+			s.study_id=26 and si.application_check = 1
+        order by
+            4 desc;
+  select * from report;
+  select * from vacation;

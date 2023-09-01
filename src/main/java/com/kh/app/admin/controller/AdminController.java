@@ -43,6 +43,7 @@ import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
+import com.kh.app.notification.service.NotificationService;
 import com.kh.app.report.dto.AdminReportListDto;
 import com.kh.app.report.entity.Report;
 import com.kh.app.board.dto.BoardChartDto;
@@ -91,6 +92,9 @@ public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	// 메인화면 출력: 오늘의 이슈, 게시판 현황, 게시글 통계, 미승인 내역, 신고현황 - 유성근
 	@GetMapping("/adminMain.do")
@@ -377,6 +381,10 @@ public class AdminController {
 	public String adminStudentSendMessage(@Valid MessageBox message) {
 		message.setSendId("admin");
 		int result = adminService.sendMessageToStudent(message);
+		
+		// 알림
+		int alarmId = notificationService.notifyMsgSendFromAdmin(message);
+		
 		return "redirect:/admin/adminStudentList.do";
 	}
 
@@ -388,6 +396,7 @@ public class AdminController {
 		int result = adminService.sendReportToStudent(attackerId, admin, messageContent);
 		// 해당 신고내역 report에서 삭제
 		int result1 = adminService.deleteReport(reportId);
+		
 		return "redirect:/admin/reportList.do";
 	}
 	
@@ -431,6 +440,9 @@ public class AdminController {
 		
 	    int result = adminService.approvementStudent(student);
 	    
+	    // 실시간 알림
+	    result = notificationService.notifyStudentApproveCheckOk(student);
+	    
 		return "redirect:/admin/adminStudentApprovementList.do";
 	}
 	
@@ -439,6 +451,9 @@ public class AdminController {
 	public String adminStudentApprovementNo(@Valid AdminStudentListDto student) {
 		
 		int result = adminService.adminStudentApprovementNo(student);
+		
+		// 실시간 알림
+	    result = notificationService.notifyStudentApproveCheckNo(student);
 		
 		return "redirect:/admin/adminStudentApprovementList.do";
 	}
@@ -722,6 +737,44 @@ public class AdminController {
 	    // 휴가 미승인 리스트
 	    List<VacationNonApprovementListDto> students = adminService.findAllNonApprovementStudent();
 	    model.addAttribute("students", students);
+	}
+	
+	// 휴가 승인
+	@PostMapping("/adminVacationOk.do")
+	public String adminVacationOk(
+				@RequestParam(value = "studentId", required = false) String studentId,
+				@RequestParam(value = "vacationId", required = false) int vacationId,
+				@RequestParam(value = "vacationStartDate", required = false) String vacationStartDate,
+				@RequestParam(value = "vacationEndDate", required = false) String vacationEndDate
+			){
+		
+		System.out.println(vacationStartDate + ", " + vacationEndDate);
+		
+		// db 수정
+		int result = adminService.updateVacationOkById(vacationId);
+		
+		// 실시간 알림
+		result = notificationService.notifyVacationCheckOk(studentId, vacationStartDate, vacationEndDate);
+		
+		return "redirect:/admin/adminVacationApprovementList.do";
+	}
+	
+	// 휴가 반려
+	@PostMapping("/adminVacationNo.do")
+	public String adminVacationNo(
+				@RequestParam(value = "studentId", required = false) String studentId,
+				@RequestParam(value = "vacationId", required = false) int vacationId,
+				@RequestParam(value = "vacationStartDate", required = false) String vacationStartDate,
+				@RequestParam(value = "vacationEndDate", required = false) String vacationEndDate
+			){
+			
+		//db 수정
+		int result = adminService.updateVacationByNoId(vacationId);
+			
+		// 실시간 알림
+		result = notificationService.notifyVacationCheckNo(studentId, vacationStartDate, vacationEndDate);
+			
+		return "redirect:/admin/adminVacationApprovementList.do";
 	}
 
 	@PostMapping("/insertStore.do")

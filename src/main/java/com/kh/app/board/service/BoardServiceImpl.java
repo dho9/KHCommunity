@@ -22,7 +22,11 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
+import com.kh.app.board.dto.StudyListDto;
+import com.kh.app.board.dto.StudyMemberDto;
+import com.kh.app.board.dto.StudyMemberId;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -491,6 +495,147 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return boardRepository.updatePostId(postId,boardId);
 	}
+	@Override
+	public StudyListDto studyFindById(int id) {
+		// TODO Auto-generated method stub
+		return boardRepository.studyFindById(id);
+	}
+	@Override
+	public int insertStudy(int studyId, String appliId, String appliContent) {
+		// TODO Auto-generated method stub
+		return boardRepository.insertStudy(studyId,appliId,appliContent);
+	}
+	@Override
+	public int checkStudy(int studyId, String appliId) {
+		// TODO Auto-generated method stub
+		return boardRepository.checkStudy(studyId,appliId);
+	}
+	@Override
+	public List<StudyList> findStudyList(String memberId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findStudyList(memberId);
+	}
 	
+	@Override
+	public List<JobKorea> getJobKoreaDatas(int page, int limit, String keyword) throws IOException {
+		List<JobKorea> jobKoreaList = new ArrayList<>();
+
+		Document document = Jsoup.connect(BASE_URL + "/Search/?stext=" + keyword + "&tabType=recruit&Page_No=" + page).get();
+		Elements contents = document.select(".post");
+
+		int startIndex = (page - 1) * limit;
+		int endIndex = Math.min(startIndex + limit, contents.size());
+
+		for (int i = startIndex; i < endIndex; i++) {
+			Element content = contents.get(i);
+
+			String href = content.select(".post-list-corp .name").attr("href");
+			String fullUrl = BASE_URL + href;
+			JobKorea jobKorea = JobKorea.builder()
+					.company(content.select(".post-list-corp .name").text())
+					.title(content.select(".post-list-info .title").text())
+					.option(content.select(".post-list-info .option").text())
+					.etc(content.select(".post-list-info .etc").text())
+					.url(fullUrl)
+					.build();
+
+			jobKoreaList.add(jobKorea);
+		}
+		return jobKoreaList;
+	}
+	
+	@Override
+	public List<BoardListDto> findAllByBoardId(int id) {
+		return boardRepository.findAllByBoardId(id);
+	}
+	@Override
+	public int findStudyId( int boardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findStudyId(boardId);
+	}
+	@Override
+	public int insertStudyInfo(String memberId, int findStudyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.insertStudyInfo(memberId,findStudyId);
+	}
+	
+	@Override
+	public String findReceivedIdByPostId(int postId) {
+		return boardRepository.findReceivedIdByPostId(postId);
+	}
+	
+	@Override
+	public List<StudyInfo> finAllStudyAppli(int findStudyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.finAllStudyAppli(findStudyId);
+	}
+	@Override
+	public Study myStudyFindById(int id) {
+		// TODO Auto-generated method stub
+		return boardRepository.myStudyFindById(id);
+	}
+	@Override
+	public int updateStudyInfo(String memberId, int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.updateStudyInfo(memberId,studyId);
+	}
+	@Override
+	public int deleteStudyInfo(String memberId, int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudyInfo(memberId,studyId);
+	}
+	
+	@Override
+	public String findReceivedIdByCommentRef(int ref) {
+		// TODO Auto-generated method stub
+		return boardRepository.findReceivedIdByCommentRef(ref);
+	}
+	
+	public List<StudyMemberDto> findStudyMember(int studyId) {
+		return boardRepository.findStudyMember(studyId);
+	}
+	@Override
+	public int updateStudyCount(int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.updateStudyCount(studyId);
+	}
+	@Override
+	public Study findByStudyleaderName(int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findByStudyleaderName(studyId);
+	}
+	
+	@Override
+	public int deleteStudyBoard(int deleteStudyBoardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudyBoard(deleteStudyBoardId);
+	}
+	
+	@Override
+	public int deleteStudy(int deleteStudyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudy(deleteStudyId);
+	}
+	
+	@Override
+	public int deleteBoardType(int deleteStudyBoardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteBoardType(deleteStudyBoardId);
+	}
+	@Override
+	public int studyDeleteMember(String memberId, int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.studyDeleteMember(memberId,studyId);
+	}
+	@Override
+	public List<StudyMemberId> findStudyMemberIdList(int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findStudyMemberIdList(studyId);
+	}
+	@Override
+	public int minusStudyCount(int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.minusStudyCount(studyId);
+	}
 }
 

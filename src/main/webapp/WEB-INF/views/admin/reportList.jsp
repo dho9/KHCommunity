@@ -134,7 +134,7 @@
 	    <div class="modal-dialog">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="sendMessageModalLabel">쪽지 보내기</h5>
+	                <h5 class="modal-title" id="sendMessageModalLabel">조치사항 전달</h5>
 	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 	            <form:form method="POST" action="${pageContext.request.contextPath}/admin/sendReport.do">
@@ -143,6 +143,7 @@
 		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
 		                <input name="attackerId" id="receiveAttackerId" readonly>
 		                <input type="hidden" name="reportId" id="reportId"/>
+		                <input type="hidden" name="reporterId" id="modalReporterId"/>
 		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
 		            </div>
 	            	<div class="modal-footer">

@@ -14,9 +14,9 @@ import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
-import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentDto;
 import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
@@ -26,6 +26,7 @@ import com.kh.app.member.entity.Student;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.StudentVacation;
 import com.kh.app.member.entity.StudentVacationAttachment;
+import com.kh.app.notification.entity.Notification;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 @Mapper
@@ -64,7 +65,7 @@ public interface MemberRepository {
 	StudentMypageInfoDto findByMemberInfo(String memberId);
 
 	@Select("select * from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
-	List<TicketBuyDto> findByTicketInfo(String memberId);
+	List<TicketBuyDto> findByTicketInfo(String memberId,RowBounds rowBounds);
 
 	@Select("select * from curriculum where curriculum_id= #{curriculumId}")
 	Curriculum findByDdayInfo(int curriculumId);
@@ -129,6 +130,19 @@ public interface MemberRepository {
 
 	@Select("select * from chat_message where chat_id = #{chatId} order by chat_no")
 	List<ChatMessage> getChatMessagesByChatId(int chatId);
+
+	@Select("SELECT * FROM (SELECT * FROM alarm WHERE received_id = #{memberId} ORDER BY alarm_id DESC) WHERE ROWNUM <= 6")
+	List<Notification> getNotificationsById(String memberId);
+
+	@Update("update alarm set read_check = 'y' where alarm_id = #{alarmId}")
+	int updateAlarmReadCheck(int alarmId);
+
+
+	@Select("select count(*) from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
+	int totalCountTicket(String memberId);
+
+	@Select("select c.curriculum_id, c.class_id, c.teacher_id, m.board_id from student s left join myclass m on s.curriculum_id = m.curriculum_id left join curriculum c on m.curriculum_id = c.curriculum_id where teacher_id = #{memberId}")
+	StudentDto findTeacher(String memberId);
 
 
 }

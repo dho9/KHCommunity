@@ -337,6 +337,48 @@
 			1 desc
 	</select>
 	
+	<select id="findAllByBoardId" resultType="boardListDto">
+		select 
+	  		p.post_id,
+	  		p.member_id,
+		    p.title,
+		    p.post_created_at,
+		    c.content,
+		    p.board_id
+		from
+		    post p join post_content c
+		    	on
+		    p.post_id = c.post_id
+		where
+		    p.board_id=#{boardId}
+		order by
+			1 desc
+	</select>
+	
+	<select id="findStudyMember" resultType="studyMemberDto">
+		select 
+		    s.member_id reader_id,
+		    si.*
+		from 
+			study s join study_info si
+			on
+			s.study_id = si.study_id
+		where 
+			s.study_id=#{studyId} and si.application_check = 1
+		order by
+			4 desc
+	</select>
+	
+  <resultMap type="studyMemberDto" id="studyMemberDtoMap">
+  	<result column="reader_id" property="readerId"/>
+  	<result column="studyId" property="study_id"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="introduce" property="introduce"/>
+  	<result column="study_application_at" property="studyApplicationAt"/>
+  	<result column="applcation_check" property="applcationCheck"/>
+  </resultMap> 		
+	
+	
   <resultMap type="boardListDto" id="boardListDtoMap">
   	<id column="post_id" property="postId"/>
   	<result column="member_id" property="memberId"/>
@@ -506,5 +548,32 @@ FETCH FIRST 5 ROWS ONLY
 	order by
 		 (SELECT MAX(pc.comment_created_at) FROM post_comment pc WHERE pc.post_id = p.post_id) DESC
   </select>
+  
+  <select id="studyFindById" resultType="StudyListDto">
+SELECT
+    p.post_id,
+    p.member_id,
+    p.title,
+    p.post_created_at,
+    p.tag,
+    c.content,
+    p.board_id,
+    m.member_name,
+    s.study_people,
+    s.member_count,
+    s.study_id
+    
+FROM
+    post p
+JOIN
+    post_content c ON p.post_id = c.post_id
+LEFT JOIN
+    member m ON p.member_id = m.member_id
+JOIN
+    study s ON p.post_id = s.post_id
+WHERE
+    p.post_id = #{id}
+	</select>
+  
   
 </mapper>

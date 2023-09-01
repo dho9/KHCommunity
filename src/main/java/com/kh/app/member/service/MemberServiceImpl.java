@@ -20,9 +20,9 @@ import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.member.dto.EmployeeDto;
-import com.kh.app.member.controller.StudentDto;
 import com.kh.app.member.dto.EmployeeInfoDto;
 import com.kh.app.member.dto.MemberCreateDto;
+import com.kh.app.member.dto.StudentDto;
 import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
@@ -32,6 +32,7 @@ import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.StudentVacation;
 import com.kh.app.member.entity.StudentVacationAttachment;
 import com.kh.app.member.repository.MemberRepository;
+import com.kh.app.notification.entity.Notification;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -170,8 +171,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<TicketBuyDto> findByTicketInfo(String memberId) {
-		return memberRepository.findByTicketInfo(memberId);
+	public List<TicketBuyDto> findByTicketInfo(String memberId, Map<String, Object> params) {
+		int limit = (int) params.get("limit");
+		int page = (int) params.get("page");
+		int offset = (page - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberRepository.findByTicketInfo(memberId, rowBounds);
 	}
 
 	@Override
@@ -257,4 +262,25 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.getChatMessagesByChatId(chatId);
 	}
 
+	@Override
+	public List<Notification> getNotificationsById(String memberId) {
+		return memberRepository.getNotificationsById(memberId);
+	}
+	
+	@Override
+	public int updateAlarmReadCheck(int alarmId) {
+		return memberRepository.updateAlarmReadCheck(alarmId);
+	}
+
+	
+	@Override
+	public int totalCountTicket(String memberId) {
+		return  memberRepository.totalCountTicket(memberId);
+	}
+	
+	@Override
+	public StudentDto findTeacher(String memberId) {
+		return memberRepository.findTeacher(memberId);
+	}
+	
 }
