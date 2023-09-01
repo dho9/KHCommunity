@@ -315,7 +315,7 @@ public interface BoardRepository {
 	@Select("select member_id from study_info where study_id = #{studyId}")
 	List<StudyMemberId> findStudyMemberIdList(int studyId);
 	
-	@Update(" update study set study_people = study_people-1 where study_id =#{studyId}")
+	@Update("update study set study_people = study_people-1 where study_id =#{studyId}")
 	int minusStudyCount(int studyId);
 
 	@Select("select * from student where student_id=#{memberId}")
