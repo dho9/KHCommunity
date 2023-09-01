@@ -506,8 +506,6 @@ public class AdminController {
 			List<Report> reports = adminService.findAllReports(params);
 			int totalCount = adminService.countAllReports();
 			int totalPages = (int) Math.ceil((double) totalCount / limit);
-			log.info("totalCount = {}", totalCount);
-			log.info("totalPages = {}", totalPages);
 			model.addAttribute("reports", reports);
 			model.addAttribute("currentPage", page);
 			model.addAttribute("totalPages", totalPages);
@@ -554,7 +552,6 @@ public class AdminController {
 	@PostMapping("/adminTeacherDelete.do")
 	public String adminTeacherDelete(@Valid Teacher teacher) {
 		String memberId = teacher.getMemberId();
-		log.info("memberId = {}", memberId);
 		// member테이블에서 삭제
 		int result1 = adminService.deleteAdminTeacher(memberId);
 		int result2 = adminService.deleteAdminAuthority(memberId);

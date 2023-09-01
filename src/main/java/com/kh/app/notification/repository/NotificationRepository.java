@@ -28,4 +28,5 @@ public interface NotificationRepository {
 			statement = " select seq_alarm_id.currval from dual")
 	int insertCommentAlarm(MsgPayload payload);
 
+
 }

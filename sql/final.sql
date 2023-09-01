@@ -463,16 +463,7 @@ CREATE TABLE alarm (
     alarm_id number,
     received_id varchar(30),
     content varchar(400),
-    created_at date,
-    alarm_type char(1),
-    read_check char(1)
-);
-
-drop table alarm;
-CREATE TABLE alarm (
-    alarm_id number,
-    received_id varchar(30),
-    content varchar(400),
+    post_id number,
     created_at date,
     alarm_type char(1),
     read_check char(1)
