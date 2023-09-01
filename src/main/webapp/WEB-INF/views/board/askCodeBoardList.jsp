@@ -11,6 +11,9 @@
 a.article{
 color: black;
 }
+a {
+  text-decoration: none;
+}
 .anonymous{
 	float: right;
 	background-color: white;

@@ -8,6 +8,9 @@
 a.article {
 	color: black;
 }
+a {
+  text-decoration: none;
+}
 </style>
 
 <div id="container" class="community" style="margin-top: 25px;">

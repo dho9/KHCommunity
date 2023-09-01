@@ -6,6 +6,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a {
+  text-decoration: none;
+}
 a.article{
 color: black;
 }
