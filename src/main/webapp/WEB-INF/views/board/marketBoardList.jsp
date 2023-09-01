@@ -136,7 +136,7 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
+	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="2">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
