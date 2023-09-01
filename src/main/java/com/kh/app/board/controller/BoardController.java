@@ -1265,7 +1265,7 @@ public class BoardController {
 		int result = boardService.studyDeleteMember(member.getMemberId(),studyId);
 		Study studyName= boardService.findByStudyleaderName(studyId);
 		Study study = boardService.findByStudyleaderName(studyId);
-		String msg = member.getMemberId()+"님이 "+ studyName.getStudyName()+"에서 나가셨습니다.";
+		String msg = member.getMemberId()+"님이 "+ studyName.getStudyName()+"스터디 모임에서 나가셨습니다.";
 		if(result>0) {
 			int alarmId = notificationService.notifyAlamSendFromMemberId(study.getMemberId(),msg);
 			int minus = boardService.minusStudyCount(studyId);

@@ -61,6 +61,24 @@
 	transform: rotate(-13deg);
   }
 }
+
+#command button{
+
+	background-color: white;
+    border-radius: 7px;
+    border: 2px solid black;
+    float: right;
+    font-size: 20px;
+    margin-top: 2px
+
+}
+
+#command button:hover{
+
+	background-color: royalblue;
+	color: white;
+
+}
 </style>
 
 
@@ -380,8 +398,8 @@
 							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✉️ 쪽지 <br>
 							        	\${content}
-							      	</div>
 							        <button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'r') {
@@ -390,8 +408,8 @@
 							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	⛔ 신고 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'c') {
@@ -400,8 +418,8 @@
 							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	🌐 댓글 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'a') {
@@ -410,8 +428,8 @@
 							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✔️ 승인관련 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'v') {
@@ -420,8 +438,8 @@
 							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	🗓️ 휴가관련 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	}else if(alarmType ==='s'){
@@ -430,8 +448,8 @@
 							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✏ 스터디 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	}
@@ -624,8 +642,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	✉️ 쪽지 <br>
 					        	\${content}
-					      	</div>
 					        <button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 		    			</form:form>
 				    `;
 				} else if(alarmType === 'r') {
@@ -634,8 +652,8 @@
 			    			<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	⛔ 신고 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'c') {
@@ -644,8 +662,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	🌐 댓글 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'a') {
@@ -654,8 +672,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	✔️ 승인관련 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'v') {
@@ -664,8 +682,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	🗓️ 휴가관련 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	}else if(alarmType === 's') {
@@ -674,8 +692,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	✏스터디 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	}
