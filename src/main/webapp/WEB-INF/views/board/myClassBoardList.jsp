@@ -391,7 +391,7 @@ body {
 							<tr data-value="\${board[i].postId}">
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
-						      <td>\${board[i].memberId}</td>
+						      <td>\${board[i].memberName}</td>
 						      <td>\${createdAt}</td>
 						    </tr>
 						`;

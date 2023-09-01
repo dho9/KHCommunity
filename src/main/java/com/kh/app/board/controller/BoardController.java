@@ -696,7 +696,7 @@ public class BoardController {
 		// totalPage 계산
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
 		List<BoardListDto> myClassBoardList = boardService.myClassBoardFindByTag(tag, params, boardId);
-//		log.info("myClassBoardList ={}", myClassBoardList);
+		log.info("myClassBoardList ={}", myClassBoardList);
 //		log.info("totalPages = {}", totalPages);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(Map.of("board", myClassBoardList, "currentPage", page, "totalPages", totalPages));

@@ -216,13 +216,13 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=27"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=11"
 						class="new" style="text-decoration: none;">221</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=28"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=12"
 						class="new"style="text-decoration: none;">222</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=29"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=13"
 						class="new" style="text-decoration: none;">223</a></li>
 				</ul>
 			</div>
@@ -230,13 +230,10 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=30"
-						class="new" style="text-decoration: none;">224</a></li>
-					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=31"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=14"
 						class="new"style="text-decoration: none;">231</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=32"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=15"
 						class="new" style="text-decoration: none;">232</a></li>
 				</ul>
 			</div>
@@ -244,13 +241,13 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=21"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=16"
 						class="new" style="text-decoration: none;">351</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=22"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=17"
 						class="new"style="text-decoration: none;">352</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=23"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=18"
 						class="new" style="text-decoration: none;">353</a></li>
 				</ul>
 			</div>
@@ -258,10 +255,10 @@
 			<div class="group">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=24"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=19"
 						class="new" style="text-decoration: none;">361</a></li>
 					<li><a
-						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=25"
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=20"
 						class="new" style="text-decoration: none;">362</a></li>
 				</ul>
 			</div>
