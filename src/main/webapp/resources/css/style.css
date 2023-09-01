@@ -2012,7 +2012,7 @@ dl, ul, ol, menu, li {
    .card>div{
       overflow: hidden;
    }
-   #boardSubmenu {
+   #boardSubmenu, #myClassBoardSubmenu {
       border-bottom: 1px solid #f3f3f3;
       position: relative;
       display: none;
@@ -2033,7 +2033,7 @@ dl, ul, ol, menu, li {
      }
    }
    
-   #boardSubmenu.show {
+   #boardSubmenu.show, #myClassBoardSubmenu.show {
         animation: slideIn 0.5s ease forwards;
    }
    
