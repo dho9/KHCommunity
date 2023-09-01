@@ -32,8 +32,6 @@ public class CommonController {
 	@PostMapping("/updateAlarmReadCheck.do")
 	@ResponseBody
 	public int updateAlarmReadCheck(@RequestParam(value = "alarmId", required=false) int alarmId) {
-		
-		System.out.println(alarmId);
 		int result = memberService.updateAlarmReadCheck(alarmId);
 		return result;
 	}

@@ -47,7 +47,7 @@
 
 /* 수강정보 css */
 p.classInfo{color:#606060;}
-p.adminInfo{color:#606060; font-size: 20px; display: inline-block; margin:0px 10px;}
+p.adminInfo{color:#606060; font-size: 17px; display: inline-block; margin:0px 10px;}
 span.classInfo{font-size: 1.3rem; border-right: 2px solid #cecece}
 h2.classInfo{font-weight: bold; color:royalblue;}
 p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}

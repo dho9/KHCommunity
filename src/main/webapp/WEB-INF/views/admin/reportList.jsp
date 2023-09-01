@@ -143,7 +143,7 @@
 		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
 		                <input name="attackerId" id="receiveAttackerId" readonly>
 		                <input type="hidden" name="reportId" id="reportId"/>
-		                <input type="hidden" name="reporterId" id="modalReporterId"/>
+		                <input type="hidden" name="sendReporterId" id="sendModalReporterId"/>
 		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
 		            </div>
 	            	<div class="modal-footer">
@@ -168,8 +168,9 @@
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
             document.getElementById("modalReporterId").value = reporterId;
+            document.getElementById("sendModalReporterId").value = reporterId;
             document.getElementById("modalReportContent").value = reportContent;
-            document.getElementById("reportId").value = reportId;  
+            document.getElementById("reportId").value = reportId;
           });
         });
 		const sendButton = document.querySelectorAll("#messageButton");
