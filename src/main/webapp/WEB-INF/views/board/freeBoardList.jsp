@@ -87,39 +87,15 @@ color: black;
 					</a>
 				</c:forEach>
 			</article>
-			
-			<%-- <div class="pagination">
-		        <ul>
-		          <c:if test="${currentPage > 1}">
-		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" >&laquo;</a></li>
-		          </c:if>
-		
-		          <c:forEach var="pageNum" begin="1" end="${totalPages}">
-		            <c:choose>
-		              <c:when test="${pageNum eq currentPage}">
-		                <li class="active"><a href="#">${pageNum}</a></li>
-		              </c:when>
-		              <c:otherwise>
-		                <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${pageNum}">${pageNum}</a></li>
-		              </c:otherwise>
-		            </c:choose>
-		          </c:forEach>
-		
-		          <c:if test="${currentPage < totalPages}">
-		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage + 1}" ></a></li>
-		          </c:if>
-		        </ul>
-	        </div>  --%>
-	        
-		   
 		  <ul class="pagination justify-content-center">
-		    
 	      	<c:if test="${currentPage > 1}">
 			    <li class="page-item">
-			        <li><a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" aria-label="Previous">&laquo;</a></li>
+			        <li>
+			        	<a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" aria-label="Previous">
+			        		&laquo;
+			        	</a>
+			        </li>
 			        <span aria-hidden="true">&laquo;</span>
-			        </a>
-			    </li>
 	        </c:if>
 		    <li class="page-item">
 		    	<c:forEach var="pageNum" begin="1" end="${totalPages}">
