@@ -48,7 +48,7 @@
 #kakao{width:60%; display: inline-block; margin: 3% 0;}
 #loginTitle{font-size: 60px; font-family: 'MBC1961GulimM'; font-weight: bold; color : #4870ef; text-shadow: 1px 1px 0 grey; margin: 5% 0;}
 #loginBtns {width: 100%}
-#loginBtns button{width: 35%; display: inline-black; margin: 5%}
+#loginBtns button{width: 35%; display: inline-black; margin: 5%; border: 1px solid #007bff; float: none;}
 </style>
 <body>
 
