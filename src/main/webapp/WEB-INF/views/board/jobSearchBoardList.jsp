@@ -187,6 +187,7 @@ input:focus {
 	    	document.getElementById("loadMoreButton").style.visibility = 'hidden';
 	    }
 	    jobSearch(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	function loadMoreJobPostingsByFilter() {
 	    currentPage++;
@@ -194,6 +195,7 @@ input:focus {
 	    	document.getElementById("loadMoreButtonByFilter").style.visibility = 'hidden';
 	    }
 	    jobSearchByFilter(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	
 	function loadPrevJobPostings() {
@@ -202,6 +204,7 @@ input:focus {
 	    	document.getElementById("loadPrevButton").style.visibility = 'hidden';
 	    }
 	    jobSearch(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	function loadPrevJobPostingsByFilter() {
 	    currentPage--;
@@ -209,6 +212,7 @@ input:focus {
 	    	document.getElementById("loadPrevButtonByFilter").style.visibility = 'hidden';
 	    }
 	    jobSearchByFilter(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	
     function jobSearch(pageNumber) {
@@ -223,7 +227,7 @@ input:focus {
             success: function(response) {
             	/* console.log(response) */
                 const jobKoreaList = response.jobKoreaList;
-                console.log(jobKoreaList);
+                /* console.log(jobKoreaList); */
                 
                 render(jobKoreaList);
             }
@@ -243,7 +247,7 @@ input:focus {
 				/* console.log(responseData); */
 				const {currentPage} = responseData;
                 const jobKoreaList = responseData.jobKoreaList;
-                console.log('111111111', jobKoreaList);
+                /* console.log('111111111', jobKoreaList); */
                	document.getElementById("loadPrevButton").style.display = 'none';
                	document.getElementById("loadMoreButton").style.display = 'none';
                	/* document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
@@ -272,7 +276,7 @@ input:focus {
     		const option = jobKoreaList[i].option;
     		let etc = jobKoreaList[i].etc;
     		const url = jobKoreaList[i].url;
-    		console.log('@@@', company, title, option, etc, url);
+    		/* console.log('@@@', company, title, option, etc, url); */
     		
    			if (etc.split(" ").length > 5) {
                 etc = etc.split(" ").slice(0, 5).join(" ") + "...";

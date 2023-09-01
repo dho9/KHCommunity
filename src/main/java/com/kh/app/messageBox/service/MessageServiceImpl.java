@@ -18,7 +18,6 @@ public class MessageServiceImpl implements MessageService {
 	private MessageRepository messageRepository;
 	@Override
 	public int insertMessage(MessageBox message) {
-		// TODO Auto-generated method stub
 		return messageRepository.insertMessage(message);
 	}
 	@Override
@@ -28,22 +27,18 @@ public class MessageServiceImpl implements MessageService {
     }
 	@Override
 	public int messageDelete(String messageId) {
-		// TODO Auto-generated method stub
 		return messageRepository.messageDelete(messageId);
 	}
 	@Override
 	public int messageUpdate(String checked, String messageId) {
-		// TODO Auto-generated method stub
 		return messageRepository.messageUpdate(checked, messageId);
 	}
 	@Override
 	public List<MessageBox> getMessageList(String memberId) {
-		// TODO Auto-generated method stub
 		return messageRepository.getMessageList(memberId);
 	}
 	@Override
 	public int insertMessageReport(MessageReportDto messageReport) {
-		// TODO Auto-generated method stub
 		return messageRepository.insertMessageReport(messageReport);
 	}
 	

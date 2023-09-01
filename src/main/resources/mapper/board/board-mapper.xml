@@ -326,11 +326,14 @@
 		    c.content,
 		    (select count(*) from post_comment pc where pc.post_id = p.post_id) comment_count,
 		    p.board_id,
-		    p.anonymous_check
+		    p.anonymous_check,
+		    m.member_name
 		from
 		    post p join post_content c
 		    	on
 		    p.post_id = c.post_id
+		    left join member m
+		    	on m.member_id = p.member_id
 		where
 		    p.board_id=#{boardId} and tag = #{tag}
 		order by

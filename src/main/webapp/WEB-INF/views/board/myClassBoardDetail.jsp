@@ -301,7 +301,7 @@ body {
 						commentRef : e.target.closest('li').querySelector('input[name=commentId]').value
 					},
 					success(responseData) {
-						console.log(responseData);
+						/* console.log(responseData); */
 						window.location.href = "${pageContext.request.contextPath}/board/myClassBoardDetail.do?id=" + postId
 					}
 				})

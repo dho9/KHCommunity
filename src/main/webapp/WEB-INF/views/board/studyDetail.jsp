@@ -516,7 +516,7 @@ button.updateBtn, button.deleteBtn{
 
 				<script>
 				 const memberId = '<sec:authentication property="principal.username"/>';
-				  console.log(memberId);
+				  /* console.log(memberId); */
 				</script>
 				<div class="mb-3">
                  <label for="toInput" class="form-label">To</label>
@@ -595,7 +595,7 @@ button.updateBtn, button.deleteBtn{
 	    $.ajax({
 	        url: "${pageContext.request.contextPath}/board/myStudyList.do",
 	        success: function(data) {
-	            console.log(JSON.stringify(data));
+	            /* console.log(JSON.stringify(data)); */
 	            
 	            const container = $("#popularPostsContainer");
 	            for (let i = 0; i < data.length; i++) {
@@ -755,7 +755,7 @@ button.updateBtn, button.deleteBtn{
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
