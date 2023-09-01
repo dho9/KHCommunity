@@ -52,7 +52,7 @@ public class MyPageController {
 
 
 		// 식권정보 시작
-		int limit = 10;
+		int limit = 5;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit

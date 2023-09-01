@@ -1247,6 +1247,7 @@ select * from delete_comment;
 select * from authority;
 select * from calendar;
 select * from alarm;
+select * from myclass;
 
 delete chat_room where chat_id between 75 and 77;
 
