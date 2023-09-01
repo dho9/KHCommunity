@@ -171,7 +171,7 @@ public class NotificationServiceImpl implements NotificationService {
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/commentNotice/" + to, payload);
 		
-		System.out.println(payload);
+		System.out.println(payload.getPostId());
 		
 		return 0;
 	}
