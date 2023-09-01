@@ -1522,6 +1522,7 @@ input[name=_tags] {
 }
 
 #container>div.articles>article>a.article {
+	
     display: block;
     padding: 15px;
     border: solid 0.7px lightgray;

@@ -49,6 +49,9 @@
 	crossorigin="anonymous"></script>
 
 <style>
+a {
+  text-decoration: none;
+}
 @font-face {
 	font-family: 'GmarketSansMedium';
 	src:

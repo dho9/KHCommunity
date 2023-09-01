@@ -427,7 +427,7 @@ p.title,
 FROM
     post p
 WHERE
-     p.post_created_at BETWEEN (SYSDATE - 7) AND SYSDATE
+     p.post_created_at BETWEEN (current_date - 7) AND current_date
 ORDER BY
     like_count DESC
 FETCH FIRST 5 ROWS ONLY

@@ -16,6 +16,9 @@
   'GRAD' 0,
   'opsz' 24
 }
+a {
+  text-decoration: none;
+}
 .listCallBack{
     display: block;
     margin-top: 5px;

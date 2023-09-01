@@ -7,6 +7,9 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
 a.article{
+a {
+  text-decoration: none;
+}
 color: black;
 }
 .anonymous{

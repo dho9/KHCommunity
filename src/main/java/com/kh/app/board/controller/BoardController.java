@@ -1090,7 +1090,8 @@ public class BoardController {
 			int postId = study.getPostId(); // StudyList 객체의 id 가져오기
 
 			BoardListDto postDetail = boardService.findById(postId);
-			study.setTag(postDetail.getTag());  
+				
+				study.setTag(postDetail.getTag());  
 		}
 		model.addAttribute("studyBoardList", studyList);
 		return "/board/studyBoardList";
