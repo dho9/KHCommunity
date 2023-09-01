@@ -1486,10 +1486,10 @@ aside>div.title>ol.buttons>li>a.image.setting {
 }
 
 .hashTag {
-	width: 23%;
-	height: 5%;
-	
-	margin-left: 1%;
+	width: 32%;
+    height: 6.5%;
+    margin-left: 1%;
+    border-radius: 7px;
 }
 
 .hashTag-container {
@@ -1520,6 +1520,7 @@ input[name=_tags] {
 	text-align: center;
 	height: 15px;
 	border: none;
+	margin-top: 4px;
 }
 
 .tag-container {
@@ -1532,6 +1533,7 @@ input[name=_tags] {
 }
 
 #container>div.articles>article>a.article {
+	
     display: block;
     padding: 15px;
     border: solid 0.7px lightgray;

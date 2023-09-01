@@ -284,7 +284,6 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<Comment> findByCommentByPostId(int postId) {
-		// TODO Auto-generated method stub
 		return boardRepository.findByCommentByPostId(postId);
 	}
 
@@ -294,17 +293,14 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public int deleteCommentLikeByMemberId(int commentId, String memberId) {
-		// TODO Auto-generated method stub
 		return boardRepository.deleteCommentLikeByMemberId(commentId,memberId);
 	}
 	@Override
 	public int insertCommentLikeByMemberId(int commentId, String memberId) {
-		// TODO Auto-generated method stub
 		return boardRepository.insertCommentLikeByMemberId(commentId,memberId);
 	}
 	@Override
 	public CommentLike findCommentLikeCount(int commentId) {
-		// TODO Auto-generated method stub
 		return boardRepository.findCommentLikeCount(commentId);
 	}
 
@@ -320,12 +316,10 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<CommentLike> commentLikeCheckById(int postId, String memberId) {
-		// TODO Auto-generated method stub
 		return boardRepository.CommentLikeCheckById(postId,memberId);
 	}
 	@Override
 	public int createComment(Comment comment) {
-		// TODO Auto-generated method stub
 		return boardRepository.createComment(comment);
 	}
 	@Override
@@ -334,7 +328,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	public List<NoticeBoardDto> findThreeNotice() {
-		// TODO Auto-generated method stub
 		return boardRepository.findThreeNotice();
 	}
 
@@ -378,7 +371,6 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int totalCountMyarticle(String memberId) {
-		// TODO Auto-generated method stub
 		return boardRepository.totalCountMyarticle(memberId);
 	}
 	@Override
@@ -391,12 +383,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public int totalCountMycommentarticle(String memberId) {
-		// TODO Auto-generated method stub
 		return boardRepository.totalCountMycommentarticle(memberId);
 	}
 	@Override
 	public List<CommentLike> commentLikeCheck(int postId) {
-		// TODO Auto-generated method stub
 		return boardRepository.commentLikeCheck(postId);
 	}
 
@@ -422,18 +412,15 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int deleteComment(int commentId) {
-		// TODO Auto-generated method stub
 		return boardRepository.deleteComment(commentId);
 	}
 	@Override
 	public int checkRef(int commentId) {
-		// TODO Auto-generated method stub
 		return boardRepository.checkRef(commentId);
 	}
 
 	@Override
 	public int deleteCommentId(int commentId) {
-		// TODO Auto-generated method stub
 		return boardRepository.deleteCommentId(commentId);
 	}
 
@@ -468,52 +455,42 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public List<StudyList> findAllStudy() {
-		// TODO Auto-generated method stub
 		return boardRepository.findAllStudy();
 	}
 	@Override
 	public int createStudy(Study study) {
-		// TODO Auto-generated method stub
 		return boardRepository.createStudy(study);
 	}
 	@Override
 	public int findBoarderId(Study study) {
-		// TODO Auto-generated method stub
 		return boardRepository.findBoarderId(study);
 	}
 	@Override
 	public int createBoard(Study study) {
-		// TODO Auto-generated method stub
 		return boardRepository.createBoard(study);
 	}
 	@Override
 	public int findByPostId() {
-		// TODO Auto-generated method stub
 		return boardRepository.findByPostId();
 	}
 	@Override
 	public int updatePostId(int postId, int boardId) {
-		// TODO Auto-generated method stub
 		return boardRepository.updatePostId(postId,boardId);
 	}
 	@Override
 	public StudyListDto studyFindById(int id) {
-		// TODO Auto-generated method stub
 		return boardRepository.studyFindById(id);
 	}
 	@Override
 	public int insertStudy(int studyId, String appliId, String appliContent) {
-		// TODO Auto-generated method stub
 		return boardRepository.insertStudy(studyId,appliId,appliContent);
 	}
 	@Override
 	public int checkStudy(int studyId, String appliId) {
-		// TODO Auto-generated method stub
 		return boardRepository.checkStudy(studyId,appliId);
 	}
 	@Override
 	public List<StudyList> findStudyList(String memberId) {
-		// TODO Auto-generated method stub
 		return boardRepository.findStudyList(memberId);
 	}
 	
@@ -551,12 +528,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public int findStudyId( int boardId) {
-		// TODO Auto-generated method stub
 		return boardRepository.findStudyId(boardId);
 	}
 	@Override
 	public int insertStudyInfo(String memberId, int findStudyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.insertStudyInfo(memberId,findStudyId);
 	}
 	
@@ -567,28 +542,23 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public List<StudyInfo> finAllStudyAppli(int findStudyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.finAllStudyAppli(findStudyId);
 	}
 	@Override
 	public Study myStudyFindById(int id) {
-		// TODO Auto-generated method stub
 		return boardRepository.myStudyFindById(id);
 	}
 	@Override
 	public int updateStudyInfo(String memberId, int studyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.updateStudyInfo(memberId,studyId);
 	}
 	@Override
 	public int deleteStudyInfo(String memberId, int studyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.deleteStudyInfo(memberId,studyId);
 	}
 	
 	@Override
 	public String findReceivedIdByCommentRef(int ref) {
-		// TODO Auto-generated method stub
 		return boardRepository.findReceivedIdByCommentRef(ref);
 	}
 	
@@ -597,45 +567,37 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public int updateStudyCount(int studyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.updateStudyCount(studyId);
 	}
 	@Override
 	public Study findByStudyleaderName(int studyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.findByStudyleaderName(studyId);
 	}
 	
 	@Override
 	public int deleteStudyBoard(int deleteStudyBoardId) {
-		// TODO Auto-generated method stub
 		return boardRepository.deleteStudyBoard(deleteStudyBoardId);
 	}
 	
 	@Override
 	public int deleteStudy(int deleteStudyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.deleteStudy(deleteStudyId);
 	}
 	
 	@Override
 	public int deleteBoardType(int deleteStudyBoardId) {
-		// TODO Auto-generated method stub
 		return boardRepository.deleteBoardType(deleteStudyBoardId);
 	}
 	@Override
 	public int studyDeleteMember(String memberId, int studyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.studyDeleteMember(memberId,studyId);
 	}
 	@Override
 	public List<StudyMemberId> findStudyMemberIdList(int studyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.findStudyMemberIdList(studyId);
 	}
 	@Override
 	public int minusStudyCount(int studyId) {
-		// TODO Auto-generated method stub
 		return boardRepository.minusStudyCount(studyId);
 	}
 	

@@ -33,7 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().mvcMatchers("/resources/**");
-		
 	}
 	
 	@Autowired
@@ -84,6 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.userInfoEndpoint()
 		.userService(oauth2UserService);
 		
+		
 	}
 	
 	@Override
@@ -92,6 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
 	
 	}
+	
 	
 	
 }

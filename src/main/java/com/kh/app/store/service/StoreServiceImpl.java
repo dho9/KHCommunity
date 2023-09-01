@@ -17,18 +17,15 @@ public class StoreServiceImpl implements StoreService {
 	
 	@Override
 	public List<Store> findAll() {
-		// TODO Auto-generated method stub
 		return storeRepository.findAll();
 	}
 	@Override
 	public StoreDetailDto findStoreById(int id) {
-		// TODO Auto-generated method stub
 		return storeRepository.findStoreById(id);
 	}
 	
 	@Override
 	public int findStoreIdByName(String name) {
-		// TODO Auto-generated method stub
 		 return storeRepository.findStoreIdByName(name);
 	}
 }
