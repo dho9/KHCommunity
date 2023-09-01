@@ -347,6 +347,7 @@ public class BoardController {
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("available", available));
 	}
 
+	
 	/**
 	 * 게시글조회
 	 * 
@@ -354,7 +355,7 @@ public class BoardController {
 	 * @param model
 	 */
 	@GetMapping("/boardDetail.do")
-	public void boardDetail(@RequestParam int id, Model model) {
+	public void boardDetail(@RequestParam int id, Model model, @AuthenticationPrincipal MemberDetails principal) {
 		BoardListDto postDetail = boardService.findById(id);
 		// log.debug("postDetail = {}", postDetail);
 
@@ -366,8 +367,13 @@ public class BoardController {
 		model.addAttribute("board", board);
 //		System.out.println(board);
 		model.addAttribute("postAttach", postAttach);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
+		
+		
 	}
-
+	
 	/**
 	 * 해당 게시물에 공감(좋아요) 했는지 안했는지
 	 * 
@@ -1064,8 +1070,10 @@ public class BoardController {
 				.body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
 	}
 
+	
+	
 	@GetMapping("/studyBoardList.do")
-	public String studyList(Model model) {
+	public String studyList(Model model, @AuthenticationPrincipal MemberDetails principal) {
 		List<StudyList> studyList = boardService.findAllStudy();
 		for (StudyList study : studyList) {
 			int postId = study.getPostId(); // StudyList 객체의 id 가져오기
@@ -1075,6 +1083,10 @@ public class BoardController {
 				study.setTag(postDetail.getTag());  
 		}
 		model.addAttribute("studyBoardList", studyList);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
+		
 		return "/board/studyBoardList";
 	}
 	

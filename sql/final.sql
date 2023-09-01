@@ -97,6 +97,7 @@
 --drop sequence seq_curriculum_id;
 --drop sequence seq_cal;
 --drop sequence seq_alarm_id;
+--drop sequence seq_study_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -121,6 +122,7 @@ create sequence seq_cal
 	increment by 1
 	minvalue 1
 	maxvalue 99999;
+create sequence seq_study_id;
 --===============================================
 -- 테이블 생성
 --===============================================
@@ -1496,7 +1498,7 @@ CREATE TABLE study (
 update study set study_people = 1 where study_id = 4;
 select * from member;
 select * from study;
-create sequence seq_study_id;
+
 insert into study (study_id,board_id,study_name,member_id,member_count,study_created_at ) values(seq_study_id.nextval, seq_board_id.nextval, '자바 빡시게 하자잉', 'eogh',5,default);
 select seq_board_id.CURRVAL from dual;
 
@@ -1671,3 +1673,57 @@ insert into member
 
   select * from vacation;
 select * from post;
+select * from employee;
+select * from authority;
+select * from board order by 1;
+update board set board_id = 10 where board_id=11;
+TRUNCATE TABLE board CASCADE CONSTRAINTS;
+
+--truncate table post;
+--truncate table favorite;
+--truncate table post_content;
+--truncate table post_comment;
+--truncate table post_attachment;
+--truncate table post_like;
+--truncate table comment_like;
+--truncate table report;
+--truncate table board;
+--truncate table study;
+--truncate table talker;
+--truncate table chat_message;
+--truncate table chat_room;
+
+select * from board;
+insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'자유게시판','소통','freeBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'장터게시판','소통','marketBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'오늘 뭐 먹지?','소통','todayFoodBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'정보공유','소통','sharingInformationBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'코드질문','소통','askCodeBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'스터디','소통','studyBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'수료생게시판','소통','graduateBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'예비생게시판','소통','preStudentBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'직원게시판','소통','employeeBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'공지사항게시판','소통','noticeBoardList');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
