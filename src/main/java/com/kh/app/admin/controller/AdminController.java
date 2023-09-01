@@ -390,12 +390,15 @@ public class AdminController {
 
 	// 피신고자에게 주의조치 보내고 report테이블에서 해당 행 삭제
 	@PostMapping("/sendReport.do")
-	public String sendReport(@RequestParam String reportId, @RequestParam String attackerId, @Valid MessageBox message, @RequestParam String messageContent) {
+	public String sendReport(@RequestParam String reporterId, @RequestParam String reportId, @RequestParam String attackerId, @Valid MessageBox message, @RequestParam String messageContent) {
 		String admin = "admin";
 		// message_box에 주의조치 메세지전송
 		int result = adminService.sendReportToStudent(attackerId, admin, messageContent);
 		// 해당 신고내역 report에서 삭제
 		int result1 = adminService.deleteReport(reportId);
+		
+		// 알림
+		result = notificationService.notifyReportAlarm(reporterId, attackerId, messageContent);
 		
 		return "redirect:/admin/reportList.do";
 	}
