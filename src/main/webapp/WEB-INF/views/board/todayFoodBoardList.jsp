@@ -218,7 +218,7 @@ color: chocolate;}
 	    const grade = document.querySelector("#grade");
 	    grade_.addEventListener('change', (e) => {
 	       grade.value = grade_.value;
-	       console.log(grade);
+	       /* console.log(grade); */
 	    });
 	    
 	 	// 익명체크
@@ -230,12 +230,12 @@ color: chocolate;}
 		    if (anonymousImg.src.endsWith('/anonymous.png')) {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
 		    	anonymousCheck.value = "true";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		        
 		    } else {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
 		    	anonymousCheck.value = "false";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		    }
 		});
 		
@@ -268,7 +268,7 @@ color: chocolate;}
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
@@ -313,7 +313,7 @@ color: chocolate;}
 	  
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
-    	console.log(document.querySelector('.bi').dataset.value);
+    	/* console.log(document.querySelector('.bi').dataset.value); */
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
     		data : {
@@ -338,7 +338,7 @@ color: chocolate;}
     	
     	// load됐을때 공감(좋아요) 했는지 확인
     	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
+	    	/* console.log(e.dataset.value); */
 	   		$.ajax({
 	   			url : "${pageContext.request.contextPath}/board/postLike.do",
 	   			data : {
@@ -370,7 +370,7 @@ color: chocolate;}
     }
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
-    	console.log(e.target.dataset.value);
+    	/* console.log(e.target.dataset.value); */
     	
     	const token = document.tokenFrm._csrf.value;
     	
@@ -385,7 +385,7 @@ color: chocolate;}
             method : "POST",
             dataType : "json",
             success(responseData) {
-                console.log(responseData);
+                /* console.log(responseData); */
                 const {available} = responseData;
                 
                 const star = document.querySelector('.bi');

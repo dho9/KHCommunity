@@ -86,7 +86,7 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createStudyPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
+	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="6">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -150,7 +150,7 @@ ex ) 위치, 스터디내용 ...
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";

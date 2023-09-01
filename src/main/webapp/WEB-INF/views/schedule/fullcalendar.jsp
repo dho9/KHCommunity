@@ -145,10 +145,10 @@ document.addEventListener('DOMContentLoaded', function() {
         calendar.unselect()
       }, */
       eventClick: function(arg) {
-    	  console.log("#등록된 일정 클릭#");
-    	  console.log(arg.event);
+    	  /* console.log("#등록된 일정 클릭#"); */
+    	  /* console.log(arg.event); */
     	  const groupId = arg.event._def.groupId;
-    	  console.log(groupId);
+    	  /* console.log(groupId); */
     	  
         if (confirm('일정을 삭제하시겠습니까?')) {
            arg.event.remove();
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
               data: { groupId: groupId }, 
               contentType: 'application/json', // 데이터 타입 지정
               success: function(response) {
-                console.log('삭제 데이터 전송 성공:', response);
+                /* console.log('삭제 데이터 전송 성공:', response); */
               },
               error: function(xhr, textStatus, errorThrown) {
                 console.error('오류 발생:', errorThrown);
@@ -176,13 +176,13 @@ document.addEventListener('DOMContentLoaded', function() {
     	        url: "${pageContext.request.contextPath}/calendar/calendar.do?method=data",
     	        dataType: "json",
     	        success: function(responseData) {
-    	            console.log("responseData =", responseData);
+    	            /* console.log("responseData =", responseData); */
 					const todayTodoBody = document.querySelector("#todayTodoBody");
 					todayTodoBody.innerHTML ="";
     	            var events = [];
     	            let todo = false;
     	            responseData.forEach(function(item) {
-    	            	console.log(item);
+    	            	/* console.log(item); */
     	                var event = {
     	                    title: item.title,
     	                    start: item.start,
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const startDate = new Date(startInput.value);
         const endDate = new Date(endInput.value);
-		console.log(title.value);
+		/* console.log(title.value); */
         if (title.value == null || title.value == "") {
         	alert('일정 내용은 반드시 입력해야합니다.');
         	event.preventDefault(); 
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('colorSelect').addEventListener('change', function() {
 	 document.getElementById('backgroundColor').value = document.getElementById('colorSelect').value;
-     console.log(document.getElementById('backgroundColor').value);
+     /* console.log(document.getElementById('backgroundColor').value); */
   });
   
   
