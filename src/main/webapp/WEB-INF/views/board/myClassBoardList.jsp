@@ -100,7 +100,12 @@ body {
 	      </div>
 	      <div class="modal-body" style="height: 700px;">
 	      	<form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createMyClass.do" id="createForm" method="POST" enctype="multipart/form-data" style="height: 550px;">
-		      	<input type = "hidden" name="boardId" id="boardId" value="${studentInfo.boardId}">
+	      		<c:if test="${authority eq '[ADMIN]' or authority eq '[TEACHER]'}">
+		      		<input type = "hidden" name="boardId" id="boardId" value="${boardId}">
+		      	</c:if>
+	      		<c:if test="${authority eq '[STUDENT]'}">
+		      		<input type = "hidden" name="boardId" id="boardId" value="${studentInfo.boardId}">
+		      	</c:if>
 		      	<div class="input-group mb-3">
 				  <div class="input-group-prepend">
 				    <input style="width: 105px; height: 43px; background-color: #a6a6a6;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="게시판"/>
