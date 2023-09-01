@@ -283,6 +283,15 @@ input:focus {
 						</div>
 					</div>
 				`;
+               }else{
+            	   job.innerHTML += `
+   	    			<div id="jobDetail"><div id="jobDetailCompany"><a href="\${url}">\${company}</a></div>
+   			    		<div style="width: 640px; height: 183px;">
+   			    			<p class="medium" style="font-size: 22px;"><a href="\${url}">\${title}</a></p>
+   						  	<p class="medium">\${option}</p>
+   						  	<p class="medium" id="jobDetailEtc">\${etc}</p>
+   						</div>
+   					</div>`;
                }
     	}
     };

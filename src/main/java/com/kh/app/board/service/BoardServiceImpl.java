@@ -26,6 +26,7 @@ import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
 import com.kh.app.board.dto.StudyMemberDto;
+import com.kh.app.board.dto.StudyMemberId;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -585,6 +586,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public String findReceivedIdByCommentRef(int ref) {
+		// TODO Auto-generated method stub
+		return boardRepository.findReceivedIdByCommentRef(ref);
+	}
+	
 	public List<StudyMemberDto> findStudyMember(int studyId) {
 		return boardRepository.findStudyMember(studyId);
 	}
@@ -597,6 +603,39 @@ public class BoardServiceImpl implements BoardService {
 	public Study findByStudyleaderName(int studyId) {
 		// TODO Auto-generated method stub
 		return boardRepository.findByStudyleaderName(studyId);
+	}
+	
+	@Override
+	public int deleteStudyBoard(int deleteStudyBoardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudyBoard(deleteStudyBoardId);
+	}
+	
+	@Override
+	public int deleteStudy(int deleteStudyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteStudy(deleteStudyId);
+	}
+	
+	@Override
+	public int deleteBoardType(int deleteStudyBoardId) {
+		// TODO Auto-generated method stub
+		return boardRepository.deleteBoardType(deleteStudyBoardId);
+	}
+	@Override
+	public int studyDeleteMember(String memberId, int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.studyDeleteMember(memberId,studyId);
+	}
+	@Override
+	public List<StudyMemberId> findStudyMemberIdList(int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.findStudyMemberIdList(studyId);
+	}
+	@Override
+	public int minusStudyCount(int studyId) {
+		// TODO Auto-generated method stub
+		return boardRepository.minusStudyCount(studyId);
 	}
 }
 

@@ -54,8 +54,10 @@ color: black;
 			</article>
 		</c:if>
 			<c:if test="${not empty studyBoardList}">
+				
 			<article>
 				<c:forEach items="${studyBoardList}" var="board">
+   					 <c:if test="${board.studyPeople lt board.memberCount}">
 					<a class="article" href="${pageContext.request.contextPath}/board/studyDetail.do?id=${board.postId}">
 				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 					  		<h3 class="medium">${board.memberId}</h3>
@@ -67,6 +69,7 @@ color: black;
 					  	<p class="medium">모집인원 : ${board.studyPeople} / ${board.memberCount}</p> <br>
 					  	<hr>
 					</a>
+					</c:if>
 				</c:forEach>
 			</article>
 			</c:if>
