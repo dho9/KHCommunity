@@ -38,7 +38,13 @@ color: black;
   font-weight: bold;
 }
 </style>
-
+	<c:if test="${student.studentType eq 'c'}">
+		<script>
+			alert("수강생 인증 후 이용해 주세요~!")
+			window.history.back();
+		</script>
+	</c:if>
+	<c:if test="${student.studentType ne 'c'}">
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -121,6 +127,7 @@ color: black;
 		  </ul>
 		</c:if>
 	</div>
+	</c:if>
     <form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
