@@ -274,7 +274,7 @@ public class AdminController {
         @RequestParam String phone,
         @RequestParam String dept) {
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate localDateBirthday = LocalDate.parse(birthday, formatter); // LocalDate 형식으로 변환
         
         String encodedPassword = passwordEncoder.encode(pw);
@@ -318,7 +318,7 @@ public class AdminController {
 	        @RequestParam String phone,
 	        @RequestParam String subject) {
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate localDateBirthday = LocalDate.parse(birthday, formatter); // LocalDate 형식으로 변환
         
         String encodedPassword = passwordEncoder.encode(pw);
