@@ -6,6 +6,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a {
+  text-decoration: none;
+}
 a.article{
 color: black;
 }
@@ -36,6 +39,13 @@ color: black;
   font-weight: bold;
 }
 </style>
+	<c:if test="${student.studentType eq 'c'}">
+		<script>
+			alert("수강생 인증 후 이용해 주세요~!")
+			window.history.back();
+		</script>
+	</c:if>
+	<c:if test="${student.studentType ne 'c'}">
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -89,6 +99,7 @@ color: black;
         </div>
     </div>
     </div>
+    </c:if>
 	
 	<script>
 	
@@ -96,7 +107,7 @@ color: black;
 	    $.ajax({
 	        url: "${pageContext.request.contextPath}/board/myStudyList.do",
 	        success: function(data) {
-	            console.log(JSON.stringify(data));
+	            /* console.log(JSON.stringify(data)); */
 	            
 	            const container = $("#popularPostsContainer");
 	            for (let i = 0; i < data.length; i++) {
@@ -124,7 +135,7 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createStudyPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
+	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="6">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -142,12 +153,13 @@ ex ) 위치, 스터디내용 ...
 	" class="smallplaceholder" id="text"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag">해시태그</label><br>
+	        	<label for="hashTag">&nbsp; 해시태그</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+	        	<label for="hashTag">인원 수</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 스터디 해시태그를 등록해주세요"/>
-	        	<input type="number"  name="count" id="count" style="width: 150px; font-size: 20px;" placeholder="스터디 인원"/ />
+	        	
+	        	<input type="number"  name="count" id="count" style="width: 150px; font-size: 15px;" placeholder="스터디 인원"/ />
 	        	<div class="hashTag-container"></div>
 	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af;">취소</button>
         	<button class="createPostBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
 	      </form:form>
@@ -188,7 +200,7 @@ ex ) 위치, 스터디내용 ...
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";

@@ -55,13 +55,12 @@ public interface MemberRepository {
 	@Insert("insert into student_attachment values(seq_student_attach_id.nextval, #{memberId}, #{studentOriginalFilename}, #{studentRenamedFilename})")
 	int insertStudentAttach(StudentAttachment attach);
 
-	@Update("update student set approve_request_date = sysdate, approve_check = 'i' where student_id = #{memberId}")
+	@Update("update student set approve_request_date = current_date, approve_check = 'i' where student_id = #{memberId}")
 	int updateApproveRequestDate(StudentAttachment attach);
 
 	@Delete("delete from member where member_id=#{memberId}")
 	int deleteMember(String memberId);
 
-//	@Select("select c.curriculum_name , mt.member_name, c.class_id from member m left outer join student s on m.member_id = s.student_id left outer join curriculum c on s.curriculum_id = c.curriculum_id left outer join member mt on c.teacher_id = mt.member_id where m.member_id = #{memberId}")
 	StudentMypageInfoDto findByMemberInfo(String memberId);
 
 	@Select("select * from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
@@ -70,17 +69,13 @@ public interface MemberRepository {
 	@Select("select * from curriculum where curriculum_id= #{curriculumId}")
 	Curriculum findByDdayInfo(int curriculumId);
 
-	// @Insert("insert into vacation_attachment
-	// values(seq_vacation_attach_id.nextval, seq_vacation_id.nextval,
-	// #{vacationOriginalFilename}, #{vacationRenamedFilename})")
 	int insertVacationAttach(MemberDetails member, StudentVacationAttachment attach);
 
-//	@Insert("insert into vacation values( seq_vacation_id.nextval, #{member.studentId}, #{member.vacationStartDate, jdbcType=DATE}, #{member.vacationEndDate, jdbcType=DATE}, #{member.teacherId}, #{member.employeeId}, #{member.vacationSendDate}, '1' )")
 	int insertVacationById(MemberDetails member);
 
 	List<StudentVacationApproveDto> findAllVacationApproveList(String memberId);
 	 
-	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', sysdate, '1' )")
+	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', current_date, '1' )")
 	@SelectKey(before = false, keyProperty = "vacationId", resultType = int.class, statement = "select seq_vacation_id.currval from dual")
 	int insertVacation(StudentVacation vacation);
 
@@ -141,7 +136,17 @@ public interface MemberRepository {
 	@Select("select count(*) from store s left outer join ticket_order t on s.store_id = t.store_id where member_id = #{memberId}")
 	int totalCountTicket(String memberId);
 
-	@Select("select c.curriculum_id, c.class_id, c.teacher_id, m.board_id from student s left join myclass m on s.curriculum_id = m.curriculum_id left join curriculum c on m.curriculum_id = c.curriculum_id where teacher_id = #{memberId}")
+	@Select("SELECT \r\n"
+			+ "     mc.board_id\r\n"
+			+ " FROM\r\n"
+			+ "      member m \r\n"
+			+ " LEFT OUTER JOIN curriculum c ON c.teacher_id = m.member_id\r\n"
+			+ " RIGHT OUTER JOIN authority a ON m.member_id = a.member_id \r\n"
+			+ " LEFT OUTER JOIN employee e ON employee_id = m.member_id\r\n"
+			+ " LEFT OUTER JOIN myclass mc ON mc.curriculum_id = c.curriculum_id\r\n"
+			+ " WHERE	\r\n"
+			+ "     m.member_id = 'rudqls'\r\n"
+			+ "     and current_date between c.curriculum_start_at and c.curriculum_end_at")
 	StudentDto findTeacher(String memberId);
 
 

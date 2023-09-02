@@ -11,6 +11,9 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+a {
+  text-decoration: none;
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -184,6 +187,7 @@ input:focus {
 	    	document.getElementById("loadMoreButton").style.visibility = 'hidden';
 	    }
 	    jobSearch(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	function loadMoreJobPostingsByFilter() {
 	    currentPage++;
@@ -191,6 +195,7 @@ input:focus {
 	    	document.getElementById("loadMoreButtonByFilter").style.visibility = 'hidden';
 	    }
 	    jobSearchByFilter(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	
 	function loadPrevJobPostings() {
@@ -199,6 +204,7 @@ input:focus {
 	    	document.getElementById("loadPrevButton").style.visibility = 'hidden';
 	    }
 	    jobSearch(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	function loadPrevJobPostingsByFilter() {
 	    currentPage--;
@@ -206,6 +212,7 @@ input:focus {
 	    	document.getElementById("loadPrevButtonByFilter").style.visibility = 'hidden';
 	    }
 	    jobSearchByFilter(currentPage);
+	    window.scrollTo(0, 0);
 	}
 	
     function jobSearch(pageNumber) {
@@ -220,7 +227,7 @@ input:focus {
             success: function(response) {
             	/* console.log(response) */
                 const jobKoreaList = response.jobKoreaList;
-                console.log(jobKoreaList);
+                /* console.log(jobKoreaList); */
                 
                 render(jobKoreaList);
             }
@@ -240,7 +247,7 @@ input:focus {
 				/* console.log(responseData); */
 				const {currentPage} = responseData;
                 const jobKoreaList = responseData.jobKoreaList;
-                console.log('111111111', jobKoreaList);
+                /* console.log('111111111', jobKoreaList); */
                	document.getElementById("loadPrevButton").style.display = 'none';
                	document.getElementById("loadMoreButton").style.display = 'none';
                	/* document.getElementById("loadPrevButtonByFilter").style.visibility = 'visible';
@@ -269,7 +276,7 @@ input:focus {
     		const option = jobKoreaList[i].option;
     		let etc = jobKoreaList[i].etc;
     		const url = jobKoreaList[i].url;
-    		console.log('@@@', company, title, option, etc, url);
+    		/* console.log('@@@', company, title, option, etc, url); */
     		
    			if (etc.split(" ").length > 5) {
                 etc = etc.split(" ").slice(0, 5).join(" ") + "...";
@@ -283,6 +290,15 @@ input:focus {
 						</div>
 					</div>
 				`;
+               }else{
+            	   job.innerHTML += `
+   	    			<div id="jobDetail"><div id="jobDetailCompany"><a href="\${url}">\${company}</a></div>
+   			    		<div style="width: 640px; height: 183px;">
+   			    			<p class="medium" style="font-size: 22px;"><a href="\${url}">\${title}</a></p>
+   						  	<p class="medium">\${option}</p>
+   						  	<p class="medium" id="jobDetailEtc">\${etc}</p>
+   						</div>
+   					</div>`;
                }
     	}
     };

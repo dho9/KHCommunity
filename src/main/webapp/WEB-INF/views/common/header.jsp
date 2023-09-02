@@ -30,11 +30,12 @@
 	border:2px solid black;
 	border-radius:15px;
 	padding:10px;
-	margin-top:5px;
+	margin-left:20px;
 	width:fit-content;
 	margin-right:30px;
 	opacity:0;
 	transition: opacity 0.5s ease;
+	height: fit-content;
 }
 
 #alarmImgBox {
@@ -48,6 +49,7 @@
 
 #alarmImg {
   transform-origin: top;
+  margin-left: 30px;
 }
 
 @keyframes bell{
@@ -60,6 +62,24 @@
   10%, 20%, 30%, 40% {
 	transform: rotate(-13deg);
   }
+}
+
+#command button{
+
+	background-color: white;
+    border-radius: 7px;
+    border: 2px solid black;
+    float: right;
+    font-size: 20px;
+    margin-top: 2px
+
+}
+
+#command button:hover{
+
+	background-color: royalblue;
+	color: white;
+
 }
 </style>
 
@@ -131,7 +151,7 @@
 	            	</a>
             	</sec:authorize>
             	<sec:authorize access="isAuthenticated()">
-            		<div style="width:65px;" id="alarmBox">
+            		<div style="width:65px; display:flex;" id="alarmBox">
             			<div id="alarmImgBox" style="display:flex; padding-top:10px;">
             				<img id="alarmImg" style="width:30px;" alt="" src="${pageContext.request.contextPath}/resources/images/alarmicon.png">
 							
@@ -174,7 +194,6 @@
 						href="${pageContext.request.contextPath}/board/todayFoodBoardList.do"
 						class="new" style="text-decoration: none;">오늘 뭐 먹지?</a></li>
 				</ul>
-
 			</div>
 			<div class="divider"></div>
 			<div class="group">
@@ -188,28 +207,83 @@
 				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/graduateBoardList.do" class="new" style="text-decoration: none;">수료생게시판</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/preStudentBoardList.do" class="new" style="text-decoration: none;">예비생게시판</a></li>
-				<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+				<sec:authorize access="hasAuthority('ADMIN')">
+					<li><a href="${pageContext.request.contextPath}/board/employeeBoardList.do" class="new" style="text-decoration: none;">직원 게시판</a></li>
+            	</sec:authorize>
 				</ul>
 			</div>
 			<div class="divider"></div>
+			<hr>
+		</div>
+		<div class="wrap" id="myClassBoardSubmenu">
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=11"
+						class="new" style="text-decoration: none;">221</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=12"
+						class="new"style="text-decoration: none;">222</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=13"
+						class="new" style="text-decoration: none;">223</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=14"
+						class="new"style="text-decoration: none;">231</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=15"
+						class="new" style="text-decoration: none;">232</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=16"
+						class="new" style="text-decoration: none;">351</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=17"
+						class="new"style="text-decoration: none;">352</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=18"
+						class="new" style="text-decoration: none;">353</a></li>
+				</ul>
+			</div>
+			<div class="divider"></div>
+			<div class="group">
+				<ul>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=19"
+						class="new" style="text-decoration: none;">361</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=20"
+						class="new" style="text-decoration: none;">362</a></li>
+				</ul>
+			</div>
 			<hr>
 		</div>
 	</div>
 	<div id="jangjun">
 	<sec:authentication property="principal" var="loginMember" />
 	<script>
+	const _authority = '<sec:authentication property="authorities"/>';
+    const authority = _authority.replace(/&#91;/g, '').replace(/&#93;/g, '');
 	document.querySelector('#myClass').addEventListener('click', () => {
 		const _memberId = '<sec:authentication property="name"/>';
-		const _authority = '<sec:authentication property="authorities"/>';
  	    const memberId = _memberId.replace(/&#64;/g, '@');
- 	    const authority = _authority.replace(/&#91;/g, '').replace(/&#93;/g, '');
-		console.log('!!!!!!!!', authority);
+		/* console.log('!!!!!!!!', authority); */
 	    if(_memberId === 'anonymousUser') {
 	        alert('로그인이 필요합니다.');
 	    }
         else {
         	if(authority === 'STUDENT') {
-        		console.log('학생입니다.');
+        		/* console.log('학생입니다.'); */
 		        $.ajax({
 		           url : "${pageContext.request.contextPath}/member/findStudentType.do",
 		           data : {
@@ -228,19 +302,21 @@
 		        });
         	}
         	else {
-        		console.log('직원입니다.');
-        		$.ajax({
- 		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
- 		           data : {
- 		               memberId : memberId
- 		           },
- 		           success(responseData) {
- 		               const {teacher} = responseData;
- 		               console.log(teacher);
- 		               const {boardId} = teacher;
-	        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
- 		           }
- 		        });
+        		/* console.log('직원입니다.'); */
+        		if(authority === 'TEACHER') {
+	        		$.ajax({
+	 		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
+	 		           data : {
+	 		               memberId : memberId
+	 		           },
+	 		           success(responseData) {
+	 		               const {teacher} = responseData;
+	 		               /* console.log(teacher); */
+	 		               const {boardId} = teacher;
+		        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+	 		           }
+	 		        });
+        		}
         	}
         }
    });
@@ -255,6 +331,19 @@
         boardSubmenu.style.animation = '';
           
      };
+     
+    if(authority === 'ADMIN') {
+		document.querySelector('#myClass').onclick = () => {
+	        const myClassBoardSubmenu = document.getElementById('myClassBoardSubmenu');
+	        myClassBoardSubmenu.classList.toggle('show');
+	     };
+	     document.querySelector('#myClassBoardSubmenu').mouseleave =() => {
+	        const myClassBoardSubmenu = document.getElementById('myClassBoardSubmenu');
+	        myClassBoardSubmenu.style.display = 'none';
+	        myClassBoardSubmenu.style.animation = '';
+	          
+	     };
+    }
 
 	
 	</script>
@@ -278,7 +367,7 @@
 						memberId
 					},
 					success: function(data) {
-						console.log("성공")
+
 						renderNotifications(data);
 					},
 					error: function() {
@@ -294,7 +383,7 @@
 
 				  
 				notifications.forEach(notification => {
-					const { alarmId, content, readCheck, alarmType } = notification;
+					const { alarmId, content, readCheck, alarmType, postId } = notification;
 					
 					const alarmContentBox = document.querySelector("#alarmContentBox");
 					const alarmContent = document.createElement('div');
@@ -309,61 +398,61 @@
 				    	if(alarmType === 'm'){
 				    		alarmContent.innerHTML = `
 					    		<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✉️ 쪽지 <br>
 							        	\${content}
-							      	</div>
 							        <button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'r') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	⛔ 신고 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'c') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	🌐 댓글 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'a') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✔️ 승인관련 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'v') {
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	🗓️ 휴가관련 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	}else if(alarmType ==='s'){
 				    		alarmContent.innerHTML = `
 				    			<form:form name="readCheckFrm">
-							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							    	<div id="alarmText" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 							        	✏ 스터디 <br>
 							        	\${content}
-							      	</div>
 							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+							      	</div>
 					    		</form:form>
 						    `;
 				    	}
@@ -372,42 +461,42 @@
 				    	
 				    	if(alarmType === 'm') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	✉️ 쪽지 <br>
 						        	\${content}
 						      	</div>
 						    `;
 				    	} else if(alarmType === 'r') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	⛔ 신고 <br>
 						        	\${content}
 						      	</div>
 						    `;			    		
 			    		} else if(alarmType === 'c') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	🌐 댓글 <br>
 						        	\${content}
 						      	</div>
 						    `;
 			    		} else if(alarmType === 'a') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	✔️ 승인관련 <br>
 						        	\${content}
 						      	</div>
 						    `;
 			    		} else if(alarmType === 'v') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText-\${uniqueId}" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						        	🗓️ 휴가관련 <br>
 						        	\${content}
 						      	</div>
 						    `;
 			    		} else if(alarmType === 's') {
 			    			alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    	<div id="alarmText" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 						    		✏ 스터디 <br>
 						        	\${content}
 						      	</div>
@@ -417,6 +506,21 @@
 				    
 				    alarmContentBox.appendChild(alarmContent);
 				    alarmContentBox.appendChild(contentBr);
+				    
+					const alarmText = document.getElementById(`alarmText-\${uniqueId}`);
+					
+					if(readCheck == 'y'){
+						alarmText.addEventListener('click', () => {
+							if(alarmType === 'm') {
+						        // 클릭 시 "마이 페이지"로 이동
+						        window.location.href = '/kh/member/myPage.do'; // 실제 주소로 대체해주세요
+							} else if(alarmType=='s'){
+				          		window.location.href = '/kh/board/studyBoardList.do';
+				          	} else if(alarmType == 'c') {
+				          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
+				          	}
+				    	}); 
+					}
 				    
 					const checkBtn = document.querySelector(`#isChecked-\${uniqueId}`);
 					const readCheckFrm = document.readCheckFrm;
@@ -441,9 +545,12 @@
 					                checkBtn.style.display="none";
 					                alarmImg.style.animation = "";
 					                if(alarmType=='s'){
-						          		 window.location.href = '/kh/board/studyBoardList.do';
+						          		window.location.href = '/kh/board/studyBoardList.do';
+						          	} else if(alarmType == 'c') {
+						          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
+						          	} else {
+						          		location.reload();
 						          	}
-					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
 					            },
 					            error: function() {
 					                console.log("실패")
@@ -451,6 +558,8 @@
 					        });
 					    });
 					}
+					
+					
 					
 				});
 				
@@ -481,6 +590,8 @@
 			    
 			    isContentVisible = !isContentVisible;
 			});
+			
+			
 		    
 		   
 		   
@@ -491,28 +602,34 @@
 		
 			// 만약 연결되면
 			stompClient.connect({}, (frame) => {
-				console.log('open : ', frame);
+				/* console.log('open : ', frame); */
 				
 				// 메세지 알림 받는 구독신청 
 				stompClient.subscribe(`/topic/msgnotice/\${memberId}`, (message) => {
-					console.log(`/topic/msgnotice/${memberId} : `, message);
+					/* console.log(`/topic/msgnotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 댓글, 대댓글 알림 받는 구독신청
 				stompClient.subscribe(`/topic/commentNotice/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 수강생 승인 여부 알림 받는 구독신청
 				stompClient.subscribe(`/topic/stdAppCheck/\${memberId}`, (message) => {
-					console.log(`/topic/commentNotice/${memberId} : `, message);
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
 					renderMessage(message);
 				});
 				
 				// 휴가 처리 관련 알림 받는 구독신청
 				stompClient.subscribe(`/topic/vacCheck/\${memberId}`, (message) => {
+					/* console.log(`/topic/commentNotice/${memberId} : `, message); */
+					renderMessage(message);
+				});
+				
+				// 휴가 처리 관련 알림 받는 구독신청
+				stompClient.subscribe(`/topic/reportCheck/\${memberId}`, (message) => {
 					console.log(`/topic/commentNotice/${memberId} : `, message);
 					renderMessage(message);
 				});
@@ -520,7 +637,7 @@
 			
 			const renderMessage = (message) => {
 				const {alarmId, sendId, recieveId, content, createdAt, alarmType, postId} = JSON.parse(message.body);
-				console.log(sendId, recieveId, content, createdAt, alarmType);
+				/* console.log(sendId, recieveId, content, createdAt, alarmType); */
 				
 				const alarmImgBox = document.querySelector("#alarmImgBox");
 				
@@ -556,8 +673,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	✉️ 쪽지 <br>
 					        	\${content}
-					      	</div>
 					        <button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 		    			</form:form>
 				    `;
 				} else if(alarmType === 'r') {
@@ -566,8 +683,8 @@
 			    			<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	⛔ 신고 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'c') {
@@ -576,8 +693,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	🌐 댓글 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'a') {
@@ -586,8 +703,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	✔️ 승인관련 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'v') {
@@ -596,8 +713,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	🗓️ 휴가관련 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	}else if(alarmType === 's') {
@@ -606,8 +723,8 @@
 					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
 					        	✏스터디 <br>
 					        	\${content}
-					      	</div>
 					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					      	</div>
 				      	</form:form>
 				    `;
 		    	}
@@ -633,13 +750,17 @@
 				                "X-CSRF-TOKEN": token
 				            },
 				            success: function(data) {
-				            	console.log(data+"asdsadsadsadsad");
+				            	/* console.log(data+"asdsadsadsadsad"); */
 					           	alarmContent.style.color="grey";
 					           	alarmContent.style.borderColor = "grey";
 					           	checkBtn.style.display="none";
 					           	alarmImg.style.animation = "";
 					          	if(alarmType=='s'){
 					          		 window.location.href = '/kh/board/studyBoardList.do';
+					          	} else if(alarmType == 'c') {
+					          		window.location.href = '/kh/board/boardDetail.do?id='+postId;
+					          	} else {
+					          		location.reload();
 					          	}
 				            	
 				            },

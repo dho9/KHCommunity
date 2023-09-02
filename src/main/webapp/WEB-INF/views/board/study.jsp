@@ -6,6 +6,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a {
+  text-decoration: none;
+}
 a.article{
 color: black;
 }
@@ -86,7 +89,7 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createStudyPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
+	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="6">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -105,7 +108,7 @@ ex ) 위치, 스터디내용 ...
 	        </p>
 	        <div>
 	        	<label for="hashTag">해시태그</label><br>
-	        	<input type="text" class="hashTag" placeholder="Enter로 스터디 해시태그를 등록해주세요"/>
+	        	<input type="text" class="hashTag" placeholder="Enter로 스터디 해시태그를 등록해주세요"/><br>
 	        	<input type="number"  name="count" id="count" style="width: 150px; font-size: 20px;" placeholder="스터디 인원"/ />
 	        	<div class="hashTag-container"></div>
 	        </div>
@@ -150,7 +153,7 @@ ex ) 위치, 스터디내용 ...
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";

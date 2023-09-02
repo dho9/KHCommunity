@@ -16,6 +16,9 @@
   'GRAD' 0,
   'opsz' 24
 }
+a {
+  text-decoration: none;
+}
 .listCallBack{
     display: block;
     margin-top: 5px;
@@ -292,6 +295,7 @@ ul.commentMenu li {
     margin: 5px 0;
     box-sizing: border-box;
 }
+
 .message-content {
     background-color: #fff;
     margin: 10% auto;
@@ -338,9 +342,10 @@ button.updateBtn, button.deleteBtn{
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div id="container" class="community" style="margin-top: 25px;">
 	<sec:authentication property="principal" var="loginMember" />
-	<div class="wrap title">
+	<c:if test="${student.studentType eq 'c'}">
+		<c:if test="${postDetail.boardId eq '8' }">
+			<div class="wrap title">
 		<h1><a>${board.boardName}</a></h1>
-
 	</div>
 	<div class="wrap articles">
 		<c:if test="${empty postDetail}">
@@ -382,7 +387,7 @@ button.updateBtn, button.deleteBtn{
 								id="openMessageBtn"
 								onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지
 								|</li>
-							<li class="abuse">신고</li>
+							<li class="abuse" style="margin-top: 3px">신고</li>
 						</c:if>
 					</ul>
 					<hr>
@@ -470,6 +475,147 @@ button.updateBtn, button.deleteBtn{
 		</button>
 		
 	</div>
+		</c:if>
+		<c:if test="${postDetail.boardId ne '8' }">
+			<script>
+			alert("수강생 인증 후 이용해 주세요~!")
+			window.history.back();
+		</script>
+		</c:if>
+	</c:if>
+	<c:if test="${student.studentType ne 'c'}">
+		<div class="wrap title">
+		<h1><a>${board.boardName}</a></h1>
+	</div>
+	<div class="wrap articles">
+		<c:if test="${empty postDetail}">
+			<article class="dialog">조회된 게시글이 존재하지 않습니다.</article>
+		</c:if>
+		<c:if test="${not empty postDetail}">
+			<article>
+
+				<a class="article"> <img class="picture large"
+					src="${pageContext.request.contextPath}/resources/images/usericon.png" />
+					<div class="profile">
+						<c:if test="${postDetail.anonymousCheck eq '1'}">
+							<h3 class="large" style="font-size: 13px" id="postAnonymous">익명</h3>
+						</c:if>
+						<c:if test="${postDetail.anonymousCheck ne '1'}">
+							<h3 class="large" style="font-size: 13px" id="postCreateId">${postDetail.memberId}</h3>
+						</c:if>
+						<time class="large" style="font-size: 12px">
+							<fmt:parseDate value="${postDetail.postCreatedAt}"
+								pattern="yyyy-MM-dd'T'HH:mm" var="createdAt" />
+							<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm" />
+						</time>
+					</div>
+					<ul class="status">
+						<c:if test="${postDetail.memberId eq loginMember.username}">
+							<li style="margin-right: 5px;">
+								<button type="button" class="updateBtn"
+									onclick="showInputForm()"
+									style="background: none; color: black; padding: 0;">
+									수정 |</button>
+							<li class="deleteBtn"><button type="button"
+									class="deleteBtn"
+									style="background: none; color: black; padding: 0;">
+									삭제</button></li>
+						</c:if>
+
+						<c:if test="${postDetail.memberId ne loginMember.username}">
+							<li class="messagesend" style="margin-right: 5px;"
+								id="openMessageBtn"
+								onclick="messageSend('${postDetail.memberId}', '${postDetail.anonymousCheck}')">쪽지
+								|</li>
+							<li class="abuse" style="margin-top: 3px">신고</li>
+						</c:if>
+					</ul>
+					<hr>
+					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h2>
+						<br> 
+						<%--
+						<input type="hidden" name="content" id="content"
+							value="${postDetail.content}">
+						 --%>
+						<c:if test="${postAttach != null }">
+							<c:if test="${postDetail.boardId eq '5'}">
+								<img
+									src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
+									style="width: 50%;">
+								<p class="large">
+									<textarea id="batch_content" name="batch_content"></textarea>
+
+								</p>
+								<br>
+							</c:if>
+							<c:if test="${postDetail.boardId ne '5'}">
+								<img
+									src="${pageContext.request.contextPath }/resources/images/upload/${postAttach.postRenamedFilename}"
+									style="width: 50%;">
+								<p class="large">${postDetail.content}</p>
+								<br>
+							</c:if>
+
+						</c:if>
+						<c:if test="${postAttach == null }">
+							<c:if test="${postDetail.boardId eq '5'}">
+								<p class="large">
+									<textarea id="batch_content" name="batch_content"></textarea>
+								</p>
+								<br>
+							</c:if>
+							<c:if test="${postDetail.boardId ne '5'}">
+								<p class="large">${postDetail.content}</p>
+								<br>
+							</c:if>
+
+						</c:if>
+
+
+						<c:forEach items="${postDetail.tag}" var="tag">
+							<span class="tag">${tag}</span>
+						</c:forEach>
+						<ul class="status">
+							<%-- 좋아요 버튼 --%>
+							<li><img class="like" data-value="${postDetail.postId}"
+								style="cursor: pointer;"
+								src="${pageContext.request.contextPath}/resources/images/like.png" /></li>
+							<li class="vote" data-value="${postDetail.postId}"
+								style="margin-top: 5px; cursor: pointer;">${postDetail.postLike}</li>
+							<li><img
+								src="${pageContext.request.contextPath}/resources/images/comment.png" /></li>
+							<li class="comment" style="margin-top: 5px;">${postDetail.commentCount}</li>
+						</ul>
+						<hr></a>
+			</article>
+		</c:if>
+		<div class="comments" style="display: block">
+			<div id="commnetContainer">
+				<div id="commentList"></div>
+				<div class="articles">
+					<article>
+						<form:form name="commentFrm" class="writecomment">
+							<div style="display: flex; align-items: center;">
+								<input type="text" name="commentText" id="commentText"
+									maxlength="300" autocomplete="off" placeholder="댓글을 입력하세요."
+									class="text" data-listener-added_4fb6911b="true">
+								<ul class="option">
+									<li title="익명" class="anonym"></li>
+									<li title="완료" class="submit" data-value="1"></li>
+								</ul>
+							</div>
+						</form:form>
+					</article>
+				</div>
+			</div>
+
+		</div>
+		<button class="listCallBack"  onClick="location.href='${pageContext.request.contextPath}/board/${board.boardLink}.do'">
+			<span class="material-symbols-outlined" style="float: left; display: inline-block; margin-top: 5px; margin-right: 7px; margin-left: 4px;">list</span>글 목록
+		</button>
+	</div>
+	</c:if>
+	
 	<%-- 해시태그를 클릭했을 때의 폼 --%>
 	<form name="tagFrm"
 		action="${pageContext.request.contextPath}/board/boardSearch.do">
@@ -506,7 +652,7 @@ button.updateBtn, button.deleteBtn{
 
 				<script>
 				 const memberId = '<sec:authentication property="principal.username"/>';
-				  console.log(memberId);
+				  /* console.log(memberId); */
 				</script>
 				<div class="mb-3">
                  <label for="toInput" class="form-label">To</label>
@@ -625,7 +771,6 @@ button.updateBtn, button.deleteBtn{
 	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 	      	id="updateForm" 
 	      	method="post" 
-	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -647,11 +792,12 @@ button.updateBtn, button.deleteBtn{
 	        	<textarea id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag">해시태그</label><br>
+	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
+	        <label class="custom-file-button" for="fileInput">파일 선택</label>
+	        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
         	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
         	<button type="button" class="anonymous">
@@ -667,7 +813,6 @@ button.updateBtn, button.deleteBtn{
 		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 		  	      	id="updateForm" 
 		  	      	method="post" 
-		  	      	style="height: 66%;"
 		        		enctype="multipart/form-data">
 		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -705,11 +850,13 @@ button.updateBtn, button.deleteBtn{
 		  	        </p>
 		  	        	
 		  	        <div>
-		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	         
+		  	        
+		  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+			        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;"> 
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="buy" style="float: right; color: #0ca5af; font-size: 18px; font-weight: bold; background: none;">삽니다</button>
@@ -730,7 +877,6 @@ button.updateBtn, button.deleteBtn{
 	  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 	  	      	id="updateForm" 
 	  	      	method="post" 
-	  	      	style="height: 71.2%;"
 	        		enctype="multipart/form-data">
 	  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 	  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -777,11 +923,12 @@ button.updateBtn, button.deleteBtn{
 	  	        </p>
 	  	        	
 	  	        <div>
-	  	        	<label for="hashTag">해시태그</label><br>
+	  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	  	        	<div class="hashTag-container"></div>
 	  	        </div>
-	  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
+	  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+		        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 	  	      	<button type="submit" id="submitBtn" style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;" >edit</span></button>
 	          	<button type="button" class="anonymous">
@@ -798,7 +945,6 @@ button.updateBtn, button.deleteBtn{
 		  	      	action="${pageContext.request.contextPath}/board/updatePost.do" 
 		  	      	id="updateForm" 
 		  	      	method="post" 
-		  	      	style="height: 66%;"
 		        		enctype="multipart/form-data">
 		  	      	<input type = "hidden" name="boardId" id="boardId" value="${postDetail.boardId}">
 		  	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="${postDetail.anonymousCheck}">
@@ -836,13 +982,13 @@ button.updateBtn, button.deleteBtn{
 		  	        </p>
 		  	        	
 		  	        <div>
-		  	        	<label for="hashTag">해시태그</label><br>
+		  	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 		  	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 		  	        	<div class="hashTag-container"></div>
 		  	        </div>
-		  	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;" >
 		  	        
-		  	      	
+		  	      	<label class="custom-file-button" for="fileInput">파일 선택</label>
+			        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 		  	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af; color: white;">취소</button>
 		          	<button style="float: right; background-color: #c62917;" ><span class="material-symbols-outlined" style="color: white;">edit</span></button>
 		          	<button type="button" class="anonymous">
@@ -897,7 +1043,7 @@ button.updateBtn, button.deleteBtn{
 	    if(grade_ !== null && grade !== null){
 	    	grade_.addEventListener('change', (e) => {
 	 	       grade.value = grade_.value;
-	 	       console.log(grade);
+	 	       /* console.log(grade); */
 	 	    });
 	    }
 	    
@@ -916,12 +1062,12 @@ button.updateBtn, button.deleteBtn{
 		    if (anonymousImg.src.endsWith('/anonymous.png')) {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
 		    	anonymousCheck.value = "true";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		        
 		    } else {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
 		    	anonymousCheck.value = "false";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		    }
 		});
 		
@@ -954,7 +1100,7 @@ button.updateBtn, button.deleteBtn{
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
@@ -1077,7 +1223,7 @@ button.updateBtn, button.deleteBtn{
 	  
     // 내가 즐겨찾기한 게시판인지 확인
 	function isFovorite() {
-    	console.log(document.querySelector('.bi').dataset.value);
+    	/* console.log(document.querySelector('.bi').dataset.value); */
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
     		data : {
@@ -1104,7 +1250,7 @@ button.updateBtn, button.deleteBtn{
    	// 공감(좋아요) 했는지 확인
     function isLike() {
     	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
+	    	/* console.log(e.dataset.value); */
 	   		$.ajax({
 	   			url : "${pageContext.request.contextPath}/board/postLike.do",
 	   			data : {
@@ -1137,7 +1283,7 @@ button.updateBtn, button.deleteBtn{
    	
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
-    	console.log(e.target.dataset.value);
+    	/* console.log(e.target.dataset.value); */
     	
     	const token = document.tokenFrm._csrf.value;
     	
@@ -1250,7 +1396,7 @@ button.updateBtn, button.deleteBtn{
 	// 공감(좋아요) 누르기
 	function like() {
 		document.querySelector('.vote').onclick = (e) => {
-			console.log('!!!!!!!!!!!!!');
+			/* console.log('!!!!!!!!!!!!!'); */
 			const token = document.tokenFrm._csrf.value;
 			
 			$.ajax({
@@ -1301,7 +1447,7 @@ button.updateBtn, button.deleteBtn{
 	    	},
 	    	method : "POST",
 	    	success(data){
-	    		console.log(data);
+	    		/* console.log(data); */
 	    		renderComments(data);
 	    		loadCommentLike();
 	    		
@@ -1397,7 +1543,7 @@ button.updateBtn, button.deleteBtn{
 	    childCommentsContainer.className = 'child-comments';
 	    
 	    childComments.forEach(childComment => {
-	    console.log(childComment.memberId);
+	    /* console.log(childComment.memberId); */
 	    const showAuthor = childComment.memberId !==postAuthor; 	
 	    
 	    	const commentCreatedAt = childComment.commentCreatedAt;
@@ -1469,7 +1615,7 @@ function loadCommentLike() {
 
 let anonyCk = false;
 document.querySelector('#commnetContainer').addEventListener('click', (event) => {
-	console.log("클릭!")
+	/* console.log("클릭!") */
   const clickedElement = event.target;
   const value = clickedElement.getAttribute('data-value');
   
@@ -1539,7 +1685,7 @@ document.querySelector('#commnetContainer').addEventListener('click', (event) =>
   }
   if (clickedElement.classList.contains('deleteComment')){
 	  const commentId = clickedElement.getAttribute('data-commentid');
-	  console.log(commentId);
+	  /* console.log(commentId); */
 	  deleteComment(commentId);
   }
   
@@ -1564,7 +1710,7 @@ function deleteComment(commentId){
 		        },
 		        method: "GET",
 		        success(responseData) {
-		        	console.log(responseData);
+		        	/* console.log(responseData); */
 		        	loadComment();
 		        	
 		        }

@@ -5,10 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <style>
 a.article{
 color: black;
+}
+a {
+  text-decoration: none;
 }
 .anonymous{
 	float: right;
@@ -37,6 +41,13 @@ color: black;
   font-weight: bold;
 }
 </style>
+	<c:if test="${student.studentType eq 'c'}">
+		<script>
+			alert("수강생 인증 후 이용해 주세요~!")
+			window.history.back();
+		</script>
+	</c:if>
+	<c:if test="${student.studentType ne 'c'}">
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -88,30 +99,40 @@ color: black;
 					</a>
 				</c:forEach>
 			</article>
-			<div class="pagination">
-		        <ul>
-		          <c:if test="${currentPage > 1}">
-		            <li><a href="${pageContext.request.contextPath}/board/askCodeBoardList.do?page=${currentPage - 1}" >&laquo;</a></li>
-		          </c:if>
-		
-		          <c:forEach var="pageNum" begin="1" end="${totalPages}">
+			<ul class="pagination justify-content-center">
+	      	<c:if test="${currentPage > 1}">
+			    <li class="page-item">
+			        <li>
+			        	<a class="page-link" href="${pageContext.request.contextPath}/board/askCodeBoardList.do?page=${currentPage - 1}" aria-label="Previous">
+			        		&laquo;
+			        	</a>
+			        </li>
+			        <span aria-hidden="true">&laquo;</span>
+	        </c:if>
+		    <li class="page-item">
+		    	<c:forEach var="pageNum" begin="1" end="${totalPages}">
 		            <c:choose>
 		              <c:when test="${pageNum eq currentPage}">
-		                <li class="active"><a href="#">${pageNum}</a></li>
+		                <li class="active"><a class="page-link" href="#">${pageNum}</a></li>
 		              </c:when>
 		              <c:otherwise>
-		                <li><a href="${pageContext.request.contextPath}/board/askCodeBoardList.do?page=${pageNum}">${pageNum}</a></li>
+		                <li><a class="page-link" href="${pageContext.request.contextPath}/board/askCodeBoardList.do?page=${pageNum}">${pageNum}</a></li>
 		              </c:otherwise>
 		            </c:choose>
-		          </c:forEach>
-		
-		          <c:if test="${currentPage < totalPages}">
+		        </c:forEach>
+		    </li>
+		    <li class="page-item">
+		      <a class="page-link" href="#" aria-label="Next">
+		      	  <c:if test="${currentPage < totalPages}">
 		            <li><a href="${pageContext.request.contextPath}/board/askCodeBoardList.do?page=${currentPage + 1}" ></a></li>
 		          </c:if>
-		        </ul>
-	      </div>
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		    </li>
+		  </ul>
 		</c:if>
 	</div>
+	</c:if>
     <form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
@@ -128,7 +149,6 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="5">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -145,15 +165,43 @@ color: black;
 					<option value="sql">Sql</option>	      			
 	      		</select>
 	      	</p>
-	        <p>
+	      	<button>코드편집기 on/off</button>
+	      	<textarea name="text" placeholder="KH소통할까?는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다. 위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다. 
+
+	      		아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다. 
+
+	      		※ 정치·사회 관련 행위 금지 
+	      		- 국가기관, 정치 관련 단체, 언론, 시민단체에 대한 언급 혹은 이와 관련한 행위 
+	      		- 정책·외교 또는 정치·정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위 
+	      		- 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위 
+	      		- 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위 
+	      		* 해당 게시물은 시사·이슈 게시판에만 작성 가능합니다. 
+
+	      		※ 홍보 및 판매 관련 행위 금지 
+	      		- 영리 여부와 관계 없이 사업체·기관·단체·개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위 
+	      		- 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭·단어 언급 행위 
+	      		* 해당 게시물은 홍보게시판에만 작성 가능합니다. 
+
+	      		※ 불법촬영물 유통 금지
+	      		불법촬영물등을 게재할 경우 전기통신사업법에 따라 삭제 조치 및 서비스 이용이 영구적으로 제한될 수 있으며 관련 법률에 따라 처벌받을 수 있습니다. 
+
+	      		※ 그 밖의 규칙 위반 
+	      		- 타인의 권리를 침해하거나 불쾌감을 주는 행위 
+	      		- 범죄, 불법 행위 등 법령을 위반하는 행위 
+	      		- 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 게시물 작성 행위 
+	      		- 음란물, 성적 수치심을 유발하는 행위 
+	      		- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
+		        </p>
+	        <p class="codeContentArea">
 	        	<textarea class="codeTextCreate" id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag">해시태그</label><br>
+	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
-	        <input class="file" type="file" name="file" multiple="multiple" style="margin-top: 2%;">
+	        <label class="custom-file-button" for="fileInput">파일 선택</label>
+	        <input class="file" type="file" id="fileInput" name="file" multiple="multiple" style="margin-top: 2%;">
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af;">취소</button>
         	<button class="createPostBtn" type="submit" id="submitBtn" style="float: right;" ><span class="material-symbols-outlined" >edit</span></button>
         	<button type="button" class="anonymous">
@@ -202,12 +250,12 @@ color: black;
 		    if (anonymousImg.src.endsWith('/anonymous.png')) {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
 		    	anonymousCheck.value = "true";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		        
 		    } else {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
 		    	anonymousCheck.value = "false";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		    }
 		});
 		
@@ -240,7 +288,7 @@ color: black;
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
@@ -294,7 +342,7 @@ color: black;
 	  
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
-    	console.log(document.querySelector('.bi').dataset.value);
+    	/* console.log(document.querySelector('.bi').dataset.value); */
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
     		data : {
@@ -319,7 +367,7 @@ color: black;
     	
     	// load됐을때 공감(좋아요) 했는지 확인
     	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
+	    	/* console.log(e.dataset.value); */
 	   		$.ajax({
 	   			url : "${pageContext.request.contextPath}/board/postLike.do",
 	   			data : {
@@ -351,7 +399,7 @@ color: black;
     }
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
-    	console.log(e.target.dataset.value);
+    	/* console.log(e.target.dataset.value); */
     	
     	const token = document.tokenFrm._csrf.value;
     	
@@ -366,7 +414,7 @@ color: black;
             method : "POST",
             dataType : "json",
             success(responseData) {
-                console.log(responseData);
+                /* console.log(responseData); */
                 const {available} = responseData;
                 
                 const star = document.querySelector('.bi');

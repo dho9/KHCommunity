@@ -26,16 +26,16 @@
 		const memberId = '<sec:authentication property="principal.username"/>';
 		</script>
 		<script>
-			console.log('Hello stomp.js');
+			/* console.log('Hello stomp.js'); */
 			const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
 			const stompClient = Stomp.over(ws);
 		
 			stompClient.connect({}, (frame) => {
-				console.log('open : ', frame);
+				/* console.log('open : ', frame); */
 				
 				// 구독신청 
 				stompClient.subscribe('/topic/admin', (message) => {
-					console.log('/topic/admin : ', message);
+					/* console.log('/topic/admin : ', message); */
 					renderMessage(message);
 				});
 			});
@@ -43,7 +43,7 @@
 			// /topic/admin으로 알림을 보내면 실행되는 함수
 			const renderMessage = (message) => {
 				const {chatId, content, createdAt} = JSON.parse(message.body);
-				console.log(chatId, content, createdAt);
+				/* console.log(chatId, content, createdAt); */
 				
 				const toastContainer = document.getElementById("toastContainer");
 				const uniqueId = Math.random().toString(36).substring(2, 15);
@@ -81,7 +81,7 @@
 				        // 클릭 이벤트 핸들러 등록
 				        acceptButton.click(function() {
 				            const chatId = $(this).attr("data-chatid");
-				            console.log(chatId);
+				            /* console.log(chatId); */
 
 				            const chatApproveFrm = document.getElementById(`chatApproveFrm-\${uniqueId}`);
 				            if (chatApproveFrm) {  // 엘리먼트가 존재하는지 확인
@@ -97,12 +97,12 @@
 				                        "X-CSRF-TOKEN": token
 				                    },
 				                    success: function(responseData) {
-				                        console.log("성공", responseData);
+				                        /* console.log("성공", responseData); */
 
 				                        // 새 창 열기
 				                        const newWindow = window.open(
 				                            "${pageContext.request.contextPath}/chat/chatConsultingRequest.do?chatId=" + chatId,
-				                            '_blank'
+				                            '_blank', 'width=700, height=800'
 				                        );
 
 				                        if (newWindow) {
@@ -117,7 +117,7 @@
 				                        }
 				                    },
 				                    error: function(error) {
-				                        console.error("에러", error);
+				                        /* console.error("에러", error); */
 				                    }
 				                });
 				            } else {

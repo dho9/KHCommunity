@@ -7,6 +7,9 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
 a.article{
+a {
+  text-decoration: none;
+}
 color: black;
 }
 .anonymous{
@@ -64,7 +67,7 @@ color: black;
 
     // load됐을때 내가 즐겨찾기한 게시판인지 확인
     window.onload = () => {
-    	console.log(document.querySelector('.bi').dataset.value);
+    	/* console.log(document.querySelector('.bi').dataset.value); */
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
     		data : {
@@ -89,7 +92,7 @@ color: black;
     	
     	// load됐을때 공감(좋아요) 했는지 확인
     	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
+	    	/* console.log(e.dataset.value); */
 	   		$.ajax({
 	   			url : "${pageContext.request.contextPath}/board/postLike.do",
 	   			data : {
@@ -121,7 +124,7 @@ color: black;
     }
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
-    	console.log(e.target.dataset.value);
+    	/* console.log(e.target.dataset.value); */
     	
     	const token = document.tokenFrm._csrf.value;
     	
@@ -136,7 +139,7 @@ color: black;
             method : "POST",
             dataType : "json",
             success(responseData) {
-                console.log(responseData);
+                /* console.log(responseData); */
                 const {available} = responseData;
                 
                 const star = document.querySelector('.bi');

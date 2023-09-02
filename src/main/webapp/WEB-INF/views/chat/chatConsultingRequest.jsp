@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>KH TIME 상담센터</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/chatReq.css" />
 <script src="${pageContext.request.contextPath}/resources/js/jquery-3.7.0.js"></script>
@@ -83,7 +83,7 @@
 	    const stompClient = Stomp.over(new SockJS('/kh/ws'));
 	
 	    stompClient.connect({}, (frame) => {
-	        console.log('Connected: ' + frame);
+	        /* console.log('Connected: ' + frame); */
 	
 	        // 특정 주제로 구독신청
 	        const topic = '/topic/chat/chatId='+chatId;
@@ -91,7 +91,7 @@
 	        	
 	        	
 	        	const payload = JSON.parse(message.body);
-				console.log(payload);
+
 	            // 수신한 메시지를 화면에 표시하는 함수 호출
 	            displayReceivedMessage(payload.message, payload.createdAt, payload.sender);
 	            
@@ -156,11 +156,11 @@
                 "X-CSRF-TOKEN": token
             },
             success: function(responseData) {
-                console.log("성공");
+                /* console.log("성공"); */
                 
             },
             error: function(error) {
-                console.error("에러", error);
+            	
             }
         });
     }
@@ -191,6 +191,8 @@
     	// 종료 메시지를 저장하고 종료 상태를 `localStorage`에 표시
         localStorage.setItem('quitMessage', quitMsg);
         localStorage.setItem('quitChatVisible', 'false');
+        
+        scrollToBottom();
 	}
 	
 	function sendMessage(stompClient, message, createdAt) {
@@ -225,7 +227,7 @@
 	               "X-CSRF-TOKEN": token
 	        },
 	    	success(responseData){
-	    		console.log("성공")
+	    		/* console.log("성공") */
 	    	}
 	    });
 	}
@@ -243,11 +245,18 @@
 	    }
 	    messageContainer.appendChild(messageElement);
 	    
+	    scrollToBottom();
+	    
 	}
 	
 	function getChatIdFromQueryString() {
 	    const urlParams = new URLSearchParams(window.location.search);
 	    return urlParams.get('chatId');
+	}
+	
+	function scrollToBottom() {
+	    const chatBody = document.getElementById('chatBody');
+	    chatBody.scrollTop = chatBody.scrollHeight;
 	}
 	
 	</script>
@@ -281,12 +290,12 @@
 		dateElement.innerHTML = '<div class="text-center" style="color:darkgrey;">'+today+'</div><br>';
 		chatBody.appendChild(dateElement);
 	    
-	    console.log(chatId);
+	    /* console.log(chatId); */
 	    // WebSocket 연결
 	    const stompClient = Stomp.over(new SockJS('/kh/ws'));
 	
 	    stompClient.connect({}, (frame) => {
-	        console.log('Connected: ' + frame);
+	        /* console.log('Connected: ' + frame); */
 	
 	        // 특정 주제로 구독신청
 	        const topic = '/topic/chat/chatId='+chatId;
@@ -350,7 +359,7 @@
 	        const chatFrm = document.forms.chatFrm;
 	        const token = chatFrm._csrf.value;
 	        
-	        console.log(token);
+	        /* console.log(token); */
 	        
 	        $.ajax({
 	    		type : "POST",
@@ -365,7 +374,7 @@
 	                "X-CSRF-TOKEN": token
 	            },
 	    		success(responseData){
-	    			console.log("성공")
+	    			/* console.log("성공") */
 	    		}
 	    	});
 	    
@@ -384,6 +393,8 @@
 	    }
 	    
 	    messageContainer.appendChild(messageElement);
+	    
+	    scrollToBottom();
 	}
 	
 	function getChatIdFromQueryString() {
@@ -402,6 +413,13 @@
     	// 종료 메시지를 저장하고 종료 상태를 `localStorage`에 표시
         localStorage.setItem('quitMessage', quitMsg);
         localStorage.setItem('quitChatVisible', 'false');
+        
+        scrollToBottom();
+	}
+	
+	function scrollToBottom() {
+	    const chatBody = document.getElementById('chatBody');
+	    chatBody.scrollTop = chatBody.scrollHeight;
 	}
 	
 	</script>

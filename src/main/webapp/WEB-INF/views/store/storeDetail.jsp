@@ -223,14 +223,14 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                     quantity : quantity
                 }, function (rsp) { // callback
                     if (rsp.success) {
-                        console.log(rsp);
+                        /* console.log(rsp); */
                         const {name} = rsp;
                         const userId = memberId;
                         const totalAmount = quantity * 3000; // 총 결제 금액을 계산
                       	
                         sendPaymentDataToServer(rsp.merchant_uid, userId, name, quantity, totalAmount);
                     } else {
-                        console.log(rsp);
+                        /* console.log(rsp) */;
                     }
                 });
             }
@@ -249,7 +249,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                     
                 };
                 const ckTotalPrice = totalAmount;
-                console.log(requestData);
+                /* console.log(requestData); */
                 jQuery.ajax({
                     url: '${pageContext.request.contextPath}/ticket/buyTicket.do',
                     type: 'POST',
@@ -268,15 +268,15 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                                "X-CSRF-TOKEN": token1
                            },
                            success: function(validationData) {
-                               console.log("Payment validity checked:", validationData);
+                               /* console.log("Payment validity checked:", validationData); */
                                if (validationData.isValid) {
                             	  const {order} = validationData;
-                            	  console.log(order.totalPrice);
+                            	  /* console.log(order.totalPrice); */
                             	   if(ckTotalPrice === order.totalPrice){
                             		   
                                    alert("결제가 성공했습니다..");
-                                   document.getElementById('create-kakao-link-btn').style.display = 'block';
                                    document.getElementById('create-kakao-link-btn').click();
+                                   document.getElementById('create-kakao-link-btn').style.display = 'block';
                             	   }
                                } else {
                                    alert("결제 유효성 검사에 실패했습니다.");

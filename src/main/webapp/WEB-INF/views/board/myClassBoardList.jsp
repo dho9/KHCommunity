@@ -13,6 +13,9 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+a {
+  text-decoration: none;
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -100,7 +103,12 @@ body {
 	      </div>
 	      <div class="modal-body" style="height: 700px;">
 	      	<form:form name="createFrm" class="hidden" action="${pageContext.request.contextPath}/board/createMyClass.do" id="createForm" method="POST" enctype="multipart/form-data" style="height: 550px;">
-		      	<input type = "hidden" name="boardId" id="boardId" value="${studentInfo.boardId}">
+	      		<c:if test="${authority eq '[ADMIN]' or authority eq '[TEACHER]'}">
+		      		<input type = "hidden" name="boardId" id="boardId" value="${boardId}">
+		      	</c:if>
+	      		<c:if test="${authority eq '[STUDENT]'}">
+		      		<input type = "hidden" name="boardId" id="boardId" value="${studentInfo.boardId}">
+		      	</c:if>
 		      	<div class="input-group mb-3">
 				  <div class="input-group-prepend">
 				    <input style="width: 105px; height: 43px; background-color: #a6a6a6;" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="_tags" value="게시판"/>
@@ -231,9 +239,9 @@ body {
 				page : pageNumber // 페이지 번호 전달
 			},
 			success(reponseData) {
-				console.log(reponseData);
+				/* console.log(reponseData); */
 				const {board, currentPage, totalPages} = reponseData;
-				console.log('sss'+board, currentPage, totalPages);
+				/* console.log('sss'+board, currentPage, totalPages); */
 				
 				const tbody = document.querySelector('tbody');
 				tbody.innerHTML = "";
@@ -364,9 +372,9 @@ body {
 				tag : btnValue
 			},
 			success(reponseData) {
-				console.log(reponseData);
+				/* console.log(reponseData); */
 				const {board, currentPage, totalPages} = reponseData;
-				console.log(board, currentPage, totalPages);
+				/* console.log(board, currentPage, totalPages); */
 				
 				const tbody = document.querySelector('tbody');
 				tbody.innerHTML = "";
@@ -386,7 +394,7 @@ body {
 							<tr data-value="\${board[i].postId}">
 						      <th scope="row">\${board[i].postId}</th>
 						      <td>\${board[i].title}</td>
-						      <td>\${board[i].memberId}</td>
+						      <td>\${board[i].memberName}</td>
 						      <td>\${createdAt}</td>
 						    </tr>
 						`;

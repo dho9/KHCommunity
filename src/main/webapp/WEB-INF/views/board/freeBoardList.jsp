@@ -11,6 +11,9 @@
 a.article{
 color: black;
 }
+a {
+  text-decoration: none;
+}
 .anonymous{
 	float: right;
 	background-color: white;
@@ -38,7 +41,15 @@ color: black;
   font-weight: bold;
 }
 </style>
-	<div id="container" class="community" style="margin-top: 25px;">
+
+	<c:if test="${student.studentType eq 'c'}">
+		<script>
+			alert("수강생 인증 후 이용해 주세요~!")
+			window.history.back();
+		</script>
+	</c:if>
+	<c:if test="${student.studentType ne 'c'}">
+		<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
 			<a>자유게시판</a>
@@ -68,7 +79,7 @@ color: black;
 					  		<h3 class="medium">${board.memberId}</h3>
 				  		</c:if>
 					  	<time class="medium">
-						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 						  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
 					  	</time>
 					  	<hr>
@@ -87,52 +98,41 @@ color: black;
 					</a>
 				</c:forEach>
 			</article>
-			
-			<%-- <div class="pagination">
-		        <ul>
-		          <c:if test="${currentPage > 1}">
-		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" >&laquo;</a></li>
-		          </c:if>
-		
-		          <c:forEach var="pageNum" begin="1" end="${totalPages}">
+		  <ul class="pagination justify-content-center">
+	      	<c:if test="${currentPage > 1}">
+			    <li class="page-item">
+			        <li>
+			        	<a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage - 1}" aria-label="Previous">
+			        		&laquo;
+			        	</a>
+			        </li>
+			        <span aria-hidden="true">&laquo;</span>
+	        </c:if>
+		    <li class="page-item">
+		    	<c:forEach var="pageNum" begin="1" end="${totalPages}">
 		            <c:choose>
 		              <c:when test="${pageNum eq currentPage}">
-		                <li class="active"><a href="#">${pageNum}</a></li>
+		                <li class="active"><a class="page-link" href="#">${pageNum}</a></li>
 		              </c:when>
 		              <c:otherwise>
-		                <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${pageNum}">${pageNum}</a></li>
+		                <li><a class="page-link" href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${pageNum}">${pageNum}</a></li>
 		              </c:otherwise>
 		            </c:choose>
-		          </c:forEach>
-		
-		          <c:if test="${currentPage < totalPages}">
-		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage + 1}" ></a></li>
-		          </c:if>
-		        </ul>
-	        </div>  --%>
-	        
-		   
-		  <ul class="pagination justify-content-center">
-		    
-		    <li class="page-item">
-		      <a class="page-link" href="#" aria-label="Previous">
-		        <span aria-hidden="true">&laquo;</span>
-		      </a>
+		        </c:forEach>
 		    </li>
-		    
-		    <li class="page-item"><a class="page-link" href="#">1</a></li>
-		    <li class="page-item"><a class="page-link" href="#">2</a></li>
-		    <li class="page-item"><a class="page-link" href="#">3</a></li>
-		    
 		    <li class="page-item">
 		      <a class="page-link" href="#" aria-label="Next">
+		      	  <c:if test="${currentPage < totalPages}">
+		            <li><a href="${pageContext.request.contextPath}/board/freeBoardList.do?page=${currentPage + 1}" ></a></li>
+		          </c:if>
 		        <span aria-hidden="true">&raquo;</span>
 		      </a>
 		    </li>
 		  </ul>
-		   
 		</c:if>
 	</div>
+	</c:if>
+	
     <form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
@@ -149,7 +149,6 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 63%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -185,7 +184,7 @@ color: black;
 	- 스포일러, 공포, 속임, 놀라게 하는 행위" class="smallplaceholder" id="text"></textarea>
 	        </p>
 	        <div>
-	        	<label for="hashTag" class="hashTag">해시태그</label><br>
+	        	<label for="hashTag" style="margin-left: 10px">해시태그</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 해시태그를 등록해주세요"/>
 	        	<div class="hashTag-container"></div>
 	        </div>
@@ -217,12 +216,12 @@ color: black;
 		    if (anonymousImg.src.endsWith('/anonymous.png')) {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymouscheck.png';
 		    	anonymousCheck.value = "true";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		        
 		    } else {
 		    	anonymousImg.src = '${pageContext.request.contextPath}/resources/images/anonymous.png';
 		    	anonymousCheck.value = "false";
-		    	console.log("anonymousCheck", anonymousCheck.value);
+		    	/* console.log("anonymousCheck", anonymousCheck.value); */
 		    }
 		});
 		
@@ -236,6 +235,7 @@ color: black;
 	    let hashTags = [];
 	    
 	    hashTag.addEventListener('keydown', (e) => {
+	    	/* console.log('!!!!!!!!!!!!'); */
 	    	if(e.key === 'Enter') {
 	    		e.preventDefault();
 	    		const tag = hashTag.value.trim();
@@ -255,7 +255,7 @@ color: black;
 	    
 	    function addHashTag(tag) {
 	        tag = tag.replace(/[\s]/g, '').trim();
-	        console.log(tag);
+	        /* console.log(tag); */
 	        if (!hashTags.includes(tag)) {
 	            const tagContainer = document.createElement("div");
 	            tagContainer.className = "tag-container";
@@ -301,7 +301,7 @@ color: black;
 	  
     // 내가 즐겨찾기한 게시판인지 확인
 	function isFovorite() {
-    	console.log(document.querySelector('.bi').dataset.value);
+    	/* console.log(document.querySelector('.bi').dataset.value); */
     	$.ajax({
     		url : "${pageContext.request.contextPath}/board/favorite.do",
     		data : {
@@ -328,7 +328,7 @@ color: black;
    	// 공감(좋아요) 했는지 확인
     function isLike() {
     	document.querySelectorAll('.like').forEach((e) => {
-	    	console.log(e.dataset.value);
+	    	/* console.log(e.dataset.value); */
 	   		$.ajax({
 	   			url : "${pageContext.request.contextPath}/board/postLike.do",
 	   			data : {
@@ -361,7 +361,7 @@ color: black;
    	
     // 즐겨찾기 누르기
     document.querySelector('.bi').onclick = (e) => {
-    	console.log(e.target.dataset.value);
+    	/* console.log(e.target.dataset.value); */
     	
     	const token = document.tokenFrm._csrf.value;
     	
@@ -376,7 +376,7 @@ color: black;
             method : "POST",
             dataType : "json",
             success(responseData) {
-                console.log(responseData);
+                /* console.log(responseData); */
                 const {available} = responseData;
                 
                 const star = document.querySelector('.bi');

@@ -14,19 +14,17 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private TicketRepository ticketRepository;
+	
 	@Override
 	public int findTicketIdByStoreId(int storeId) {
-		// TODO Auto-generated method stub
 		return ticketRepository.findTicketIdByStoreId(storeId);
 	}
 	@Override
 	public int createOrder(TicketOrder order) {
-		// TODO Auto-generated method stub
 		return ticketRepository.createOrder(order);
 	}
 	@Override
 	public TicketBuyDto checkOreder(TicketBuyDto _order) {
-		// TODO Auto-generated method stub
 		return ticketRepository.checkOreder(_order);
 	}
 }

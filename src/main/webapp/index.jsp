@@ -414,11 +414,11 @@
         <div class="leftside">
             <div class="card pconly" style="margin-bottom: 19px;">
                 <form class="logged">
-                    <img src="https://cf-fpi.everytime.kr/0.png" class="picture">
                     <sec:authorize access="isAuthenticated()">
-                    <p class="nickname">${loginMember.username}</p>
-                    <p class="school">${loginMember.name}</p>
-                    <p class="school">${ loginMember.memberEmail}</p>
+                   		<img src="https://cf-fpi.everytime.kr/0.png" class="picture">
+                   		<p class="nickname">${loginMember.username}</p>
+                    	<p class="school">${loginMember.name}</p>
+                    	<p class="school">${ loginMember.memberEmail}</p>
                     </sec:authorize>
                     <ul class="buttons">
   						<sec:authorize access="isAuthenticated()">
@@ -431,9 +431,10 @@
 	                        <li><a href="#" id="logoutLink" onclick="logoutFn();">로그아웃</a></li>    
 	                    </sec:authorize>  
 	                    <sec:authorize access="isAnonymous()">
-	                    	<li style="margin: 0 19.5%; width: 92.3px;"><a href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a></li>
+	                    	<p style="font-size: 14px; margin-left: 7px; margin-bottom: 27px; color: #737373;">커뮤니티 이용을 위해 <span style="color:royalblue; font-weight: bold;">로그인</span>이 필요합니다!</p>
+	                    	<li style="margin: 0 8.5%; width: 125px;" ><a class="anonymousBtn" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a></li>
 	                    	<br/><br/>
-	                    	<li style="margin: 0 19.5%; width: 88px;"><a href="${pageContext.request.contextPath}/member/memberCreate.do">회원가입</a></li>
+	                    	<li style="margin: 0 8.5%; width: 125px;"><a  class="anonymousBtn" href="${pageContext.request.contextPath}/member/memberCreate.do">회원가입</a></li>
 	                    </sec:authorize>                   
                     </ul>
                     <hr>
@@ -611,7 +612,7 @@ async function loadThreePostByBoardId(boardId, boardContainer) {
         });
     });
     document.querySelector('.favorite').addEventListener('mouseleave', (e) => {
-        console.log(e+'ㅋㅋㅋㅋ');
+        /* console.log(e+'ㅋㅋㅋㅋ'); */
         const favorite = document.querySelector(".favorite");
         favorite.style.display = "none";
     });

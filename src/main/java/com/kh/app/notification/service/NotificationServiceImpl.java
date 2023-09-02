@@ -75,7 +75,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.build();
 
 		// db저장
-		int alarmId = notificationRepository.insertMessageAlarm(payload);
+		int alarmId = notificationRepository.insertAlarm(payload);
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/msgnotice/" + to, payload);
 		
@@ -102,7 +102,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.build();
 				
 		// db저장
-		int alarmId = notificationRepository.insertMessageAlarm(payload);
+		int alarmId = notificationRepository.insertAlarm(payload);
 		
 //		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		
@@ -133,7 +133,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.build();
 				
 		// db저장
-		int alarmId = notificationRepository.insertMessageAlarm(payload);
+		int alarmId = notificationRepository.insertAlarm(payload);
 		simpMessagingTemplate.convertAndSend("/topic/msgnotice/" + to, payload);
 		
 		return alarmId;
@@ -170,6 +170,8 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/commentNotice/" + to, payload);
+		
+		System.out.println(payload.getPostId());
 		
 		return 0;
 	}
@@ -222,7 +224,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.alarmType(AlarmType.a)
 				.build();
 		
-		int alarmId = notificationRepository.insertStudentApproveCheckAlarm(payload);
+		int alarmId = notificationRepository.insertAlarm(payload);
 						
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/stdAppCheck/" + to, payload);
@@ -244,7 +246,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.alarmType(AlarmType.a)
 				.build();
 		
-		int alarmId = notificationRepository.insertStudentApproveCheckAlarm(payload);
+		int alarmId = notificationRepository.insertAlarm(payload);
 								
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/stdAppCheck/" + to, payload);
@@ -267,7 +269,7 @@ public class NotificationServiceImpl implements NotificationService {
 				.build();
 		
 		// db저장
-		int alarmId = notificationRepository.insertStudentVacationCheckAlarm(payload);
+		int alarmId = notificationRepository.insertAlarm(payload);
 										
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/stdAppCheck/" + to, payload);
@@ -290,11 +292,55 @@ public class NotificationServiceImpl implements NotificationService {
 				.build();
 				
 		// db저장
-		int alarmId = notificationRepository.insertStudentVacationCheckAlarm(payload);
+		int alarmId = notificationRepository.insertAlarm(payload);
 												
 		// 특정 사용자에게 알림
 		simpMessagingTemplate.convertAndSend("/topic/stdAppCheck/" + to, payload);
 												
+		return 0;
+	}
+	
+	@Override
+	public int notifyReportAlarmToReporterId(String reporterId, String messageContent) {
+		// 알림 받을 대상
+		String to = reporterId;
+										
+		MsgPayload payload = MsgPayload.builder()
+				.alarmId(0)
+				.receivedId(to)
+				.content(to + "님<br>요청하신 신고가 처리되었습니다.")
+				.createdAt(System.currentTimeMillis())
+				.alarmType(AlarmType.r)
+				.build();
+							
+		// db저장
+		int alarmId = notificationRepository.insertAlarm(payload);
+																
+		// 신고자에게 알림
+		simpMessagingTemplate.convertAndSend("/topic/reportCheck/" + to, payload);
+				
+		return 0;
+	}
+	
+	@Override
+	public int notifyReportAlarmToAttackerId(String attackerId, String messageContent) {
+		// 알림 받을 대상
+		String to = attackerId;
+												
+		MsgPayload payload = MsgPayload.builder()
+				.alarmId(0)
+				.receivedId(to)
+				.content(to + "님 신고가 접수되었습니다.<br>메세지함 확인하시고 이용에 주의바랍니다.")
+				.createdAt(System.currentTimeMillis())
+				.alarmType(AlarmType.r)
+				.build();
+									
+		// db저장
+		int alarmId = notificationRepository.insertAlarm(payload);
+																		
+		// 피신고자에게 알림
+		simpMessagingTemplate.convertAndSend("/topic/reportCheck/" + to, payload);
+						
 		return 0;
 	}
 	

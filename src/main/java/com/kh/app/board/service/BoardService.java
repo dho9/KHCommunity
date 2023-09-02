@@ -25,6 +25,7 @@ import com.kh.app.board.entity.Favorite;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.board.entity.PostLike;
 import com.kh.app.board.entity.Study;
+import com.kh.app.member.entity.Student;
 
 public interface BoardService {
 
@@ -213,6 +214,8 @@ public interface BoardService {
 	List<StudyMemberId> findStudyMemberIdList(int studyId);
 
 	int minusStudyCount(int studyId);
+
+	Student findStudentById(String memberId);
 
 
 }

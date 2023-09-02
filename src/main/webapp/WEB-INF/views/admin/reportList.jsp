@@ -75,6 +75,9 @@
 				<div class="d-flex justify-content-center">
 				    <nav aria-label="Page navigation">
 				        <ul class="pagination">
+				        	<li class="page-item">
+        						<a class="page-link" href="${pageContext.request.contextPath}/admin/reportList.do">목록</a>
+        					</li>
 				            <c:if test="${currentPage > 1}">
 				                <li class="page-item">
 				                    <a class="page-link" href="${pageContext.request.contextPath}/admin/reportList.do?page=${currentPage - 1}" aria-label="Previous">
@@ -101,7 +104,6 @@
 				            </c:if>
 				        </ul>
 				    </nav>
-				<a class="page-link" href="${pageContext.request.contextPath}/admin/reportList.do">목록</a>
 				</div>
           </div>
       </div>
@@ -141,7 +143,7 @@
 		            <!-- 여기에 쪽지 보내기 양식 등을 추가하세요 -->
 		                <input name="attackerId" id="receiveAttackerId" readonly>
 		                <input type="hidden" name="reportId" id="reportId"/>
-		                <input type="hidden" name="reporterId" id="modalReporterId"/>
+		                <input type="hidden" name="sendReporterId" id="sendModalReporterId"/>
 		                <textarea name="messageContent" id="messageContent" placeholder="내용을 입력해주세요." style="width:80%;"></textarea>
 		            </div>
 	            	<div class="modal-footer">
@@ -166,9 +168,9 @@
             // 모달 내의 입력 필드에 데이터 설정
             document.getElementById("modalRowId").value = rowId;
             document.getElementById("modalReporterId").value = reporterId;
+            document.getElementById("sendModalReporterId").value = reporterId;
             document.getElementById("modalReportContent").value = reportContent;
-            document.getElementById("reportId").value = reportId;  
-               console.log(reportId); // 확인을 위해 로그 출력
+            document.getElementById("reportId").value = reportId;
           });
         });
 		const sendButton = document.querySelectorAll("#messageButton");

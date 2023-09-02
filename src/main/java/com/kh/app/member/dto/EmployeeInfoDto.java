@@ -24,6 +24,7 @@ public class EmployeeInfoDto {
 	private int curriculumId;
 	private LocalDate curriculumStartAt;
 	private LocalDate curriculumEndAt;
+	private int boardId;
 	
 }
 
