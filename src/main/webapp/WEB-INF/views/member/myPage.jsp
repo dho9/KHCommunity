@@ -326,8 +326,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<p class="mypageBtn" id="memberDel" onclick="logoutFrm();"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
 			<c:if test="${studentAuthInfo.studentType eq 's'}">
-			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
-			<hr class="myPageHr"/>
+				<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
+				<hr class="myPageHr"/>
 			</c:if>
 			
 			<!-- 성근님 코드 -->
@@ -582,7 +582,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	            	<div class="modal-body">
 	            	 	<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br> 
 						<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
-					
+
 							<div class="myPageDivs" id="vacationDiv" >		
 								<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
 									enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
@@ -597,7 +597,6 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 												<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
 											</td>
 										</tr>
-										<br/>
 										<br/>
 									
 										<tr>
@@ -717,7 +716,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>패스워드 : </th>
 							<td>
-								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+								<input type="password" class="form-control" name="memberPwd" id="memberPwd"  required>
 							</td>
 						</tr>
 						<br/>
@@ -725,7 +724,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>패스워드 확인 : </th>
 							<td>
-								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+								<input type="password" class="form-control" id="passwordConfirmation"  required>
 							</td>
 						</tr>
 						<br/>

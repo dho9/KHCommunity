@@ -426,7 +426,7 @@
 		                 		<li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
 		                 	</c:if>
 		                 	<c:if test="${fn:contains(loginMember.authorities, 'TEACHER') || fn:contains(loginMember.authorities, 'ADMIN')}">
-		                 		<li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
+		                 		<li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">내 정보</a></li>
 							</c:if>
 	                        <li><a href="#" id="logoutLink" onclick="logoutFn();">로그아웃</a></li>    
 	                    </sec:authorize>  
