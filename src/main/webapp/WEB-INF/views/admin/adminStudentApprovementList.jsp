@@ -103,13 +103,19 @@
                           <input type="hidden" id="modalCurriculumId">
                           커리큘럼
                           <br>
-                          <select name="khCurriculum" id="khCurriculum">
+                          <select name="khCurriculum" id="khCurriculum" style="font-size:15px;">
 						      <c:forEach items="${curriculums}" var="curriculum">
 						          <option value="${curriculum.curriculumId}" ${khCurriculum eq curriculum.curriculumId ? 'selected' : '' }>
 						              ${curriculum.curriculumId} : ${curriculum.curriculumName}(${curriculum.classId}, ${curriculum.teacherId}) 수료일: ${curriculum.curriculumEndAt}
 						          </option>
 						      </c:forEach>
-						  </select>
+						  </select> <br>
+						  학생타입 : <!-- 학생타입 : 예비생 -->
+								<input type="radio" name="studentType" id="modalStudentType1" value="c">예비생
+								<!-- 학생타입 : 수강생 -->
+								<input type="radio" name="studentType" id="modalStudentType2" value="s">수강생
+								<!-- 학생타입 : 수료생 -->
+								<input type="radio" name="studentType" id="modalStudentType3" value="p">수료생
                           <hr>
                           <button class="btn btn-primary" type="button" id="btnOk">승인</button> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                           <button class="btn btn-danger" type="button" id="btnNo">반려</button> 
@@ -164,6 +170,7 @@
             const secondName = row.getAttribute("data-second-name");
             const studentCurriculumId = row.getAttribute("data-curriculum-id");
             const studentRenamedFilename = row.getAttribute("data-student-file");
+            const studentTypeValue = row.getAttribute("data-studentType");
             
             const iframe = document.getElementById("studentPdf"); // "iframeElement"을 실제 iframe의 ID로 변경해주세요
             const currentSrc = iframe.src; // 이미 있는 URL 가져오기
@@ -176,6 +183,9 @@
             document.getElementById("modalFirstId").value = firstId;
             document.getElementById("modalSecondName").value = secondName;
             document.getElementById("modalCurriculumId").value = studentCurriculumId;
+            document.getElementById("modalStudentType1").checked = (studentTypeValue === "예비생");
+            document.getElementById("modalStudentType2").checked = (studentTypeValue === "수강생");
+            document.getElementById("modalStudentType3").checked = (studentTypeValue === "수료생");
           });
         });
       
@@ -200,6 +210,7 @@
         function sendDataToServer(url) {
           const modalFrm = document.modalFrm;
           const studentId = modalFrm.firstId.value;
+          const studentType = modalFrm.studentType.value;
           const khCurriculum = document.getElementById("khCurriculum");
           const curriculumId = khCurriculum.options[khCurriculum.selectedIndex].value;
           const token = document.modalFrm._csrf.value;
@@ -208,7 +219,8 @@
             url: url, // 수정 또는 강퇴에 따라 다른 URL 지정
             data: {
             	studentId,
-            	curriculumId
+            	curriculumId,
+            	studentType
             },
             headers: {
                 "X-CSRF-TOKEN": token

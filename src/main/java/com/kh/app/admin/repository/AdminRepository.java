@@ -171,7 +171,7 @@ public interface AdminRepository {
 	@Select("SELECT count(*) FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
 	int totalCountNonApprovementStudents();
 
-	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', approve_complete_date = current_date where student_id = #{studentId}")
+	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', student_type = #{studentType}, approve_complete_date = current_date where student_id = #{studentId}")
 	int approvementStudent(AdminStudentListDto student);
 
 	@Update("update student set approve_check = 'n' where student_id = #{studentId} ")
