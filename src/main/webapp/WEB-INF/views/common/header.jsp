@@ -303,18 +303,20 @@
         	}
         	else {
         		/* console.log('직원입니다.'); */
-        		$.ajax({
- 		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
- 		           data : {
- 		               memberId : memberId
- 		           },
- 		           success(responseData) {
- 		               const {teacher} = responseData;
- 		               /* console.log(teacher); */
- 		               const {boardId} = teacher;
-	        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
- 		           }
- 		        });
+        		if(authority === 'TEACHER') {
+	        		$.ajax({
+	 		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
+	 		           data : {
+	 		               memberId : memberId
+	 		           },
+	 		           success(responseData) {
+	 		               const {teacher} = responseData;
+	 		               /* console.log(teacher); */
+	 		               const {boardId} = teacher;
+		        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+	 		           }
+	 		        });
+        		}
         	}
         }
    });
