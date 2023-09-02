@@ -54,8 +54,10 @@ color: black;
 			</article>
 		</c:if>
 			<c:if test="${not empty studyBoardList}">
+				
 			<article>
 				<c:forEach items="${studyBoardList}" var="board">
+   					 <c:if test="${board.studyPeople lt board.memberCount}">
 					<a class="article" href="${pageContext.request.contextPath}/board/studyDetail.do?id=${board.postId}">
 				  		<img class="picture medium" src="${pageContext.request.contextPath}/resources/images/usericon.png"/>
 					  		<h3 class="medium">${board.memberId}</h3>
@@ -67,12 +69,49 @@ color: black;
 					  	<p class="medium">모집인원 : ${board.studyPeople} / ${board.memberCount}</p> <br>
 					  	<hr>
 					</a>
+					</c:if>
 				</c:forEach>
 			</article>
 			</c:if>
 	</div>
     <form:form name="tokenFrm"></form:form>
+    <div class="rightside">
+	<form action="${pageContext.request.contextPath}/board/boardSearch.do"
+		class="search" onsubmit="return  validateSearchForm()">
+		<input type="text" id="keyword" name="keyword" placeholder="원하는 스터디를 검색하세요!"
+			class="text" />
+	</form>
+	 <div class="card">
+        <div class="board" id="popularPostsContainer">
+            <h3>
+                <a>내가 참여한 스터디 목록</a>
+            </h3>
+        </div>
+    </div>
+    </div>
+	
 	<script>
+	
+	document.addEventListener('DOMContentLoaded', () => {
+	    $.ajax({
+	        url: "${pageContext.request.contextPath}/board/myStudyList.do",
+	        success: function(data) {
+	            console.log(JSON.stringify(data));
+	            
+	            const container = $("#popularPostsContainer");
+	            for (let i = 0; i < data.length; i++) {
+	                const post = data[i];
+	                const postHTML = `<a href="${pageContext.request.contextPath}/board/myStudy.do?id=\${post.boardId}" class="article">
+	                    <p class="title"> ▶ \${post.studyName}</p>
+	                    <hr>
+	                </a>`;
+	                container.append(postHTML);
+	            }
+	        }
+	    });
+	});
+	
+	
 	function showInputForm() {
 		 
 	    const writeButton = document.getElementById("writeArticleButton");
@@ -187,10 +226,6 @@ ex ) 위치, 스터디내용 ...
 	  writeButton.style.display = "block";
 	  createForm.remove();
 	}
-	
-	
-	
-	  
 	  </script>
-<%@ include file="/WEB-INF/views/common/rightSide.jsp" %>
+
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

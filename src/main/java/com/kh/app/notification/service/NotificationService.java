@@ -1,10 +1,12 @@
 package com.kh.app.notification.service;
 
+
 import javax.validation.Valid;
 
+import com.kh.app.board.entity.Comment;
 import com.kh.app.chat.entity.Talker;
+import com.kh.app.member.dto.AdminStudentListDto;
 import com.kh.app.messageBox.entity.MessageBox;
-import com.kh.app.notification.entity.Alarm;
 
 public interface NotificationService {
 
@@ -12,7 +14,21 @@ public interface NotificationService {
 
 	int notifyMsgSend(MessageBox message);
 
-	int notifyMsgSendFromAdmin(@Valid MessageBox message);
+	int notifyMsgSendFromAdmin(MessageBox message);
+
+	int notifyAlamSendFromMemberId(String memberId, String msg);
+	
+	int notifyComment(Comment comment, String receivedId);
+
+	int notifyCocomment(Comment comment, String receivedId);
+
+	int notifyStudentApproveCheckOk(AdminStudentListDto student);
+
+	int notifyStudentApproveCheckNo(AdminStudentListDto student);
+
+	int notifyVacationCheckOk(String studentId, String vacationStartDate, String vacationEndDate);
+
+	int notifyVacationCheckNo(String studentId, String vacationStartDate, String vacationEndDate);
 
 
 }

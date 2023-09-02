@@ -13,8 +13,11 @@ import com.kh.app.board.dto.JobKorea;
 import com.kh.app.board.dto.NoticeBoardDto;
 import com.kh.app.board.dto.PopularBoardDto;
 import com.kh.app.board.dto.PostReportDto;
+import com.kh.app.board.dto.StudyInfo;
 import com.kh.app.board.dto.StudyList;
 import com.kh.app.board.dto.StudyListDto;
+import com.kh.app.board.dto.StudyMemberDto;
+import com.kh.app.board.dto.StudyMemberId;
 import com.kh.app.board.entity.Board;
 import com.kh.app.board.entity.Comment;
 import com.kh.app.board.entity.CommentLike;
@@ -167,6 +170,49 @@ public interface BoardService {
 	StudyListDto studyFindById(int id);
 
 	int insertStudy(int studyId, String appliId, String appliContent);
+
+	List<JobKorea> getJobKoreaDatas (int page, int limit, String keyword) throws IOException;
+	
+	int checkStudy(int studyId, String appliId);
+
+	List<StudyList> findStudyList(String memberId);
+	
+
+	List<BoardListDto> findAllByBoardId(int id);
+	int findStudyId(int findId);
+
+	int insertStudyInfo(String memberId, int findStudyId);
+
+	String findReceivedIdByPostId(int postId);
+
+	List<StudyInfo> finAllStudyAppli(int findStudyId);
+
+	Study myStudyFindById(int id);
+
+	int updateStudyInfo(String memberId, int studyId);
+
+	int deleteStudyInfo(String memberId, int studyId);
+
+
+	String findReceivedIdByCommentRef(int ref);
+
+	List<StudyMemberDto> findStudyMember(int studyId);
+	
+	int updateStudyCount(int studyId);
+
+	Study findByStudyleaderName(int studyId);
+
+	int deleteStudyBoard(int deleteStudyBoardId);
+
+	int deleteStudy(int deleteStudyId);
+
+	int deleteBoardType(int deleteStudyBoardId);
+	
+	int studyDeleteMember(String memberId, int studyid);
+
+	List<StudyMemberId> findStudyMemberIdList(int studyId);
+
+	int minusStudyCount(int studyId);
 
 
 }

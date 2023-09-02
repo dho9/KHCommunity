@@ -16,7 +16,6 @@
 .new {
 	text-decoration: none;
 }
-
 #alarmTextBox{
 	font-size:15px;
 	display: inherit;
@@ -149,12 +148,12 @@
 
             </div>
             <ul id="menu">
-                <li><a href="${pageContext.request.contextPath}" style="text-decoration: none;" style="text-decoration: none;">게시판</a></li>
+                <li id="BoardHeaderBtn"><a href="#" style="text-decoration: none;">게시판</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/noticeBoardList.do" style="text-decoration: none;">공지사항</a></li>
-                <li id="myClass"><a>우리반</a></li>
+                <li id="myClass" style="cursor: pointer;"><a>우리반</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/jobSearchBoardList.do" style="text-decoration: none;">취업</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
-                <li><a href="${pageContext.request.contextPath}/board/promotionBoardList.do" style="text-decoration: none;">홍보</a></li>
+                <li><a href="${pageContext.request.contextPath}/board/studyBoardList.do" style="text-decoration: none;">스터디</a></li>
                 <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
             </ul>
         </div>
@@ -182,7 +181,6 @@
 				<ul>
 				<li><a href="${pageContext.request.contextPath}/board/sharingInformationBoardList.do" class="new" style="text-decoration: none;">정보공유</a></li>
 				<li><a href="${pageContext.request.contextPath}/board/askCodeBoardList.do" class="new" style="text-decoration: none;">코드질문</a></li>
-				<li><a href="${pageContext.request.contextPath}/board/studyBoardList.do" class="new" style="text-decoration: none;">스터디</a></li>
 				</ul>
 			</div>
 			<div class="divider"></div>
@@ -202,30 +200,62 @@
 	<script>
 	document.querySelector('#myClass').addEventListener('click', () => {
 		const _memberId = '<sec:authentication property="name"/>';
+		const _authority = '<sec:authentication property="authorities"/>';
  	    const memberId = _memberId.replace(/&#64;/g, '@');
+ 	    const authority = _authority.replace(/&#91;/g, '').replace(/&#93;/g, '');
+		console.log('!!!!!!!!', authority);
 	    if(_memberId === 'anonymousUser') {
 	        alert('로그인이 필요합니다.');
 	    }
         else {
-	        $.ajax({
-	           url : "${pageContext.request.contextPath}/member/findStudentType.do",
-	           data : {
-	               memberId : memberId
-	           },
-	           success(responseData) {
-	               const {student} = responseData;
-	               const {curriculumId, studentType, boardId} = student;
-	               if(studentType != 's' || boardId == 0) {
-	                   alert('수강중인 학생만 이용가능합니다.');
-	               }
-	               else {
-	                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
-	               }
-	           }
-	        });
+        	if(authority === 'STUDENT') {
+        		console.log('학생입니다.');
+		        $.ajax({
+		           url : "${pageContext.request.contextPath}/member/findStudentType.do",
+		           data : {
+		               memberId : memberId
+		           },
+		           success(responseData) {
+		               const {student} = responseData;
+		               const {curriculumId, studentType, boardId} = student;
+		               if(studentType != 's' || boardId == 0) {
+		                   alert('수강중인 학생만 이용가능합니다.');
+		               }
+		               else {
+		                   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+		               }
+		           }
+		        });
+        	}
+        	else {
+        		console.log('직원입니다.');
+        		$.ajax({
+ 		           url : "${pageContext.request.contextPath}/member/findTeacher.do",
+ 		           data : {
+ 		               memberId : memberId
+ 		           },
+ 		           success(responseData) {
+ 		               const {teacher} = responseData;
+ 		               console.log(teacher);
+ 		               const {boardId} = teacher;
+	        		   window.location.href = "${pageContext.request.contextPath}/board/myClassBoardList.do?boardId=" + boardId;
+ 		           }
+ 		        });
+        	}
         }
    });
 	
+	document.querySelector('#BoardHeaderBtn').onclick = () => {
+        const boardSubmenu = document.getElementById('boardSubmenu');
+          boardSubmenu.classList.toggle('show');
+     };
+     document.querySelector('#boardSubmenu').mouseleave =() => {
+        const boardSubmenu = document.getElementById('boardSubmenu');
+        boardSubmenu.style.display = 'none';
+        boardSubmenu.style.animation = '';
+          
+     };
+
 	
 	</script>
 	<sec:authorize access="isAuthenticated()">
@@ -288,35 +318,58 @@
 						    `;
 				    	} else if(alarmType === 'r') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-						        	⛔ 신고 <br>
-						        	\${content}
-						      	</div>
+				    			<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	⛔ 신고 <br>
+							        	\${content}
+							      	</div>
+							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'c') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-						        	🌐 댓글 <br>
-						        	\${content}
-						      	</div>
+				    			<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	🌐 댓글 <br>
+							        	\${content}
+							      	</div>
+							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'a') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-						        	✔️ 승인관련 <br>
-						        	\${content}
-						      	</div>
+				    			<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	✔️ 승인관련 <br>
+							        	\${content}
+							      	</div>
+							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
 						    `;
 				    	} else if(alarmType === 'v') {
 				    		alarmContent.innerHTML = `
-						    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-						        	🗓️ 휴가관련 <br>
-						        	\${content}
-						      	</div>
+				    			<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	🗓️ 휴가관련 <br>
+							        	\${content}
+							      	</div>
+							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
+						    `;
+				    	}else if(alarmType ==='s'){
+				    		alarmContent.innerHTML = `
+				    			<form:form name="readCheckFrm">
+							    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+							        	✏ 스터디 <br>
+							        	\${content}
+							      	</div>
+							      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+					    		</form:form>
 						    `;
 				    	}
 				    	
 				    } else {
+				    	
 				    	if(alarmType === 'm') {
 				    		alarmContent.innerHTML = `
 						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
@@ -352,7 +405,14 @@
 						        	\${content}
 						      	</div>
 						    `;
-			    		}
+			    		} else if(alarmType === 's') {
+			    			alarmContent.innerHTML = `
+						    	<div id="alarmContent" style="border:2px solid grey; color:grey; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+						    		✏ 스터디 <br>
+						        	\${content}
+						      	</div>
+						    `;
+			    		} 
 				    }
 				    
 				    alarmContentBox.appendChild(alarmContent);
@@ -363,31 +423,32 @@
 					
 					if(checkBtn){
 						checkBtn.addEventListener("click", function(){
-					        if (readCheck === 'n'){
 					        	
-					        	const token = '${_csrf.token}';
+					        const token = '${_csrf.token}';
 					        	
-					            $.ajax({
-					                type: "POST",
-					                url: "${pageContext.request.contextPath}/common/updateAlarmReadCheck.do",
-					                data: {
-					                    alarmId
-					                },
-					                headers: {
-					                    "X-CSRF-TOKEN": token
-					                },
-					                success: function(data) {
-					                	alarmContent.style.color="grey";
-					                	alarmContent.style.borderColor = "grey";
-					                	checkBtn.style.display="none";
-					                	alarmImg.style.animation = "";
-					                	window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
-					                },
-					                error: function() {
-					                    console.log("실패")
-					                }
-					            });
-					        }
+					        $.ajax({
+					            type: "POST",
+					            url: "${pageContext.request.contextPath}/common/updateAlarmReadCheck.do",
+					            data: {
+					                alarmId
+					            },
+					            headers: {
+					                "X-CSRF-TOKEN": token
+					            },
+					            success: function(data) {
+					           		alarmContent.style.color="grey";
+					                alarmContent.style.borderColor = "grey";
+					                checkBtn.style.display="none";
+					                alarmImg.style.animation = "";
+					                if(alarmType=='s'){
+						          		 window.location.href = '/kh/board/studyBoardList.do';
+						          	}
+					                window.location.href = "/kh/member/myPage.do"; // 원하는 URL로 변경
+					            },
+					            error: function() {
+					                console.log("실패")
+					            }
+					        });
 					    });
 					}
 					
@@ -423,23 +484,42 @@
 		    
 		   
 		   
-			
+			// 웹소켓 연결
 			
 			const ws = new SockJS(`http://localhost:8080/kh/ws`); // endpoint
 			const stompClient = Stomp.over(ws);
 		
+			// 만약 연결되면
 			stompClient.connect({}, (frame) => {
 				console.log('open : ', frame);
 				
-				// 구독신청 
+				// 메세지 알림 받는 구독신청 
 				stompClient.subscribe(`/topic/msgnotice/\${memberId}`, (message) => {
 					console.log(`/topic/msgnotice/${memberId} : `, message);
+					renderMessage(message);
+				});
+				
+				// 댓글, 대댓글 알림 받는 구독신청
+				stompClient.subscribe(`/topic/commentNotice/\${memberId}`, (message) => {
+					console.log(`/topic/commentNotice/${memberId} : `, message);
+					renderMessage(message);
+				});
+				
+				// 수강생 승인 여부 알림 받는 구독신청
+				stompClient.subscribe(`/topic/stdAppCheck/\${memberId}`, (message) => {
+					console.log(`/topic/commentNotice/${memberId} : `, message);
+					renderMessage(message);
+				});
+				
+				// 휴가 처리 관련 알림 받는 구독신청
+				stompClient.subscribe(`/topic/vacCheck/\${memberId}`, (message) => {
+					console.log(`/topic/commentNotice/${memberId} : `, message);
 					renderMessage(message);
 				});
 			});
 			
 			const renderMessage = (message) => {
-				const {sendId, recieveId, content, createdAt, alarmType} = JSON.parse(message.body);
+				const {alarmId, sendId, recieveId, content, createdAt, alarmType, postId} = JSON.parse(message.body);
 				console.log(sendId, recieveId, content, createdAt, alarmType);
 				
 				const alarmImgBox = document.querySelector("#alarmImgBox");
@@ -468,51 +548,116 @@
 				alarmContent.classList.add="alarmContainer"
 				const alarmBr = document.createElement('br');
 				
+				const uniqueId = Math.random().toString(36).substring(2, 15);
+				
 				if(alarmType === 'm'){
 					alarmContent.innerHTML = `
-				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-				        	✉️ 쪽지 <br>
-				        	\${content}
-				      	</div>
+						<form:form name="readCheckFrm">
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	✉️ 쪽지 <br>
+					        	\${content}
+					      	</div>
+					        <button type="button" id="isChecked-\${uniqueId}">확인</button>
+		    			</form:form>
 				    `;
 				} else if(alarmType === 'r') {
 		    		alarmContent.innerHTML = `
-				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-				        	⛔ 신고 <br>
-				        	\${content}
-				      	</div>
+		    			<form:form name="readCheckFrm">	
+			    			<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	⛔ 신고 <br>
+					        	\${content}
+					      	</div>
+					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'c') {
 		    		alarmContent.innerHTML = `
-				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-				        	🌐 댓글 <br>
-				        	\${content}
-				      	</div>
+		    			<form:form name="readCheckFrm">	
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	🌐 댓글 <br>
+					        	\${content}
+					      	</div>
+					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'a') {
 		    		alarmContent.innerHTML = `
-				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-				        	✔️ 승인관련 <br>
-				        	\${content}
-				      	</div>
+		    			<form:form name="readCheckFrm">	
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	✔️ 승인관련 <br>
+					        	\${content}
+					      	</div>
+					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+				      	</form:form>
 				    `;
 		    	} else if(alarmType === 'v') {
 		    		alarmContent.innerHTML = `
-				    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
-				        	🗓️ 휴가관련 <br>
-				        	\${content}
-				      	</div>
+		    			<form:form name="readCheckFrm">	
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	🗓️ 휴가관련 <br>
+					        	\${content}
+					      	</div>
+					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+				      	</form:form>
+				    `;
+		    	}else if(alarmType === 's') {
+		    		alarmContent.innerHTML = `
+		    			<form:form name="readCheckFrm">	
+					    	<div id="alarmContent" style="border:2px solid black; border-radius:10px; background-color:white; line-height: 1.6; width: 250px; cursor: pointer; padding: 7px; font-size: 13px; font-weight: 600;">
+					        	✏스터디 <br>
+					        	\${content}
+					      	</div>
+					      	<button type="button" id="isChecked-\${uniqueId}">확인</button>
+				      	</form:form>
 				    `;
 		    	}
 				
 				alarmContentBox.prepend(alarmBr);
 				alarmContentBox.prepend(alarmContent);
 				
+				const checkBtn = document.querySelector(`#isChecked-\${uniqueId}`);
+				const readCheckFrm = document.readCheckFrm;
 				
+				if(checkBtn){
+					checkBtn.addEventListener("click", function(){
+				      
+				    	const token = '${_csrf.token}';
+				        	
+				        $.ajax({
+				            type: "POST",
+				            url: "${pageContext.request.contextPath}/common/updateAlarmReadCheck.do",
+				            data: {
+				                alarmId
+				            },
+				            headers: {
+				                "X-CSRF-TOKEN": token
+				            },
+				            success: function(data) {
+				            	console.log(data+"asdsadsadsadsad");
+					           	alarmContent.style.color="grey";
+					           	alarmContent.style.borderColor = "grey";
+					           	checkBtn.style.display="none";
+					           	alarmImg.style.animation = "";
+					          	if(alarmType=='s'){
+					          		 window.location.href = '/kh/board/studyBoardList.do';
+					          	}
+				            	
+				            },
+				            error: function() {
+				                console.log("실패")
+				            }
+				         });
+				        
+				    });
+				}
+				
+				/* alarmContent.addEventListener('click', () => {
+			        // 클릭 시 "마이 페이지"로 이동
+			        window.location.href = '/kh/member/myPage.do'; // 실제 주소로 대체해주세요
+			    }); */
 			    
 			}
 			
 		</script>
-		
 	</sec:authorize>
 	

@@ -96,6 +96,7 @@
 --drop sequence seq_chat_message_no;
 --drop sequence seq_curriculum_id;
 --drop sequence seq_cal;
+--drop sequence seq_alarm_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -458,6 +459,16 @@ CREATE TABLE myclass (
     FOREIGN KEY (curriculum_id) REFERENCES curriculum(curriculum_id)
 );
 
+CREATE TABLE alarm (
+    alarm_id number,
+    received_id varchar(30),
+    content varchar(400),
+    created_at date,
+    alarm_type char(1),
+    read_check char(1)
+);
+
+drop table alarm;
 CREATE TABLE alarm (
     alarm_id number,
     received_id varchar(30),
@@ -1255,7 +1266,6 @@ VALUES (4, 2, '자유게시판인데 왜 아무도 글을 안쓰냐 ㅡㅡ');
 
 
 
-
 INSERT INTO member (member_id, member_pwd, member_name, member_phone, member_email, birthday)
 VALUES ('test2', 'test2', 'test2', '010-1234-5678', 'test2@naver.com', TO_DATE('1990-01-01', 'YYYY-MM-DD'));
 
@@ -1461,9 +1471,10 @@ select * from post;
 select * from chat_room;
 delete chat_room where chat_id between 119 and 140;
 
-
+select * from post_comment;
 select * from alarm;
-
+select * from student;
+select * from post_comment where comment_id = 295;
 update alarm set read_check = 'n' where received_id = 'khendev23';
 
 SELECT *
@@ -1510,6 +1521,7 @@ SELECT seq_board_id.CURRVAL, study_name, '스터디', 'studyList'
 FROM study
 WHERE board_id = 44;
 select study_name from study where board_id = 44;
+
 CREATE TABLE study_info (
     study_id NUMBER,
     member_id varchar2(20),
@@ -1519,6 +1531,16 @@ CREATE TABLE study_info (
     FOREIGN KEY ( member_id) REFERENCES member(member_id),
     FOREIGN KEY ( study_id) REFERENCES study(study_id)
 );
+
+ALTER TABLE study_info
+DROP CONSTRAINT SYS_C0026955;
+
+ALTER TABLE study_info
+ADD CONSTRAINT fk_sutdyinfo_study_id
+FOREIGN KEY (study_id)
+REFERENCES study(study_id)
+ON DELETE CASCADE;
+
 select * from study_info;
 select * from study;
 select * from study;
@@ -1616,3 +1638,39 @@ WHERE
     p.post_id = 216;
     select * from study;
     select * from study_info;
+    delete study_info;
+  select * from study_info;
+  select * from alarm; 
+  select * from message_box;
+  
+  select * from study where study_id in ( select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1);
+    
+  
+  select study_id from study_info where member_id ='eogh' and APPLICATION_CHECK=1;
+  
+  update study_info set APPLICATION_CHECK = 1 where member_id = 'eogh';
+  
+  select * from study where board_id =59;
+  select * from post where board_id = 59;
+  select * from study;
+  select * from study_info;
+  
+  select * from post where board_id = 6 order by 1 desc;
+  select * from post order by 2 desc;
+  select * from study order by 1 desc;
+  select * from study_info order by 1 desc;
+  select * from board order by 1 desc;
+  
+  select 
+		    s.member_id reader_id,
+		    si.*
+		from 
+			study s join study_info si
+			on
+			s.study_id = si.study_id
+		where 
+			s.study_id=26 and si.application_check = 1
+        order by
+            4 desc;
+  select * from report;
+  select * from vacation;

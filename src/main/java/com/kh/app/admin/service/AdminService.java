@@ -166,6 +166,10 @@ public interface AdminService {
 
 	int updateMyClass(String boardId, String selectedCurriculumId);
 
+	int updateVacationOkById(int vacationId);
+
+	int updateVacationByNoId(int vacationId);
+
 
 
 
