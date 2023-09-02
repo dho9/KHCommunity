@@ -174,7 +174,6 @@ public class MemberSecurityController {
 
 		Student student = memberService.findStudentById(memberId);
 
-		System.out.println(student);
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
 	}
 

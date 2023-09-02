@@ -58,6 +58,8 @@ public class MemberServiceImpl implements MemberService {
 		
 		return result;
 	}
+	
+	
 
 	@Override
 	public Member findMemberById(String memberId) {
