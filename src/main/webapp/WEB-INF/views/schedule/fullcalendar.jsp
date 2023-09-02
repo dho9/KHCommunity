@@ -117,35 +117,25 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+	
+	 // 캘린더 요소를 가져와서 초기화
     var calendarEl = document.getElementById('calendar');
 	
+	 
+	 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+    	
+      // 캘린더 헤더 툴바 설정	
       headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        left: 'prev,next today', // 왼쪽에 월을 이동할 수 있는 prev, next버튼과 오늘이 있는 달로 들어올 수있게 today
+        center: 'title', // 달 이름을 중앙에 출력
+        right: 'dayGridMonth,timeGridWeek,timeGridDay' // 뷰 선택 옵션
       },
-      initialDate: new Date(),
-      navLinks: true, 
-      selectable: true,
-      selectMirror: true,
-/*       select: function(arg) {
-    	console.log(arg);
-        var eventTitle = prompt('입력할 일정:');
-        if (eventTitle) {
-          calendar.addEvent({
-            title: eventTitle,
-            start: arg.start,
-            end: arg.end,
-            allDay: arg.allDay,
-            backgroundColor:"royalblue",
-            textColor:"white"
-          })
-        }
-        calendar.unselect()
-      }, */
-      eventClick: function(arg) {
-    	  /* console.log("#등록된 일정 클릭#"); */
+      initialDate: new Date(), // 초기 날짜를 현재 날짜로 설정
+      navLinks: true, // 날짜 내비게이션 링크 활성화
+      selectable: true, 
+      selectMirror: true, 
+      eventClick: function(arg) { // 일정 클릭 이벤트 핸들러
     	  /* console.log(arg.event); */
     	  const groupId = arg.event._def.groupId;
     	  /* console.log(groupId); */

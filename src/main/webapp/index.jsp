@@ -535,7 +535,7 @@
 	    	  window.location.href = 'https://www.iei.or.kr/company/company.kh';
 	    });
 	    carouselItems[1].addEventListener('click', () => {
-	    	  window.location.href = '{pageContext.request.contextPath}/board/todayFoodBoardList.do';
+	    	  window.location.href = '${pageContext.request.contextPath}/board/todayFoodBoardList.do';
 	    });
 	    carouselItems[2].addEventListener('click', () => {
 	    	  window.location.href = '${pageContext.request.contextPath}/store/storeList.do';

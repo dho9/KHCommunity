@@ -29,6 +29,7 @@ import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.MemberDetails;
+import com.kh.app.member.entity.Student;
 import com.kh.app.member.service.MemberService;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
@@ -49,8 +50,8 @@ public class MyPageController {
 		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
 		// 끝
-
-
+		Student student = memberService.findStudentById(principal.getMemberId());
+		model.addAttribute("studentAuthInfo", student);
 		// 식권정보 시작
 		int limit = 5;
 		Map<String, Object> params = Map.of(
