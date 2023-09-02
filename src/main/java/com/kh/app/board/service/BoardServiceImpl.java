@@ -430,6 +430,9 @@ public class BoardServiceImpl implements BoardService {
 	public List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException {
 		List<JobKorea> jobKoreaList = new ArrayList<>();
 
+		// 1. jsoup.connect(주소) : 페이지 주소의 문자열을 주소화
+		// 2. get() : 주소화된 페이지의 주소를 가져옴
+		// 3. Document 클래스 : 연결해서 얻어온 HTML 전체 문서
 		Document document = Jsoup.connect(URL + "&tabType=recruit&Page_No=" + page).get();;
 		Elements contents = document.select(".post");
 
@@ -437,12 +440,15 @@ public class BoardServiceImpl implements BoardService {
 		int endIndex = Math.min(startIndex + limit, contents.size());
 
 		for (int i = startIndex; i < endIndex; i++) {
+			// 4. Element 클래스 : Document의 HTML요소
+			// .select() : Document 클래스로 담은 HTML문의 CSS 쿼리문을 불러오는 기능
+			// .text() : Element 클래스로 담아진 각각의 요소를 텍스트화
 			Element content = contents.get(i);
 
 			String href = content.select(".post-list-corp .name").attr("href");
 			String fullUrl = BASE_URL + href;
 			JobKorea jobKorea = JobKorea.builder()
-					.company(content.select(".post-list-corp .name").text())
+					.company(content.select(".post-list-corp .name").text()) 
 					.title(content.select(".post-list-info .title").text())
 					.option(content.select(".post-list-info .option").text())
 					.etc(content.select(".post-list-info .etc").text())
