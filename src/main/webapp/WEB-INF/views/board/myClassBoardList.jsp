@@ -249,7 +249,7 @@ body {
 				if(board.length == 0) {
 					tbody.innerHTML = `
 						<tr>
-				  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
+				  			<td colspan="4" scope="row">조회된 게시글이 존재하지 않습니다.</td>
 				  		</tr>
 					`;
 				}
@@ -382,7 +382,7 @@ body {
 				if(board.length == 0) {
 					tbody.innerHTML = `
 						<tr>
-				  			<th scope="row">조회된 게시글이 존재하지 않습니다.</th>
+				  			<td colspan="4" scope="row">조회된 게시글이 존재하지 않습니다.</td>
 				  		</tr>
 					`;
 				}
