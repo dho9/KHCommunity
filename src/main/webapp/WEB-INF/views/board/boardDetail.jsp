@@ -1493,7 +1493,7 @@ button.updateBtn, button.deleteBtn{
 		 	        <h3 class="medium" style="display: flex; align-items: center; justify-content: space-between;">
 		 	            <div style="display: flex; align-items: center;">
 		 	                <img src="https://cf-fpi.everytime.kr/0.png" class="picturesmall">
-		 	                <span>\${comment.anonymousCheck ? '익명' : comment.memberId} \${showAuthor ? '' : '<author class="author">(작성자)</author>'}</span>
+		 	                <span>\${comment.anonymousCheck ? '익명' : comment.memberId} \${showAuthor ? '' : '<author class="author">(글쓴이)</author>'}</span>
 		 	            </div>
 		 	        	<ul class="commentMenu">
 		                 	 \${showAbuse ? `<li class="messagesend" onclick="messageSend('\${comment.memberId}', '\${comment.anonymousCheck}')">쪽지</li>` : `<li class="deleteComment" data-commentid="\${comment.commentId}">삭제</li>`}
