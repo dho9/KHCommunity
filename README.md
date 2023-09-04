@@ -37,12 +37,12 @@
    - 웹소켓, stomp 이용
      
 ### 실시간 알림 : https://github.com/MinHeeJ/KHCommunity/blob/master/src/main/java/com/kh/app/notification/service/NotificationServiceImpl.java
-    - 게시글 댓글, 대댓글 알림
-    - 상담 신청 알림
-    - 쪽지 알림
-    - 신고 알림
-    - 회원 승인 알림
-    - 휴가 승인 알림
+   - 게시글 댓글, 대댓글 알림
+   - 상담 신청 알림
+   - 쪽지 알림
+   - 신고 알림
+   - 회원 승인 알림
+   - 휴가 승인 알림
 
 ### 우리반게시판 관리 : https://github.com/MinHeeJ/KHCommunity/blob/master/src/main/webapp/WEB-INF/views/admin/myClassBoardList.jsp
    - 수료생 게시판 초기화
