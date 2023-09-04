@@ -147,10 +147,10 @@ ex ) 위치, 스터디내용 ...
 	        </p>
 	        <div>
 	        	<label for="hashTag">&nbsp; 해시태그</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-	        	<label for="hashTag">인원 수</label><br>
+	        	<label for="hashTag" style="margin-left: 84px;">인원 수</label><br>
 	        	<input type="text" class="hashTag" placeholder="Enter로 스터디 해시태그를 등록해주세요"/>
 	        	
-	        	<input type="number"  name="count" id="count" style="width: 150px; font-size: 15px;" placeholder="스터디 인원"/ />
+	        	<input type="number"  name="count" id="count" style="width: 150px; font-size: 15px; margin-left: 15px;" placeholder="스터디 인원"/ />
 	        	<div class="hashTag-container"></div>
 	        </div>
 	        <button type="button" class="cancel" onclick="hideInputForm()" style="float: right;border-left: solid 3px white; background-color: #0ca5af;">취소</button>

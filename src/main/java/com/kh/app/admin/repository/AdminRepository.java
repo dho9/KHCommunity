@@ -315,7 +315,7 @@ public interface AdminRepository {
 
 	@Select("SELECT *\r\n"
 			+ "FROM myclass\r\n"
-			+ "JOIN curriculum ON myclass.curriculum_id = curriculum.curriculum_id")
+			+ "JOIN curriculum ON myclass.curriculum_id = curriculum.curriculum_id order by curriculum_end_at")
 	List<MyClassBoardListDto> findAllMyClassBoard();
 
 	@Select("SELECT c.curriculum_id, c.class_id, c.teacher_id, c.subject, c.curriculum_name, c.curriculum_start_at, c.curriculum_end_at\r\n"
