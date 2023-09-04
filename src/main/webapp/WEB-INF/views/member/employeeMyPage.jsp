@@ -93,6 +93,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 #studentsModal .modal-content{font-family: 'Pretendard-Regular'; width: 150%; margin-left: -20%;}
 #vacationModal .modal-dialog{width: 700px; height: 500px;}
 /* #studentsModalContent{width: 1000px;} */
+#studentListTbl {font-size: 12px;}
+
 </style>
 
 <section>
@@ -573,7 +575,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 				        <button type="button" class="btn-close studentsClose" data-bs-dismiss="modal" aria-label="Close"></button>
 				    </div>
 			    	<div class="modal-body">
-					    <table class="table table-hover" id="vacationTbl">
+					    <table class="table table-hover" id="studentListTbl">
 							<thead>
 							<tr>
 								<th>No</th>

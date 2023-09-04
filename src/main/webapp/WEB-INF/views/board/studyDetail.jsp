@@ -489,12 +489,15 @@ button.updateBtn, button.deleteBtn{
 			<form:form id="appliForm" name="appliForm"
 				action="${pageContext.request.contextPath}/board/studyApply.do"
 				method="post">
-				<input type="text" name="studyId" id="studyId"
+				<input type="hidden" name="studyId" id="studyId"
 					value="${postDetail.studyId}">
-					<input type="hidden" name="postId" id=""postId""
+				<input type="hidden" name="postId" id=""postId""
 					value="${postDetail.postId}">
-				<input type="text" name="appliId" id="appliId"
+				<input type="hidden" name="appliId" id="appliId"
 					value="${loginMember.username}">
+				<label for="studyName">스터디 이름 : </label>
+				<input type="text" name="studyName" id="studyName"
+					value="${postDetail.title}" style="width: 300px" readonly>
 				<textarea id="appliContent" name="appliContent" rows="4" style = "height: 30%; width: 100%; margin-top: 15px; resize:none" placeholder="간단한 소개를 입력하세요 (거주지역, 활동시간 등)" required></textarea>
 				<button type="submit"  class="btn btn-primary"style = "margin-top: 19px;   font-weight: bold; ">지원하기</button>
 			</form:form>
