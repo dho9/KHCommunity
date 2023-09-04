@@ -325,8 +325,10 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="memberDel" onclick="logoutFrm();"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
-			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
-			<hr class="myPageHr"/>
+			<c:if test="${studentAuthInfo.studentType eq 's'}">
+				<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
+				<hr class="myPageHr"/>
+			</c:if>
 			
 			<!-- 성근님 코드 -->
 			<form:form name="consultReqFrm">
@@ -573,40 +575,38 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		
 		
 		<!-- 휴가신청 -->
+        <c:if test="${studentAuthInfo.studentType eq 's'}">
 		<div id="vacationModal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 	        	<div class="modal-content">
 	            	<div class="modal-body">
-	            	<%-- <c:if test="${student.studentType eq 's'}"> --%>
 	            	 	<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br> 
 						<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
-					<%-- </c:if> --%>
+
 							<div class="myPageDivs" id="vacationDiv" >		
 								<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
-									enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
+										   enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
 									<br/>
 									<label class="frmStyles" for="memberId">아이디 &nbsp;: &nbsp;</label>
 									<input type="text" class="frmStyles" name="memberId" id="memberId" value="${loginMember.username}" readonly>
-										 <br/>
-										 <br/>
-										 <tr>
-											<th> 휴가시작날짜 : </th>
-											<td>
-												<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
-											</td>
-										</tr>
-										<br/>
-									
-										<tr>
-											<th>휴가끝나는날짜 : </th>
-											<td>
-												<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
-											</td>
-										</tr>
-										
-										<br/>
-										<br/>
-										<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
+									 <br/>
+									 <br/>
+									 <tr>
+										<th> 휴가시작날짜 : </th>
+										<td>
+											<input type="date" class="form-control" placeholder="휴가시작날짜" name="vacationStartDate" id="vacationStartDate"/>
+										</td>
+									 </tr>
+									 <br/>
+									<tr>
+										<th>휴가끝나는날짜 : </th>
+										<td>
+											<input type="date" class="form-control" placeholder="휴가끝날짜" name="vacationEndDate" id="vacationEndDate" />
+										</td>
+									</tr>
+									<br/>
+									<br/>
+									<label class="frmStyles" for="teacherId">담당강사님 &nbsp;: &nbsp;</label>
 									<input type="text" class="frmStyles" name="teacherId" id="memberId" value="${studentInfo.teacherId}" readonly>
 									
 									<div class="input-group" style="padding:0px;">
@@ -625,6 +625,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</div> 
 				</div>	
 			</div>
+			</c:if>
 			
 		</div> 
 	

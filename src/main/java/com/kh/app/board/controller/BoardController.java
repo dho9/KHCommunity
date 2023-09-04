@@ -784,6 +784,7 @@ public class BoardController {
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 //	    log.info("studentInfo = {}", studentInfo);
 
+		model.addAttribute("authority", principal.getAuthorities());
 		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("postAttach", postAttach);

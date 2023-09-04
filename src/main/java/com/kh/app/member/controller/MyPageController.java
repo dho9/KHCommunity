@@ -29,6 +29,7 @@ import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.MemberDetails;
+import com.kh.app.member.entity.Student;
 import com.kh.app.member.service.MemberService;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
@@ -49,8 +50,9 @@ public class MyPageController {
 		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
 		// 끝
-
-
+		Student student = memberService.findStudentById(principal.getMemberId());
+		model.addAttribute("studentAuthInfo", student);
+		
 		// 식권정보 시작
 		int limit = 5;
 		Map<String, Object> params = Map.of(
@@ -99,7 +101,8 @@ public class MyPageController {
 			@RequestParam(value = "subject", required = false) String subject,
 			@RequestParam(value = "jobCode", required = false) String jobCode,
 			@RequestParam(value = "employeeId", required = false) String employeeId,
-			@RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
+			@RequestParam(value = "curriculumName", required = false) String curriculumName, 
+			@RequestParam(defaultValue = "1") int page) throws Exception {
 
 		String auth = principal.getAuthorities() + "";
 		if("[TEACHER]".equals(auth)) {
@@ -121,7 +124,23 @@ public class MyPageController {
 		EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
 		model.addAttribute("adminInfo", adminInfo);
 		
+		// 식권정보 시작
+		int limit = 5;
+		Map<String, Object> params = Map.of(
+				"page", page,
+				"limit", limit
+			);
 		
+		List<TicketBuyDto> studentTicketInfo = memberService.findByTicketInfo(principal.getMemberId(), params);
+		model.addAttribute("studentTicketInfo", studentTicketInfo);
+		
+		model.addAttribute("currentPage", page);
+		
+		int totalCount = memberService.totalCountTicket(principal.getMemberId());
+		
+		 int totalPages = (int) Math.ceil((double) totalCount / limit);
+		 model.addAttribute("totalPages", totalPages);
+		 // 식권정보 끝
 	
 		 
 	}

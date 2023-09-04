@@ -171,7 +171,7 @@ public interface AdminRepository {
 	@Select("SELECT count(*) FROM student s JOIN member m ON s.student_id = m.member_id where approve_check='i'")
 	int totalCountNonApprovementStudents();
 
-	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', approve_complete_date = current_date where student_id = #{studentId}")
+	@Update("update student set curriculum_id = #{curriculumId}, approve_check = 'y', student_type = #{studentType}, approve_complete_date = current_date where student_id = #{studentId}")
 	int approvementStudent(AdminStudentListDto student);
 
 	@Update("update student set approve_check = 'n' where student_id = #{studentId} ")
@@ -315,7 +315,7 @@ public interface AdminRepository {
 
 	@Select("SELECT *\r\n"
 			+ "FROM myclass\r\n"
-			+ "JOIN curriculum ON myclass.curriculum_id = curriculum.curriculum_id")
+			+ "JOIN curriculum ON myclass.curriculum_id = curriculum.curriculum_id order by curriculum_end_at")
 	List<MyClassBoardListDto> findAllMyClassBoard();
 
 	@Select("SELECT c.curriculum_id, c.class_id, c.teacher_id, c.subject, c.curriculum_name, c.curriculum_start_at, c.curriculum_end_at\r\n"
