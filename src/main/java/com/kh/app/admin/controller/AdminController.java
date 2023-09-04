@@ -581,7 +581,7 @@ public class AdminController {
         
         log.debug("curriculumId = {}", curriculumId);
         
-        if (classId != null && curriculumId != 0) {
+        if (classId != null || curriculumId != 0) {
             List<AdminCurriculumDetailDto> classStudents = adminService.findStudentsByClassId(classId, curriculumId);
             return classStudents;
         }
