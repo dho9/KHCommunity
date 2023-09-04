@@ -29,11 +29,11 @@
    - 결제 검증
    - 결제API, 카카오공유하기 API, 길찾기 API
      
-### 코드질문 게시판 https://github.com/MinHeeJ/KHCommunity/blob/master/src/main/webapp/WEB-INF/views/board/askCodeBoardList.jsp
-   - 로그인 필수...
+### 코드질문 게시판 : https://github.com/MinHeeJ/KHCommunity/blob/master/src/main/webapp/WEB-INF/views/board/askCodeBoardList.jsp
+   - 로그인 필수
    - 코드 편집기 API를 이용한 코드질문 게시판
     
-### 채팅 :https://github.com/MinHeeJ/KHCommunity/blob/master/src/main/webapp/WEB-INF/views/chat/chatConsultingRequest.jsp
+### 채팅 : https://github.com/MinHeeJ/KHCommunity/blob/master/src/main/webapp/WEB-INF/views/chat/chatConsultingRequest.jsp
    - 웹소켓, stomp 이용
      
 ### 실시간 알림 : https://github.com/MinHeeJ/KHCommunity/blob/master/src/main/java/com/kh/app/notification/service/NotificationServiceImpl.java
