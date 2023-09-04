@@ -19,7 +19,7 @@
                   <thead>
                       <tr>
                           <th scope="col">반</th>
-                          <th scope="col">담당 강사 Id</th>
+                          <th scope="col">담당 강사 ID</th>
                           <th scope="col">과목</th>
                           <th scope="col">과정명</th>
                           <th scope="col">개강일</th>
