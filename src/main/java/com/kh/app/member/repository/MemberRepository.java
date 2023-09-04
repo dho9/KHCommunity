@@ -75,11 +75,19 @@ public interface MemberRepository {
 
 	List<StudentVacationApproveDto> findAllVacationApproveList(String memberId);
 	 
-	@Insert("insert into vacation values(seq_vacation_id.nextval, #{studentId}, #{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, #{teacherId}, '', current_date, '1' )")
-	@SelectKey(before = false, keyProperty = "vacationId", resultType = int.class, statement = "select seq_vacation_id.currval from dual")
+	@Insert("insert into vacation "
+			+ "values(seq_vacation_id.nextval, #{studentId}, "
+			+ "#{vacationStartDate, jdbcType=DATE}, #{vacationEndDate, jdbcType=DATE}, "
+			+ "#{teacherId}, '', current_date, '1' )")
+	@SelectKey(before = false, 
+			   keyProperty = "vacationId", 
+			   resultType = int.class, 
+			   statement = "select seq_vacation_id.currval from dual")
 	int insertVacation(StudentVacation vacation);
 
-	@Insert("insert into vacation_attachment values(seq_vacation_attach_id.nextval, #{vacationId}, #{vacationOriginalFilename}, #{vacationRenamedFilename})")
+	@Insert("insert into vacation_attachment "
+			+ "values(seq_vacation_attach_id.nextval, #{vacationId}, "
+			+ "#{vacationOriginalFilename}, #{vacationRenamedFilename})")
 	int insertAttachment(StudentVacationAttachment attach);
 
 	List<EmployeeInfoDto> findByEmployeeInfo(String memberId);

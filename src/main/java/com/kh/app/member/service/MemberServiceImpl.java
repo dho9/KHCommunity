@@ -190,7 +190,6 @@ public class MemberServiceImpl implements MemberService {
 	public int insertVacation(StudentVacation vacation) {
 		int result = 0;
 		
-		
 		result = memberRepository.insertVacation(vacation);
 		
 		//attachment 저장
@@ -201,7 +200,6 @@ public class MemberServiceImpl implements MemberService {
 				result = memberRepository.insertAttachment(attach);
 			}
 		}
-		
 		return result;
 	}
 

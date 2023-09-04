@@ -511,15 +511,18 @@ button.updateBtn, button.deleteBtn{
 					</div>
 					<ul class="status">
 						<c:if test="${postDetail.memberId eq loginMember.username}">
-							<li style="margin-right: 5px;">
-								<button type="button" class="updateBtn"
-									onclick="showInputForm()"
-									style="background: none; color: black; padding: 0;">
-									수정 |</button>
-							<li class="deleteBtn"><button type="button"
-									class="deleteBtn"
-									style="background: none; color: black; padding: 0;">
-									삭제</button></li>
+							<c:if test="${postDetail.boardId eq '10'}"></c:if>
+							<c:if test="${postDetail.boardId ne '10'}">
+								<li style="margin-right: 5px;">
+									<button type="button" class="updateBtn"
+										onclick="showInputForm()"
+										style="background: none; color: black; padding: 0;">
+										수정 |</button>
+								<li class="deleteBtn"><button type="button"
+										class="deleteBtn"
+										style="background: none; color: black; padding: 0;">
+										삭제</button></li>
+							</c:if>
 						</c:if>
 
 						<c:if test="${postDetail.memberId ne loginMember.username}">
