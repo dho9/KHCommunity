@@ -24,9 +24,13 @@
 
 ## 샘플계정
 - 관리자
+  
   id : admin
+  
   pw : admin
 - 사용자
+
   id : eogh
+ 
   pw : 1234
 
