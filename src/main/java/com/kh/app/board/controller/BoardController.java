@@ -92,24 +92,26 @@ public class BoardController {
 	private String multipartLocation;
 
 	@GetMapping("/freeBoardList.do")
-	public String freeBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
+	public String freeBoardList(
+			Model model, @RequestParam(defaultValue = "1") int page,
+			@AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
+		
+		// 로그인한 사용자 정보
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
 
+		// 게시물
 		List<BoardListDto> freeBoardLists = boardService.freeBoardFindAll(params);
+		model.addAttribute("freeBoardLists", freeBoardLists);
 
+		// 게시물 수
 		int totalCount = boardService.totalCountFreeBoard();
 
 		// totalPages 계산
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
-
-		model.addAttribute("freeBoardLists", freeBoardLists);
 		model.addAttribute("totalPages", totalPages);
-		
-		Student student = boardService.findStudentById(principal.getMemberId());
-		model.addAttribute("student", student);
-		
-		
 
 		return "/board/freeBoardList";
 	}
@@ -1094,12 +1096,7 @@ public class BoardController {
 	@GetMapping("/studyDetail.do")
 	public void studyDetail(@RequestParam int id, Model model) {
 		StudyListDto postDetail = boardService.studyFindById(id);
-		//		System.out.println(id);
-		//log.debug("postDetail = {}", postDetail);
-		//		System.out.println(postDetail);
 		Board board = boardService.findBoardName(postDetail.getBoardId());
-//		log.debug("boardddddddddddd={}", board);
-		// log.debug("boardddddddddddd={}",postDetail);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board", board);
 		System.out.println(postDetail);
