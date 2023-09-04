@@ -19,23 +19,17 @@ public class MemberUpdateDto {
 	@Pattern(regexp = "\\w{4,}", message="비밀번호는 영문자/숫자 4글자 이상이어야 합니다.")
 	private String memberPwd;
 	
-//	@NotBlank(message="이름은 필수입니다.")
-//	private String memberName;
-
 	@NotBlank(message = "번호는 필수입니다.")
 	private String memberPhone;
 
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate birthday;
 	
-//	private String memberEmail;
 	
 	public Member toMember() {
 		return Member.builder()
-//				.memberName(memberName)
 				.memberPwd(memberPwd)
 				.memberPhone(memberPhone)
-//				.memberEmail(memberEmail)
 				.birthday(birthday)
 				.build();
 	}

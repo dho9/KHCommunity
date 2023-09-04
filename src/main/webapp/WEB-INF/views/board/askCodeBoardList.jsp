@@ -11,6 +11,9 @@
 a.article{
 color: black;
 }
+a {
+  text-decoration: none;
+}
 .anonymous{
 	float: right;
 	background-color: white;
@@ -129,7 +132,7 @@ color: black;
 		  </ul>
 		</c:if>
 	</div>
-	</c:if>>
+	</c:if>
     <form:form name="tokenFrm"></form:form>
 	<script>
 	<%-- 글작성 폼 --%>
@@ -146,7 +149,6 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="5">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">
@@ -163,7 +165,7 @@ color: black;
 					<option value="sql">Sql</option>	      			
 	      		</select>
 	      	</p>
-	        <p>
+	        <p class="codeContentArea">
 	        	<textarea class="codeTextCreate" id="batch_content" name="batch_content"></textarea>
 	        </p>
 	        <div>

@@ -275,8 +275,8 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                             	   if(ckTotalPrice === order.totalPrice){
                             		   
                                    alert("결제가 성공했습니다..");
-                                   document.getElementById('create-kakao-link-btn').style.display = 'block';
                                    document.getElementById('create-kakao-link-btn').click();
+                                   document.getElementById('create-kakao-link-btn').style.display = 'block';
                             	   }
                                } else {
                                    alert("결제 유효성 검사에 실패했습니다.");

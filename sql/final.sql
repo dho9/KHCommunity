@@ -97,6 +97,7 @@
 --drop sequence seq_curriculum_id;
 --drop sequence seq_cal;
 --drop sequence seq_alarm_id;
+--drop sequence seq_study_id;
 --===============================================
 -- 시퀀스 생성
 --===============================================
@@ -121,6 +122,7 @@ create sequence seq_cal
 	increment by 1
 	minvalue 1
 	maxvalue 99999;
+create sequence seq_study_id;
 --===============================================
 -- 테이블 생성
 --===============================================
@@ -463,16 +465,7 @@ CREATE TABLE alarm (
     alarm_id number,
     received_id varchar(30),
     content varchar(400),
-    created_at date,
-    alarm_type char(1),
-    read_check char(1)
-);
-
-drop table alarm;
-CREATE TABLE alarm (
-    alarm_id number,
-    received_id varchar(30),
-    content varchar(400),
+    post_id number,
     created_at date,
     alarm_type char(1),
     read_check char(1)
@@ -934,8 +927,8 @@ alter table message_box add constraint CK_messagebox_anonymous_check check (anon
 alter table report add constraint CK_report_check check (report_check in ('y', 'n'));
 -- 댓글삭제여부
 alter table post_comment add constraint ck_post_comment_delete_ck check (delete_ck in ('0','1'));
--- 알림 타입(r:신고, m:쪽지, c:댓글, a:승인관련, v:휴가관련)
-alter table alarm add constraint ck_alarm_alarm_type check (alarm_type in ('m', 'r', 'c', 'a', 'v'));
+-- 알림 타입(r:신고, m:쪽지, c:댓글, a:승인관련, v:휴가관련, s:스터디 관련)
+alter table alarm add constraint ck_alarm_alarm_type check (alarm_type in ('m', 'r', 'c', 'a', 'v', 's'));
 -- 알림 읽음 여부
 alter table alarm add constraint ck_alarm_read_check check (read_check in ('y', 'n'));
 --=================================
@@ -1227,7 +1220,6 @@ select * from vacation;
 select * from vacation_attachment;
 select * from board order by 1;
 select * from post order by 1;
-delete post where post_id = 42;
 select * from post_content order by 1;
 select * from post_comment;
 select * from favorite;
@@ -1247,6 +1239,7 @@ select * from delete_comment;
 select * from authority;
 select * from calendar;
 select * from alarm;
+select * from myclass;
 
 delete chat_room where chat_id between 75 and 77;
 
@@ -1505,7 +1498,7 @@ CREATE TABLE study (
 update study set study_people = 1 where study_id = 4;
 select * from member;
 select * from study;
-create sequence seq_study_id;
+
 insert into study (study_id,board_id,study_name,member_id,member_count,study_created_at ) values(seq_study_id.nextval, seq_board_id.nextval, '자바 빡시게 하자잉', 'eogh',5,default);
 select seq_board_id.CURRVAL from dual;
 
@@ -1673,31 +1666,64 @@ WHERE
         order by
             4 desc;
   select * from report;
+
+  select * from alarm;
+
+insert into member
+
   select * from vacation;
 select * from post;
+select * from employee;
+select * from authority;
+select * from board order by 1;
+update board set board_id = 10 where board_id=11;
+TRUNCATE TABLE board CASCADE CONSTRAINTS;
 
-select * from curriculum;
+--truncate table post;
+--truncate table favorite;
+--truncate table post_content;
+--truncate table post_comment;
+--truncate table post_attachment;
+--truncate table post_like;
+--truncate table comment_like;
+--truncate table report;
+--truncate table board;
+--truncate table study;
+--truncate table talker;
+--truncate table chat_message;
+--truncate table chat_room;
+
 select * from board;
-select * from myclass;
+insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'자유게시판','소통','freeBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'장터게시판','소통','marketBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'오늘 뭐 먹지?','소통','todayFoodBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'정보공유','소통','sharingInformationBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'코드질문','소통','askCodeBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'스터디','소통','studyBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'수료생게시판','소통','graduateBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'예비생게시판','소통','preStudentBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'직원게시판','소통','employeeBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'공지사항게시판','소통','noticeBoardList');
 
-insert into myclass (board_id, curriculum_id) values (11, 1);
-insert into myclass (board_id, curriculum_id) values (12, 2);
-insert into myclass (board_id, curriculum_id) values (13, 3);
-insert into myclass (board_id, curriculum_id) values (14, 4);
-insert into myclass (board_id, curriculum_id) values (15, 5);
-insert into myclass (board_id, curriculum_id) values (16, 6);
-insert into myclass (board_id, curriculum_id) values (17, 7);
-insert into myclass (board_id, curriculum_id) values (18, 8);
-insert into myclass (board_id, curriculum_id) values (19, 9);
-insert into myclass (board_id, curriculum_id) values (20, 10);
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-221','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-222','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-223','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-231','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-232','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-351','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-352','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-353','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-361','소통','myclassBoardList');
-Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-362','소통','myclassBoardList');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

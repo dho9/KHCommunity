@@ -44,7 +44,7 @@ a{text-decoration: none;}
 				<div class="field birth">
 				    <b>생년월일</b>
 				    <div>
-				        <input type="text" placeholder="ex)20/02/02" name="birthday">
+				        <input type="text" placeholder="ex)2000/02/02" name="birthday">
 				    </div>
 				</div>
 				<div class="field">

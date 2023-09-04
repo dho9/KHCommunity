@@ -47,7 +47,7 @@
 
 /* 수강정보 css */
 p.classInfo{color:#606060;}
-p.adminInfo{color:#606060; font-size: 20px; display: inline-block; margin:0px 10px;}
+p.adminInfo{color:#606060; font-size: 17px; display: inline-block; margin:0px 10px;}
 span.classInfo{font-size: 1.3rem; border-right: 2px solid #cecece}
 h2.classInfo{font-weight: bold; color:royalblue;}
 p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
@@ -288,7 +288,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 	 					<tbody id= "messageBoxTbl">
 							<c:if test="${empty vacationApprove }">
 								<tr>
-									<td colspan="5" class="text-center">조회된 휴가신청 내역이 없습니다.</td>
+									<td colspan="6" class="text-center">조회된 휴가신청 내역이 없습니다.</td>
 								
 								</tr>
 								</c:if>
@@ -353,14 +353,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					<tr>
 						<th>패스워드 : </th>
 						<td>
-							<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+							<input type="password" class="form-control" name="memberPwd"  id="memberPwd"  required>
 						</td>
 					</tr>
 					<br/>
 					<tr>
 						<th>패스워드 확인 : </th>
 						<td>
-							<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+							<input type="password" class="form-control" id="passwordConfirmation"  required>
 						</td>
 					</tr>
 					<br/>
@@ -413,7 +413,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					<tr>
 						<th>패스워드 : </th>
 						<td>
-							<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
+							<input type="password" class="form-control" name="memberPwd"  id="memberPwd"  required>
 						</td>
 					</tr>
 					<br/>
@@ -421,7 +421,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					<tr>
 						<th>패스워드 확인 : </th>
 						<td>
-							<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
+							<input type="password" class="form-control" id="passwordConfirmation" required>
 						</td>
 					</tr>
 					<br/>

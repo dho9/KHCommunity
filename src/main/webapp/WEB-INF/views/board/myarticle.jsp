@@ -8,8 +8,15 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <style>
+a {
+  text-decoration: none;
+}
+a {
+  text-decoration: none;
+}
 a.article{
 color: black;
+
 }
 article ul.status{
 margin-top: -1%;
@@ -73,7 +80,7 @@ color: black;}
               <h3 class="medium">${board.memberId}</h3>
             </c:if>
             <time class="medium">
-              <fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+              <fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
               <fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
             </time>
             <hr>

@@ -347,6 +347,7 @@ public class BoardController {
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("available", available));
 	}
 
+	
 	/**
 	 * 게시글조회
 	 * 
@@ -354,7 +355,7 @@ public class BoardController {
 	 * @param model
 	 */
 	@GetMapping("/boardDetail.do")
-	public void boardDetail(@RequestParam int id, Model model) {
+	public void boardDetail(@RequestParam int id, Model model, @AuthenticationPrincipal MemberDetails principal) {
 		BoardListDto postDetail = boardService.findById(id);
 		// log.debug("postDetail = {}", postDetail);
 
@@ -366,8 +367,13 @@ public class BoardController {
 		model.addAttribute("board", board);
 //		System.out.println(board);
 		model.addAttribute("postAttach", postAttach);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
+		
+		
 	}
-
+	
 	/**
 	 * 해당 게시물에 공감(좋아요) 했는지 안했는지
 	 * 
@@ -623,8 +629,9 @@ public class BoardController {
 	                .anonymousCheck(_comment.isAnonymousCheck()).build();
 	        int result = boardService.createComment(comment);
 	        
+	        // 받는 사람 받아오기
 	        String receivedId = boardService.findReceivedIdByCommentRef(ref);
-	        
+	        // 실시간 알림
 	        result = notificationService.notifyCocomment(comment, receivedId);
 	        
 	        return ResponseEntity
@@ -641,8 +648,9 @@ public class BoardController {
 	                .anonymousCheck(_comment.isAnonymousCheck()).build();
 	        int result = boardService.createComment(comment);
 	        
+	        // 받는 사람 받아오기
 	        String receivedId = boardService.findReceivedIdByPostId(_comment.getPostId());
-	        
+	        // 실시간 알림
 	        result = notificationService.notifyComment(comment, receivedId);
 	        
 	        return ResponseEntity
@@ -779,6 +787,7 @@ public class BoardController {
 		studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 //	    log.info("studentInfo = {}", studentInfo);
 
+		model.addAttribute("authority", principal.getAuthorities());
 		model.addAttribute("studentInfo", studentInfo);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("postAttach", postAttach);
@@ -1062,16 +1071,23 @@ public class BoardController {
 				.body(Map.of("jobKoreaList", jobKoreaList, "currentPage", page, "totalPages", totalPages));
 	}
 
+	
+	
 	@GetMapping("/studyBoardList.do")
-	public String studyList(Model model) {
+	public String studyList(Model model, @AuthenticationPrincipal MemberDetails principal) {
 		List<StudyList> studyList = boardService.findAllStudy();
 		for (StudyList study : studyList) {
 			int postId = study.getPostId(); // StudyList 객체의 id 가져오기
-
+			
 			BoardListDto postDetail = boardService.findById(postId);
-			study.setTag(postDetail.getTag());  
+				
+				study.setTag(postDetail.getTag());  
 		}
 		model.addAttribute("studyBoardList", studyList);
+		
+		Student student = boardService.findStudentById(principal.getMemberId());
+		model.addAttribute("student", student);
+		
 		return "/board/studyBoardList";
 	}
 	

@@ -425,24 +425,26 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	private static String BASE_URL = "https://www.jobkorea.co.kr";
-	private static String URL = "https://www.jobkorea.co.kr/Search/?stext=%EA%B0%9C%EB%B0%9C%EC%9E%90";
+	private static String URL = "https://www.jobkorea.co.kr/"
+								+ "Search/?stext=%EA%B0%9C%EB%B0%9C%EC%9E%90";
 	@Override
 	public List<JobKorea> getJobKoreaDatas(int page, int limit) throws IOException {
 		List<JobKorea> jobKoreaList = new ArrayList<>();
 
-		Document document = Jsoup.connect(URL + "&tabType=recruit&Page_No=" + page).get();;
+		Document document = Jsoup.connect(URL + "&tabType=recruit&Page_No=" + page).get();
 		Elements contents = document.select(".post");
 
 		int startIndex = (page - 1) * limit;
 		int endIndex = Math.min(startIndex + limit, contents.size());
 
 		for (int i = startIndex; i < endIndex; i++) {
+			
 			Element content = contents.get(i);
 
 			String href = content.select(".post-list-corp .name").attr("href");
 			String fullUrl = BASE_URL + href;
 			JobKorea jobKorea = JobKorea.builder()
-					.company(content.select(".post-list-corp .name").text())
+					.company(content.select(".post-list-corp .name").text()) 
 					.title(content.select(".post-list-info .title").text())
 					.option(content.select(".post-list-info .option").text())
 					.etc(content.select(".post-list-info .etc").text())
@@ -453,6 +455,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 		return jobKoreaList;
 	}
+	
 	@Override
 	public List<StudyList> findAllStudy() {
 		return boardRepository.findAllStudy();
@@ -498,7 +501,8 @@ public class BoardServiceImpl implements BoardService {
 	public List<JobKorea> getJobKoreaDatas(int page, int limit, String keyword) throws IOException {
 		List<JobKorea> jobKoreaList = new ArrayList<>();
 
-		Document document = Jsoup.connect(BASE_URL + "/Search/?stext=" + keyword + "&tabType=recruit&Page_No=" + page).get();
+		Document document = Jsoup.connect(BASE_URL + "/Search/?stext=" + keyword 
+												+ "&tabType=recruit&Page_No=" + page).get();
 		Elements contents = document.select(".post");
 
 		int startIndex = (page - 1) * limit;

@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.kh.app.common.HelloSpringUtils;
 import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.member.dto.MemberCreateDto;
@@ -101,7 +102,6 @@ public class MemberSecurityController {
 		MemberDetails principal = (MemberDetails) authentication.getPrincipal();
 		Object credentials = authentication.getCredentials();
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
 	}
 
 	@GetMapping("/checkIdDuplicate.do")
@@ -120,8 +120,6 @@ public class MemberSecurityController {
 	@GetMapping("/mailCheck")
 	@ResponseBody
 	public String mailCheck(String email, Model model) {
-		
-		log.info("email = {}", email);
 		model.addAttribute("email", email);
 		return memberService.joinEmail(email);
 	}
@@ -140,6 +138,12 @@ public class MemberSecurityController {
 		String memberId = principal.getMemberId();
 		member.setMemberId(memberId);
 		
+		if (bindingResult.hasErrors()) {
+			ObjectError error = bindingResult.getAllErrors().get(0);
+			redirectAttr.addFlashAttribute("msg", error.getDefaultMessage());
+			return "redirect:/member/memberUpdate.do";
+		}
+		
 		String rawPassword = member.getMemberPwd();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		member.setMemberPwd(encodedPassword);
@@ -155,6 +159,7 @@ public class MemberSecurityController {
 				memberDetails.getPassword(),
 				memberDetails.getAuthorities()
 			);
+		
 		SecurityContextHolder.getContext().setAuthentication(newAuthentication);
 		
 		
@@ -169,37 +174,9 @@ public class MemberSecurityController {
 
 		Student student = memberService.findStudentById(memberId);
 
-		System.out.println(student);
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
 	}
 
-//	@PostMapping("/certification.do")
-//	public String certification(@AuthenticationPrincipal MemberDetails member,
-//			@RequestParam(value = "upFile", required = true) MultipartFile upFiles)
-//			throws IllegalStateException, IOException {
-//
-//		// 1. 파일저장
-//		StudentAttachment attach = null;
-//
-//		if (!upFiles.isEmpty()) {
-//			String originalFilename = upFiles.getOriginalFilename();
-//			String renamedFilename = KhCoummunityUtils.getRenamedFilename(originalFilename); // 20230807_14255555
-//
-//			File destFile = new File(renamedFilename);
-//
-//			upFiles.transferTo(destFile);
-//
-//			attach = StudentAttachment.builder().studentOriginalFilename(originalFilename)
-//					.studentRenamedFilename(renamedFilename).memberId(member.getMemberId()).build();
-//
-//		}
-//		
-//		log.debug("attach = {}", attach);
-//
-//		int result = memberService.insertStudentAttach(attach);
-//
-//		return "redirect:/member/myPage.do";
-//	}
 	
 	@PostMapping("/certification.do")
 	public String certification(@AuthenticationPrincipal MemberDetails member,
@@ -231,7 +208,6 @@ public class MemberSecurityController {
 	    }
 
 	    int result = memberService.insertStudentAttach(attach);
-
 	    return "redirect:/member/myPage.do";
 	}
 	
@@ -251,6 +227,7 @@ public class MemberSecurityController {
 		
 	    if (result > 0) {
 	    	redirectAttr.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다.");
+	    	
 	        return "redirect:/";
 	    } 
 	        else {
@@ -259,17 +236,6 @@ public class MemberSecurityController {
 	    }
 	
 	}
-	
-//	
-//	@GetMapping("/messageDelete.do")
-//	@ResponseBody
-//	public ResponseEntity<?> messageDelete(@RequestParam String messageId) {
-//
-////		int result= memberService.messageDelete(messageId);
-//		log.debug("★★messageDelete = {}", messageId);
-//		return ResponseEntity.status(HttpStatus.OK).body(Map.of("messageId", messageId));
-//	}
-//	
 
 	
 	@GetMapping("/vacationSubmit.do")
@@ -277,7 +243,6 @@ public class MemberSecurityController {
 	public ResponseEntity<?> studnetVacationSubmit(@RequestParam String memberId) {
 
 		Student student = memberService.findStudentById(memberId);
-		log.debug("student={}", student);
 	
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student, "memberId", memberId));
 	}
@@ -313,7 +278,6 @@ public class MemberSecurityController {
 						.vacationOriginalFilename(originalFilename)
 						.vacationRenamedFilename(renamedFilename)
 						.build();
-				
 				attachments.add(attach);
 			}
 		}
@@ -327,14 +291,12 @@ public class MemberSecurityController {
 				.vacationStartDate(_vacation.getVacationStartDate())
 				.vacationEndDate(_vacation.getVacationEndDate())
 				.teacherId(_vacation.getTeacherId())
-		//		.employeeId(employee.getEmployeeId())
 				.vacationSendDate(_vacation.getVacationSendDate())
 				.vacationApproveCheck("1")
 				.attachments(attachments)
 				.build();
 		
 		int result = memberService.insertVacation(vacation);
-
 	    return "redirect:/member/myPage.do";
 	}
 	
@@ -342,8 +304,6 @@ public class MemberSecurityController {
 	@ResponseBody
 	public ResponseEntity<?> findStudentType(@RequestParam String memberId) {
 		StudentDto student = memberService.findStudentType(memberId);
-//		log.info("student={}", student);
-	
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("student", student));
 	} 
 	
@@ -351,8 +311,6 @@ public class MemberSecurityController {
 	@ResponseBody
 	public ResponseEntity<?> findTeacher(@RequestParam String memberId) {
 		StudentDto teacher = memberService.findTeacher(memberId);
-//		log.info("teacher={}", teacher);
-		
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("teacher", teacher));
 	} 
 

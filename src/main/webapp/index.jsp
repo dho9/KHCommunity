@@ -426,7 +426,7 @@
 		                 		<li><a href="${pageContext.request.contextPath}/member/myPage.do">내 정보</a></li>
 		                 	</c:if>
 		                 	<c:if test="${fn:contains(loginMember.authorities, 'TEACHER') || fn:contains(loginMember.authorities, 'ADMIN')}">
-		                 		<li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">직원</a></li>
+		                 		<li><a href="${pageContext.request.contextPath}/member/employeeMyPage.do">내 정보</a></li>
 							</c:if>
 	                        <li><a href="#" id="logoutLink" onclick="logoutFn();">로그아웃</a></li>    
 	                    </sec:authorize>  
@@ -535,7 +535,7 @@
 	    	  window.location.href = 'https://www.iei.or.kr/company/company.kh';
 	    });
 	    carouselItems[1].addEventListener('click', () => {
-	    	  window.location.href = '{pageContext.request.contextPath}/board/todayFoodBoardList.do';
+	    	  window.location.href = '${pageContext.request.contextPath}/board/todayFoodBoardList.do';
 	    });
 	    carouselItems[2].addEventListener('click', () => {
 	    	  window.location.href = '${pageContext.request.contextPath}/store/storeList.do';

@@ -29,6 +29,7 @@ import com.kh.app.member.dto.StudentListDto;
 import com.kh.app.member.dto.StudentMypageInfoDto;
 import com.kh.app.member.dto.StudentVacationApproveDto;
 import com.kh.app.member.entity.MemberDetails;
+import com.kh.app.member.entity.Student;
 import com.kh.app.member.service.MemberService;
 import com.kh.app.ticket.dto.TicketBuyDto;
 
@@ -49,10 +50,10 @@ public class MyPageController {
 		StudentMypageInfoDto studentInfo = memberService.findByMemberInfo(principal.getMemberId());
 		model.addAttribute("studentInfo", studentInfo);
 		// 끝
-
-
+		Student student = memberService.findStudentById(principal.getMemberId());
+		model.addAttribute("studentAuthInfo", student);
 		// 식권정보 시작
-		int limit = 10;
+		int limit = 5;
 		Map<String, Object> params = Map.of(
 				"page", page,
 				"limit", limit
@@ -67,7 +68,6 @@ public class MyPageController {
 		
 		 int totalPages = (int) Math.ceil((double) totalCount / limit);
 		 model.addAttribute("totalPages", totalPages);
-		    
 		// 식권정보 끝
 
 		// Dday 시작
@@ -102,9 +102,6 @@ public class MyPageController {
 			@RequestParam(value = "employeeId", required = false) String employeeId,
 			@RequestParam(value = "curriculumName", required = false) String curriculumName) throws Exception {
 
-		
-		
-		
 		String auth = principal.getAuthorities() + "";
 		if("[TEACHER]".equals(auth)) {
 			
@@ -113,19 +110,16 @@ public class MyPageController {
 		}
 
 
-		List<StudentVacationApproveDto> studentVacationApprove = memberService
-				.findAllVacationApproveList(principal.getMemberId());
+		List<StudentVacationApproveDto> studentVacationApprove = memberService.findAllVacationApproveList(principal.getMemberId());
 		model.addAttribute("vacationApprove", studentVacationApprove);
-		log.info("★★vacationApprove = {} ", studentVacationApprove);
+	
 		LocalDate currentDate = LocalDate.now();
 		model.addAttribute("currentDate", currentDate);
 
 		List<StudentListDto> studentList = memberService.findStudentByTeacher(principal.getMemberId());
 		model.addAttribute("studentList", studentList);
-		log.info("★★studentList = {} ", studentList);
 		
 		EmployeeDto adminInfo = memberService.findEmployeeById(principal.getMemberId());
-
 		model.addAttribute("adminInfo", adminInfo);
 		
 		
@@ -160,8 +154,6 @@ public class MyPageController {
 			@RequestParam String vacationId ,
 			@RequestParam String approveResult
 			) {
-		
-		log.info("vacationId = {} {}", vacationId, approveResult);
 		
 		int result = memberService.updateVacationApprove(vacationId, approveResult);
 		

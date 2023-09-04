@@ -58,6 +58,8 @@ public class MemberServiceImpl implements MemberService {
 		
 		return result;
 	}
+	
+	
 
 	@Override
 	public Member findMemberById(String memberId) {
@@ -69,7 +71,6 @@ public class MemberServiceImpl implements MemberService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		UserDetails memberDetails = memberRepository.loadUserByUsername(username);
-		log.debug("memberDetails={}", memberDetails);
 		if(memberDetails == null)
 			throw new UsernameNotFoundException(username);
 		
@@ -184,15 +185,6 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findByDdayInfo(curriculumId);
 	}
 
-//	@Override
-//	public int insertVacationAttach(VacationAttachment attach, MemberDetails member) {
-//		int result=0;
-//		result = memberRepository.insertVacation(member);
-//		result = memberRepository.insertVacationAttach(attach);
-//		result = memberRepository.updateVacationState(attach);
-//		return result;
-//	}
-
 
 	@Override
 	public int insertVacation(StudentVacation vacation) {
@@ -200,7 +192,7 @@ public class MemberServiceImpl implements MemberService {
 		
 		
 		result = memberRepository.insertVacation(vacation);
-		log.debug("board = {}", vacation);
+		
 		//attachment 저장
 		List<StudentVacationAttachment> attachments = ((StudentVacation) vacation).getAttachments();
 		if(attachments != null && !attachments.isEmpty()) {

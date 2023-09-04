@@ -13,6 +13,9 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <style>
+a {
+  text-decoration: none;
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -87,12 +90,14 @@ body {
 			<h2 class="title">우리반 게시판</h2>
 			<p>${loginMember.name}님, 반갑습니다. 'KH소통할까?'에 오신 걸 환영합니다.</p>
 		</div>
-		<div class="myClassBoard-subTitle">
-			<ul>
-				<li style="margin-left: 4%;">${studentInfo.curriculumName}반</li>
-				<li style="margin-left: 3.5%;">[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
-			</ul>
-		</div>
+		<c:if test="${authority eq '[STUDENT]'}">
+			<div class="myClassBoard-subTitle">
+				<ul>
+					<li>${studentInfo.curriculumName}반</li>
+					<li>[${studentInfo.classId}] ${studentInfo.memberName} 강사님</li>
+				</ul>
+			</div>
+		</c:if>
 	
 		<button id="prevBtn" type="button" class="btn btn-outline-primary" value="${postDetail.boardId}"><i class="bi bi-list"></i>글목록</button>
 	

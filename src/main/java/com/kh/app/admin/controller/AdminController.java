@@ -4,14 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,16 +25,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.app.admin.service.AdminService;
 import com.kh.app.member.entity.Authority;
-import com.kh.app.member.entity.Employee;
-import com.kh.app.member.entity.Member;
-import com.kh.app.member.entity.MemberDetails;
 import com.kh.app.member.entity.StudentAttachment;
 import com.kh.app.member.entity.Teacher;
 import com.kh.app.messageBox.entity.MessageBox;
@@ -52,16 +43,12 @@ import com.kh.app.curriculum.dto.CurriculumListDto;
 import com.kh.app.curriculum.dto.CurriculumRegDto;
 import com.kh.app.store.entity.Store;
 import com.kh.app.store.service.StoreService;
-import com.kh.app.board.dto.BoardChartDto;
-import com.kh.app.curriculum.dto.CurriculumListDto;
-import com.kh.app.board.dto.BoardChartDto;
 import com.kh.app.board.dto.BoardCreateDto;
 import com.kh.app.board.dto.MyClassBoardListDto;
 import com.kh.app.board.entity.PostAttachment;
 import com.kh.app.chat.dto.AdminChatListDto;
 import com.kh.app.chat.entity.ChatMessage;
 import com.kh.app.common.HelloSpringUtils;
-import com.kh.app.common.KhCoummunityUtils;
 import com.kh.app.curriculum.entity.Curriculum;
 import com.kh.app.khclass.entity.KhClass;
 import com.kh.app.member.dto.AdminEmployeeListDto;
@@ -287,7 +274,7 @@ public class AdminController {
         @RequestParam String phone,
         @RequestParam String dept) {
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate localDateBirthday = LocalDate.parse(birthday, formatter); // LocalDate 형식으로 변환
         
         String encodedPassword = passwordEncoder.encode(pw);
@@ -331,7 +318,7 @@ public class AdminController {
 	        @RequestParam String phone,
 	        @RequestParam String subject) {
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate localDateBirthday = LocalDate.parse(birthday, formatter); // LocalDate 형식으로 변환
         
         String encodedPassword = passwordEncoder.encode(pw);
@@ -390,12 +377,17 @@ public class AdminController {
 
 	// 피신고자에게 주의조치 보내고 report테이블에서 해당 행 삭제
 	@PostMapping("/sendReport.do")
-	public String sendReport(@RequestParam String reportId, @RequestParam String attackerId, @Valid MessageBox message, @RequestParam String messageContent) {
+	public String sendReport(@RequestParam String sendReporterId, @RequestParam String reportId, @RequestParam String attackerId, @Valid MessageBox message, @RequestParam String messageContent) {
 		String admin = "admin";
 		// message_box에 주의조치 메세지전송
 		int result = adminService.sendReportToStudent(attackerId, admin, messageContent);
 		// 해당 신고내역 report에서 삭제
 		int result1 = adminService.deleteReport(reportId);
+		
+		// 알림
+		result = notificationService.notifyReportAlarmToReporterId(sendReporterId, messageContent);
+		
+		result = notificationService.notifyReportAlarmToAttackerId(attackerId, messageContent);
 		
 		return "redirect:/admin/reportList.do";
 	}

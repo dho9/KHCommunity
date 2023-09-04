@@ -11,6 +11,9 @@
 a.article{
 color: black;
 }
+a {
+  text-decoration: none;
+}
 .anonymous{
 	float: right;
 	background-color: white;
@@ -76,7 +79,7 @@ color: black;
 					  		<h3 class="medium">${board.memberId}</h3>
 				  		</c:if>
 					  	<time class="medium">
-						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createdAt"/>
+						  	<fmt:parseDate value="${board.postCreatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 						  	<fmt:formatDate value="${createdAt}" pattern="yy/MM/dd HH:mm"/>
 					  	</time>
 					  	<hr>
@@ -146,7 +149,6 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="1">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">

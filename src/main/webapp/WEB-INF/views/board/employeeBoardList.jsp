@@ -10,6 +10,9 @@
 a.article{
 color: black;
 }
+a {
+  text-decoration: none;
+}
 .anonymous{
 	float: right;
 	background-color: white;
@@ -37,8 +40,6 @@ color: black;
   font-weight: bold;
 }
 </style>
-
-
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
@@ -135,7 +136,6 @@ color: black;
 	      	action="${pageContext.request.contextPath}/board/createPost.do" 
 	      	id="createForm" 
 	      	method="post" 
-	      	style="height: 66%;"
       		enctype="multipart/form-data">
 	      	<input type = "hidden" name="boardId" id="boardId" value="9">
 	      	<input type = "hidden" name="anonymousCheck" id="anonymousCheck" value="false">

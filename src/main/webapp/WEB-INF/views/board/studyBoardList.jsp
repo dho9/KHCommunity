@@ -6,6 +6,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <style>
+a {
+  text-decoration: none;
+}
 a.article{
 color: black;
 }
@@ -36,6 +39,7 @@ color: black;
   font-weight: bold;
 }
 </style>
+	
 	<div id="container" class="community" style="margin-top: 25px;">
 	<div class="wrap title">
 		<h1>
