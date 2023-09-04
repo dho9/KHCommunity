@@ -257,11 +257,10 @@ public class MemberSecurityController {
 	                             HttpServletRequest request)
 	                            throws IllegalStateException, IOException {
 		
-		
-	
 	    // 1. 새로운 저장 경로 지정
 	    ServletContext servletContext =  request.getServletContext();
-	    String resourcesPath = "/resources/images/vacationSubmitUpload/";
+	    // 파일이 저장될 서버 내의 실제 경로를 지정
+	    String resourcesPath = "/resources/images/vacationSubmitUpload/"; 
 		String approveUploadPath = servletContext.getRealPath(resourcesPath);
 
 	    // 2. 파일 저장
@@ -269,22 +268,19 @@ public class MemberSecurityController {
 		for(MultipartFile upFile : upFiles) {					
 			if(!upFiles.isEmpty()) {
 				String originalFilename = upFile.getOriginalFilename();
-				String renamedFilename = KhCoummunityUtils.getRenamedFilename(originalFilename); // 20230807_142828888_123.jpg
-				File destFile = new File(approveUploadPath + renamedFilename); // 부모디렉토리 생략가능. spring.servlet.multipart.location 값을 사용
+				String renamedFilename = KhCoummunityUtils.getRenamedFilename(originalFilename); 
+				File destFile = new File(approveUploadPath + renamedFilename); 
 				upFile.transferTo(destFile); // 실제파일 저장
 				
-				StudentVacationAttachment attach = 
-					StudentVacationAttachment.builder()
+				// 첨부파일 정보를 담은 객체를 생성하고 리스트에 추가
+				StudentVacationAttachment attach = StudentVacationAttachment.builder()
 						.vacationOriginalFilename(originalFilename)
 						.vacationRenamedFilename(renamedFilename)
 						.build();
-				attachments.add(attach);
+						attachments.add(attach);
 			}
 		}
-		
-		
-		
-		
+		// 사용자가 입력한 휴가 정보와 첨부파일 정보가 담긴 리스트로 휴가 객체를 생성
 		StudentVacation vacation = StudentVacation.builder()
 				.vacationId(_vacation.getVacationId())
 				.studentId(member.getMemberId())
@@ -296,7 +292,7 @@ public class MemberSecurityController {
 				.attachments(attachments)
 				.build();
 		
-		int result = memberService.insertVacation(vacation);
+		int result = memberService.insertVacation(vacation); //휴가 정보 DB저장
 	    return "redirect:/member/myPage.do";
 	}
 	
