@@ -153,7 +153,7 @@ public interface MemberRepository {
 			+ " LEFT OUTER JOIN employee e ON employee_id = m.member_id\r\n"
 			+ " LEFT OUTER JOIN myclass mc ON mc.curriculum_id = c.curriculum_id\r\n"
 			+ " WHERE	\r\n"
-			+ "     m.member_id = 'rudqls'\r\n"
+			+ "     m.member_id = #{memberId}\r\n"
 			+ "     and current_date between c.curriculum_start_at and c.curriculum_end_at")
 	StudentDto findTeacher(String memberId);
 
