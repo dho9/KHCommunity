@@ -1675,3 +1675,29 @@ WHERE
   select * from report;
   select * from vacation;
 select * from post;
+
+select * from curriculum;
+select * from board;
+select * from myclass;
+
+insert into myclass (board_id, curriculum_id) values (11, 1);
+insert into myclass (board_id, curriculum_id) values (12, 2);
+insert into myclass (board_id, curriculum_id) values (13, 3);
+insert into myclass (board_id, curriculum_id) values (14, 4);
+insert into myclass (board_id, curriculum_id) values (15, 5);
+insert into myclass (board_id, curriculum_id) values (16, 6);
+insert into myclass (board_id, curriculum_id) values (17, 7);
+insert into myclass (board_id, curriculum_id) values (18, 8);
+insert into myclass (board_id, curriculum_id) values (19, 9);
+insert into myclass (board_id, curriculum_id) values (20, 10);
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-221','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-222','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-223','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-231','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-232','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-351','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-352','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-353','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-361','소통','myclassBoardList');
+Insert into KH.BOARD (BOARD_ID,BOARD_NAME,BOARD_CATEGORY,BOARD_LINK) values (seq_board_id.nextval,'우리반게시판-362','소통','myclassBoardList');
+
