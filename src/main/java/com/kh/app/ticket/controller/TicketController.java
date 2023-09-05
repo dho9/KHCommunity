@@ -43,6 +43,8 @@ public class TicketController {
 		String name = _order.getStorename();
 		int storeId = storeService.findStoreIdByName(name);
 		int ticketId = ticketService.findTicketIdByStoreId(storeId);
+		int ckPrice =  ticketService.findTicketPrice(ticketId);
+		
 //		log.debug("storeId = {}",storeId);
 //		log.debug("ticketId = {}",ticketId);
 		TicketOrder order = TicketOrder.builder()
@@ -53,8 +55,12 @@ public class TicketController {
 				.amount(_order.getAmount())
 				.totalPrice(_order.getTotalPrice())
 				.build();
+		int result =0;
+		if( ckPrice * order.getAmount() == order.getTotalPrice()) {
+			
+			result = ticketService.createOrder(order);
+		}
 //		log.debug("order = {}",order);
-		int result = ticketService.createOrder(order);
 //		log.debug("result = {}",result);
 		String msg ="";
 		if(result>0) {

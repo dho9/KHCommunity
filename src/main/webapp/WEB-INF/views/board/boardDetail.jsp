@@ -393,10 +393,6 @@ button.updateBtn, button.deleteBtn{
 					<hr>
 					<h1 class="large" style="font-size: 20px;">${postDetail.title}</h2>
 						<br> 
-						<%--
-						<input type="hidden" name="content" id="content"
-							value="${postDetail.content}">
-						 --%>
 						<c:if test="${postAttach != null }">
 							<c:if test="${postDetail.boardId eq '5'}">
 								<img

@@ -27,4 +27,9 @@ public class TicketServiceImpl implements TicketService {
 	public TicketBuyDto checkOreder(TicketBuyDto _order) {
 		return ticketRepository.checkOreder(_order);
 	}
+	@Override
+	public int findTicketPrice(int ticketId) {
+		// TODO Auto-generated method stub
+		return ticketRepository.findTicketPrice(ticketId);
+	}
 }

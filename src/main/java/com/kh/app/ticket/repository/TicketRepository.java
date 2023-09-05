@@ -25,6 +25,9 @@ public interface TicketRepository {
 	
 	@Select ("select * from ticket_order where order_id = #{orderId} and amount = #{amount} and total_price= #{totalPrice} ")
 	TicketBuyDto checkOreder(TicketBuyDto _order);
+	
+	@Select( "select price from ticket where ticket_id =#{ticketId}")
+	int findTicketPrice(int ticketId);
 
 	
 }

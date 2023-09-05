@@ -226,8 +226,8 @@ geocoder.addressSearch('${store.address}', function(result, status) {
                         /* console.log(rsp); */
                         const {name} = rsp;
                         const userId = memberId;
-                        const totalAmount = quantity * 3000; // 총 결제 금액을 계산
-                      	
+                        const totalAmount = quantity * '${store.price}'; // 총 결제 금액을 계산
+                      	console.log(totalAmount+'asdsadsadasd');
                         sendPaymentDataToServer(rsp.merchant_uid, userId, name, quantity, totalAmount);
                     } else {
                         /* console.log(rsp) */;
