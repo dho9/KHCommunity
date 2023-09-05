@@ -1190,7 +1190,7 @@ public class BoardController {
 //		System.out.println("myStudyNotice == " + myStudyNotice);
 		
 		List<StudyMemberDto> studyMembers = boardService.findStudyMember(myStudy.getStudyId());
-//		System.out.println("studyMembers == " + studyMembers);
+		System.out.println("studyMembers == " + studyMembers);
 		model.addAttribute("studyMembers",studyMembers);
 		
 		BoardListDto postDetail = boardService.findById(id);

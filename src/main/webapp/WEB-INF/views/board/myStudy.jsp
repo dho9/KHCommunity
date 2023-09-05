@@ -639,8 +639,9 @@ p.infoTitles {
          <h2 id="profileName">${loginMember.name}님</h2>
          <p id="myId">(${loginMember.username})
          <p />
-         <button type="button" id="logoutBtn">로그아웃</button>
-         <button type="button" id="deleteStudyBtn">스터디 끝내기</button>
+         <c:if test="${studyMembers.get(0).readerId eq loginMember.username}">
+           <button type="button" id="deleteStudyBtn">스터디 끝내기</button>
+         </c:if>
       </div>
       <%-- 스터디 삭제 히든 폼 --%>
       <form:form
@@ -842,19 +843,18 @@ p.infoTitles {
    <%-- 스터디 끝내기 --%>
    const deleteStudyBtn = document.querySelector("#deleteStudyBtn");
    const deleteStudyFrm = document.querySelector("#deleteStudyFrm");
+   if(deleteStudyBtn !== null){
    deleteStudyBtn.addEventListener("click",() => {
-      if(confirm("정말 스터디를 끝내시겠습니까??")){
-         alert("스터디가 종료되었습니다.");
-         deleteStudyFrm.submit();
-      } else{
-         alert("돌아가겠습니다.");
-      }
-      
-   });
+	      if(confirm("정말 스터디를 끝내시겠습니까??")){
+	         alert("스터디가 종료되었습니다.");
+	         deleteStudyFrm.submit();
+	      } else{
+	         alert("돌아가겠습니다.");
+	      }
+	      
+	   });
+   }
    
-   document.getElementById("logoutBtn").addEventListener("click", function(event) {
-      memberLogoutFrm.submit();
-   });
    
    var chatTblBody = document.getElementById('chatTblBody');
    var messageBoxTbl = document.getElementById('messageBoxTbl');
