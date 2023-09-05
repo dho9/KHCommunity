@@ -14,6 +14,8 @@ public interface TicketService {
 
 	TicketBuyDto checkOreder(TicketBuyDto _order);
 
+	int findTicketPrice(int ticketId);
+
 
 
 
