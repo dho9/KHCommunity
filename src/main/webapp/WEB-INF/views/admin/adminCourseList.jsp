@@ -477,7 +477,7 @@
 	    	            },
 	    	            success: function(response) {
 	    	                // 성공적으로 응답을 받았을 때 실행되는 부분
-	    	                alert('과정이 수정되었습니다.'); // 서버의 응답 내용을 출력 (개발자 도구에서 확인 가능)
+	    	                alert('과정이 수정되었습니다.'); // 서버의 응답 내용을 출력
 	    	                location.href="${pageContext.request.contextPath}/admin/adminCourseList.do";
 	    	            },
 	    	            error: function(error) {

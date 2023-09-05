@@ -325,10 +325,8 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 			<hr class="myPageHr"/>
 			<p class="mypageBtn" id="memberDel" onclick="logoutFrm();"><i class="bi bi-eraser-fill"></i> &nbsp;&nbsp; 회원탈퇴</p>
 			<hr class="myPageHr"/>
-			<c:if test="${studentAuthInfo.studentType eq 's'}">
-				<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
-				<hr class="myPageHr"/>
-			</c:if>
+			<p class="mypageBtn" id="vacationBtn"><i class="bi bi-calendar3"></i> &nbsp;&nbsp; 휴가신청</p>
+			<hr class="myPageHr"/>
 			
 			<!-- 성근님 코드 -->
 			<form:form name="consultReqFrm">
@@ -715,7 +713,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>패스워드 : </th>
 							<td>
-								<input type="password" class="form-control" name="memberPwd" id="memberPwd"  required>
+								<input type="password" class="form-control" name="memberPwd" placeholder="비밀번호" id="memberPwd" value='<sec:authentication property="principal.memberPwd"/>' required>
 							</td>
 						</tr>
 						<br/>
@@ -723,7 +721,7 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 						<tr>
 							<th>패스워드 확인 : </th>
 							<td>
-								<input type="password" class="form-control" id="passwordConfirmation"  required>
+								<input type="password" class="form-control" id="passwordConfirmation" value='<sec:authentication property="principal.memberPwd"/>' required>
 							</td>
 						</tr>
 						<br/>
