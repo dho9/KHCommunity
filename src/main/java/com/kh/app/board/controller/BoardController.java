@@ -180,18 +180,19 @@ public class BoardController {
 	}
 
 	@GetMapping("/askCodeBoardList.do")
-	public String askCodeBoardList(Model model, @RequestParam(defaultValue = "1") int page, @AuthenticationPrincipal MemberDetails principal) {
+	public String askCodeBoardList(
+			Model model, @RequestParam(defaultValue = "1") int page, 
+			@AuthenticationPrincipal MemberDetails principal) {
 		int limit = 6;
 		Map<String, Object> params = Map.of("page", page, "limit", limit);
 		List<BoardListDto> askCodeBoardList = boardService.askCodeBoardFindAll(params);
+		model.addAttribute("askCodeBoardList", askCodeBoardList);
 
 		int totalCount = boardService.totalCountAskCodeBoard();
 
 		// totalPages 계산
 		int totalPages = (int) Math.ceil((double) totalCount / limit);
 		model.addAttribute("totalPages", totalPages);
-
-		model.addAttribute("askCodeBoardList", askCodeBoardList);
 		
 		Student student = boardService.findStudentById(principal.getMemberId());
 		model.addAttribute("student", student);
@@ -357,23 +358,19 @@ public class BoardController {
 	 * @param model
 	 */
 	@GetMapping("/boardDetail.do")
-	public void boardDetail(@RequestParam int id, Model model, @AuthenticationPrincipal MemberDetails principal) {
+	public void boardDetail(
+			@RequestParam int id, Model model, 
+			@AuthenticationPrincipal MemberDetails principal) {
 		BoardListDto postDetail = boardService.findById(id);
-		// log.debug("postDetail = {}", postDetail);
-
 		Board board = boardService.findBoardName(postDetail.getBoardId());
-		log.debug("boardddddddddddd={}", board);
-		// log.debug("boardddddddddddd={}",postDetail);
+		
 		PostAttachment postAttach = boardService.findAttachById(id);
 		model.addAttribute("postDetail", postDetail);
 		model.addAttribute("board", board);
-//		System.out.println(board);
 		model.addAttribute("postAttach", postAttach);
 		
 		Student student = boardService.findStudentById(principal.getMemberId());
 		model.addAttribute("student", student);
-		
-		
 	}
 	
 	/**
@@ -447,8 +444,6 @@ public class BoardController {
 			@RequestParam(required = false) String[] _tags, @AuthenticationPrincipal MemberDetails member,
 			@RequestParam(value = "file", required = false) List<MultipartFile> files)
 			throws IllegalStateException, IOException {
-		log.info("!!!!!!!!!!!!!!!!!!!!!!!!!", boardId);
-		//log.debug("loginMember = {}", member);
 		List<String> tags = _tags != null ? Arrays.asList(_tags) : null; 
 		
 		// 1. 파일저장
