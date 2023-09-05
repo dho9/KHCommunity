@@ -573,14 +573,14 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 		
 		
 		<!-- 휴가신청 -->
+        <c:if test="${studentAuthInfo.studentType eq 's'}">
 		<div id="vacationModal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 	        	<div class="modal-content">
 	            	<div class="modal-body">
-	            	<c:if test="${student.studentType eq 's'}">
 	            	 	<button type="button" class="close vacation-close" data-dismiss="vacationModal">&times;</button></br> 
 						<p class="infoTitles"><i class="bi bi-pencil-square"></i> &nbsp;휴가신청</p>
-					</c:if>
+
 							<div class="myPageDivs" id="vacationDiv" >		
 								<form:form name="vacationSubmitFrm" action="${pageContext.request.contextPath}/member/vacationSubmit.do" 
 										   enctype = "multipart/form-data" method="post" id="vacationSubmitFrm">
@@ -623,7 +623,9 @@ p.infoTitles{color:#3c3c3c; font-size: 1.4rem;}
 					</div> 
 				</div>	
 			</div>
-
+			</c:if>
+			
+		</div> 
 	
 	<!-- 메인컨테이너 div끝 -->
 
