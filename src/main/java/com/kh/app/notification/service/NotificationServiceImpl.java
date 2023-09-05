@@ -43,7 +43,6 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		simpMessagingTemplate.convertAndSend("/topic/admin", payload);
 		
-		// 3. db 알림행 등록
 		return 0;
 		
 	}

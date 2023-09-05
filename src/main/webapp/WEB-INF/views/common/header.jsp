@@ -145,11 +145,6 @@
                         style="width: 160px; height: 100px; z-index: 1; margin-top: -74%; margin-left: 27%;"></a>
             </div>
             <div id="account" style="display:flex;">
-            	<sec:authorize access="hasAuthority('ADMIN')">
-	            	<a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; width:60px; font-size: 1px;">
-	            		관리자페이지
-	            	</a>
-            	</sec:authorize>
             	<sec:authorize access="isAuthenticated()">
             		<div style="width:65px; display:flex;" id="alarmBox">
             			<div id="alarmImgBox" style="display:flex; padding-top:10px;">
@@ -175,6 +170,9 @@
                 <li><a href="${pageContext.request.contextPath}/store/storeList.do" style="text-decoration: none;">식권</a></li>
                 <li><a href="${pageContext.request.contextPath}/board/studyBoardList.do" style="text-decoration: none;">스터디</a></li>
                 <li><a href="${pageContext.request.contextPath}/calendar/calendar.do?method=list" style="text-decoration: none;">스케쥴</a></li>
+                <sec:authorize access="hasAuthority('ADMIN')">
+	            	<li><a href="${pageContext.request.contextPath}/admin/adminMain.do" target="_blank" style="text-decoration: none; color:royalblue;">관리자페이지</a></li>
+            	</sec:authorize>
             </ul>
         </div>
     </nav>
