@@ -205,7 +205,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
         
             function requestPay(quantity) {
                 var IMP = window.IMP; 
-                IMP.init("imp32361472"); 
+                IMP.init("APIKEY"); 
               
                 var today = new Date();   
                 var hours = today.getHours(); // 시
@@ -298,7 +298,7 @@ geocoder.addressSearch('${store.address}', function(result, status) {
 
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script type="text/javascript">
-    Kakao.init('29e3b1a49b48d90cc80318415174bdca')
+    Kakao.init('APIKEY')
     Kakao.Link.createDefaultButton({
      
       container: '#create-kakao-link-btn',
